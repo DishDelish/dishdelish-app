@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">SDPBootcamp</string>
+    <string name="greetingMessage">Hello, %1$s!</string>
+</resources>
