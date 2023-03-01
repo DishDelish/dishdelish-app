@@ -4,8 +4,6 @@ container:
   memory: 16G
   kvm: true
 
-env:
-  CC_TEST_REPORTER_ID: ENCRYPTED[b7761db6f688012b8c1dba565ff3c6f731ffffa4f444adb42af0d38708108f9aedbb17683061ecc9fb833009b36308b8]
 
 check_android_task:
   name: Run Android tests
