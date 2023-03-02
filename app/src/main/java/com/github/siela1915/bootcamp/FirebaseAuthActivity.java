@@ -58,7 +58,7 @@ public class FirebaseAuthActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         postAuthIntent = getIntent().getParcelableExtra("com.github.siela1915.bootcamp.postauthintent");
-        AUTH_ACTION auth_action = (AUTH_ACTION) getIntent().getSerializableExtra("com.github.siela1915.bootcamp.authentication");
+        AUTH_ACTION auth_action = (AUTH_ACTION) getIntent().getSerializableExtra("com.github.siela1915.bootcamp.authaction");
 
         switch (auth_action) {
             case LOGIN:
@@ -81,6 +81,7 @@ public class FirebaseAuthActivity extends AppCompatActivity {
             if (user != null) {
                 // Launch supplied intent with the user info
                 postAuthIntent.putExtra("com.github.siela1915.bootcamp.firebaseuser", user);
+                finish();
                 startActivity(postAuthIntent);
             }
         } else {
@@ -128,6 +129,7 @@ public class FirebaseAuthActivity extends AppCompatActivity {
                 .signOut(this)
                 .addOnCompleteListener(task -> {
                     // ...
+                    finish();
                     startActivity(postAuthIntent);
                 });
     }
@@ -137,6 +139,7 @@ public class FirebaseAuthActivity extends AppCompatActivity {
                 .delete(this)
                 .addOnCompleteListener(task -> {
                     // ...
+                    finish();
                     startActivity(postAuthIntent);
                 });
     }
