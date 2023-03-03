@@ -6,6 +6,7 @@ container:
 
 env:
   CC_TEST_REPORTER_ID: ENCRYPTED[b0b9138c7d8f0d1aa40c4335c5e7c057411059a5757da79b3fbb04e8dd49552c873c04f4e17de0b1f1127f064cbb58d0]
+  MAPS_API_KEY: ENCRYPTED[8e77f8370112342842913be02b33cae69d438e78b4d83df5833f9e205df737a209bbd07986c6d436738e6be5539bd946]
 
 check_android_task:
   name: Run Android tests
@@ -25,7 +26,7 @@ check_android_task:
     -no-window
     -camera-back none
   assemble_instrumented_tests_script: |
-    echo MAPS_API_KEY=ENCRYPTED[8e77f8370112342842913be02b33cae69d438e78b4d83df5833f9e205df737a209bbd07986c6d436738e6be5539bd946]
+    echo MAPS_API_KEY=ENCRYPTED[8e77f8370112342842913be02b33cae69d438e78b4d83df5833f9e205df737a209bbd07986c6d436738e6be5539bd946] >> local.properties
     chmod +x gradlew
     ./gradlew assembleDebugAndroidTest
   wait_for_avd_script:
