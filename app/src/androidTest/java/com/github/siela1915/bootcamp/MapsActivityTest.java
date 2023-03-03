@@ -21,10 +21,5 @@ public class MapsActivityTest {
     public void isMapDisplayed() {
         onView(withId(R.id.map)).check(matches(isDisplayed()));
     }
-
-    @Test
-    public void isMapReady() {
-        onView(withContentDescription("Google Map")).perform(click());
-
-    }
+    
 }
