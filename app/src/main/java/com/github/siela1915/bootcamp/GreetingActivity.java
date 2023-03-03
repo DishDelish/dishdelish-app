@@ -14,7 +14,7 @@ public class GreetingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_greeting);
 
         Intent intent = getIntent();
-        TextView message = (TextView) findViewById(R.id.greetingMessage);
+        TextView message = findViewById(R.id.greetingMessage);
 
         String userName = intent.getStringExtra("com.github.siela1915.bootcamp.userName");
 
