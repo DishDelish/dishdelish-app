@@ -60,6 +60,10 @@ public class FirebaseAuthActivity extends AppCompatActivity {
         postAuthIntent = getIntent().getParcelableExtra("com.github.siela1915.bootcamp.postauthintent");
         AUTH_ACTION auth_action = (AUTH_ACTION) getIntent().getSerializableExtra("com.github.siela1915.bootcamp.authaction");
 
+        if (auth_action == null) {
+            finish();
+            return;
+        }
         switch (auth_action) {
             case LOGIN:
                 signIn();
@@ -80,7 +84,6 @@ public class FirebaseAuthActivity extends AppCompatActivity {
             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
             if (user != null) {
                 // Launch supplied intent with the user info
-                postAuthIntent.putExtra("com.github.siela1915.bootcamp.firebaseuser", user);
                 finish();
                 startActivity(postAuthIntent);
             }
@@ -112,16 +115,22 @@ public class FirebaseAuthActivity extends AppCompatActivity {
     }
 
     public void signIn() {
-        // Choose authentication providers
-        List<AuthUI.IdpConfig> providers = Collections.singletonList(
-                new AuthUI.IdpConfig.GoogleBuilder().build());
-        // Create and launch sign-in intent
-        Intent signInIntent = AuthUI.getInstance()
-                .createSignInIntentBuilder()
-                .setAvailableProviders(providers)
-                .setIsSmartLockEnabled(!BuildConfig.DEBUG /* credentials */, true /* hints */)
-                .build();
-        signInLauncher.launch(signInIntent);
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        if (auth.getCurrentUser() != null) {
+            finish();
+            startActivity(postAuthIntent);
+        } else {
+            // Choose authentication providers
+            List<AuthUI.IdpConfig> providers = Collections.singletonList(
+                    new AuthUI.IdpConfig.GoogleBuilder().build());
+            // Create and launch sign-in intent
+            Intent signInIntent = AuthUI.getInstance()
+                    .createSignInIntentBuilder()
+                    .setAvailableProviders(providers)
+                    .setIsSmartLockEnabled(!BuildConfig.DEBUG /* credentials */, true /* hints */)
+                    .build();
+            signInLauncher.launch(signInIntent);
+        }
     }
 
     public void signOut() {
