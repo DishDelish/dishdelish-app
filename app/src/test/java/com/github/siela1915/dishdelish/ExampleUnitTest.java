@@ -1,4 +1,4 @@
-package com.github.siela1915.bootcamp;
+package com.github.siela1915.dishdelish;
 
 import org.junit.Test;
 

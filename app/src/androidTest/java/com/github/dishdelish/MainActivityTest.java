@@ -1,8 +1,7 @@
-package com.github.siela1915.bootcamp;
+package com.github.dishdelish;
 
 import static androidx.test.espresso.Espresso.onView;
 
-import androidx.test.espresso.ViewAction;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.intent.Intents;

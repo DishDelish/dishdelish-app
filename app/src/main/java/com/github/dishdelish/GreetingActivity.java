@@ -1,4 +1,4 @@
-package com.github.siela1915.bootcamp;
+package com.github.dishdelish;
 
 import androidx.appcompat.app.AppCompatActivity;
 
