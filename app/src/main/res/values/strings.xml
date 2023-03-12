@@ -1,5 +1,8 @@
 <resources>
-    <string name="app_name">SDPBootcamp</string>
+    <string name="app_name"></string>
+    <string name="open">open</string>
+    <string name="page_title">DishDelish</string>
+    <string name="close">close</string>
     <string name="greetingMessage">Hello, %1$s!</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

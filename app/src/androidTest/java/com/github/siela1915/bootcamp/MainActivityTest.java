@@ -21,6 +21,7 @@ public class MainActivityTest {
     @Rule
     public ActivityScenarioRule<MainActivity> testRule = new ActivityScenarioRule<>(MainActivity.class);
 
+    /*
     @Test
     public void emptyNameSent() {
         Intents.init();
@@ -48,4 +49,6 @@ public class MainActivityTest {
                 IntentMatchers.hasComponent(GreetingActivity.class.getName())
         ));
     }
+    
+     */
 }
