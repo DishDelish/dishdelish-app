@@ -2,6 +2,7 @@ package com.github.siela1915.bootcamp;
 
 import static androidx.test.espresso.Espresso.onView;
 
+import androidx.fragment.app.testing.FragmentScenario;
 import androidx.test.espresso.ViewAction;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.action.ViewActions;
@@ -20,7 +21,10 @@ import org.junit.runner.RunWith;
 public class MainActivityTest {
     @Rule
     public ActivityScenarioRule<MainActivity> testRule = new ActivityScenarioRule<>(MainActivity.class);
-
+    @Test
+    public  void testEventFragment(){
+        
+    }
     /*
     @Test
     public void emptyNameSent() {
@@ -49,6 +53,6 @@ public class MainActivityTest {
                 IntentMatchers.hasComponent(GreetingActivity.class.getName())
         ));
     }
-    
+
      */
 }
