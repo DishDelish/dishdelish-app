@@ -1,5 +1,6 @@
 package com.github.siela1915.bootcamp;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -86,7 +87,7 @@ public class FirebaseAuthActivity extends AppCompatActivity {
         if (response != null && response.getError() != null) { // If response is null, user canceled with back button, so no popup
             // inflate the layout of the popup window
             LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-            View popupView = inflater.inflate(R.layout.popup_window, findViewById(android.R.id.content));
+            @SuppressLint("InflateParams") View popupView = inflater.inflate(R.layout.popup_window, null);
 
             TextView popupTextView = popupView.findViewById(R.id.popupText);
             popupTextView.setText(String.format(Locale.ENGLISH, "Login failed with error: %s", response.getError().getLocalizedMessage()));
@@ -95,12 +96,14 @@ public class FirebaseAuthActivity extends AppCompatActivity {
             boolean focusable = true; // lets taps outside the popup also dismiss it
             final PopupWindow popupWindow = new PopupWindow(popupView, width_height, width_height, focusable);
 
-            popupWindow.showAtLocation(this.getCurrentFocus(), Gravity.CENTER, 0, 0);
+            popupWindow.showAtLocation(findViewById(android.R.id.content).getRootView(), Gravity.CENTER, 0, 0);
+            popupWindow.setOnDismissListener(this::onBackPressed);
 
             // dismiss the popup window when touched
             popupView.setOnTouchListener((v, event) -> {
                 v.performClick();
                 popupWindow.dismiss();
+
                 return true;
             });
         }
