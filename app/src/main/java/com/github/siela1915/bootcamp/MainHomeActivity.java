@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
 
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -26,7 +27,6 @@ public class MainHomeActivity extends AppCompatActivity {
                     .add(R.id.fragContainer,HomePageFragment.class,null)
                     .commit();
         }
-
         drawerLayout= findViewById(R.id.drawer_layout);
         navigationView= findViewById(R.id.navView);
         toggle= new ActionBarDrawerToggle(this,drawerLayout,R.string.open,R.string.close);
@@ -51,6 +51,10 @@ public class MainHomeActivity extends AppCompatActivity {
 
                     break;
                 case R.id.about:
+                    getSupportFragmentManager().beginTransaction()
+                            .setReorderingAllowed(true)
+                            .replace(R.id.fragContainer,AboutPageFragment.class,null)
+                            .commit();
                     break;
                 case R.id.filter:
                     break;
