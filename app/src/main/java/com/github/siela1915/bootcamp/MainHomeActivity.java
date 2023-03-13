@@ -24,5 +24,12 @@ public class MainHomeActivity extends AppCompatActivity {
                     .add(R.id.fragContainer,HomePageFragment.class,null)
                     .commit();
         }
+
+        drawerLayout= findViewById(R.id.drawer_layout);
+        navigationView= findViewById(R.id.navView);
+        toggle= new ActionBarDrawerToggle(this,drawerLayout,R.string.open,R.string.close);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 }
