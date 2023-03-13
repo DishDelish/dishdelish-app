@@ -5,4 +5,6 @@
     <string name="home">Home</string>
     <string name="open">Open</string>
     <string name="close">Close</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="about">About</string>
 </resources>
