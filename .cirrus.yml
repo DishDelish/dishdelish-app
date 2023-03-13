@@ -9,6 +9,8 @@ env:
 
 check_android_task:
   name: Run Android tests
+  install_firebase_emulator_script:
+    curl -sL https://firebase.tools | bash
   install_emulator_script:
     sdkmanager --install "system-images;android-30;google_apis;x86"
   create_avd_script:
@@ -40,7 +42,7 @@ check_android_task:
   screen_record_background_script:
     for n in $(seq 1 20); do adb exec-out screenrecord --time-limit=180 --output-format=h264 - > $n.h264; done
   check_script:
-    ./gradlew check connectedCheck
+    firebase emulators:exec --project sdp-firebase-bootcamp-44331 --only auth './gradlew check connectedCheck'
   report_codeclimate_script: |
     export JACOCO_SOURCE_PATH=app/src/main/java/
     ./cc-test-reporter format-coverage ./app/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml --input-type jacoco
