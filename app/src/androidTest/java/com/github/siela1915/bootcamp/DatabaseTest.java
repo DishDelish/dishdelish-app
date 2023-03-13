@@ -20,10 +20,11 @@ public class DatabaseTest {
         map.put("Ingredients", "egg, bacon, toast");
         map.put("rating", "great");
         map.put("servings", "one hungry person");
-        db.set("testRecipe", map);
-        String recipe = db.get("testRecipe");
+        String key = db.set("testRecipe", map);
+        String recipe = db.get(key);
         System.out.println(recipe);
         assertNotEquals(recipe, null);
+        db.remove(key);
     }
 
 }

@@ -26,7 +26,7 @@ public class Database {
             Task<DataSnapshot> task = db.child("recipes").child(key).get();
             try {
                 DataSnapshot snapshot = Tasks.await(task);
-                return snapshot.getValue().toString();
+                return snapshot.getValue() == null ? null : snapshot.getValue().toString();
             } catch (ExecutionException | InterruptedException e) {
                 continue;
             }
@@ -34,8 +34,14 @@ public class Database {
         return null;
     }
 
-    public void set(String key, Map<String, Object> value) {
-        db.child("recipes").child(key).updateChildren(value);
+    public String set(String key, Map<String, Object> value) {
+        String uniqueKey = db.child("recipes").child(key).push().getKey();
+        db.child("recipes").child(uniqueKey).updateChildren(value);
+        return uniqueKey;
+    }
+
+    public void remove(String key) {
+        db.child("recipes").child(key).removeValue();
     }
 
 }
