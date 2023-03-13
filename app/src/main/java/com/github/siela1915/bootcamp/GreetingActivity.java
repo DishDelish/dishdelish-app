@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
 
+import com.github.dishdelish.R;
+
 public class GreetingActivity extends AppCompatActivity {
 
     @Override
