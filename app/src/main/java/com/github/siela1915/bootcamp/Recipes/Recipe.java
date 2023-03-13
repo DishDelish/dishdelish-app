@@ -18,13 +18,14 @@ public class Recipe {
     public int prepTime;
     public int cookTime;
     public int servings;
-    public List<Pair<Integer, Ingredient>> ingredientList;
+    public Utensils utensils;
+    public List<Pair<Unit, Ingredient>> ingredientList;
     //Every step and comment will be a separate String in the list
     public List<String> steps;
     public List<String> comments;
 
     public Recipe(int image, String recipeName, String userName, int profilePicture, double rating,
-                  int prepTime, int cookTime, int servings, List<Pair<Integer, Ingredient>> ingredientList,
+                  int prepTime, int cookTime, int servings, Utensils utensils, List<Pair<Unit, Ingredient>> ingredientList,
                   List<String> steps, List<String> comments) {
 
 
@@ -36,6 +37,7 @@ public class Recipe {
         this.prepTime = prepTime;
         this.cookTime = cookTime;
         this.servings = servings;
+        this.utensils = utensils;
         this.ingredientList = ingredientList;
         this.steps = steps;
         this.comments = comments;
