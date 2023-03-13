@@ -20,8 +20,23 @@ public class DatabaseTest {
         map.put("Ingredients", "egg, bacon, toast");
         map.put("rating", "great");
         map.put("servings", "one hungry person");
-        String key = db.set("testRecipe", map);
+        String key = db.set(map);
         String recipe = db.get(key);
+        System.out.println(recipe);
+        assertNotEquals(recipe, null);
+        db.remove(key);
+    }
+
+    @Test
+    public void searchByNameReturnsSingleRecipe() {
+        Database db = new Database();
+        Map<String, Object> map = new HashMap<>();
+        map.put("name", "testRecipe");
+        map.put("Ingredients", "egg, bacon, toast");
+        map.put("rating", "great");
+        map.put("servings", "one hungry person");
+        String key = db.set(map);
+        String recipe = db.getByName("testRecipe");
         System.out.println(recipe);
         assertNotEquals(recipe, null);
         db.remove(key);
