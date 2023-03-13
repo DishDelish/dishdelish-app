@@ -17,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void buttonClicked(View view) {
         EditText userName = (EditText) findViewById(R.id.mainInputText);
-        Intent greetingIntent = new Intent(this, GreetingActivity.class);
+        Intent greetingIntent = new Intent(this, MainHomeActivity.class);
         greetingIntent.putExtra("com.github.siela1915.bootcamp.userName", userName.getText().toString());
         startActivity(greetingIntent);
     }
