@@ -37,6 +37,7 @@
                   <entry key="Duration" value="90" />
                   <entry key="Resizable_Experimental_API_33" value="120" />
                   <entry key="Tests" value="360" />
+                  <entry key="bootcamp" value="120" />
                 </map>
               </option>
             </AndroidTestResultsTableState>
@@ -63,6 +64,7 @@
                   <entry key="Duration" value="90" />
                   <entry key="Resizable_Experimental_API_33" value="120" />
                   <entry key="Tests" value="360" />
+                  <entry key="bootcamp" value="120" />
                 </map>
               </option>
             </AndroidTestResultsTableState>
