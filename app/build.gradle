@@ -7,7 +7,7 @@ plugins {
 }
 
 android {
-    namespace 'com.github.dishdelish'
+    namespace 'com.github.siela1915.bootcamp'
     compileSdk 33
 
     defaultConfig {

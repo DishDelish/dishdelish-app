@@ -8,8 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.github.dishdelish.R;
-
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link SuggestionFragment#newInstance} factory method to
