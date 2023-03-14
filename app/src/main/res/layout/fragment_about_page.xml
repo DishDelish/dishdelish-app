@@ -30,6 +30,7 @@
         android:layout_height="180dp"
         android:layout_gravity="center_horizontal|center_vertical"
         android:ellipsize="none"
+        android:justificationMode="inter_word"
         android:foregroundGravity="center_vertical|center_horizontal"
         android:gravity="center_horizontal|center_vertical"
         android:text="@string/about"

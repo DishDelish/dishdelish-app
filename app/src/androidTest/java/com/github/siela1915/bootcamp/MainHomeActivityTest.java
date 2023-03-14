@@ -12,6 +12,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.ViewAction;
 import androidx.test.espresso.action.ViewActions;
+import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
@@ -26,6 +27,7 @@ public class MainHomeActivityTest {
 
     @Test
     public void test2(){
+        Intents.init();
         ActivityScenario<MainHomeActivity> scenario = ActivityScenario.launch(MainHomeActivity.class);
         onView(withId(R.id.drawer_layout)).perform(ViewActions.click());
 
