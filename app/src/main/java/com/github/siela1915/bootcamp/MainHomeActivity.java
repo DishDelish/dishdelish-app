@@ -35,6 +35,7 @@ public class MainHomeActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         navigationView.setNavigationItemSelectedListener(item ->{
+            /*
             switch (item.getItemId()){
                 case R.id.menuItem_home:
                     getSupportFragmentManager().beginTransaction()
@@ -50,6 +51,24 @@ public class MainHomeActivity extends AppCompatActivity {
                             .commit();
                     break;
                 default:
+            }
+
+             */
+            if(item.getItemId()== R.id.menuItem_home){
+                getSupportFragmentManager().beginTransaction()
+                        .setReorderingAllowed(true)
+                        .replace(R.id.fragContainer,HomePageFragment.class,null)
+                        .commit();
+            }
+            else {
+                if(item.getItemId()== R.id.menuItem_about){
+                    getSupportFragmentManager().beginTransaction()
+                            .setReorderingAllowed(true)
+                            .replace(R.id.fragContainer,AboutPageFragment.class,null)
+                            .commit();
+                }else{
+                    //to be done when the other functionalities are implemented
+                }
             }
 
             drawerLayout.close();

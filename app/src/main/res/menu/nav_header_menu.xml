@@ -2,26 +2,26 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/menuItem_home"
-        android:title="Home"
+        android:title="@string/home_menu"
         android:icon="@drawable/baseline_home_24"/>
     <item
         android:id="@+id/menuItem_favorites"
-        android:title="Favorites"
+        android:title="@string/favorites_menu"
         android:icon="@drawable/baseline_favorite_24"/>
     <item
         android:id="@+id/menuItem_upload"
-        android:title="Upload"
+        android:title="@string/upload_menu"
         android:icon="@drawable/baseline_upload_24"/>
     <item
         android:id="@+id/menuItem_filter"
-        android:title="Filter"
+        android:title="@string/filter_menu"
         android:icon="@drawable/baseline_filter_alt_24"/>
     <item
         android:id="@+id/menuItem_login"
-        android:title="Login"
+        android:title="@string/login_menu"
         android:icon="@drawable/baseline_login_24"/>
     <item
         android:id="@+id/menuItem_about"
-        android:title="About"
+        android:title="@string/about_menu"
         android:icon="@drawable/baseline_info_24"/>
 </menu>
