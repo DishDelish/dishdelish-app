@@ -3,16 +3,11 @@ package com.github.siela1915.bootcamp;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.isNotEnabled;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 
-import android.view.Gravity;
-
-import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.test.core.app.ActivityScenario;
-import androidx.test.espresso.ViewAction;
-import androidx.test.espresso.action.ViewActions;
-import androidx.test.espresso.intent.Intents;
+import androidx.test.espresso.contrib.DrawerActions;
+import androidx.test.espresso.contrib.NavigationViewActions;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
@@ -25,11 +20,44 @@ public class MainHomeActivityTest {
     @Rule
     public ActivityScenarioRule<MainHomeActivity> testRule = new ActivityScenarioRule<>(MainHomeActivity.class);
 
+
+    ActivityScenario<MainHomeActivity> scenario = ActivityScenario.launch(MainHomeActivity.class);
+
     @Test
-    public void test2(){
-        Intents.init();
-        ActivityScenario<MainHomeActivity> scenario = ActivityScenario.launch(MainHomeActivity.class);
-        onView(withId(R.id.drawer_layout)).perform(ViewActions.click());
+    public void startingApplicationWithHomePageViewTest(){
+        onView(withId(R.id.homeFragment)).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void clickingOnToggleButtonOpensNavigationMenuTest(){
+        onView(withId(R.id.drawer_layout))
+                .perform(DrawerActions.open());
+        onView(withId(R.id.navView)).check(matches(isDisplayed()));
+    }
+    @Test
+    public void openingAndClosingTheNavigationDrawerDoesNotChangeTheContentContainerTest(){
+        onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
+        onView(withId(R.id.navView))
+                .perform(NavigationViewActions.navigateTo(R.id.menuItem_about));
+        onView(withId(R.id.aboutFragment)).check(matches(isDisplayed()));
+
+        onView(withId(R.id.drawer_layout))
+                .perform(DrawerActions.open())
+                .perform(DrawerActions.close());
+        onView(withId(R.id.aboutFragment)).check(matches(isDisplayed()));
+
+    }
+    @Test
+    public void navigationBetweenHomePageAboutPageAndOtherPagesTest(){
+        onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
+        onView(withId(R.id.navView))
+                .perform(NavigationViewActions.navigateTo(R.id.menuItem_about));
+        onView(withId(R.id.aboutFragment)).check(matches(isDisplayed()));
+
+        onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
+        onView(withId(R.id.navView))
+                .perform(NavigationViewActions.navigateTo(R.id.menuItem_home));
+        onView(withId(R.id.homeFragment)).check(matches(isDisplayed()));
 
     }
 }

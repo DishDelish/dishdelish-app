@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/home"
+        android:id="@+id/menuItem_home"
         android:title="Home"
         android:icon="@drawable/baseline_home_24"/>
     <item
-        android:id="@+id/favorites"
+        android:id="@+id/menuItem_favorites"
         android:title="Favorites"
         android:icon="@drawable/baseline_favorite_24"/>
     <item
-        android:id="@+id/upload"
+        android:id="@+id/menuItem_upload"
         android:title="Upload"
         android:icon="@drawable/baseline_upload_24"/>
     <item
-        android:id="@+id/filter"
+        android:id="@+id/menuItem_filter"
         android:title="Filter"
         android:icon="@drawable/baseline_filter_alt_24"/>
     <item
-        android:id="@+id/login"
+        android:id="@+id/menuItem_login"
         android:title="Login"
         android:icon="@drawable/baseline_login_24"/>
     <item
-        android:id="@+id/about"
+        android:id="@+id/menuItem_about"
         android:title="About"
         android:icon="@drawable/baseline_info_24"/>
 </menu>

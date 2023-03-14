@@ -36,27 +36,18 @@ public class MainHomeActivity extends AppCompatActivity {
 
         navigationView.setNavigationItemSelectedListener(item ->{
             switch (item.getItemId()){
-                case R.id.home:
+                case R.id.menuItem_home:
                     getSupportFragmentManager().beginTransaction()
                             .setReorderingAllowed(true)
                             .replace(R.id.fragContainer,HomePageFragment.class,null)
                             .commit();
                     break;
-                case R.id.upload:
-                    break;
-                case R.id.favorites:
 
-                    break;
-                case R.id.login:
-
-                    break;
-                case R.id.about:
+                case R.id.menuItem_about:
                     getSupportFragmentManager().beginTransaction()
                             .setReorderingAllowed(true)
                             .replace(R.id.fragContainer,AboutPageFragment.class,null)
                             .commit();
-                    break;
-                case R.id.filter:
                     break;
                 default:
             }
