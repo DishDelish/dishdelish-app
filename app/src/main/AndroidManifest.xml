@@ -15,11 +15,6 @@
             android:name=".SuggestionsActivity"
             android:exported="false" />
         <activity
-            android:name=".SuggestionActivity"
-            android:exported="false"
-            android:label="@string/title_activity_suggestion"
-            android:theme="@style/Theme.SDPBootcamp.NoActionBar" />
-        <activity
             android:name=".GreetingActivity"
             android:exported="false" />
         <activity
