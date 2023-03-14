@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scrollView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="40dp"
+        tools:context=".RecipeActivity">
+
+        <ImageView
+            android:id="@+id/recipePicture"
+            android:layout_width="335dp"
+            android:layout_height="282dp"
+            android:layout_marginTop="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/recipe_picture" />
+
+        <TextView
+            android:id="@+id/recipeNameText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:fontFamily="@font/inter"
+            android:text="Recipe Name"
+            android:textAlignment="viewStart"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textColor="@color/black"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:typeface="normal"
+            app:layout_constraintStart_toStartOf="@+id/recipePicture"
+            app:layout_constraintTop_toBottomOf="@+id/recipePicture" />
+
+        <ImageView
+            android:id="@+id/userAvatar"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="20dp"
+            app:layout_constraintStart_toStartOf="@+id/recipeNameText"
+            app:layout_constraintTop_toBottomOf="@+id/ratingBar"
+            app:srcCompat="@drawable/user_avatar" />
+
+        <TextView
+            android:id="@+id/userNameText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="28dp"
+            android:fontFamily="@font/inter"
+            android:text="User Name"
+            android:textColor="#101010"
+            app:layout_constraintStart_toEndOf="@+id/userAvatar"
+            app:layout_constraintTop_toBottomOf="@+id/ratingBar" />
+
+        <ImageView
+            android:id="@+id/favoriteImage"
+            android:layout_width="50dp"
+            android:layout_height="47dp"
+            android:layout_marginTop="20dp"
+            app:layout_constraintEnd_toEndOf="@+id/recipePicture"
+            app:layout_constraintTop_toBottomOf="@+id/recipeNameText"
+            app:srcCompat="@drawable/heart" />
+
+        <ImageView
+            android:id="@+id/infoBoxes"
+            android:layout_width="325dp"
+            android:layout_height="126dp"
+            android:layout_marginTop="188dp"
+            app:layout_constraintEnd_toEndOf="@+id/recipePicture"
+            app:layout_constraintStart_toStartOf="@+id/recipePicture"
+            app:layout_constraintTop_toBottomOf="@+id/recipePicture"
+            app:srcCompat="@drawable/info_boxes" />
+
+        <TextView
+            android:id="@+id/prepTimeNbMins"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="33dp"
+            android:layout_marginTop="70dp"
+            android:text="000"
+            android:textAlignment="viewStart"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            app:layout_constraintStart_toStartOf="@+id/infoBoxes"
+            app:layout_constraintTop_toTopOf="@+id/infoBoxes" />
+
+        <TextView
+            android:id="@+id/kcalCount"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="263dp"
+            android:layout_marginTop="70dp"
+            android:text="0000"
+            android:textAlignment="viewStart"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            app:layout_constraintStart_toStartOf="@+id/infoBoxes"
+            app:layout_constraintTop_toTopOf="@+id/infoBoxes" />
+
+        <TextView
+            android:id="@+id/prepMinsText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="31dp"
+            android:text="mins"
+            android:textAlignment="viewStart"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            app:layout_constraintStart_toStartOf="@+id/infoBoxes"
+            app:layout_constraintTop_toBottomOf="@+id/prepTimeNbMins" />
+
+        <TextView
+            android:id="@+id/cookTimeNbMins"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="150dp"
+            android:layout_marginTop="70dp"
+            android:text="000"
+            android:textAlignment="viewStart"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            app:layout_constraintStart_toStartOf="@+id/infoBoxes"
+            app:layout_constraintTop_toTopOf="@+id/infoBoxes" />
+
+        <TextView
+            android:id="@+id/cookMinsText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="148dp"
+            android:text="mins"
+            android:textAlignment="viewStart"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            app:layout_constraintStart_toStartOf="@+id/infoBoxes"
+            app:layout_constraintTop_toBottomOf="@+id/cookTimeNbMins" />
+
+        <ImageView
+            android:id="@+id/ingredientsIcon"
+            android:layout_width="47dp"
+            android:layout_height="41dp"
+            android:layout_marginTop="50dp"
+            app:layout_constraintStart_toStartOf="@+id/recipePicture"
+            app:layout_constraintTop_toBottomOf="@+id/infoBoxes"
+            app:srcCompat="@drawable/ingredients_image" />
+
+        <TextView
+            android:id="@+id/ingredientsTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="56dp"
+            android:fontFamily="@font/inter_bold"
+            android:text="Ingredients"
+            android:textColor="#171616"
+            android:textSize="22sp"
+            app:layout_constraintStart_toEndOf="@+id/ingredientsIcon"
+            app:layout_constraintTop_toBottomOf="@+id/infoBoxes" />
+
+        <ImageView
+            android:id="@+id/servingsIcon"
+            android:layout_width="28dp"
+            android:layout_height="24dp"
+            android:layout_marginTop="24dp"
+            app:layout_constraintStart_toStartOf="@+id/recipePicture"
+            app:layout_constraintTop_toBottomOf="@+id/ingredientsIcon"
+            app:srcCompat="@drawable/food_kitchenware_serving_dome" />
+
+        <TextView
+            android:id="@+id/nbServings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="24dp"
+            android:autoText="false"
+            android:digits="00"
+            android:fontFamily="@font/inter"
+            android:numeric="integer"
+            android:text="00"
+            android:textColor="#0E0E0E"
+            android:textSize="16sp"
+            app:layout_constraintStart_toEndOf="@+id/servingsIcon"
+            app:layout_constraintTop_toBottomOf="@+id/ingredientsIcon" />
+
+        <TextView
+            android:id="@+id/servingsText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="24dp"
+            android:fontFamily="@font/inter"
+            android:text="servings"
+            android:textColor="#0B0A0A"
+            android:textSize="16sp"
+            app:layout_constraintStart_toEndOf="@+id/nbServings"
+            app:layout_constraintTop_toBottomOf="@+id/ingredientsIcon" />
+
+        <TextView
+            android:id="@+id/ingredientsList"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:fontFamily="@font/inter"
+            android:text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
+            android:textColor="#090909"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="@+id/recipePicture"
+            app:layout_constraintTop_toBottomOf="@+id/servingsIcon" />
+
+        <ImageView
+            android:id="@+id/utensilsIcon"
+            android:layout_width="45dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="50dp"
+            app:layout_constraintStart_toStartOf="@+id/recipePicture"
+            app:layout_constraintTop_toBottomOf="@+id/ingredientsList"
+            app:srcCompat="@drawable/appliances_sauce_pan" />
+
+        <TextView
+            android:id="@+id/utensilTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="56dp"
+            android:fontFamily="@font/inter_bold"
+            android:text="Utensils"
+            android:textColor="#0E0E0E"
+            android:textSize="22sp"
+            app:layout_constraintStart_toEndOf="@+id/utensilsIcon"
+            app:layout_constraintTop_toBottomOf="@+id/ingredientsList" />
+
+        <TextView
+            android:id="@+id/utensilsList"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:fontFamily="@font/inter"
+            android:text="Utensils here: knife, frying pan..."
+            android:textColor="#0C0C0C"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="@+id/recipePicture"
+            app:layout_constraintTop_toBottomOf="@+id/utensilsIcon" />
+
+        <ImageView
+            android:id="@+id/stepsIcon"
+            android:layout_width="43dp"
+            android:layout_height="41dp"
+            android:layout_marginTop="50dp"
+            app:layout_constraintStart_toStartOf="@+id/recipePicture"
+            app:layout_constraintTop_toBottomOf="@+id/utensilsList"
+            app:srcCompat="@drawable/steps_image" />
+
+        <TextView
+            android:id="@+id/stepsTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="56dp"
+            android:fontFamily="@font/inter_bold"
+            android:text="Steps"
+            android:textColor="#0C0C0C"
+            android:textSize="22sp"
+            app:layout_constraintStart_toEndOf="@+id/stepsIcon"
+            app:layout_constraintTop_toBottomOf="@+id/utensilsList" />
+
+        <TextView
+            android:id="@+id/stepsText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:fontFamily="@font/inter"
+            android:text="Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of &quot;de Finibus Bonorum et Malorum&quot; (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, &quot;Lorem ipsum dolor sit amet..&quot;, comes from a line in section 1.10.32."
+            android:textColor="#0C0C0C"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="@+id/recipePicture"
+            app:layout_constraintTop_toBottomOf="@+id/stepsIcon" />
+
+        <TextView
+            android:id="@+id/commentsText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="16dp"
+            android:fontFamily="@font/inter"
+            android:text="The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from &quot;de Finibus Bonorum et Malorum&quot; by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham."
+            android:textColor="#090808"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="@+id/recipePicture"
+            app:layout_constraintTop_toBottomOf="@+id/commentsIcon" />
+
+        <ImageView
+            android:id="@+id/commentsIcon"
+            android:layout_width="46dp"
+            android:layout_height="43dp"
+            android:layout_marginTop="20dp"
+            app:layout_constraintStart_toStartOf="@+id/recipePicture"
+            app:layout_constraintTop_toBottomOf="@+id/rateButton"
+            app:srcCompat="@drawable/comment" />
+
+        <TextView
+            android:id="@+id/commentsTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="28dp"
+            android:fontFamily="@font/inter_bold"
+            android:text="Comments"
+            android:textColor="#101010"
+            android:textSize="22sp"
+            app:layout_constraintStart_toEndOf="@+id/commentsIcon"
+            app:layout_constraintTop_toBottomOf="@+id/rateButton" />
+
+        <RatingBar
+            android:id="@+id/ratingBar"
+
+            android:layout_width="237dp"
+            android:layout_height="46dp"
+            android:layout_marginStart="-37dp"
+            android:layout_marginTop="20dp"
+            android:isIndicator="true"
+            android:numStars="5"
+
+
+            android:progressTint="#f0ce37"
+            android:rating="4"
+            android:scaleX="0.7"
+            android:scaleY="0.7"
+            app:layout_constraintStart_toStartOf="@+id/recipeNameText"
+            app:layout_constraintTop_toBottomOf="@+id/recipeNameText" />
+
+        <Button
+            android:id="@+id/rateButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="45dp"
+            android:text="Rate  Now !"
+            app:layout_constraintEnd_toEndOf="@+id/recipePicture"
+            app:layout_constraintHorizontal_bias="0.492"
+            app:layout_constraintStart_toStartOf="@+id/recipePicture"
+            app:layout_constraintTop_toBottomOf="@+id/stepsText" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>
