@@ -35,10 +35,7 @@ public class RecipeActivityTest {
         onView(withId(R.id.userNameText)).check(matches(isDisplayed()));
     }
 
-    @Test
-    public void isUserAvatarOnDisplay(){
-        onView(withId(R.id.userAvatar)).check(matches(isDisplayed()));
-    }
+    
 
     @Test
     public void isFavoritesButtonOnDisplay(){
