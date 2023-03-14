@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/constraintLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ProfileFragment">
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/profileLoggedOut"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="profileLogin" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/profileLoggedIn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="profilePicture,profileLogout,profileUsername,profileDisplayName,profileEmail"
+        tools:layout_editor_absoluteX="24dp"
+        tools:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/profilePicture"
+        android:layout_width="94dp"
+        android:layout_height="94dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:contentDescription="profile picture"
+        android:src="@drawable/fui_ic_anonymous_white_24dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/profileDisplayName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="Test Example"
+        android:textSize="14sp"
+        app:layout_constraintStart_toEndOf="@+id/profilePicture"
+        app:layout_constraintTop_toTopOf="@+id/profilePicture" />
+
+    <TextView
+        android:id="@+id/profileUsername"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="username"
+        app:layout_constraintBottom_toTopOf="@+id/profileEmail"
+        app:layout_constraintStart_toEndOf="@+id/profilePicture"
+        app:layout_constraintTop_toBottomOf="@+id/profileDisplayName" />
+
+    <TextView
+        android:id="@+id/profileEmail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="test@example.com"
+        app:layout_constraintBottom_toBottomOf="@+id/profilePicture"
+        app:layout_constraintStart_toEndOf="@+id/profilePicture" />
+
+    <Button
+        android:id="@+id/profileLogout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:onClick="logoutClicked"
+        android:text="Logout"
+        app:layout_constraintStart_toStartOf="@+id/profilePicture"
+        app:layout_constraintTop_toBottomOf="@+id/profilePicture" />
+
+    <Button
+        android:id="@+id/profileLogin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="loginClicked"
+        android:text="Login using Google"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
