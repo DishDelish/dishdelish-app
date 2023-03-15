@@ -20,6 +20,8 @@ import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract;
 import com.firebase.ui.auth.IdpResponse;
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
@@ -147,12 +149,13 @@ public class FirebaseAuthActivity extends AppCompatActivity {
                 });
     }
 
-    public static void update(UserProfileChangeRequest changeRequest) {
+    public static Task<Void> update(UserProfileChangeRequest changeRequest) {
         FirebaseAuth auth = FirebaseAuth.getInstance();
         if (auth.getCurrentUser() != null) {
             FirebaseUser user = auth.getCurrentUser();
-            user.updateProfile(changeRequest);
+            return user.updateProfile(changeRequest);
         }
+        return Tasks.forCanceled();
     }
 
 }
