@@ -86,7 +86,7 @@
             android:layout_marginStart="33dp"
             android:layout_marginTop="70dp"
             android:text="000"
-            android:textAlignment="viewStart"
+            android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             app:layout_constraintStart_toStartOf="@+id/infoBoxes"
             app:layout_constraintTop_toTopOf="@+id/infoBoxes" />
@@ -121,7 +121,7 @@
             android:layout_marginStart="150dp"
             android:layout_marginTop="70dp"
             android:text="000"
-            android:textAlignment="viewStart"
+            android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             app:layout_constraintStart_toStartOf="@+id/infoBoxes"
             app:layout_constraintTop_toTopOf="@+id/infoBoxes" />
@@ -132,7 +132,6 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="148dp"
             android:text="mins"
-            android:textAlignment="viewStart"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             app:layout_constraintStart_toStartOf="@+id/infoBoxes"
             app:layout_constraintTop_toBottomOf="@+id/cookTimeNbMins" />
@@ -285,6 +284,7 @@
             android:layout_marginTop="16dp"
             android:fontFamily="@font/inter"
             android:text="The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from &quot;de Finibus Bonorum et Malorum&quot; by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham."
+            android:textAlignment="center"
             android:textColor="#090808"
             android:textSize="18sp"
             app:layout_constraintStart_toStartOf="@+id/recipePicture"
