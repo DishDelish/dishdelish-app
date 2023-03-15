@@ -2,10 +2,24 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/constraintLayout"
+    android:id="@+id/profileFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ProfileFragment">
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/profileTextEdit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="profileDisplayNameEdit,profileSubmit"
+        tools:visibility="gone" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/profileTextFixed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="profileDisplayName,profileEdit"
+        tools:visibility="gone" />
 
     <androidx.constraintlayout.widget.Group
         android:id="@+id/profileLoggedOut"
@@ -17,7 +31,7 @@
         android:id="@+id/profileLoggedIn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:constraint_referenced_ids="profilePicture,profileLogout,profileUsername,profileDisplayName,profileEmail"
+        app:constraint_referenced_ids="profilePicture,profileLogout,profileEdit,profileEmail"
         tools:layout_editor_absoluteX="24dp"
         tools:visibility="gone" />
 
@@ -30,7 +44,8 @@
         android:contentDescription="profile picture"
         android:src="@drawable/fui_ic_anonymous_white_24dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/pfp" />
 
     <TextView
         android:id="@+id/profileDisplayName"
@@ -38,19 +53,10 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:text="Test Example"
-        android:textSize="14sp"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/barrierDisplayName"
         app:layout_constraintStart_toEndOf="@+id/profilePicture"
         app:layout_constraintTop_toTopOf="@+id/profilePicture" />
-
-    <TextView
-        android:id="@+id/profileUsername"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:text="username"
-        app:layout_constraintBottom_toTopOf="@+id/profileEmail"
-        app:layout_constraintStart_toEndOf="@+id/profilePicture"
-        app:layout_constraintTop_toBottomOf="@+id/profileDisplayName" />
 
     <TextView
         android:id="@+id/profileEmail"
@@ -58,15 +64,30 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:text="test@example.com"
+        android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="@+id/profilePicture"
-        app:layout_constraintStart_toEndOf="@+id/profilePicture" />
+        app:layout_constraintStart_toEndOf="@+id/profilePicture"
+        app:layout_constraintTop_toBottomOf="@+id/barrierDisplayName" />
+
+    <EditText
+        android:id="@+id/profileDisplayNameEdit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:hint="Display Name"
+        android:inputType="textPersonName"
+        android:text="Test Example"
+        android:textSize="16sp"
+        android:autofillHints="name"
+        app:layout_constraintBottom_toTopOf="@+id/barrierDisplayName"
+        app:layout_constraintStart_toEndOf="@+id/profilePicture"
+        app:layout_constraintTop_toTopOf="@+id/profilePicture" />
 
     <Button
         android:id="@+id/profileLogout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:onClick="logoutClicked"
         android:text="Logout"
         app:layout_constraintStart_toStartOf="@+id/profilePicture"
         app:layout_constraintTop_toBottomOf="@+id/profilePicture" />
@@ -75,11 +96,36 @@
         android:id="@+id/profileLogin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="loginClicked"
         android:text="Login using Google"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.25" />
+
+    <Button
+        android:id="@+id/profileEdit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="Edit Profile"
+        app:layout_constraintStart_toEndOf="@+id/profileLogout"
+        app:layout_constraintTop_toTopOf="@+id/profileLogout" />
+
+    <Button
+        android:id="@+id/profileSubmit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="Submit changes"
+        app:layout_constraintStart_toEndOf="@+id/profileLogout"
+        app:layout_constraintTop_toTopOf="@+id/profileLogout" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrierDisplayName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="profileDisplayName,profileDisplayNameEdit" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

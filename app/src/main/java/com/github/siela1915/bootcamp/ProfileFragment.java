@@ -1,20 +1,29 @@
 package com.github.siela1915.bootcamp;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
+
+import java.io.InputStream;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -34,8 +43,7 @@ public class ProfileFragment extends Fragment {
      * @return A new instance of fragment ProfileFragment.
      */
     public static ProfileFragment newInstance() {
-        ProfileFragment fragment = new ProfileFragment();
-        return fragment;
+        return new ProfileFragment();
     }
 
     @Override
@@ -55,31 +63,65 @@ public class ProfileFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        Intent navToProfile = new Intent(getActivity(), MainHomeActivity.class);
+        navToProfile.putExtra("com.github.siela1915.bootcamp.navToProfile", true);
         if (user == null) {
             view.findViewById(R.id.profileLoggedOut).setVisibility(View.VISIBLE);
             view.findViewById(R.id.profileLoggedIn).setVisibility(View.INVISIBLE);
+            view.findViewById(R.id.profileTextFixed).setVisibility(View.INVISIBLE);
+            view.findViewById(R.id.profileTextEdit).setVisibility(View.INVISIBLE);
+
+            Button loginButton = view.findViewById(R.id.profileLogin);
+            loginButton.setOnClickListener((v -> startActivity(FirebaseAuthActivity.createIntent((requireActivity()), FirebaseAuthActivity.AUTH_ACTION.LOGIN, navToProfile))));
         } else {
             view.findViewById(R.id.profileLoggedOut).setVisibility(View.INVISIBLE);
             view.findViewById(R.id.profileLoggedIn).setVisibility(View.VISIBLE);
+            view.findViewById(R.id.profileTextFixed).setVisibility(View.VISIBLE);
+            view.findViewById(R.id.profileTextEdit).setVisibility(View.INVISIBLE);
 
             TextView displayName = view.findViewById(R.id.profileDisplayName);
-            TextView username = view.findViewById(R.id.profileUsername);
             TextView email = view.findViewById(R.id.profileEmail);
-            ImageView picture = view.findViewById(R.id.profilePicture);
+            EditText displayNameEdit = view.findViewById(R.id.profileDisplayNameEdit);
+            ImageView profilePicture = view.findViewById(R.id.profilePicture);
+
+            if (user.getPhotoUrl() != null) {
+                profilePicture.setImageBitmap(null);
+                CompletableFuture.supplyAsync(() -> {
+                    Bitmap mIcon11 = null;
+                    try {
+                        InputStream in = new java.net.URL(user.getPhotoUrl().toString()).openStream();
+                        mIcon11 = BitmapFactory.decodeStream(in);
+                    } catch (Exception e) {
+                        Log.e("Error", e.getMessage());
+                        e.printStackTrace();
+                    }
+                    return mIcon11;
+                }).thenAccept(profilePicture::setImageBitmap);
+            }
+
             displayName.setText(user.getDisplayName());
-            username.setText(user.getUid());
             email.setText(user.getEmail());
-            picture.setImageURI(user.getPhotoUrl());
+            displayNameEdit.setText(user.getDisplayName());
+
+            Button logoutButton = view.findViewById(R.id.profileLogout);
+            logoutButton.setOnClickListener((v -> startActivity(FirebaseAuthActivity.createIntent((requireActivity()), FirebaseAuthActivity.AUTH_ACTION.LOGOUT, navToProfile))));
+
+            Button editButton = view.findViewById(R.id.profileEdit);
+            editButton.setOnClickListener(v -> {
+                view.findViewById(R.id.profileTextFixed).setVisibility(View.INVISIBLE);
+                view.findViewById(R.id.profileTextEdit).setVisibility(View.VISIBLE);
+            });
+            Button submitButton = view.findViewById(R.id.profileSubmit);
+            submitButton.setOnClickListener(v -> {
+                view.findViewById(R.id.profileTextFixed).setVisibility(View.VISIBLE);
+                view.findViewById(R.id.profileTextEdit).setVisibility(View.INVISIBLE);
+
+                FirebaseAuthActivity.update(new UserProfileChangeRequest.Builder()
+                        .setDisplayName(displayNameEdit.getText().toString())
+                        .build());
+
+                displayName.setText(displayNameEdit.getText());
+            });
         }
-    }
-
-    public void loginClicked(View view) {
-        Intent loggedIn = new Intent(getActivity(), MainActivity.class);
-        startActivity(FirebaseAuthActivity.createIntent(getActivity(), FirebaseAuthActivity.AUTH_ACTION.LOGIN, loggedIn));
-    }
-
-    public void logoutClicked(View view) {
-        Intent loggedIn = new Intent(getActivity(), MainActivity.class);
-        startActivity(FirebaseAuthActivity.createIntent(getActivity(), FirebaseAuthActivity.AUTH_ACTION.LOGOUT, loggedIn));
     }
 }
