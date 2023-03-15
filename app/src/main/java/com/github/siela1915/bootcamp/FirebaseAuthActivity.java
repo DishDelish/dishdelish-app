@@ -22,6 +22,7 @@ import com.firebase.ui.auth.IdpResponse;
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 
 import java.util.Collections;
 import java.util.List;
@@ -132,7 +133,6 @@ public class FirebaseAuthActivity extends AppCompatActivity {
         AuthUI.getInstance()
                 .signOut(this)
                 .addOnCompleteListener(task -> {
-                    // ...
                     finish();
                     startActivity(postAuthIntent);
                 });
@@ -142,9 +142,17 @@ public class FirebaseAuthActivity extends AppCompatActivity {
         AuthUI.getInstance()
                 .delete(this)
                 .addOnCompleteListener(task -> {
-                    // ...
                     finish();
                     startActivity(postAuthIntent);
                 });
     }
+
+    public static void update(UserProfileChangeRequest changeRequest) {
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        if (auth.getCurrentUser() != null) {
+            FirebaseUser user = auth.getCurrentUser();
+            user.updateProfile(changeRequest);
+        }
+    }
+
 }
