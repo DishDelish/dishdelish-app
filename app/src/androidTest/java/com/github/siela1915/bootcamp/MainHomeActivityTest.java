@@ -48,4 +48,12 @@ public class MainHomeActivityTest {
 
     }
 
+    @Test
+    public void clickingOnProfileMenuNavigatesToProfileFragmentTest() {
+        onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
+        onView(withId(R.id.navView))
+                .perform(NavigationViewActions.navigateTo(R.id.menuItem_login));
+        onView(withId(R.id.profileFragment)).check(matches(isDisplayed()));
+    }
+
 }
