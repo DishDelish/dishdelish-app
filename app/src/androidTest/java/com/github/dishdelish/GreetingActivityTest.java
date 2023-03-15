@@ -1,4 +1,4 @@
-package com.github.dishdelish;
+package com.github.siela1915.bootcamp;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
@@ -10,7 +10,6 @@ import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
-import com.github.dishdelish.GreetingActivity;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
