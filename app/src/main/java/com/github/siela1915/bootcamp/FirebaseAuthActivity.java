@@ -84,7 +84,11 @@ public class FirebaseAuthActivity extends AppCompatActivity {
             if (user != null) {
                 // Launch supplied intent with the user info
                 finish();
-                startActivity(postAuthIntent);
+                if (postAuthIntent == null) {
+                    this.onBackPressed();
+                } else {
+                    startActivity(postAuthIntent);
+                }
             }
         }
         if (response != null && response.getError() != null) { // If response is null, user canceled with back button, so no popup
@@ -116,7 +120,11 @@ public class FirebaseAuthActivity extends AppCompatActivity {
         FirebaseAuth auth = FirebaseAuth.getInstance();
         if (auth.getCurrentUser() != null) {
             finish();
-            startActivity(postAuthIntent);
+            if (postAuthIntent == null) {
+                this.onBackPressed();
+            } else {
+                startActivity(postAuthIntent);
+            }
         } else {
             // Choose authentication providers
             List<AuthUI.IdpConfig> providers = Collections.singletonList(
@@ -136,7 +144,11 @@ public class FirebaseAuthActivity extends AppCompatActivity {
                 .signOut(this)
                 .addOnCompleteListener(task -> {
                     finish();
-                    startActivity(postAuthIntent);
+                    if (postAuthIntent == null) {
+                        this.onBackPressed();
+                    } else {
+                        startActivity(postAuthIntent);
+                    }
                 });
     }
 
@@ -145,7 +157,11 @@ public class FirebaseAuthActivity extends AppCompatActivity {
                 .delete(this)
                 .addOnCompleteListener(task -> {
                     finish();
-                    startActivity(postAuthIntent);
+                    if (postAuthIntent == null) {
+                        this.onBackPressed();
+                    } else {
+                        startActivity(postAuthIntent);
+                    }
                 });
     }
 
