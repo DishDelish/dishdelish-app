@@ -10,6 +10,7 @@ import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -18,6 +19,11 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 public class DatabaseTest {
+    @Before
+    public void setupEmulatorUser() {
+        FirebaseAuth.getInstance().useEmulator("10.0.2.2", 9099);
+        FirebaseDatabase.getInstance().useEmulator("10.0.2.2", 9000);
+    }
 
     @Test
     public void setAfterGetReturnsRecipe() {
@@ -51,8 +57,6 @@ public class DatabaseTest {
 
     @Test
     public void addAndGetSingleFavoriteRecipeTest() {
-        FirebaseAuth.getInstance().useEmulator("10.0.2.2", 9099);
-        FirebaseDatabase.getInstance().useEmulator("10.0.2.2", 9000);
         FirebaseAuthActivityTest.loginSync("addAndGetSingle@example.com");
 
         Database db = new Database();
@@ -70,8 +74,6 @@ public class DatabaseTest {
 
     @Test
     public void addAndGetMultipleFavoriteRecipesTest() {
-        FirebaseAuth.getInstance().useEmulator("10.0.2.2", 9099);
-        FirebaseDatabase.getInstance().useEmulator("10.0.2.2", 9000);
         FirebaseAuthActivityTest.loginSync("addAndGetMultiple@example.com");
 
         Database db = new Database();
@@ -92,8 +94,6 @@ public class DatabaseTest {
 
     @Test
     public void addMultipleFavoriteRecipesAndRemoveOneTest() {
-        FirebaseAuth.getInstance().useEmulator("10.0.2.2", 9099);
-        FirebaseDatabase.getInstance().useEmulator("10.0.2.2", 9000);
         FirebaseAuthActivityTest.loginSync("addMultipleAndRemove@example.com");
 
         Database db = new Database();
@@ -115,8 +115,6 @@ public class DatabaseTest {
 
     @Test
     public void addingSameFavoriteRecipeKeepsOrderTest() {
-        FirebaseAuth.getInstance().useEmulator("10.0.2.2", 9099);
-        FirebaseDatabase.getInstance().useEmulator("10.0.2.2", 9000);
         FirebaseAuthActivityTest.loginSync("addingSameFavoriteKeepsOrder@example.com");
 
         Database db = new Database();
