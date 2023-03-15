@@ -1,5 +1,8 @@
 package com.github.siela1915.bootcamp;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+
 import android.app.Activity;
 import android.content.Intent;
 
@@ -16,6 +19,7 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.auth.UserProfileChangeRequest;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -23,6 +27,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
 @RunWith(AndroidJUnit4.class)
@@ -125,5 +130,23 @@ public class FirebaseAuthActivityTest {
             throw new RuntimeException(e);
         }
         Intents.release();
+    }
+
+    @Test
+    public void testUpdate() {
+        loginSync("foo@example.com");
+
+        String initDisplayName = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getDisplayName();
+        Task<Void> result = FirebaseAuthActivity.update(new UserProfileChangeRequest.Builder()
+                .setDisplayName(initDisplayName + "updated")
+                .build());
+        try {
+            Tasks.await(result);
+
+            assertThat(FirebaseAuth.getInstance().getCurrentUser().getDisplayName(), is(initDisplayName + "updated"));
+        } catch (ExecutionException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 }
