@@ -60,20 +60,31 @@ public class MainHomeActivity extends AppCompatActivity {
                         .replace(R.id.fragContainer,HomePageFragment.class,null)
                         .commit();
             }
-            else {
-                if(item.getItemId()== R.id.menuItem_about){
-                    getSupportFragmentManager().beginTransaction()
-                            .setReorderingAllowed(true)
-                            .replace(R.id.fragContainer,AboutPageFragment.class,null)
-                            .commit();
-                }else{
-                    //to be done when the other functionalities are implemented
-                }
+            else if(item.getItemId()== R.id.menuItem_about){
+                getSupportFragmentManager().beginTransaction()
+                        .setReorderingAllowed(true)
+                        .replace(R.id.fragContainer,AboutPageFragment.class,null)
+                        .commit();
+            } else if (item.getItemId() == R.id.menuItem_login) {
+                getSupportFragmentManager().beginTransaction()
+                        .setReorderingAllowed(true)
+                        .replace(R.id.fragContainer, ProfileFragment.class, null)
+                        .commit();
+            } else {
+                //to be done when the other functionalities are implemented
             }
 
             drawerLayout.close();
             return true;
         });
+
+        if (getIntent().hasExtra("com.github.siela1915.bootcamp.navToProfile")) {
+            navigationView.setCheckedItem(R.id.menuItem_login);
+            getSupportFragmentManager().beginTransaction()
+                    .setReorderingAllowed(true)
+                    .replace(R.id.fragContainer, ProfileFragment.class, null)
+                    .commit();
+        }
     }
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
