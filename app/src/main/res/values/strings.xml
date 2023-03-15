@@ -1,6 +1,14 @@
 <resources>
     <string name="app_name">SDPBootcamp</string>
     <string name="greetingMessage">Hello, %1$s!</string>
+    <string name="uploadRecipePageTitle">Upload Recipe</string>
+    <string name="uploadRecipePageRecipeName">Recipe Name</string>
+    <string name="uploadRecipePageChooseImg">Upload Image</string>
+    <string name="uploadRecipePageButtonText">Upload Recipe</string>
+    <string name="prepTime">Preparation Time</string>
+    <string name="cookTime">Cooking Time</string>
+    <string name="servings">Servings</string>
+    <string name="utensils">Utensils</string>
     <string name="title_activity_suggestion">SuggestionActivity</string>
     <string name="large_text">
         "Material is the metaphor.\n\n"
