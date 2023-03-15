@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "51062719991",
+    "firebase_url": "https://dish-delish-recipes-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "dish-delish-recipes",
+    "storage_bucket": "dish-delish-recipes.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:51062719991:android:4fff2a8d03b1df7a13daf2",
+        "android_client_info": {
+          "package_name": "com.github.dishdelish"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "51062719991-ijmjoiv5ogqma4ei0o66jf6f8bdqcnbq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD0or9TLYfsJUh_nPsorkkpFiWcnjIswt0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "51062719991-ijmjoiv5ogqma4ei0o66jf6f8bdqcnbq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
