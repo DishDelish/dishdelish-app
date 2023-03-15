@@ -90,7 +90,7 @@ public class FirebaseAuthActivity extends AppCompatActivity {
         if (response != null && response.getError() != null) { // If response is null, user canceled with back button, so no popup
             // inflate the layout of the popup window
             LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-            @SuppressLint("InflateParams") View popupView = inflater.inflate(R.layout.popup_window, null);
+            @SuppressLint("InflateParams") View popupView = inflater.inflate(R.layout.error_popup, null);
 
             TextView popupTextView = popupView.findViewById(R.id.popupText);
             popupTextView.setText(String.format(Locale.ENGLISH, "Login failed with error: %s", response.getError().getLocalizedMessage()));
