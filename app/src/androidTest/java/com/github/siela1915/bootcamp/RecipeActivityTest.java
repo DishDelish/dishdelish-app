@@ -115,6 +115,8 @@ public class RecipeActivityTest {
     public void isRatingActivityStarted() {
         ActivityScenario scenario = ActivityScenario.launch(i);
         Intents.init();
+        Intents.release();
+        Intents.init();
         onView(withId(R.id.rateButton))
                 .perform(scrollTo(), click());
 
@@ -153,7 +155,6 @@ public class RecipeActivityTest {
     public static Matcher<View> withDrawable(final int expectedResourceId) {
         return new BoundedMatcher<View, ImageView>(ImageView.class) {
             private Bitmap expectedBitmap;
-            ;
 
             @Override
             public void describeTo(Description description) {

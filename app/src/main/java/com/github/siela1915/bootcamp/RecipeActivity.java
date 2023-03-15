@@ -28,8 +28,6 @@ public class RecipeActivity extends AppCompatActivity {
         rateButton.setOnClickListener(v -> {
             Intent ratingIntent = new Intent(v.getContext(), RatingActivity.class);
 
-            // later add an identifier for the recipe in question
-            // v.putExtra("rid", recipe.id.toString()); etc.
             v.getContext().startActivity(ratingIntent);
         });
 
