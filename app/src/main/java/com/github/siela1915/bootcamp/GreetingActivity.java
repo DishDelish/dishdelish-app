@@ -1,10 +1,11 @@
-package com.github.dishdelish;
+package com.github.siela1915.bootcamp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
+import com.github.siela1915.bootcamp.R;
 
 public class GreetingActivity extends AppCompatActivity {
 

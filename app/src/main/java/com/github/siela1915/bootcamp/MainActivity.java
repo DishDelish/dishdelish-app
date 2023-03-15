@@ -1,4 +1,4 @@
-package com.github.dishdelish;
+package com.github.siela1915.bootcamp;
 
 import android.content.Intent;
 import android.os.Bundle;

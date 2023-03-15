@@ -1,4 +1,4 @@
-package com.github.dishdelish;
+package com.github.siela1915.bootcamp;
 
 import static androidx.test.espresso.Espresso.onView;
 
@@ -9,6 +9,9 @@ import androidx.test.espresso.intent.matcher.IntentMatchers;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+
+import com.github.siela1915.bootcamp.GreetingActivity;
+import com.github.siela1915.bootcamp.MainActivity;
 
 import org.hamcrest.Matchers;
 import org.junit.Rule;

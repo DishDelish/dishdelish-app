@@ -1,4 +1,4 @@
-package com.github.dishdelish;
+package com.github.siela1915.bootcamp;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -17,14 +17,11 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.LinearLayoutCompat;
-
-import com.github.dishdelish.Recipes.Ingredient;
-import com.github.dishdelish.Recipes.Recipe;
-import com.github.dishdelish.Recipes.Unit;
-import com.github.dishdelish.Recipes.Utensils;
+import com.github.siela1915.bootcamp.Recipes.Ingredient;
+import com.github.siela1915.bootcamp.Recipes.Unit;
+import com.github.siela1915.bootcamp.Recipes.Utensils;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
