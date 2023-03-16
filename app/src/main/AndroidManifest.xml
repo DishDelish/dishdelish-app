@@ -23,6 +23,9 @@
         </activity>
 
         <activity
+            android:name=".RecipePageActivity"
+            android:exported="false" />
+        <activity
             android:name=".RatingActivity"
             android:exported="false" />
         <activity
