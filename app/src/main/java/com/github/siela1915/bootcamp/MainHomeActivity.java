@@ -35,7 +35,7 @@ public class MainHomeActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         navigationView.setNavigationItemSelectedListener(item ->{
-            /*
+
             switch (item.getItemId()){
                 case R.id.menuItem_home:
                     getSupportFragmentManager().beginTransaction()
@@ -53,7 +53,8 @@ public class MainHomeActivity extends AppCompatActivity {
                 default:
             }
 
-             */
+
+            /*
             if(item.getItemId()== R.id.menuItem_home){
                 getSupportFragmentManager().beginTransaction()
                         .setReorderingAllowed(true)
@@ -71,6 +72,8 @@ public class MainHomeActivity extends AppCompatActivity {
                 }
             }
 
+             */
+
             drawerLayout.close();
             return true;
         });
@@ -82,4 +85,5 @@ public class MainHomeActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
 }
