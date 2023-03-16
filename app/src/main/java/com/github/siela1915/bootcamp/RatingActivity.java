@@ -1,5 +1,6 @@
 package com.github.siela1915.bootcamp;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -15,6 +16,8 @@ public class RatingActivity extends AppCompatActivity implements RatingBar.OnRat
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rating);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         rating = 0;
         RatingBar rbar = (RatingBar)findViewById(R.id.ratingActivityBar);
         rbar.setOnRatingBarChangeListener(this);
@@ -22,10 +25,15 @@ public class RatingActivity extends AppCompatActivity implements RatingBar.OnRat
         Button submitButton = (Button) findViewById(R.id.submitRatingButton);
         submitButton.setOnClickListener(v -> {
             //Later do something with the rating
-            Intent submitIntent = new Intent(v.getContext(), MainActivity.class);
-            startActivity(submitIntent);
+            onBackPressed();
         });
 
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return true;
     }
 
     @Override
