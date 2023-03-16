@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class UploadingRecipeFragment extends Fragment {
     View view;
@@ -84,10 +85,7 @@ public class UploadingRecipeFragment extends Fragment {
         chooseImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_PICK);
-                startActivityForResult(Intent.createChooser(intent, "Select Image"), PICK_IMAGE_REQUEST);
+                chooseImg();
             }
         });
 
@@ -96,7 +94,6 @@ public class UploadingRecipeFragment extends Fragment {
             public void onClick(View v) {
                 if (filePath != null) {
                     pd.show();
-
                     uploadRecipe(filePath);
                 } else {
                     Toast.makeText(getActivity(), "Select an image", Toast.LENGTH_SHORT).show();
@@ -107,9 +104,7 @@ public class UploadingRecipeFragment extends Fragment {
         addIngredient.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!ingredientsAmount.getText().toString().isEmpty()
-                        && !ingredientsUnit.getText().toString().isEmpty()
-                        && !ingredientsName.getText().toString().isEmpty()
+                if (!ingredientsAmount.getText().toString().isEmpty() && !ingredientsUnit.getText().toString().isEmpty() && !ingredientsName.getText().toString().isEmpty()
                 ) {
                     int amount = Integer.parseInt(ingredientsAmount.getText().toString());
                     String unit = ingredientsUnit.getText().toString();
@@ -156,17 +151,10 @@ public class UploadingRecipeFragment extends Fragment {
     private void uploadRecipe(final Uri recipeImageUri) {
         pd.show();
 
-        EditText recipeName = view.findViewById(R.id.recipeName);
-        EditText cookTime = view.findViewById(R.id.cookTime);
-        EditText prepTime = view.findViewById(R.id.prepTime);
-        EditText servings = view.findViewById(R.id.servings);
-        EditText utensils = view.findViewById(R.id.utensils);
-
 //        FirebaseUser user = firebaseAuth.getCurrentUser();
-        String userId = "ZHANG CHi"; // should be firebaseUser.getUid()
 
         // We are taking the filepath as storagepath + firebaseUser.getUid()+".png"
-        String filepathname = storagepath + "_" + userId;
+        String filepathname = storagepath + "_" + "ZHANG CHI"; // should be firebaseUser.getUid()
         StorageReference storageReference1 = storageRef.child(filepathname);
         storageReference1.putFile(recipeImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
@@ -177,34 +165,10 @@ public class UploadingRecipeFragment extends Fragment {
                 // We will get the url of our image using uritask
                 final Uri downloadUri = uriTask.getResult();
                 if (uriTask.isSuccessful()) {
-
-                    // updating our image url into the realtime database
-                    HashMap<String, Object> hashMap = new HashMap<>();
-
-//                    Recipe recipe = new Recipe();
-//                    recipe.setRecipeName(recipeName.getText().toString());
-//                    recipe.setImage(downloadUri.toString());
-//                    recipe.setCookTime(Integer.parseInt(cookTime.getText().toString()));
-//                    recipe.setPrepTime(Integer.parseInt(prepTime.getText().toString()));
-//                    recipe.setServings(Integer.parseInt(servings.getText().toString()));
-//                    recipe.setUtensils(new Utensils(Arrays.asList(utensils.getText().toString())));
-//                    recipe.setIngredientList(ingredientList);
-//                    recipe.setSteps(getSteps());
-
-                    // should be using Recipe object but as it is not finalized some temp hashmaps are used
-                    HashMap<String, Object> recipe = new HashMap<>();
-                    recipe.put("recipeName", recipeName.getText().toString());
-                    recipe.put("image", downloadUri.toString());
-                    recipe.put("cookTime", Integer.parseInt(cookTime.getText().toString()));
-                    recipe.put("prepTime", Integer.parseInt(prepTime.getText().toString()));
-                    recipe.put("servings", Integer.parseInt(servings.getText().toString()));
-                    recipe.put("utensils", new Utensils(Arrays.asList(utensils.getText().toString())));
-                    recipe.put("ingredientList", ingredientList);
-                    recipe.put("steps", getSteps());
-                    hashMap.put(recipeName.getText().toString(), recipe);
+                    Map<String, Object> hashMap = getRecipe(downloadUri);
 
                     // should use firebaseUser.getUid()
-                    databaseReference.child(userId).updateChildren(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    databaseReference.child("ZHANG CHI").updateChildren(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
                             pd.dismiss();
@@ -281,14 +245,52 @@ public class UploadingRecipeFragment extends Fragment {
         for (int i = 0; i < stepList.getChildCount(); i++) {
             if (stepList.getChildAt(i) instanceof LinearLayoutCompat) {
                 LinearLayoutCompat ll = (LinearLayoutCompat) stepList.getChildAt(i);
-                for (int j = 0; j < ll.getChildCount(); j++) {
-                    if (ll.getChildAt(j) instanceof EditText) {
-                        steps.add(((EditText) ll.getChildAt(j)).getText().toString());
-                    }
+                if (ll.getChildAt(0) instanceof EditText) {
+                    steps.add(((EditText) ll.getChildAt(0)).getText().toString());
                 }
             }
         }
         return steps;
+    }
+
+    private Map<String, Object> getRecipe(Uri downloadUri) {
+        HashMap<String, Object> hashMap = new HashMap<>();
+        EditText recipeName = view.findViewById(R.id.recipeName);
+        EditText cookTime = view.findViewById(R.id.cookTime);
+        EditText prepTime = view.findViewById(R.id.prepTime);
+        EditText servings = view.findViewById(R.id.servings);
+        EditText utensils = view.findViewById(R.id.utensils);
+
+//                    Recipe recipe = new Recipe();
+//                    recipe.setRecipeName(recipeName.getText().toString());
+//                    recipe.setImage(downloadUri.toString());
+//                    recipe.setCookTime(Integer.parseInt(cookTime.getText().toString()));
+//                    recipe.setPrepTime(Integer.parseInt(prepTime.getText().toString()));
+//                    recipe.setServings(Integer.parseInt(servings.getText().toString()));
+//                    recipe.setUtensils(new Utensils(Arrays.asList(utensils.getText().toString())));
+//                    recipe.setIngredientList(ingredientList);
+//                    recipe.setSteps(getSteps());
+
+        // should be using Recipe object but as it is not finalized some temp hashmaps are used
+        HashMap<String, Object> recipe = new HashMap<>();
+        recipe.put("recipeName", recipeName.getText().toString());
+        recipe.put("image", downloadUri.toString());
+        recipe.put("cookTime", Integer.parseInt(cookTime.getText().toString()));
+        recipe.put("prepTime", Integer.parseInt(prepTime.getText().toString()));
+        recipe.put("servings", Integer.parseInt(servings.getText().toString()));
+        recipe.put("utensils", new Utensils(Arrays.asList(utensils.getText().toString())));
+        recipe.put("ingredientList", ingredientList);
+        recipe.put("steps", getSteps());
+        hashMap.put(recipeName.getText().toString(), recipe);
+
+        return hashMap;
+    }
+
+    private void chooseImg() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_PICK);
+        startActivityForResult(Intent.createChooser(intent, "Select Image"), PICK_IMAGE_REQUEST);
     }
 
 }
