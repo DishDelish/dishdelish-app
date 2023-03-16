@@ -6,6 +6,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 public class GreetingActivity extends AppCompatActivity {
 
     @Override
@@ -14,10 +17,15 @@ public class GreetingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_greeting);
 
         Intent intent = getIntent();
-        TextView message = (TextView) findViewById(R.id.greetingMessage);
+        TextView message = findViewById(R.id.greetingMessage);
+        String userName = "";
 
-        String userName = intent.getStringExtra("com.github.siela1915.bootcamp.userName");
-
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (intent.hasExtra("com.github.siela1915.bootcamp.userName")) {
+            userName = intent.getStringExtra("com.github.siela1915.bootcamp.userName");
+        } else if (user != null) {
+            userName = user.getDisplayName();
+        }
         message.setText(getString(R.string.greetingMessage, userName));
     }
 }
