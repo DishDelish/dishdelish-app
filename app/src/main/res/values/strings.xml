@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">SDPBootcamp</string>
+    <string name="app_name">DishDelish</string>
     <string name="greetingMessage">Hello, %1$s!</string>
     <string name="uploadRecipePageTitle">Upload Recipe</string>
     <string name="uploadRecipePageRecipeName">Recipe Name</string>
@@ -14,6 +14,20 @@
     <string name="ingredientsUnit">Unit</string>
     <string name="ingredientsName">Name</string>
     <string name="steps">Steps</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="home">Home</string>
+    <string name="open">Open</string>
+    <string name="close">Close</string>
+
+    <string name="home_menu">Home</string>
+    <string name="favorites_menu">Favorites</string>
+    <string name="upload_menu">Upload</string>
+    <string name="filter_menu">Filter</string>
+    <string name="login_menu">Login</string>
+    <string name="about_menu">About</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="about">DishDelish is an excellent recipe application made by a group of students at EPFL in 2023 which allows you making delicious dishes without being a master chef. You can search recipes according to your desire, diet and available ingredients in your fridge. You can also upload, rate and comments recipes.</string>
     <string name="title_activity_suggestion">SuggestionActivity</string>
     <string name="large_text">
         "Material is the metaphor.\n\n"

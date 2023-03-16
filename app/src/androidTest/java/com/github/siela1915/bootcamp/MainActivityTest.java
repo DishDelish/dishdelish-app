@@ -50,4 +50,32 @@ public class MainActivityTest {
                 IntentMatchers.hasComponent(GreetingActivity.class.getName())
         ));
     }
+
+    @Test
+    public void correctLoginIntentSent() {
+        Intents.init();
+        ViewInteraction button = onView(ViewMatchers.withId(R.id.mainLoginButton));
+
+        button.perform(ViewActions.click());
+
+        Intents.intended(Matchers.allOf(
+                IntentMatchers.hasExtra("com.github.siela1915.bootcamp.authaction", FirebaseAuthActivity.AUTH_ACTION.LOGIN),
+                IntentMatchers.hasExtra("com.github.siela1915.bootcamp.postauthintent", IntentMatchers.hasComponent(GreetingActivity.class.getName()))));
+
+        Intents.release();
+    }
+
+    @Test
+    public void correctLogoutIntentSent() {
+        Intents.init();
+        ViewInteraction button = onView(ViewMatchers.withId(R.id.mainLogoutButton));
+
+        button.perform(ViewActions.click());
+
+        Intents.intended(Matchers.allOf(
+                IntentMatchers.hasExtra("com.github.siela1915.bootcamp.authaction", FirebaseAuthActivity.AUTH_ACTION.LOGOUT),
+                IntentMatchers.hasExtra("com.github.siela1915.bootcamp.postauthintent", IntentMatchers.hasComponent(MainActivity.class.getName()))));
+
+        Intents.release();
+    }
 }
