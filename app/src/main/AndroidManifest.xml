@@ -12,13 +12,7 @@
         android:theme="@style/Theme.SDPBootcamp"
         tools:targetApi="31">
         <activity
-            android:name=".SuggestionsActivity"
-            android:exported="false" />
-        <activity
-            android:name=".GreetingActivity"
-            android:exported="false" />
-        <activity
-            android:name=".MainActivity"
+            android:name=".MainHomeActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,6 +20,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-    </application>
 
+        <activity
+            android:name=".SuggestionsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".GreetingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MainActivity"
+            android:exported="false">
+
+        </activity>
+    </application>
 </manifest>
