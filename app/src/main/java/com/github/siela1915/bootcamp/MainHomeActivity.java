@@ -39,7 +39,6 @@ public class MainHomeActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         navigationView.setNavigationItemSelectedListener(item ->{
-
             switch (item.getItemId()){
                 case R.id.menuItem_home:
                     setContainerContent(R.id.fragContainer,HomePageFragment.class,false);
@@ -48,11 +47,20 @@ public class MainHomeActivity extends AppCompatActivity {
                 case R.id.menuItem_about:
                     setContainerContent(R.id.fragContainer,AboutPageFragment.class,false);
                     break;
+                case R.id.menuItem_login:
+                    setContainerContent(R.id.fragContainer,ProfileFragment.class,false);
+                    break;
+                  
                 default:
             }
             drawerLayout.close();
             return true;
         });
+        
+        if (getIntent().hasExtra("com.github.siela1915.bootcamp.navToProfile")) {
+            navigationView.setCheckedItem(R.id.menuItem_login);
+            setContainerContent(R.id.fragContainer,ProfileFragment.class,false);
+        }
     }
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -75,5 +83,4 @@ public class MainHomeActivity extends AppCompatActivity {
                     .commit();
         }
     }
-
 }
