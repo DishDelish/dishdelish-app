@@ -1,12 +1,17 @@
 package com.github.siela1915.bootcamp;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
+import com.github.siela1915.bootcamp.Recipes.ExampleRecipes;
+import com.github.siela1915.bootcamp.Recipes.Recipe;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -60,5 +65,17 @@ public class HomePageFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_home_page, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        Button button = view.findViewById(R.id.homeFragButton);
+
+        button.setOnClickListener(v -> {
+            Recipe recipe = ExampleRecipes.recipes.get((int)(Math.random()*2.999));
+            startActivity(RecipeConverter.convertToIntent(recipe, getContext()));
+        });
     }
 }

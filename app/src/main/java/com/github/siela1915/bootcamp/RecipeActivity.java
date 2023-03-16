@@ -20,6 +20,8 @@ public class RecipeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         Intent i = getIntent();
 
         setPageContents(i);
@@ -32,6 +34,12 @@ public class RecipeActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return true;
     }
 
     private void setPageContents(Intent i){

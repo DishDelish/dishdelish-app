@@ -50,7 +50,9 @@ public class MainHomeActivity extends AppCompatActivity {
                 case R.id.menuItem_login:
                     setContainerContent(R.id.fragContainer,ProfileFragment.class,false);
                     break;
-                  
+                case R.id.menuItem_upload:
+                    setContainerContent(R.id.fragContainer, UploadingRecipeFragment.class, false);
+                    break;
                 default:
             }
             drawerLayout.close();

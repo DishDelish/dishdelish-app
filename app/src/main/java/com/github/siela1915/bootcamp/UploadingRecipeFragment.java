@@ -1,7 +1,7 @@
 package com.github.siela1915.bootcamp;
 
 import android.app.Activity;
-import android.app.Fragment;
+import androidx.fragment.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -60,7 +60,14 @@ public class UploadingRecipeFragment extends Fragment {
     FirebaseStorage storage = FirebaseStorage.getInstance();
     StorageReference storageRef = storage.getReferenceFromUrl("gs://dish-delish-recipes.appspot.com");
     DatabaseReference databaseReference = firebaseDatabase.getReference("Recipes");
-    ;
+
+    public UploadingRecipeFragment() {
+        // Required empty public constructor
+    }
+
+    public static UploadingRecipeFragment newInstance() {
+        return new UploadingRecipeFragment();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
