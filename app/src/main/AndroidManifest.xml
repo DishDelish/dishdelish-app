@@ -23,6 +23,12 @@
         </activity>
 
         <activity
+            android:name=".RatingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".RecipeActivity"
+            android:exported="false" />
+        <activity
             android:name=".SuggestionsActivity"
             android:exported="false" />
         <activity
@@ -36,6 +42,9 @@
         <activity
             android:name=".FirebaseAuthActivity"
             android:exported="false" />
-    </application>
 
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
+    </application>
 </manifest>

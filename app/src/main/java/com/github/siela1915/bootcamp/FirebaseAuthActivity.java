@@ -1,12 +1,14 @@
 package com.github.siela1915.bootcamp;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
@@ -84,13 +86,17 @@ public class FirebaseAuthActivity extends AppCompatActivity {
             if (user != null) {
                 // Launch supplied intent with the user info
                 finish();
-                startActivity(postAuthIntent);
+                if (postAuthIntent == null) {
+                    this.onBackPressed();
+                } else {
+                    startActivity(postAuthIntent);
+                }
             }
         }
         if (response != null && response.getError() != null) { // If response is null, user canceled with back button, so no popup
             // inflate the layout of the popup window
             LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-            @SuppressLint("InflateParams") View popupView = inflater.inflate(R.layout.popup_window, null);
+            @SuppressLint("InflateParams") View popupView = inflater.inflate(R.layout.error_popup, null);
 
             TextView popupTextView = popupView.findViewById(R.id.popupText);
             popupTextView.setText(String.format(Locale.ENGLISH, "Login failed with error: %s", response.getError().getLocalizedMessage()));
@@ -116,7 +122,11 @@ public class FirebaseAuthActivity extends AppCompatActivity {
         FirebaseAuth auth = FirebaseAuth.getInstance();
         if (auth.getCurrentUser() != null) {
             finish();
-            startActivity(postAuthIntent);
+            if (postAuthIntent == null) {
+                this.onBackPressed();
+            } else {
+                startActivity(postAuthIntent);
+            }
         } else {
             // Choose authentication providers
             List<AuthUI.IdpConfig> providers = Collections.singletonList(
@@ -136,7 +146,11 @@ public class FirebaseAuthActivity extends AppCompatActivity {
                 .signOut(this)
                 .addOnCompleteListener(task -> {
                     finish();
-                    startActivity(postAuthIntent);
+                    if (postAuthIntent == null) {
+                        this.onBackPressed();
+                    } else {
+                        startActivity(postAuthIntent);
+                    }
                 });
     }
 
@@ -145,7 +159,11 @@ public class FirebaseAuthActivity extends AppCompatActivity {
                 .delete(this)
                 .addOnCompleteListener(task -> {
                     finish();
-                    startActivity(postAuthIntent);
+                    if (postAuthIntent == null) {
+                        this.onBackPressed();
+                    } else {
+                        startActivity(postAuthIntent);
+                    }
                 });
     }
 
@@ -158,4 +176,28 @@ public class FirebaseAuthActivity extends AppCompatActivity {
         return Tasks.forCanceled();
     }
 
+    public static void promptLogin(Context context, Activity activity, Intent postLoginIntent) {
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        if (auth.getCurrentUser() != null) {
+            return;
+        }
+
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(LAYOUT_INFLATER_SERVICE);
+        @SuppressLint("InflateParams") View popupView = inflater.inflate(R.layout.prompt_login_popup, null);
+
+        Button loginButton = popupView.findViewById(R.id.loginPromptLoginButton);
+        Button cancelButton = popupView.findViewById(R.id.loginPromptLaterButton);
+
+        int width_height = LinearLayout.LayoutParams.WRAP_CONTENT;
+        boolean focusable = true; // lets taps outside the popup also dismiss it
+        final PopupWindow popupWindow = new PopupWindow(popupView, width_height, width_height, focusable);
+
+        loginButton.setOnClickListener(view -> {
+            activity.startActivity(createIntent(context, AUTH_ACTION.LOGIN, postLoginIntent));
+            popupWindow.dismiss();
+        });
+        cancelButton.setOnClickListener(view -> popupWindow.dismiss());
+
+        popupWindow.showAtLocation(activity.findViewById(android.R.id.content).getRootView(), Gravity.CENTER, 0, 0);
+    }
 }

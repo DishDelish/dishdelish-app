@@ -1,5 +1,8 @@
 package com.github.siela1915.bootcamp;
 
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
@@ -8,8 +11,11 @@ import android.content.Intent;
 
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.core.app.ApplicationProvider;
+import androidx.test.espresso.ViewInteraction;
+import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.espresso.intent.matcher.IntentMatchers;
+import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.firebase.ui.auth.AuthUI;
@@ -147,6 +153,42 @@ public class FirebaseAuthActivityTest {
         } catch (ExecutionException | InterruptedException e) {
             throw new RuntimeException(e);
         }
+    }
 
+    @Test
+    public void testPromptLoginDoNow() {
+        Intents.init();
+        try (ActivityScenario<Activity> activityScenario = ActivityScenario.launch(new Intent(ApplicationProvider.getApplicationContext(), MainActivity.class))) {
+            activityScenario.onActivity(activity -> FirebaseAuthActivity.promptLogin(ApplicationProvider.getApplicationContext(), activity, new Intent(ApplicationProvider.getApplicationContext(), GreetingActivity.class)));
+
+            ViewInteraction loginButton = onView(ViewMatchers.withId(R.id.loginPromptLoginButton));
+            loginButton.check(matches(ViewMatchers.isDisplayed()));
+
+            loginSync("test@example.com");
+
+            loginButton.perform(ViewActions.click());
+
+            loginButton.check(doesNotExist());
+            Intents.intended(IntentMatchers.hasComponent(FirebaseAuthActivity.class.getName()));
+        }
+        Intents.release();
+        logoutSync();
+    }
+
+    @Test
+    public void testPromptLoginLater() {
+        Intents.init();
+        try (ActivityScenario<Activity> activityScenario = ActivityScenario.launch(new Intent(ApplicationProvider.getApplicationContext(), MainActivity.class))) {
+            activityScenario.onActivity(activity -> FirebaseAuthActivity.promptLogin(ApplicationProvider.getApplicationContext(), activity, new Intent(ApplicationProvider.getApplicationContext(), GreetingActivity.class)));
+
+            ViewInteraction laterButton = onView(ViewMatchers.withId(R.id.loginPromptLaterButton));
+            laterButton.check(matches(ViewMatchers.isDisplayed()));
+
+            laterButton.perform(ViewActions.click());
+
+            laterButton.check(doesNotExist());
+        }
+        Intents.release();
+        logoutSync();
     }
 }

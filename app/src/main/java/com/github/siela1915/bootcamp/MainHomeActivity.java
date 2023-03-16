@@ -22,10 +22,14 @@ public class MainHomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main_home2);
 
         if(savedInstanceState== null){
+            /*
             getSupportFragmentManager().beginTransaction()
                     .setReorderingAllowed(true)
                     .add(R.id.fragContainer,HomePageFragment.class,null)
                     .commit();
+
+             */
+            setContainerContent(R.id.fragContainer,HomePageFragment.class,true);
         }
         drawerLayout= findViewById(R.id.drawer_layout);
         navigationView= findViewById(R.id.navView);
@@ -35,55 +39,27 @@ public class MainHomeActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         navigationView.setNavigationItemSelectedListener(item ->{
-            /*
             switch (item.getItemId()){
                 case R.id.menuItem_home:
-                    getSupportFragmentManager().beginTransaction()
-                            .setReorderingAllowed(true)
-                            .replace(R.id.fragContainer,HomePageFragment.class,null)
-                            .commit();
+                    setContainerContent(R.id.fragContainer,HomePageFragment.class,false);
                     break;
 
                 case R.id.menuItem_about:
-                    getSupportFragmentManager().beginTransaction()
-                            .setReorderingAllowed(true)
-                            .replace(R.id.fragContainer,AboutPageFragment.class,null)
-                            .commit();
+                    setContainerContent(R.id.fragContainer,AboutPageFragment.class,false);
                     break;
+                case R.id.menuItem_login:
+                    setContainerContent(R.id.fragContainer,ProfileFragment.class,false);
+                    break;
+                  
                 default:
             }
-
-             */
-            if(item.getItemId()== R.id.menuItem_home){
-                getSupportFragmentManager().beginTransaction()
-                        .setReorderingAllowed(true)
-                        .replace(R.id.fragContainer,HomePageFragment.class,null)
-                        .commit();
-            }
-            else if(item.getItemId()== R.id.menuItem_about){
-                getSupportFragmentManager().beginTransaction()
-                        .setReorderingAllowed(true)
-                        .replace(R.id.fragContainer,AboutPageFragment.class,null)
-                        .commit();
-            } else if (item.getItemId() == R.id.menuItem_login) {
-                getSupportFragmentManager().beginTransaction()
-                        .setReorderingAllowed(true)
-                        .replace(R.id.fragContainer, ProfileFragment.class, null)
-                        .commit();
-            } else {
-                //to be done when the other functionalities are implemented
-            }
-
             drawerLayout.close();
             return true;
         });
-
+        
         if (getIntent().hasExtra("com.github.siela1915.bootcamp.navToProfile")) {
             navigationView.setCheckedItem(R.id.menuItem_login);
-            getSupportFragmentManager().beginTransaction()
-                    .setReorderingAllowed(true)
-                    .replace(R.id.fragContainer, ProfileFragment.class, null)
-                    .commit();
+            setContainerContent(R.id.fragContainer,ProfileFragment.class,false);
         }
     }
     @Override
@@ -92,5 +68,19 @@ public class MainHomeActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void setContainerContent(int containerId, @NonNull Class<? extends Fragment> fragmentClass, boolean setOrReplace){
+        if(setOrReplace){
+            getSupportFragmentManager().beginTransaction()
+                    .setReorderingAllowed(true)
+                    .add(containerId,fragmentClass,null)
+                    .commit();
+        }else{
+            getSupportFragmentManager().beginTransaction()
+                    .setReorderingAllowed(true)
+                    .replace(containerId,fragmentClass,null)
+                    .commit();
+        }
     }
 }
