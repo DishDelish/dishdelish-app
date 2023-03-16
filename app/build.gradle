@@ -3,7 +3,6 @@ plugins {
     id 'jacoco'
     // Add the Google services Gradle plugin
     id 'com.google.gms.google-services'
-
 }
 
 android {
@@ -39,6 +38,7 @@ android {
 }
 
 dependencies {
+    def fragment_version = "1.5.5"
 
     // Import the Firebase BoM
     implementation platform('com.google.firebase:firebase-bom:31.2.3')
@@ -49,13 +49,17 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-auth'
     implementation 'com.google.firebase:firebase-firestore'
+    implementation 'com.google.firebase:firebase-storage'
     implementation 'com.google.firebase:firebase-common-ktx:20.1.0'
     implementation 'com.google.firebase:firebase-database:20.1.0'
     implementation 'com.firebaseui:firebase-ui-auth:7.2.0'
+    implementation 'com.google.firebase:firebase-auth:21.1.0'
 
     implementation 'com.google.android.material:material:<version>'
     implementation 'androidx.viewpager:viewpager:1.1.0-alpha01'
 
+    // Java language implementation
+    implementation "androidx.fragment:fragment:$fragment_version"
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.8.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
