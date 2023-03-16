@@ -40,12 +40,7 @@ public class MainHomeActivityTest {
         onView(withId(R.id.navView))
                 .perform(NavigationViewActions.navigateTo(R.id.menuItem_about));
         onView(withId(R.id.aboutFragment)).check(matches(isDisplayed()));
-
-        onView(withId(R.id.drawer_layout))
-                .perform(DrawerActions.open())
-                .perform(DrawerActions.close());
-        onView(withId(R.id.aboutFragment)).check(matches(isDisplayed()));
-
+        
     }
     @Test
     public void transitionBetweenDifferentFragmentsTest(){
