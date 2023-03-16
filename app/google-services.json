@@ -15,7 +15,15 @@
       },
       "oauth_client": [
         {
-          "client_id": "51062719991-ijmjoiv5ogqma4ei0o66jf6f8bdqcnbq.apps.googleusercontent.com",
+          "client_id": "51062719991-jlrd0h9phsd5jh74dpeljl1a12s63j17.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.github.dishdelish",
+            "certificate_hash": "7176276d00e478822e4e787cc7b9a25c1296b96e"
+          }
+        },
+        {
+          "client_id": "51062719991-b0ptt1uoasdtc6edtmrfcg6k0ag4kjfd.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
