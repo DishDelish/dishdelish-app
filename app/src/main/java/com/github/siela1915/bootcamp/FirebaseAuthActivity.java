@@ -58,6 +58,8 @@ public class FirebaseAuthActivity extends AppCompatActivity {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         postAuthIntent = getIntent().getParcelableExtra("com.github.siela1915.bootcamp.postauthintent");
         AUTH_ACTION auth_action = (AUTH_ACTION) getIntent().getSerializableExtra("com.github.siela1915.bootcamp.authaction");
 
@@ -76,6 +78,12 @@ public class FirebaseAuthActivity extends AppCompatActivity {
                 delete();
                 break;
         }
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return true;
     }
 
     private void onSignInResult(FirebaseAuthUIAuthenticationResult result) {
