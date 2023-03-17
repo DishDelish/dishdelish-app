@@ -69,6 +69,11 @@ public class DatabaseTest {
         System.out.println(Objects.requireNonNull(throwable.getCause()).getMessage());
     }
 
+    /*
+        This test might fail because removal might not finish before retrieval.
+        Not too sure how to fix this issue without changing the signature of the remove method
+        to return a Future of some kind. 
+     */
     @Test
     public void removeMakesRecipeNotRetrievable() {
         Database db = new Database(firebaseInstance);
