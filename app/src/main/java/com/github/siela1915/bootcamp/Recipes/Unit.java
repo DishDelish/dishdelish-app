@@ -1,6 +1,8 @@
 package com.github.siela1915.bootcamp.Recipes;
 
 
+import androidx.annotation.NonNull;
+
 //Number of ingredients needed, different measurements, easily changeable to be avble to change number of servings wanted
 //have a set of shared functions for all possible types of units
 public class Unit {
@@ -29,9 +31,18 @@ public class Unit {
         this.info = info;
     }
 
+    @NonNull
     @Override
     public String toString(){
         return value + " " + info;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Unit) {
+            return value == ((Unit) obj).value && info.equals(((Unit) obj).info);
+        }
+        return false;
     }
 
 }

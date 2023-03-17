@@ -14,4 +14,12 @@ public class Utensils {
     public List<String> getUtensils() {
         return utensils;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Utensils) {
+            return utensils.equals(((Utensils) obj).utensils);
+        }
+        return false;
+    }
 }

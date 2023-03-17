@@ -57,7 +57,7 @@ public class Recipe {
                     && recipeName.equals(recipe.recipeName)
                     && userName.equals(recipe.userName)
                     && profilePicture == recipe.profilePicture
-                    && rating == recipe.rating
+                    && Math.abs(rating - recipe.rating) < 1e-6      //Never compare double types with strict equality
                     && prepTime == recipe.prepTime
                     && cookTime == recipe.cookTime
                     && servings == recipe.servings
