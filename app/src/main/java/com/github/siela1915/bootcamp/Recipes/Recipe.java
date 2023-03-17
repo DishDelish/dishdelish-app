@@ -48,6 +48,27 @@ public class Recipe {
     public String toString(){
         return recipeName;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Recipe) {
+            Recipe recipe = (Recipe) obj;
+            return image == recipe.image
+                    && recipeName.equals(recipe.recipeName)
+                    && userName.equals(recipe.userName)
+                    && profilePicture == recipe.profilePicture
+                    && rating == recipe.rating
+                    && prepTime == recipe.prepTime
+                    && cookTime == recipe.cookTime
+                    && servings == recipe.servings
+                    && utensils.equals(recipe.utensils)
+                    && ingredientList.equals(recipe.ingredientList)
+                    && steps.equals(recipe.steps)
+                    && comments.equals(recipe.comments);
+        }
+        return false;
+    }
+
 }
 
 
