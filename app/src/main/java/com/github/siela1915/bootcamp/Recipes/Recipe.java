@@ -1,6 +1,8 @@
 package com.github.siela1915.bootcamp.Recipes;
 
 import android.media.Image;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Pair;
 
 import androidx.annotation.NonNull;
@@ -11,7 +13,7 @@ import com.github.siela1915.bootcamp.Labelling.DietType;
 
 import java.util.List;
 
-public class Recipe {
+public class Recipe implements Parcelable {
     //Images should be usable in activity classes like this:
     //Bitmap image = BitmapFactory.decodeResource(this.getResources(), image);
     public int image;
@@ -23,37 +25,16 @@ public class Recipe {
     public int cookTime;
     public int servings;
     public Utensils utensils;
-    public List<CuisineType> cuisineTypes;
-    public List<AllergyType> allergyTypes;
+    public int[] cuisineTypes;
+    public int[] allergyTypes;
 
-    public List<DietType> dietTypes;
-//    public List<Pair<Unit, Ingredient>> ingredientList;
+
+    public int[] dietTypes;
+    public List<Ingredient> ingredientList;
     //Every step and comment will be a separate String in the list
     public List<String> steps;
     public List<String> comments;
-
-    public Recipe() {}
-
-    public Recipe(int image, String recipeName, String userName, int profilePicture, double rating,
-                  int prepTime, int cookTime, int servings, Utensils utensils, List<CuisineType> cuisineTypes,
-                  List<AllergyType> allergyTypes, List<DietType> dietTypes, List<Pair<Unit, Ingredient>> ingredientList,
-                  List<String> steps, List<String> comments) {
-        this.image = image;
-        this.recipeName = recipeName;
-        this.userName = userName;
-        this.profilePicture = profilePicture;
-        this.rating = rating;
-        this.prepTime = prepTime;
-        this.cookTime = cookTime;
-        this.servings = servings;
-        this.utensils = utensils;
-        this.cuisineTypes = cuisineTypes;
-        this.allergyTypes = allergyTypes;
-        this.dietTypes = dietTypes;
-//        this.ingredientList = ingredientList;
-        this.steps = steps;
-        this.comments = comments;
-    }
+    public int likes;
 
     public int getImage() {
         return image;
@@ -127,37 +108,37 @@ public class Recipe {
         this.utensils = utensils;
     }
 
-    public List<CuisineType> getCuisineTypes() {
+    public int[] getCuisineTypes() {
         return cuisineTypes;
     }
 
-    public void setCuisineTypes(List<CuisineType> cuisineTypes) {
+    public void setCuisineTypes(int[] cuisineTypes) {
         this.cuisineTypes = cuisineTypes;
     }
 
-    public List<AllergyType> getAllergyTypes() {
+    public int[] getAllergyTypes() {
         return allergyTypes;
     }
 
-    public void setAllergyTypes(List<AllergyType> allergyTypes) {
+    public void setAllergyTypes(int[] allergyTypes) {
         this.allergyTypes = allergyTypes;
     }
 
-    public List<DietType> getDietTypes() {
+    public int[] getDietTypes() {
         return dietTypes;
     }
 
-    public void setDietTypes(List<DietType> dietTypes) {
+    public void setDietTypes(int[] dietTypes) {
         this.dietTypes = dietTypes;
     }
 
-//    public List<Pair<Unit, Ingredient>> getIngredientList() {
-//        return ingredientList;
-//    }
-//
-//    public void setIngredientList(List<Pair<Unit, Ingredient>> ingredientList) {
-//        this.ingredientList = ingredientList;
-//    }
+    public List<Ingredient> getIngredientList() {
+        return ingredientList;
+    }
+
+    public void setIngredientList(List<Ingredient> ingredientList) {
+        this.ingredientList = ingredientList;
+    }
 
     public List<String> getSteps() {
         return steps;
@@ -175,11 +156,21 @@ public class Recipe {
         this.comments = comments;
     }
 
+    public int getLikes() {
+        return likes;
+    }
+
+    public void setLikes(int likes) {
+        this.likes = likes;
+    }
+
+
+    public Recipe() {}
+
     public Recipe(int image, String recipeName, String userName, int profilePicture, double rating,
-                  int prepTime, int cookTime, int servings, Utensils utensils, List<Pair<Unit, Ingredient>> ingredientList,
+                  int prepTime, int cookTime, int servings, Utensils utensils, int[] cuisineTypes,
+                  int[] allergyTypes, int[] dietTypes, List<Ingredient> ingredientList,
                   List<String> steps, List<String> comments) {
-
-
         this.image = image;
         this.recipeName = recipeName;
         this.userName = userName;
@@ -189,15 +180,67 @@ public class Recipe {
         this.cookTime = cookTime;
         this.servings = servings;
         this.utensils = utensils;
-//        this.ingredientList = ingredientList;
+        this.cuisineTypes = cuisineTypes;
+        this.allergyTypes = allergyTypes;
+        this.dietTypes = dietTypes;
+        this.ingredientList = ingredientList;
         this.steps = steps;
         this.comments = comments;
     }
 
-    @NonNull
+
+    protected Recipe(Parcel in) {
+        image = in.readInt();
+        recipeName = in.readString();
+        userName = in.readString();
+        profilePicture = in.readInt();
+        rating = in.readDouble();
+        prepTime = in.readInt();
+        cookTime = in.readInt();
+        servings = in.readInt();
+        utensils = in.readParcelable(Utensils.class.getClassLoader());
+        cuisineTypes = in.createIntArray();
+        allergyTypes = in.createIntArray();
+        dietTypes = in.createIntArray();
+        ingredientList = in.createTypedArrayList(Ingredient.CREATOR);
+        steps = in.createStringArrayList();
+        comments = in.createStringArrayList();
+    }
+
+    public static final Creator<Recipe> CREATOR = new Creator<Recipe>() {
+        @Override
+        public Recipe createFromParcel(Parcel in) {
+            return new Recipe(in);
+        }
+
+        @Override
+        public Recipe[] newArray(int size) {
+            return new Recipe[size];
+        }
+    };
+
     @Override
-    public String toString(){
-        return recipeName;
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(@NonNull Parcel dest, int flags) {
+        dest.writeInt(image);
+        dest.writeString(recipeName);
+        dest.writeString(userName);
+        dest.writeInt(profilePicture);
+        dest.writeDouble(rating);
+        dest.writeInt(prepTime);
+        dest.writeInt(cookTime);
+        dest.writeInt(servings);
+        dest.writeParcelable(utensils, flags);
+        dest.writeIntArray(cuisineTypes);
+        dest.writeIntArray(allergyTypes);
+        dest.writeIntArray(dietTypes);
+        dest.writeTypedList(ingredientList);
+        dest.writeStringList(steps);
+        dest.writeStringList(comments);
     }
 
     @Override
@@ -213,7 +256,7 @@ public class Recipe {
                     && cookTime == recipe.cookTime
                     && servings == recipe.servings
                     && utensils.equals(recipe.utensils)
-//                    && ingredientList.equals(recipe.ingredientList)
+                    && ingredientList.equals(recipe.ingredientList)
                     && steps.equals(recipe.steps)
                     && comments.equals(recipe.comments);
         }

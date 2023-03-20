@@ -13,11 +13,11 @@ import java.util.List;
 
 public class RecipeConverter {
 
-    public static ArrayList<String> convertIngredientList(List<Pair<Unit, Ingredient>> ingredients){
+    public static ArrayList<String> convertIngredientList(List<Ingredient> ingredients){
         ArrayList<String> ingredientList = new ArrayList<>();
 
         for(int i = 0; i < ingredients.size(); i++){
-            ingredientList.add(ingredients.get(i).first.toString() + " "+ingredients.get(i).second.toString());
+            ingredientList.add(ingredients.get(i).getUnit().toString() + " "+ingredients.get(i).getIngredient());
         }
         return ingredientList;
     }
