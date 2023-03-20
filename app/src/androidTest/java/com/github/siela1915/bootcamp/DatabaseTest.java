@@ -3,6 +3,7 @@ package com.github.siela1915.bootcamp;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
@@ -29,16 +30,11 @@ import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
 public class DatabaseTest {
-    @Before
-    public void setupEmulatorUser() {
-        FirebaseAuth.getInstance().useEmulator("10.0.2.2", 9099);
-        FirebaseDatabase.getInstance().useEmulator("10.0.2.2", 9000);
-    }
-
     private FirebaseDatabase firebaseInstance;
 
     @Before
     public void connectToEmulator() {
+        FirebaseAuth.getInstance().useEmulator("10.0.2.2", 9099);
         firebaseInstance = FirebaseDatabase.getInstance();
         firebaseInstance.useEmulator("10.0.2.2",9000);
     }
@@ -55,7 +51,12 @@ public class DatabaseTest {
 
         Recipe recipe = createRecipeEggs();
 
-        String key = db.set(recipe);
+        String key = null;
+        try {
+            key = db.set(recipe);
+        } catch (ExecutionException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         Recipe retrieval;
         try {
             retrieval = db.get(key);
@@ -71,9 +72,13 @@ public class DatabaseTest {
     public void getFailsWithExceptionOnBogusKey() {
         Database db = new Database(firebaseInstance);
         Recipe recipe = createRecipeEggs(); //add at least one recipe to database
-        db.set(recipe);
-        Throwable throwable = assertThrows(Exception.class, () -> db.get("bogus"));
-        System.out.println(Objects.requireNonNull(throwable.getCause()).getMessage());
+        try {
+            db.set(recipe);
+            Recipe bogus = db.get("bogus");
+            assertNull(bogus);
+        } catch (ExecutionException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /*
@@ -86,20 +91,27 @@ public class DatabaseTest {
         Database db = new Database(firebaseInstance);
 
         Recipe recipe = createRecipeEggs();
-
-        String key = db.set(recipe);
-        db.remove(key);
-        //Not clear which exception firebase returns when key is absent
-        Throwable throwable = assertThrows(Exception.class, () -> db.get(key));
-        System.out.println(Objects.requireNonNull(throwable.getCause()).getMessage());
-
+        try {
+            String key = db.set(recipe);
+            db.remove(key);
+            //Not clear which exception firebase returns when key is absent
+            Recipe nonExistant = db.get(key);
+            assertNull(nonExistant);
+        } catch (ExecutionException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Test
     public void searchByNameReturnsSingleRecipe() {
         Database db = new Database(firebaseInstance);
         Recipe recipe = createRecipeEggs();
-        String key = db.set(recipe);
+        String key = null;
+        try {
+            key = db.set(recipe);
+        } catch (ExecutionException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         Map<String, Recipe> map;
         try {
             map = db.getByName("testRecipe");
@@ -116,8 +128,18 @@ public class DatabaseTest {
         Database db = new Database(firebaseInstance);
         Recipe recipe1 = createRecipeEggs();
         Recipe recipe2 = createOtherEggsRecipe();
-        String key1 = db.set(recipe1);
-        String key2 = db.set(recipe2);
+        String key1 = null;
+        try {
+            key1 = db.set(recipe1);
+        } catch (ExecutionException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        String key2 = null;
+        try {
+            key2 = db.set(recipe2);
+        } catch (ExecutionException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         Map<String, Recipe> map;
         try {
             map = db.getByName("testRecipe");
@@ -138,9 +160,13 @@ public class DatabaseTest {
         //Fill database with at least one recipe
         Database db = new Database(firebaseInstance);
         Recipe recipe = createRecipeEggs();
-        db.set(recipe);
-        Throwable throwable = assertThrows(Exception.class, () -> db.getByName("bogusName"));
-        System.out.println(Objects.requireNonNull(throwable.getCause()).getMessage());
+        try {
+            db.set(recipe);
+            Map<String, Recipe> bogus = db.getByName("bogusName");
+            assertEquals(bogus.size(), 0);
+        } catch (ExecutionException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private Recipe createRecipeEggs() {

@@ -5,7 +5,9 @@ import java.util.List;
 
 //list of strings
 public class Utensils {
-    private final List<String> utensils;
+    private List<String> utensils;
+
+    public Utensils() {}
 
     public Utensils(List<String> utensils) {
         this.utensils = utensils;
@@ -13,6 +15,10 @@ public class Utensils {
 
     public List<String> getUtensils() {
         return utensils;
+    }
+
+    public void setUtensils(List<String> utensils) {
+        this.utensils = utensils;
     }
 
     @Override

@@ -61,10 +61,14 @@ public class Database {
      * @param recipe the recipe to add to the database
      * @return the unique key id associated to this specific recipe in the database
      */
-    public String set(Recipe recipe) {
+    public String set(Recipe recipe) throws ExecutionException, InterruptedException {
         Map<String, Object> value = recipeToMap(recipe);
         String uniqueKey = db.child(RECIPES).child("new").push().getKey();
-        db.child(RECIPES).child(uniqueKey).updateChildren(value);
+        try {
+            Tasks.await(db.child(RECIPES).child(uniqueKey).updateChildren(value));
+        } catch (ExecutionException | InterruptedException e) {
+            throw e;
+        }
         return uniqueKey;
     }
 
@@ -87,7 +91,7 @@ public class Database {
      * For instance if the method times-out due to a network connection error.
      */
     public Map<String, Recipe> getByName(String name) throws ExecutionException, InterruptedException {
-        Query query = db.child(RECIPES).orderByChild("name").equalTo(name);
+        Query query = db.child(RECIPES).orderByChild("recipeName").equalTo(name);
         Task<DataSnapshot> task = query.get();
         try {
             DataSnapshot snapshot = Tasks.await(task);
@@ -113,7 +117,7 @@ public class Database {
         map.put("cookTime", recipe.cookTime);
         map.put("servings", recipe.servings);
         map.put("utensils", recipe.utensils);
-        map.put("ingredientList", recipe.ingredientList);
+//        map.put("ingredientList", recipe.ingredientList);
         map.put("steps", recipe.steps);
         map.put("comments", recipe.comments);
         return map;

@@ -39,7 +39,7 @@ public class RecipeFetcher {
         for(Recipe r :ExampleRecipes.recipes){
             //Base weight, will be lower only if diets or allergies are violated
             float weight = 5;
-            weight += favorites.stream().map(i -> r.ingredientList.stream().map(p -> p.second.equals(i)).filter(b -> b).collect(Collectors.toList())).count() *5;
+//            weight += favorites.stream().map(i -> r.ingredientList.stream().map(p -> p.second.equals(i)).filter(b -> b).collect(Collectors.toList())).count() *5;
             weight += cuisines.stream().map(i -> r.cuisineTypes.contains(i)).filter(b -> b).count() * 10;
             //System.out.println(r.recipeName + weight);
 
