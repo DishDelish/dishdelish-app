@@ -13,7 +13,7 @@
     <string name="ingredientsAmount">No.</string>
     <string name="ingredientsUnit">Unit</string>
     <string name="ingredientsName">Name</string>
-    <string name="steps">Steps</string>
+    <string name="step">Step</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="home">Home</string>
     <string name="open">Open</string>

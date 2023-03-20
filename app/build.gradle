@@ -66,7 +66,6 @@ dependencies {
     // Java language implementation
     implementation "androidx.fragment:fragment:$fragment_version"
     implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.material:material:1.8.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation "androidx.fragment:fragment:1.5.5"
     implementation("androidx.test.espresso:espresso-contrib:3.5.1", {

@@ -150,6 +150,7 @@
 
             <com.google.android.material.chip.ChipGroup
                 android:id="@+id/chipGroup"
+                android:theme="@style/Theme.SDPBootcamp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/ingredientsGroup"
@@ -160,7 +161,7 @@
                 android:layout_marginBottom="20dp" />
 
             <LinearLayout
-                android:id="@+id/stepsGroup"
+                android:id="@+id/stepGroup"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
@@ -172,14 +173,14 @@
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical">
                     <EditText
-                        android:id="@+id/steps"
+                        android:id="@+id/step"
                         android:layout_width="270dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
                         android:drawableStart="@drawable/chef_hat"
                         android:drawablePadding="5dp"
                         android:gravity="start"
-                        android:hint="@string/steps"
+                        android:hint="@string/step"
                         android:inputType="text"
                         android:textColorHint="#8e9094"
                         android:textCursorDrawable="@null" />
@@ -197,7 +198,7 @@
                 android:id="@+id/chooseImg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/stepsGroup"
+                android:layout_below="@+id/stepGroup"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="20dp"
                 android:text="@string/uploadRecipePageChooseImg" />

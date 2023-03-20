@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Pair;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,7 +49,7 @@ public class UploadingRecipeFragment extends Fragment {
     int PICK_IMAGE_REQUEST = 111;
     Uri filePath;
     ProgressDialog pd;
-    String storagepath = "Recipes_image/";
+    String storagePath = "Recipes_image/";
 
     List<Ingredient> ingredientList = new ArrayList<Ingredient>();
 
@@ -81,7 +82,7 @@ public class UploadingRecipeFragment extends Fragment {
         chipGroup = (ChipGroup) view.findViewById(R.id.chipGroup);
         addIngredient = (ImageView) view.findViewById(R.id.addIngredient);
         addStep = (ImageView) view.findViewById(R.id.addStep);
-        stepList = (LinearLayout) view.findViewById(R.id.stepsGroup);
+        stepList = (LinearLayout) view.findViewById(R.id.stepGroup);
         EditText ingredientsAmount = (EditText) view.findViewById(R.id.ingredientsAmount);
         EditText ingredientsUnit = (EditText) view.findViewById(R.id.ingredientsUnit);
         EditText ingredientsName = (EditText) view.findViewById(R.id.ingredientsName);
@@ -161,9 +162,8 @@ public class UploadingRecipeFragment extends Fragment {
 //        FirebaseUser user = firebaseAuth.getCurrentUser();
 
         // We are taking the filepath as storagepath + firebaseUser.getUid()+".png"
-        String filepathname = storagepath + "_" + "ZHANG CHI"; // should be firebaseUser.getUid()
-        StorageReference storageReference1 = storageRef.child(filepathname);
-        storageReference1.putFile(recipeImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+        String filePathName = storagePath + "_" + "ZHANG CHI"; // should be firebaseUser.getUid()
+        storageRef.child(filePathName).putFile(recipeImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
@@ -203,7 +203,7 @@ public class UploadingRecipeFragment extends Fragment {
     }
 
     private void addChip(String text) {
-        Chip chip = new Chip(getActivity());
+        Chip chip = new Chip(new ContextThemeWrapper(getActivity(), R.style.Theme_SDPBootcamp));
         chip.setText(text);
 
         chip.setClickable(true);
@@ -251,9 +251,9 @@ public class UploadingRecipeFragment extends Fragment {
         ArrayList<String> steps = new ArrayList<String>();
         for (int i = 0; i < stepList.getChildCount(); i++) {
             if (stepList.getChildAt(i) instanceof LinearLayoutCompat) {
-                LinearLayoutCompat ll = (LinearLayoutCompat) stepList.getChildAt(i);
-                if (ll.getChildAt(0) instanceof EditText) {
-                    steps.add(((EditText) ll.getChildAt(0)).getText().toString());
+                LinearLayoutCompat step = (LinearLayoutCompat) stepList.getChildAt(i);
+                if (step.getChildAt(0) instanceof EditText) {
+                    steps.add(((EditText) step.getChildAt(0)).getText().toString());
                 }
             }
         }
