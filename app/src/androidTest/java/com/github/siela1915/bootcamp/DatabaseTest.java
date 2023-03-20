@@ -174,15 +174,18 @@ public class DatabaseTest {
         utensils.add("spoon");
         utensils.add("fork");
         utensils.add("knife");
-        List<Pair<Unit, Ingredient>> ingredients = new ArrayList<>();
-        ingredients.add(new Pair<>(new Unit(4, "info"), Ingredient.EGGS));
+        List<Ingredient> ingredients = new ArrayList<>();
+        ingredients.add(new Ingredient("Eggs", new Unit(4, "some info")));
         List<String> steps = new ArrayList<>();
         steps.add("Just mash them up!");
         List<String> comments = new ArrayList<>();
         comments.add("mmm just love it!");
         comments.add("Steps unclear, bad recipe");
+        int[] cuisine = new int[]{1, 2, 3, 4, 5};
+        int[] allergy = new int[]{1, 2, 3, 4, 5};
+        int[] diet = new int[]{1, 2, 3, 4, 5};
         return new Recipe(98, "testRecipe", "randomUser1", 86, 4.5,
-                10, 5, 4, new Utensils(utensils), ingredients, steps, comments);
+                10, 5, 4, new Utensils(utensils), cuisine, allergy, diet, ingredients, steps, comments, 190);
     }
 
     private Recipe createOtherEggsRecipe() {
@@ -190,10 +193,10 @@ public class DatabaseTest {
         utensils.add("spoon");
         utensils.add("fork");
         utensils.add("knife");
-        List<Pair<Unit, Ingredient>> ingredients = new ArrayList<>();
-        ingredients.add(new Pair<>(new Unit(4, "info"), Ingredient.EGGS));
-        ingredients.add(new Pair<>(new Unit(4, "info"), Ingredient.PEPPER));
-        ingredients.add(new Pair<>(new Unit(4, "info"), Ingredient.SALT));
+        List<Ingredient> ingredients = new ArrayList<>();
+        ingredients.add(new Ingredient("Eggs", new Unit(4, "some info")));
+        ingredients.add(new Ingredient("Pepper", new Unit(4, "some info")));
+        ingredients.add(new Ingredient("Salt", new Unit(4, "some info")));
         List<String> steps = new ArrayList<>();
         steps.add("Crack the eggs open in a frying pan.");
         steps.add("Stir while eggs cook.");
@@ -201,8 +204,11 @@ public class DatabaseTest {
         List<String> comments = new ArrayList<>();
         comments.add("mmm just love it!");
         comments.add("Steps are clear! Much better than that other recipe I checked out.");
+        int[] cuisine = new int[]{1, 2, 3, 4, 5};
+        int[] allergy = new int[]{1, 2, 3, 4, 5};
+        int[] diet = new int[]{1, 2, 3, 4, 5};
         return new Recipe(97, "testRecipe", "randomUser2", 85, 4.5,
-                10, 5, 4, new Utensils(utensils), ingredients, steps, comments);
+                10, 5, 4, new Utensils(utensils), cuisine, allergy, diet, ingredients, steps, comments, 190);
     }
 
 
