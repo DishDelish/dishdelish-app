@@ -1,0 +1,15 @@
+{
+  "rules": {
+    "recipes": {
+      ".indexOn": ["name"]
+    },
+    "favorites": {
+      "$user_id": {
+      	".indexOn": [".value"],
+          ".write": "$user_id === auth.uid"
+      }
+    },
+    ".read": "now < 1680904800000",  // 2023-4-8
+    ".write": "now < 1680904800000",  // 2023-4-8
+  }
+}
