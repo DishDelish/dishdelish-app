@@ -50,7 +50,7 @@ public class UploadingRecipeFragment extends Fragment {
     ProgressDialog pd;
     String storagepath = "Recipes_image/";
 
-    List<Pair<Unit, Ingredient>> ingredientList = new ArrayList<Pair<Unit, Ingredient>>();
+    List<Ingredient> ingredientList = new ArrayList<Ingredient>();
 
     //creating reference to firebase storage
     // temporarily commented out till integrated with firebase auth
@@ -117,7 +117,7 @@ public class UploadingRecipeFragment extends Fragment {
                     String unit = ingredientsUnit.getText().toString();
                     String name = ingredientsName.getText().toString();
                     addChip(amount + " " + unit + " " + name);
-                    ingredientList.add(new Pair<>(new Unit(amount, unit), Ingredient.valueOf(name.trim().toUpperCase())));
+                    ingredientList.add(new Ingredient(name, new Unit(amount, unit)));
                     ingredientsAmount.setText("");
                     ingredientsUnit.setText("");
                     ingredientsName.setText("");
@@ -216,7 +216,7 @@ public class UploadingRecipeFragment extends Fragment {
                 // as chips are formed in the format of 'anount + " " + unit + " " + name"
                 // so that the name of the ingredient to be removed is chip.getText().toString().split(" ")[1]
                 // and it can be filtered out by its name
-                ingredientList.removeIf(ingredient -> ingredient.second.toString().equals(chip.getText().toString().split(" ")[-1])
+                ingredientList.removeIf(ingredient -> ingredient.getIngredient().equals(chip.getText().toString().split(" ")[-1])
                 );
             }
         });
