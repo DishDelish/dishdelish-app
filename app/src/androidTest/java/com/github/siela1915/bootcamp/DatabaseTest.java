@@ -51,21 +51,15 @@ public class DatabaseTest {
 
         Recipe recipe = createRecipeEggs();
 
-        String key = null;
         try {
-            key = db.set(recipe);
+            String key = db.set(recipe);
+            Recipe retrieval = db.get(key);
+            assertEquals(recipe, retrieval);
         } catch (ExecutionException | InterruptedException e) {
             throw new RuntimeException(e);
         }
-        Recipe retrieval;
-        try {
-            retrieval = db.get(key);
-        } catch (ExecutionException | InterruptedException e) {
-            System.out.println(e.getMessage());
-            throw new RuntimeException(e);
-        }
-        //System.out.println(recipe);
-        assertEquals(recipe, retrieval);
+
+
     }
 
     @Test
@@ -106,21 +100,14 @@ public class DatabaseTest {
     public void searchByNameReturnsSingleRecipe() {
         Database db = new Database(firebaseInstance);
         Recipe recipe = createRecipeEggs();
-        String key = null;
         try {
-            key = db.set(recipe);
+            String key = db.set(recipe);
+            Map<String, Recipe> map = db.getByName("testRecipe");
+            assertTrue(map.containsKey(key));
+            assertEquals(recipe, map.get(key));
         } catch (ExecutionException | InterruptedException e) {
             throw new RuntimeException(e);
         }
-        Map<String, Recipe> map;
-        try {
-            map = db.getByName("testRecipe");
-        } catch (ExecutionException | InterruptedException e) {
-            System.out.println(e.getMessage());
-            throw new RuntimeException(e);
-        }
-        assertTrue(map.containsKey(key));
-        assertEquals(recipe, map.get(key));
     }
 
     @Test
@@ -128,31 +115,18 @@ public class DatabaseTest {
         Database db = new Database(firebaseInstance);
         Recipe recipe1 = createRecipeEggs();
         Recipe recipe2 = createOtherEggsRecipe();
-        String key1 = null;
         try {
-            key1 = db.set(recipe1);
+            String key1 = db.set(recipe1);
+            String key2 = db.set(recipe2);
+            Map<String, Recipe> map = db.getByName("testRecipe");
+            assertTrue(map.containsKey(key1));
+            assertTrue(map.containsKey(key2));
+            assertEquals(2, map.size());
+            assertEquals(recipe1, map.get(key1));
+            assertEquals(recipe2, map.get(key2));
         } catch (ExecutionException | InterruptedException e) {
             throw new RuntimeException(e);
         }
-        String key2 = null;
-        try {
-            key2 = db.set(recipe2);
-        } catch (ExecutionException | InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-        Map<String, Recipe> map;
-        try {
-            map = db.getByName("testRecipe");
-        } catch (ExecutionException | InterruptedException e) {
-            System.out.println(e.getMessage());
-            throw new RuntimeException(e);
-        }
-        assertTrue(map.containsKey(key1));
-        assertTrue(map.containsKey(key2));
-        assertEquals(2, map.size());
-        assertEquals(recipe1, map.get(key1));
-        assertEquals(recipe2, map.get(key2));
-
     }
 
     @Test
