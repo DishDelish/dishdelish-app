@@ -14,6 +14,7 @@ import com.github.siela1915.bootcamp.Recipes.Utensils;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class RecipeTest {
@@ -71,6 +72,14 @@ public class RecipeTest {
         Recipe recipe1 = createOtherRecipe();
         Recipe recipe2 = createOtherRecipeDifferentSteps();
         assertFalse(recipe1.equals(recipe2));
+    }
+
+    @Test
+    public void equalsFailsWhenRecipesDoNotHaveSameDietTypes() {
+        Recipe recipe1 = createOtherRecipe();
+        Recipe recipe2 = createOtherRecipeDifferentDiet();
+        assertFalse(recipe1.equals(recipe2));
+
     }
 
     private Recipe createRecipe() {
@@ -134,6 +143,29 @@ public class RecipeTest {
                 10, 5, 4, new Utensils(utensils), cuisine, allergy, diet, ingredients, steps, comments, 190);
     }
 
+    private Recipe createOtherRecipeDifferentDiet() {
+        List<String> utensils = new ArrayList<>();
+        utensils.add("spoon");
+        utensils.add("fork");
+        utensils.add("knife");
+        List<Ingredient> ingredients = new ArrayList<>();
+        ingredients.add(new Ingredient("Eggs", new Unit(4, "some info")));
+        ingredients.add(new Ingredient("Pepper", new Unit(4, "some info")));
+        ingredients.add(new Ingredient("Salt", new Unit(4, "some info")));
+        List<String> steps = new ArrayList<>();
+        steps.add("Crack the eggs open in a frying pan.");
+        steps.add("Stir while eggs cook.");
+        steps.add("Season with some salt and pepper.");
+        List<String> comments = new ArrayList<>();
+        comments.add("mmm just love it!");
+        comments.add("Steps are clear! Much better than that other recipe I checked out.");
+        int[] cuisine = new int[]{1, 2, 3, 4, 5};
+        int[] allergy = new int[]{1, 2, 3, 4, 5};
+        int[] diet = new int[]{1, 2, 3, 4, 6};
+        return new Recipe(97, "randomRecipe", "randomUser2", 85, 4.5,
+                10, 5, 4, new Utensils(utensils), cuisine, allergy, diet, ingredients, steps, comments, 190);
+    }
+
     private Recipe createOtherRecipeDifferentIngredients() {
         List<String> utensils = new ArrayList<>();
         utensils.add("spoon");
@@ -179,4 +211,128 @@ public class RecipeTest {
         return new Recipe(97, "randomRecipe", "randomUser2", 85, 4.5,
                 10, 5, 4, new Utensils(utensils), cuisine, allergy, diet, ingredients, steps, comments, 190);
     }
+
+    @Test
+    public void getAfterSetReturnsImage() {
+        Recipe recipe = new Recipe();
+        recipe.setImage(45);
+        assertEquals(recipe.getImage(), 45);
+    }
+
+    @Test
+    public void getAfterSetReturnsRecipeName() {
+        Recipe recipe = new Recipe();
+        recipe.setRecipeName("some name");
+        assertEquals(recipe.getRecipeName(), "some name");
+    }
+
+    @Test
+    public void getAfterSetReturnsUserName() {
+        Recipe recipe = new Recipe();
+        recipe.setUserName("user name");
+        assertEquals(recipe.getUserName(), "user name");
+    }
+
+    @Test
+    public void getAfterSetReturnsProfilePicture() {
+        Recipe recipe = new Recipe();
+        recipe.setProfilePicture(89);
+        assertEquals(recipe.getProfilePicture(), 89);
+    }
+
+    @Test
+    public void getAfterSetReturnsRating() {
+        Recipe recipe = new Recipe();
+        recipe.setRating(4.5);
+        assertTrue(Math.abs(recipe.getRating() - 4.5) < 1e-6);
+    }
+
+    @Test
+    public void getAfterSetReturnsPrepTime() {
+        Recipe recipe = new Recipe();
+        recipe.setPrepTime(10);
+        assertEquals(recipe.getPrepTime(), 10);
+    }
+
+    @Test
+    public void getAfterSetReturnsCookTime() {
+        Recipe recipe = new Recipe();
+        recipe.setCookTime(20);
+        assertEquals(recipe.getCookTime(), 20);
+    }
+
+    @Test
+    public void getAfterSetReturnsServings() {
+        Recipe recipe = new Recipe();
+        recipe.setServings(4);
+        assertEquals(recipe.getServings(), 4);
+    }
+
+    @Test
+    public void getAfterSetReturnsUtensils() {
+        Recipe recipe = new Recipe();
+        Utensils utensils = new Utensils(Arrays.asList("fork", "spoon", "knife"));
+        recipe.setUtensils(utensils);
+        assertEquals(recipe.getUtensils(), utensils);
+    }
+
+    @Test
+    public void getAfterSetReturnsCuisineTypes() {
+        int[] array = new int[] {1, 2, 3, 4, 5};
+        Recipe recipe = new Recipe();
+        recipe.setCuisineTypes(array);
+        assertTrue(Arrays.equals(array, recipe.getCuisineTypes()));
+    }
+
+    @Test
+    public void getAfterSetReturnsAllergyTypes() {
+        int[] array = new int[] {1, 2, 3, 4, 5};
+        Recipe recipe = new Recipe();
+        recipe.setAllergyTypes(array);
+        assertTrue(Arrays.equals(array, recipe.getAllergyTypes()));
+    }
+
+    @Test
+    public void getAfterSetReturnsDietTypes() {
+        int[] array = new int[] {1, 2, 3, 4, 5};
+        Recipe recipe = new Recipe();
+        recipe.setDietTypes(array);
+        assertTrue(Arrays.equals(array, recipe.getDietTypes()));
+    }
+
+    @Test
+    public void getAfterSetReturnsIngredientList() {
+        Recipe recipe = new Recipe();
+        List<Ingredient> ls = Arrays.asList(new Ingredient("bread", new Unit(4, "info")),
+                new Ingredient("eggs", new Unit(2, "info")),
+                new Ingredient("butter", new Unit(200, "grams")));
+        recipe.setIngredientList(ls);
+        assertEquals(recipe.getIngredientList(), ls);
+    }
+
+    @Test
+    public void getAfterSetReturnsStepsList() {
+        Recipe recipe = new Recipe();
+        List<String> ls = Arrays.asList("first step", "second step", "third step");
+        recipe.setSteps(ls);
+        assertEquals(recipe.getSteps(), ls);
+    }
+
+    @Test
+    public void getAfterSetReturnsCommentsList() {
+        Recipe recipe = new Recipe();
+        List<String> ls = Arrays.asList("first comment", "second comment", "third comment");
+        recipe.setComments(ls);
+        assertEquals(recipe.getComments(), ls);
+    }
+
+    @Test
+    public void getAfterSetReturnsLikes() {
+        Recipe recipe = new Recipe();
+        recipe.setLikes(450);
+        assertEquals(recipe.getLikes(), 450);
+    }
+
+
+
 }
