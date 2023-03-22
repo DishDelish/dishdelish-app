@@ -1,14 +1,16 @@
 package com.github.siela1915.bootcamp;
 
+import android.os.Bundle;
+import android.view.MenuItem;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 
-import android.os.Bundle;
-import android.view.MenuItem;
-
+import com.github.siela1915.bootcamp.Recipes.ExampleRecipes;
+import com.github.siela1915.bootcamp.firebase.Database;
 import com.google.android.material.navigation.NavigationView;
 
 public class MainHomeActivity extends AppCompatActivity {
@@ -38,6 +40,8 @@ public class MainHomeActivity extends AppCompatActivity {
         toggle.syncState();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        Database database = new Database();
+
         navigationView.setNavigationItemSelectedListener(item ->{
             switch (item.getItemId()){
                 case R.id.menuItem_home:
@@ -52,6 +56,15 @@ public class MainHomeActivity extends AppCompatActivity {
                     break;
                 case R.id.menuItem_upload:
                     setContainerContent(R.id.fragContainer, UploadingRecipeFragment.class, false);
+                    break;
+                case R.id.menuItem_favorites:
+                    setContainerContent(R.id.fragContainer, RecipeListFragment.newInstance(
+//                                        Tasks.await(database.getFavorites()
+//                                                .continueWith((favoriteIds) -> {
+//                                                    return favoriteIds.getResult().stream().map(database::get).collect(Collectors.toList());
+//                                                }))
+                                        ExampleRecipes.recipes
+                                ), false);
                     break;
                 default:
             }
@@ -85,4 +98,19 @@ public class MainHomeActivity extends AppCompatActivity {
                     .commit();
         }
     }
+
+    private void setContainerContent(int containerId, @NonNull Fragment fragment, boolean setOrReplace){
+        if(setOrReplace){
+            getSupportFragmentManager().beginTransaction()
+                    .setReorderingAllowed(true)
+                    .add(containerId,fragment,null)
+                    .commit();
+        }else{
+            getSupportFragmentManager().beginTransaction()
+                    .setReorderingAllowed(true)
+                    .replace(containerId,fragment,null)
+                    .commit();
+        }
+    }
+
 }
