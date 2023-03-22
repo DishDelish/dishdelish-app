@@ -117,9 +117,13 @@ public class Database {
         map.put("cookTime", recipe.cookTime);
         map.put("servings", recipe.servings);
         map.put("utensils", recipe.utensils);
-//        map.put("ingredientList", recipe.ingredientList);
+        map.put("cuisineTypes", recipe.cuisineTypes);
+        map.put("allergyTypes", recipe.allergyTypes);
+        map.put("dietTypes", recipe.dietTypes);
+        map.put("ingredientList", recipe.ingredientList);
         map.put("steps", recipe.steps);
         map.put("comments", recipe.comments);
+        map.put("likes", recipe.likes);
         return map;
     }
 
