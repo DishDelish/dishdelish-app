@@ -63,10 +63,13 @@ public class Database {
      * @return the unique key id associated to this specific recipe in the database
      */
     public String set(Recipe recipe) throws ExecutionException, InterruptedException {
-        Map<String, Object> value = recipeToMap(recipe);
+        //Map<String, Object> value = recipeToMap(recipe);
         String uniqueKey = db.child(RECIPES).child("new").push().getKey();
+        Map<String, Object> value = new HashMap<>();
+        value.put(uniqueKey, recipe);
         try {
-            Tasks.await(db.child(RECIPES).child(uniqueKey).updateChildren(value));
+            //Tasks.await(db.child(RECIPES).child(uniqueKey).updateChildren(value));
+            Tasks.await(db.child(RECIPES).updateChildren(value));
         } catch (ExecutionException | InterruptedException e) {
             throw e;
         }
@@ -118,9 +121,9 @@ public class Database {
         map.put("cookTime", recipe.cookTime);
         map.put("servings", recipe.servings);
         map.put("utensils", recipe.utensils);
-        map.put("cuisineTypes", Arrays.asList(recipe.cuisineTypes));
-        map.put("allergyTypes", Arrays.asList(recipe.allergyTypes));
-        map.put("dietTypes", Arrays.asList(recipe.dietTypes));
+        map.put("cuisineTypes", recipe.cuisineTypes);
+        map.put("allergyTypes", recipe.allergyTypes);
+        map.put("dietTypes", recipe.dietTypes);
         map.put("ingredientList", recipe.ingredientList);
         map.put("steps", recipe.steps);
         map.put("comments", recipe.comments);
