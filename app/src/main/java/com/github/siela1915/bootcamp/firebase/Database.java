@@ -11,6 +11,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.internal.api.FirebaseNoSignedInUserException;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Collections;
 import java.util.List;
@@ -117,9 +118,9 @@ public class Database {
         map.put("cookTime", recipe.cookTime);
         map.put("servings", recipe.servings);
         map.put("utensils", recipe.utensils);
-        map.put("cuisineTypes", recipe.cuisineTypes);
-        map.put("allergyTypes", recipe.allergyTypes);
-        map.put("dietTypes", recipe.dietTypes);
+        map.put("cuisineTypes", Arrays.asList(recipe.cuisineTypes));
+        map.put("allergyTypes", Arrays.asList(recipe.allergyTypes));
+        map.put("dietTypes", Arrays.asList(recipe.dietTypes));
         map.put("ingredientList", recipe.ingredientList);
         map.put("steps", recipe.steps);
         map.put("comments", recipe.comments);
