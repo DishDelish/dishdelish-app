@@ -16,7 +16,7 @@ public class Unit implements Parcelable {
     public Unit(){}
     public Unit(int value, String info) {
         this.value = value;
-        this.info = info;
+        this.info = info.toLowerCase();
     }
 
     protected Unit(Parcel in) {
@@ -49,7 +49,7 @@ public class Unit implements Parcelable {
     }
 
     public void setInfo(String info) {
-        this.info = info;
+        this.info = info.toLowerCase();
     }
 
     @Override

@@ -10,6 +10,7 @@ import com.github.siela1915.bootcamp.Recipes.Recipe;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -23,11 +24,11 @@ import java.util.stream.Collectors;
 
 public class RecipeFetcher{
     //These lists will probably be attributes of the user, TODO refactor later
-    private int[] allergies;
-    private int[] cuisines;
-    private int[] diets;
+    private List<Integer> allergies;
+    private List<Integer> cuisines;
+    private List<Integer> diets;
 
-    public RecipeFetcher(int[] allergies, int[] cuisines, int[] diets) {
+    public RecipeFetcher(List<Integer> allergies, List<Integer> cuisines, List<Integer> diets) {
         this.allergies = allergies;
         this.cuisines = cuisines;
         this.diets = diets;
@@ -41,17 +42,27 @@ public class RecipeFetcher{
         for(Recipe r :ExampleRecipes.recipes){
             //Base weight, will be lower only if diets or allergies are violated
             float weight = 5;
-//            weight += Arrays.stream(cuisines).map(i -> Arrays.stream(r.cuisineTypes).equals(i)).count() * 10;
-//
-//            //checking if the recipe violates allergy or diet constraint
-//            //List<Boolean> temp= allergies.stream().map(a -> r.allergyTypes.contains(a)).collect(Collectors.toList());
-//            if(allergies.stream().map(a -> r.allergyTypes.contains(a)).filter(b -> b).count()>0
-//            || diets.stream().map(d -> r.dietTypes.contains(d)).filter(b -> b).count()>0){
-//                weight=0;
-//            }
-//            if(weight > 1){
-//                mapOfRecipes.put(r.recipeName, weight);
-//            }
+            weight += (cuisines).stream()
+                    .distinct()
+                    .filter(x -> (r.cuisineTypes).stream().anyMatch(y -> y == x))
+                    .toArray().length*10;
+
+            //checking if the recipe violates allergy or diet constraint
+            //List<Boolean> temp= allergies.stream().map(a -> r.allergyTypes.contains(a)).collect(Collectors.toList());
+            if((allergies).stream()
+                    .distinct()
+                    .filter(x -> (r.allergyTypes).stream().anyMatch(y -> y == x))
+                    .toArray().length > 0
+            || (diets).stream()
+                    .distinct()
+                    .filter(x -> (r.dietTypes).stream().anyMatch(y -> y == x))
+                    .toArray().length > 0){
+
+                weight=0;
+            }
+            if(weight > 1){
+                mapOfRecipes.put(r.recipeName, weight);
+            }
         }
 
         //return the appropriate recipes in descending order by weight
@@ -68,28 +79,32 @@ public class RecipeFetcher{
     /**
      * Sorts a list of recipes by cook + preparation time.
      * @param recipes list of recipes
-     * @return sorted recipes
+     * @return sorted recipe names
      */
-    public List<Recipe> sortRecipesByPreparationTime(List<Recipe> recipes){
+    public List<String> sortRecipesByPreparationTime(List<Recipe> recipes, Boolean ascending){
         Objects.requireNonNull(recipes);
         List<Recipe> ret = new ArrayList<>(recipes);
+        //default sort is ascending
         ret.sort(Comparator.comparing(r -> r.prepTime + r.cookTime));
-        return ret;
+        if(!ascending)
+            Collections.reverse(ret);
+        return ret.stream().map(r -> r.recipeName).collect(Collectors.toList());
     }
 
     /**
      * Filters recipes to only contain recipes using all ingredients in the ingredients list
      * @param recipes to be filtered
      * @param ingredients to consider for filtering
-     * @return filtered recipes
+     * @return filtered recipe names
      */
-    public List<Recipe> filterByIngredients(List<Recipe> recipes, List<Ingredient> ingredients){
+    public List<String> filterByIngredients(List<Recipe> recipes, List<Ingredient> ingredients){
         Objects.requireNonNull(recipes);
         List<Recipe> ret = new ArrayList<>(recipes);
         return ret.stream()
                 .filter(r ->
                         new HashSet<>(r.ingredientList.stream().map(Ingredient::getIngredient).collect(Collectors.toList()))
-                        .containsAll(ingredients))
+                        .containsAll(ingredients.stream().map(Ingredient::getIngredient).collect(Collectors.toList())))
+                .map(r -> r.recipeName)
                 .collect(Collectors.toList());
     }
 }
