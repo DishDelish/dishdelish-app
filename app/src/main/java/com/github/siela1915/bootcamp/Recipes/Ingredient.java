@@ -14,7 +14,7 @@ public class Ingredient implements Parcelable {
     public Ingredient(){}
 
     public void setIngredient(String ingredient) {
-        this.ingredient = ingredient;
+        this.ingredient = ingredient.toLowerCase();
     }
 
     public void setUnit(Unit unit) {
@@ -22,7 +22,7 @@ public class Ingredient implements Parcelable {
     }
 
     public Ingredient(String ingredient, Unit unit) {
-        this.ingredient = ingredient;
+        this.ingredient = ingredient.toLowerCase();
         this.unit = unit;
     }
 
