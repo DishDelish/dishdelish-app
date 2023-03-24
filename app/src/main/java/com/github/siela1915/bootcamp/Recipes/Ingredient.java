@@ -15,6 +15,7 @@ public enum Ingredient {
 
     private final String display_string;
 
+
     // constructor to set the string
     Ingredient(String name){display_string = name;}
 
@@ -23,5 +24,11 @@ public enum Ingredient {
     @Override
     public String toString() {
         return display_string;
+    }
+    public static String[] getAll(){
+        String[] res= {EGGS.toString(), FISH.display_string, OIL.display_string, MILK.display_string,
+                BUTTER.display_string, FLOUR.display_string, CARROTS.display_string, CHICKEN.display_string, HUMMUS.display_string,
+                CAULIFLOWER.display_string, LEMON.display_string,"Meat","Cheese","Tea"};
+        return res;
     }
 }

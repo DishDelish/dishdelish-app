@@ -5,7 +5,7 @@
     <string name="uploadRecipePageRecipeName">Recipe Name</string>
     <string name="uploadRecipePageChooseImg">Choose Image</string>
     <string name="uploadRecipePageButtonText">Upload Recipe</string>
-    <string name="prepTime">Preparation Time</string>
+    <string name="prepTime">Prep Time</string>
     <string name="cookTime">Cooking Time</string>
     <string name="servings">Servings</string>
     <string name="utensils">Utensils</string>
@@ -14,10 +14,13 @@
     <string name="ingredientsUnit">Unit</string>
     <string name="ingredientsName">Name</string>
     <string name="steps">Steps</string>
+    <string name="pantry">Pantry</string>
+    <string name="allergy">Allergy</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="home">Home</string>
     <string name="open">Open</string>
     <string name="close">Close</string>
+    <string name="btnIcon">v</string>
 
     <string name="home_menu">Home</string>
     <string name="favorites_menu">Favorites</string>
