@@ -166,7 +166,7 @@ public class Recipe implements Parcelable {
     public Recipe(int image, String recipeName, String userName, int profilePicture, double rating,
                   int prepTime, int cookTime, int servings, Utensils utensils, List<Integer> cuisineTypes,
                   List<Integer> allergyTypes, List<Integer> dietTypes, List<Ingredient> ingredientList,
-                  List<String> steps, List<String> comments) {
+                  List<String> steps, List<String> comments, int likes) {
         this.image = image;
         this.recipeName = recipeName;
         this.userName = userName;

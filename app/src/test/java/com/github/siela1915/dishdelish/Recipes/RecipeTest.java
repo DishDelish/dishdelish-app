@@ -94,9 +94,9 @@ public class RecipeTest {
         List<String> comments = new ArrayList<>();
         comments.add("mmm just love it!");
         comments.add("Steps unclear, bad recipe");
-        int[] cuisine = new int[]{1, 2, 3, 4, 5};
-        int[] allergy = new int[]{1, 2, 3, 4, 5};
-        int[] diet = new int[]{1, 2, 3, 4, 5};
+        List<Integer> cuisine = Arrays.asList(1, 2, 3, 4, 5);
+        List<Integer> allergy = Arrays.asList(1, 2, 3, 4, 5);
+        List<Integer> diet = Arrays.asList(1, 2, 3, 4, 5);
         return new Recipe(98, "randomRecipe", "randomUser1", 86, 4.5,
                 10, 5, 4, new Utensils(utensils), cuisine, allergy, diet, ingredients, steps, comments, 190);
     }
@@ -113,9 +113,9 @@ public class RecipeTest {
         List<String> comments = new ArrayList<>();
         comments.add("mmm just love it!");
         comments.add("Steps unclear, bad recipe");
-        int[] cuisine = new int[]{1, 2, 3, 4, 5};
-        int[] allergy = new int[]{1, 2, 3, 4, 5};
-        int[] diet = new int[]{1, 2, 3, 4, 5};
+        List<Integer> cuisine = Arrays.asList(1, 2, 3, 4, 5);
+        List<Integer> allergy = Arrays.asList(1, 2, 3, 4, 5);
+        List<Integer> diet = Arrays.asList(1, 2, 3, 4, 5);
         return new Recipe(98, "randomRecipe2", "randomUser1", 86, 4.5,
                 10, 5, 4, new Utensils(utensils), cuisine, allergy, diet, ingredients, steps, comments, 190);
     }
@@ -136,9 +136,9 @@ public class RecipeTest {
         List<String> comments = new ArrayList<>();
         comments.add("mmm just love it!");
         comments.add("Steps are clear! Much better than that other recipe I checked out.");
-        int[] cuisine = new int[]{1, 2, 3, 4, 5};
-        int[] allergy = new int[]{1, 2, 3, 4, 5};
-        int[] diet = new int[]{1, 2, 3, 4, 5};
+        List<Integer> cuisine = Arrays.asList(1, 2, 3, 4, 5);
+        List<Integer> allergy = Arrays.asList(1, 2, 3, 4, 5);
+        List<Integer> diet = Arrays.asList(1, 2, 3, 4, 5);
         return new Recipe(97, "randomRecipe", "randomUser2", 85, 4.5,
                 10, 5, 4, new Utensils(utensils), cuisine, allergy, diet, ingredients, steps, comments, 190);
     }
@@ -159,9 +159,9 @@ public class RecipeTest {
         List<String> comments = new ArrayList<>();
         comments.add("mmm just love it!");
         comments.add("Steps are clear! Much better than that other recipe I checked out.");
-        int[] cuisine = new int[]{1, 2, 3, 4, 5};
-        int[] allergy = new int[]{1, 2, 3, 4, 5};
-        int[] diet = new int[]{1, 2, 3, 4, 6};
+        List<Integer> cuisine = Arrays.asList(1, 2, 3, 4, 5);
+        List<Integer> allergy = Arrays.asList(1, 2, 3, 4, 5);
+        List<Integer> diet = Arrays.asList(1, 2, 3, 4, 6);
         return new Recipe(97, "randomRecipe", "randomUser2", 85, 4.5,
                 10, 5, 4, new Utensils(utensils), cuisine, allergy, diet, ingredients, steps, comments, 190);
     }
@@ -182,9 +182,9 @@ public class RecipeTest {
         List<String> comments = new ArrayList<>();
         comments.add("mmm just love it!");
         comments.add("Steps are clear! Much better than that other recipe I checked out.");
-        int[] cuisine = new int[]{1, 2, 3, 4, 5};
-        int[] allergy = new int[]{1, 2, 3, 4, 5};
-        int[] diet = new int[]{1, 2, 3, 4, 5};
+        List<Integer> cuisine = Arrays.asList(1, 2, 3, 4, 5);
+        List<Integer> allergy = Arrays.asList(1, 2, 3, 4, 5);
+        List<Integer> diet = Arrays.asList(1, 2, 3, 4, 5);
         return new Recipe(97, "randomRecipe", "randomUser2", 85, 4.5,
                 10, 5, 4, new Utensils(utensils), cuisine, allergy, diet, ingredients, steps, comments, 190);
     }
@@ -205,9 +205,9 @@ public class RecipeTest {
         List<String> comments = new ArrayList<>();
         comments.add("mmm just love it!");
         comments.add("Steps are clear! Much better than that other recipe I checked out.");
-        int[] cuisine = new int[]{1, 2, 3, 4, 5};
-        int[] allergy = new int[]{1, 2, 3, 4, 5};
-        int[] diet = new int[]{1, 2, 3, 4, 5};
+        List<Integer> cuisine = Arrays.asList(1, 2, 3, 4, 5);
+        List<Integer> allergy = Arrays.asList(1, 2, 3, 4, 5);
+        List<Integer> diet = Arrays.asList(1, 2, 3, 4, 5);
         return new Recipe(97, "randomRecipe", "randomUser2", 85, 4.5,
                 10, 5, 4, new Utensils(utensils), cuisine, allergy, diet, ingredients, steps, comments, 190);
     }
@@ -278,26 +278,26 @@ public class RecipeTest {
 
     @Test
     public void getAfterSetReturnsCuisineTypes() {
-        int[] array = new int[] {1, 2, 3, 4, 5};
+        List<Integer> array = Arrays.asList(1, 2, 3, 4, 5);
         Recipe recipe = new Recipe();
         recipe.setCuisineTypes(array);
-        assertTrue(Arrays.equals(array, recipe.getCuisineTypes()));
+        assertTrue(array.equals(recipe.getCuisineTypes()));
     }
 
     @Test
     public void getAfterSetReturnsAllergyTypes() {
-        int[] array = new int[] {1, 2, 3, 4, 5};
+        List<Integer> array = Arrays.asList(1, 2, 3, 4, 5);
         Recipe recipe = new Recipe();
         recipe.setAllergyTypes(array);
-        assertTrue(Arrays.equals(array, recipe.getAllergyTypes()));
+        assertTrue(array.equals(recipe.getAllergyTypes()));
     }
 
     @Test
     public void getAfterSetReturnsDietTypes() {
-        int[] array = new int[] {1, 2, 3, 4, 5};
+        List<Integer> array = Arrays.asList(1, 2, 3, 4, 5);
         Recipe recipe = new Recipe();
         recipe.setDietTypes(array);
-        assertTrue(Arrays.equals(array, recipe.getDietTypes()));
+        assertTrue(array.equals(recipe.getDietTypes()));
     }
 
     @Test

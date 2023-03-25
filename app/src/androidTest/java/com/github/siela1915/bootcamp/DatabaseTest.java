@@ -24,6 +24,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -155,9 +156,9 @@ public class DatabaseTest {
         List<String> comments = new ArrayList<>();
         comments.add("mmm just love it!");
         comments.add("Steps unclear, bad recipe");
-        int[] cuisine = new int[]{1, 2, 3, 4, 5};
-        int[] allergy = new int[]{1, 2, 3, 4, 5};
-        int[] diet = new int[]{1, 2, 3, 4, 5};
+        List<Integer> cuisine = Arrays.asList(1, 2, 3, 4, 5);
+        List<Integer> allergy = Arrays.asList(1, 2, 3, 4, 5);
+        List<Integer> diet = Arrays.asList(1, 2, 3, 4, 5);
         return new Recipe(98, "testRecipe", "randomUser1", 86, 4.5,
                 10, 5, 4, new Utensils(utensils), cuisine, allergy, diet, ingredients, steps, comments, 190);
     }
@@ -178,9 +179,9 @@ public class DatabaseTest {
         List<String> comments = new ArrayList<>();
         comments.add("mmm just love it!");
         comments.add("Steps are clear! Much better than that other recipe I checked out.");
-        int[] cuisine = new int[]{1, 2, 3, 4, 5};
-        int[] allergy = new int[]{1, 2, 3, 4, 5};
-        int[] diet = new int[]{1, 2, 3, 4, 5};
+        List<Integer> cuisine = Arrays.asList(1, 2, 3, 4, 5);
+        List<Integer> allergy = Arrays.asList(1, 2, 3, 4, 5);
+        List<Integer> diet = Arrays.asList(1, 2, 3, 4, 5);
         return new Recipe(97, "testRecipe", "randomUser2", 85, 4.5,
                 10, 5, 4, new Utensils(utensils), cuisine, allergy, diet, ingredients, steps, comments, 190);
     }
