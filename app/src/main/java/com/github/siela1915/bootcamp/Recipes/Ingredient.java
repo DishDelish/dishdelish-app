@@ -11,7 +11,8 @@ public enum Ingredient {
     EGGS("Eggs"), FISH("Fish"), OIL("Oil"), MILK("Milk"),
     BUTTER("Butter"), FLOUR("Flour"), SALT("Salt"), PEPPER("Pepper"),
     CARROTS("Carrots"), CHICKEN("Chicken"), LEMON("Lemon"), HUMMUS("Hummus"),
-    CAULIFLOWER("Cauliflower"), CORIANDER("Coriander"), SUGAR("Sugar");
+    CAULIFLOWER("Cauliflower"), CORIANDER("Coriander"), SUGAR("Sugar"),BEEF("Beef"),
+    CHEESE("Cheese");
 
     private final String display_string;
 
@@ -28,7 +29,7 @@ public enum Ingredient {
     public static String[] getAll(){
         String[] res= {EGGS.toString(), FISH.display_string, OIL.display_string, MILK.display_string,
                 BUTTER.display_string, FLOUR.display_string, CARROTS.display_string, CHICKEN.display_string, HUMMUS.display_string,
-                CAULIFLOWER.display_string, LEMON.display_string,"Meat","Cheese","Tea"};
+                CAULIFLOWER.display_string, LEMON.display_string, BEEF.display_string, CHEESE.display_string};
         return res;
     }
 }

@@ -16,19 +16,21 @@
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/fragContainer"
-            android:layout_width="413dp"
-            android:layout_height="585dp"
+            android:layout_width="match_parent"
+            android:layout_height="648dp"
             android:layoutDirection="ltr"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.753"
             tools:ignore="VisualLintBounds" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/filterLayout"
             android:layout_width="match_parent"
-            android:layout_height="71dp"
+            android:layout_height="74dp"
             app:layout_constraintBottom_toTopOf="@+id/fragContainer"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -43,31 +45,45 @@
                 android:id="@+id/timingBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
-                android:layout_marginStart="88dp"
+                android:layout_marginStart="92dp"
+                android:layout_marginBottom="8dp"
                 android:foreground="@android:drawable/btn_dropdown"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/pantryBtn"
-                tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck"
-                tools:layout_editor_absoluteY="38dp" />
+                tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
             <Button
                 android:id="@+id/notIncludIngBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
+                android:layout_marginBottom="8dp"
                 android:foreground="@android:drawable/btn_dropdown"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/timingBtn"
-                tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck"
-                tools:layout_editor_absoluteY="38dp" />
+                tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+
+            <Button
+                android:id="@+id/dietBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_marginBottom="8dp"
+                android:foreground="@android:drawable/btn_dropdown"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/notIncludIngBtn"
+                tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
             <Button
                 android:id="@+id/pantryBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginBottom="8dp"
                 android:foreground="@android:drawable/btn_dropdown"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/timingBtn"
                 app:layout_constraintStart_toStartOf="parent"
-                tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck,DuplicateClickableBoundsCheck"
-                tools:layout_editor_absoluteY="38dp" />
+                tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck,DuplicateClickableBoundsCheck" />
 
             <TextView
                 android:id="@+id/includLabel"
@@ -80,13 +96,27 @@
                 app:layout_constraintEnd_toEndOf="@id/pantryBtn"
                 app:layout_constraintLeft_toLeftOf="@id/pantryBtn"
                 app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.931"
+                tools:ignore="HardcodedText,TextContrastCheck,TextSizeCheck,VisualLintOverlap" />
+
+            <TextView
+                android:id="@+id/includLabel2"
+                android:layout_width="86dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/pantry"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toTopOf="@+id/pantryBtn"
+                app:layout_constraintEnd_toEndOf="@id/pantryBtn"
+                app:layout_constraintLeft_toLeftOf="@id/pantryBtn"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.931"
                 tools:ignore="HardcodedText,TextContrastCheck,TextSizeCheck" />
 
             <TextView
                 android:id="@+id/notIncludLabel"
-                android:layout_width="82dp"
+                android:layout_width="86dp"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="7dp"
                 android:gravity="center"
                 android:text="@string/allergy"
                 android:textSize="18sp"
@@ -94,19 +124,42 @@
                 app:layout_constraintEnd_toEndOf="@id/notIncludIngBtn"
                 app:layout_constraintLeft_toLeftOf="@id/notIncludIngBtn"
                 app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.931"
                 tools:ignore="HardcodedText,TextContrastCheck,TextSizeCheck" />
 
             <TextView
                 android:id="@+id/prepTimeLabel"
-                android:layout_width="84dp"
-                android:layout_height="wrap_content"
+                android:layout_width="90dp"
+                android:layout_height="24dp"
                 android:text="@string/prepTime"
                 android:textSize="18sp"
                 app:layout_constraintBottom_toTopOf="@+id/timingBtn"
                 app:layout_constraintEnd_toEndOf="@id/timingBtn"
                 app:layout_constraintLeft_toLeftOf="@id/timingBtn"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:ignore="HardcodedText,TextContrastCheck" />
+                app:layout_constraintVertical_bias="0.931"
+                tools:ignore="HardcodedText,TextContrastCheck,TextSizeCheck" />
+
+            <TextView
+                android:id="@+id/dietLabel"
+                android:layout_width="86dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/diet"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toTopOf="@+id/dietBtn"
+                app:layout_constraintEnd_toEndOf="@id/dietBtn"
+                app:layout_constraintLeft_toLeftOf="@id/dietBtn"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.931"
+                tools:ignore="HardcodedText,TextContrastCheck,TextSizeCheck,VisualLintOverlap" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_begin="20dp" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
