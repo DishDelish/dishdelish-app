@@ -8,11 +8,12 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Pair;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -42,16 +43,17 @@ import java.util.Map;
 
 public class UploadingRecipeFragment extends Fragment {
     View view;
-    Button chooseImg, uploadImg;
-    ChipGroup chipGroup;
-    ImageView imgView, addIngredient, addStep;
-    LinearLayout stepList;
+    Button uploadImg, addIngredient, addStep;
+    ImageView imgView;
+    LinearLayout stepListLinearLayout, ingredientLinearLayout;
     int PICK_IMAGE_REQUEST = 111;
     Uri filePath;
     ProgressDialog pd;
-    String storagePath = "Recipes_image/";
+    String storagePath = "recipes_image/";
 
-    List<Ingredient> ingredientList = new ArrayList<Ingredient>();
+    AutoCompleteTextView prepTimeUnitAutoComplete, cookTimeUnitAutoComplete;
+
+    String[] timeUnits = new String[]{"mins", "hours", "days"};
 
     //creating reference to firebase storage
     // temporarily commented out till integrated with firebase auth
@@ -73,24 +75,27 @@ public class UploadingRecipeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_upload_recipes, container, false);
 
-        chooseImg = (Button) view.findViewById(R.id.chooseImg);
-        uploadImg = (Button) view.findViewById(R.id.uploadButton);
-        imgView = (ImageView) view.findViewById(R.id.imgView);
-        chipGroup = (ChipGroup) view.findViewById(R.id.chipGroup);
-        addIngredient = (ImageView) view.findViewById(R.id.addIngredient);
-        addStep = (ImageView) view.findViewById(R.id.addStep);
-        stepList = (LinearLayout) view.findViewById(R.id.stepGroup);
-        EditText ingredientsAmount = (EditText) view.findViewById(R.id.ingredientsAmount);
-        EditText ingredientsUnit = (EditText) view.findViewById(R.id.ingredientsUnit);
-        EditText ingredientsName = (EditText) view.findViewById(R.id.ingredientsName);
+        // get view elements
+        uploadImg = (Button) view.findViewById(R.id.recipeUploadButton);
+        imgView = (ImageView) view.findViewById(R.id.recipeImage);
+        addIngredient = (Button) view.findViewById(R.id.addIngredientButton);
+        addStep = (Button) view.findViewById(R.id.addStepButton);
+        stepListLinearLayout = (LinearLayout) view.findViewById(R.id.stepGroup);
+        ingredientLinearLayout = (LinearLayout) view.findViewById(R.id.ingredientsGroup);
+        prepTimeUnitAutoComplete = (AutoCompleteTextView) view.findViewById(R.id.prepTimeUnitAutoComplete);
+        cookTimeUnitAutoComplete = (AutoCompleteTextView) view.findViewById(R.id.cookTimeUnitAutoComplete);
+
+        // set up dropdown content for the unit of prepTime and cookTime
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.dropdown_item, timeUnits);
+        prepTimeUnitAutoComplete.setAdapter(adapter);
+        cookTimeUnitAutoComplete.setAdapter(adapter);
 
         pd = new ProgressDialog(getActivity());
         pd.setMessage("Uploading....");
 
-        chooseImg.setOnClickListener(new View.OnClickListener() {
+        imgView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 chooseImg();
@@ -112,17 +117,7 @@ public class UploadingRecipeFragment extends Fragment {
         addIngredient.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!ingredientsAmount.getText().toString().isEmpty() && !ingredientsUnit.getText().toString().isEmpty() && !ingredientsName.getText().toString().isEmpty()
-                ) {
-                    int amount = Integer.parseInt(ingredientsAmount.getText().toString());
-                    String unit = ingredientsUnit.getText().toString();
-                    String name = ingredientsName.getText().toString();
-                    addChip(amount + " " + unit + " " + name);
-                    ingredientList.add(new Ingredient(name, new Unit(amount, unit)));
-                    ingredientsAmount.setText("");
-                    ingredientsUnit.setText("");
-                    ingredientsName.setText("");
-                }
+                addIngredient();
             }
         });
 
@@ -169,7 +164,7 @@ public class UploadingRecipeFragment extends Fragment {
                 Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
                 while (!uriTask.isSuccessful()) ;
 
-                // We will get the url of our image using uritask
+                // get the url of the recipe image using uritask
                 final Uri downloadUri = uriTask.getResult();
                 if (uriTask.isSuccessful()) {
                     Map<String, Object> hashMap = getRecipe(downloadUri);
@@ -202,64 +197,6 @@ public class UploadingRecipeFragment extends Fragment {
         });
     }
 
-    private void addChip(String text) {
-        Chip chip = new Chip(new ContextThemeWrapper(getActivity(), R.style.Theme_SDPBootcamp));
-        chip.setText(text);
-
-        chip.setClickable(true);
-        chip.setCheckable(true);
-        chip.setCloseIconVisible(true);
-        chip.setOnCloseIconClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                chipGroup.removeView(chip);
-                // as chips are formed in the format of 'anount + " " + unit + " " + name"
-                // so that the name of the ingredient to be removed is chip.getText().toString().split(" ")[1]
-                // and it can be filtered out by its name
-                ingredientList.removeIf(ingredient -> ingredient.getIngredient().equals(chip.getText().toString().split(" ")[-1])
-                );
-            }
-        });
-
-        chipGroup.addView(chip);
-    }
-
-    private void addStep() {
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            final View step = getLayoutInflater().inflate(R.layout.cancelable_edittext, null, false);
-            ImageView removeStep = (ImageView) step.findViewById(R.id.remove);
-            EditText stepContent = (EditText) step.findViewById(R.id.stepContent);
-
-            stepContent.setHint("Step " + String.valueOf(stepList.getChildCount() + 1));
-
-            removeStep.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    removeStep(step);
-                }
-            });
-
-            stepList.addView(step);
-        }
-    }
-
-    private void removeStep(View step) {
-        stepList.removeView(step);
-    }
-
-    private List<String> getSteps() {
-        ArrayList<String> steps = new ArrayList<String>();
-        for (int i = 0; i < stepList.getChildCount(); i++) {
-            if (stepList.getChildAt(i) instanceof LinearLayoutCompat) {
-                LinearLayoutCompat step = (LinearLayoutCompat) stepList.getChildAt(i);
-                if (step.getChildAt(0) instanceof EditText) {
-                    steps.add(((EditText) step.getChildAt(0)).getText().toString());
-                }
-            }
-        }
-        return steps;
-    }
-
     private Map<String, Object> getRecipe(Uri downloadUri) {
         HashMap<String, Object> hashMap = new HashMap<>();
         EditText recipeName = view.findViewById(R.id.recipeName);
@@ -286,7 +223,7 @@ public class UploadingRecipeFragment extends Fragment {
         recipe.put("prepTime", Integer.parseInt(prepTime.getText().toString()));
         recipe.put("servings", Integer.parseInt(servings.getText().toString()));
         recipe.put("utensils", new Utensils(Arrays.asList(utensils.getText().toString())));
-        recipe.put("ingredientList", ingredientList);
+        recipe.put("ingredientList", getIngredients());
         recipe.put("steps", getSteps());
         hashMap.put(recipeName.getText().toString(), recipe);
 
@@ -300,4 +237,75 @@ public class UploadingRecipeFragment extends Fragment {
         startActivityForResult(Intent.createChooser(intent, "Select Image"), PICK_IMAGE_REQUEST);
     }
 
+    private void addIngredient() {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            final View ingredient = getLayoutInflater().inflate(R.layout.recipe_ingredient_edittext, null, false);
+            ImageView removeIngredient = (ImageView) ingredient.findViewById(R.id.removeIngredient);
+
+            removeIngredient.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    removeIngredient(ingredient);
+                }
+            });
+
+            stepListLinearLayout.addView(ingredient);
+        }
+    }
+
+    private void removeIngredient(View ingredient) {
+        ingredientLinearLayout.removeView(ingredient);
+    }
+
+    private List<Ingredient> getIngredients() {
+        ArrayList<Ingredient> ingredients = new ArrayList<Ingredient>();
+        for (int i = 0; i < stepListLinearLayout.getChildCount(); i++) {
+            if (stepListLinearLayout.getChildAt(i) instanceof LinearLayoutCompat) {
+                LinearLayoutCompat step = (LinearLayoutCompat) stepListLinearLayout.getChildAt(i);
+                if (step.getChildAt(0) instanceof EditText && step.getChildAt(1) instanceof EditText && step.getChildAt(2) instanceof EditText) {
+                    String ingredientName = ((EditText) step.getChildAt(2)).getText().toString();
+                    String ingredientUnit = ((EditText) step.getChildAt(1)).getText().toString();
+                    int ingredientAmount = Integer.parseInt(((EditText) step.getChildAt(0)).getText().toString());
+                    ingredients.add(new Ingredient(ingredientName, new Unit(ingredientAmount, ingredientUnit)));
+                }
+            }
+        }
+        return ingredients;
+    }
+
+    private void addStep() {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            final View step = getLayoutInflater().inflate(R.layout.recipe_step_edittext, null, false);
+            ImageView removeStep = (ImageView) step.findViewById(R.id.removeStep);
+            EditText stepContent = (EditText) step.findViewById(R.id.stepContent);
+
+            stepContent.setHint("Step " + String.valueOf(stepListLinearLayout.getChildCount() + 1));
+
+            removeStep.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    removeStep(step);
+                }
+            });
+
+            stepListLinearLayout.addView(step);
+        }
+    }
+
+    private void removeStep(View step) {
+        stepListLinearLayout.removeView(step);
+    }
+
+    private List<String> getSteps() {
+        ArrayList<String> steps = new ArrayList<String>();
+        for (int i = 0; i < stepListLinearLayout.getChildCount(); i++) {
+            if (stepListLinearLayout.getChildAt(i) instanceof LinearLayoutCompat) {
+                LinearLayoutCompat step = (LinearLayoutCompat) stepListLinearLayout.getChildAt(i);
+                if (step.getChildAt(0) instanceof EditText) {
+                    steps.add(((EditText) step.getChildAt(0)).getText().toString());
+                }
+            }
+        }
+        return steps;
+    }
 }

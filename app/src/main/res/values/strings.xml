@@ -3,17 +3,28 @@
     <string name="greetingMessage">Hello, %1$s!</string>
     <string name="uploadRecipePageTitle">Upload Recipe</string>
     <string name="uploadRecipePageRecipeName">Recipe Name</string>
+    <string name="uploadRecipePageRecipeNameHint">Give your recipe a name</string>
     <string name="uploadRecipePageChooseImg">Choose Image</string>
     <string name="uploadRecipePageButtonText">Upload Recipe</string>
-    <string name="prepTime">Preparation Time</string>
-    <string name="cookTime">Cooking Time</string>
+    <string name="prepTime">Prep Time</string>
+    <string name="prepTimeHint">0</string>
+    <string name="cookTime">Cook Time</string>
+    <string name="cookTimeHint">0</string>
     <string name="servings">Servings</string>
+    <string name="servingsHint">e.g. 5</string>
     <string name="utensils">Utensils</string>
+    <string name="utensilsHint">e.g. chopsticks</string>
     <string name="ingredients">Ingredients</string>
-    <string name="ingredientsAmount">No.</string>
-    <string name="ingredientsUnit">Unit</string>
-    <string name="ingredientsName">Name</string>
-    <string name="step">Step</string>
+    <string name="ingredientsAmountHint">e.g. 2</string>
+    <string name="ingredientsUnitHint">e.g. cups</string>
+    <string name="ingredientsNameHint">e.g. suger</string>
+    <string name="addIngredients">Add Ingredient</string>
+    <string name="step">Directions</string>
+    <string name="addSteps">Add Step</string>
+    <string name="time_mins">mins</string>
+    <string name="time_hours">hours</string>
+    <string name="time_days">days</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="home">Home</string>
     <string name="open">Open</string>

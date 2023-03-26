@@ -8,7 +8,8 @@
         android:layout_height="fill_parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        android:fillViewport="true">
 
         <RelativeLayout
             android:layout_width="fill_parent"
@@ -16,212 +17,406 @@
 
             <TextView
                 android:id="@+id/uploadRecipeTitle"
-                android:layout_width="wrap_content"
+                android:layout_width="350dp"
+                android:layout_centerHorizontal="true"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
                 android:layout_marginTop="40dp"
                 android:text="@string/uploadRecipePageTitle"
-                android:textSize="40sp" />
+                android:textSize="34sp"
+                android:textStyle="bold" />
 
-            <EditText
+            <LinearLayout
                 android:id="@+id/recipeName"
-                android:layout_width="300dp"
+                android:layout_width="350dp"
+                android:layout_marginTop="40dp"
+                android:layout_centerHorizontal="true"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/uploadRecipeTitle"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="20dp"
-                android:drawableStart="@drawable/cookie_edit"
-                android:drawablePadding="5dp"
-                android:gravity="start"
-                android:hint="@string/uploadRecipePageRecipeName"
-                android:inputType="text"
-                android:textColorHint="#8e9094"
-                android:textCursorDrawable="@null" />
+                android:orientation="vertical">
 
-            <EditText
+                <TextView
+                    android:layout_width="350dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/uploadRecipePageRecipeName"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/recipeNameContent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/uploadRecipePageRecipeNameHint"
+                    android:textColorHint="#8e9094"
+                    app:startIconDrawable="@drawable/cookie_edit"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
                 android:id="@+id/prepTime"
-                android:layout_width="300dp"
+                android:layout_width="350dp"
+                android:layout_marginTop="20dp"
+                android:layout_centerHorizontal="true"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/recipeName"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="5dp"
-                android:drawableStart="@drawable/cookie_clock"
-                android:drawablePadding="5dp"
-                android:gravity="start"
-                android:hint="@string/prepTime"
-                android:inputType="numberDecimal"
-                android:textColorHint="#8e9094"
-                android:textCursorDrawable="@null" />
+                android:orientation="horizontal">
 
-            <EditText
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/prepTime"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/prepTimeContent"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:hint="@string/prepTimeHint"
+                    android:textColorHint="#8e9094"
+                    app:startIconDrawable="@drawable/cookie_clock"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/prepTimeUnit"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:hint="@string/time_mins">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/prepTimeUnitAutoComplete"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="none"
+                        />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
                 android:id="@+id/cookTime"
-                android:layout_width="300dp"
+                android:layout_width="350dp"
+                android:layout_marginTop="20dp"
+                android:layout_centerHorizontal="true"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/prepTime"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="5dp"
-                android:drawableStart="@drawable/cookie_clock"
-                android:drawablePadding="5dp"
-                android:gravity="start"
-                android:hint="@string/cookTime"
-                android:inputType="numberDecimal"
-                android:textColorHint="#8e9094"
-                android:textCursorDrawable="@null" />
+                android:orientation="horizontal">
 
-            <EditText
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/cookTime"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/cookTimeContent"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:hint="@string/cookTimeHint"
+                    android:textColorHint="#8e9094"
+                    app:startIconDrawable="@drawable/cookie_clock"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/cookTimeUnit"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:hint="@string/time_mins">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/cookTimeUnitAutoComplete"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="none"
+                        />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
                 android:id="@+id/servings"
-                android:layout_width="300dp"
+                android:layout_width="350dp"
+                android:layout_marginTop="30dp"
+                android:layout_centerHorizontal="true"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/cookTime"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="5dp"
-                android:drawableStart="@drawable/pencil"
-                android:drawablePadding="5dp"
-                android:gravity="start"
-                android:hint="@string/servings"
-                android:inputType="numberDecimal"
-                android:textColorHint="#8e9094"
-                android:textCursorDrawable="@null" />
+                android:orientation="vertical">
 
-            <EditText
+                <TextView
+                    android:layout_width="350dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/servings"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/servingsContent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/servingsHint"
+                    android:textColorHint="#8e9094"
+                    app:startIconDrawable="@drawable/pencil"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="numberDecimal"
+                        />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
                 android:id="@+id/utensils"
-                android:layout_width="300dp"
+                android:layout_width="350dp"
+                android:layout_marginTop="30dp"
+                android:layout_centerHorizontal="true"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/servings"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="5dp"
-                android:drawableStart="@drawable/silverware_fork_knife"
-                android:drawablePadding="5dp"
-                android:gravity="start"
-                android:hint="@string/utensils"
-                android:inputType="text"
-                android:textColorHint="#8e9094"
-                android:textCursorDrawable="@null" />
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="350dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/utensils"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/utensilsContent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/utensilsHint"
+                    android:textColorHint="#8e9094"
+                    app:startIconDrawable="@drawable/silverware_fork_knife"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/ingredientsGroup"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:layout_marginTop="30dp"
+                android:orientation="vertical"
                 android:layout_below="@+id/utensils"
-                android:layout_centerHorizontal="true"
-                android:gravity="center_vertical">
+                android:layout_centerHorizontal="true">
 
-                <EditText
-                    android:id="@+id/ingredientsAmount"
-                    android:layout_width="70dp"
+                <TextView
+                    android:layout_width="350dp"
                     android:layout_height="wrap_content"
-                    android:drawableStart="@drawable/fruit_citrus"
-                    android:drawablePadding="5dp"
-                    android:gravity="start"
-                    android:hint="@string/ingredientsAmount"
-                    android:inputType="number"
-                    android:textColorHint="#8e9094"
-                    android:textCursorDrawable="@null" />
-                <EditText
-                    android:id="@+id/ingredientsUnit"
-                    android:layout_width="40dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:gravity="start"
-                    android:hint="@string/ingredientsUnit"
-                    android:inputType="text"
-                    android:textColorHint="#8e9094"
-                    android:textCursorDrawable="@null" />
-                <EditText
-                    android:id="@+id/ingredientsName"
-                    android:layout_width="150dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:gravity="start"
-                    android:hint="@string/ingredientsName"
-                    android:inputType="text"
-                    android:textColorHint="#8e9094"
-                    android:textCursorDrawable="@null" />
+                    android:text="@string/ingredients"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
 
-                <ImageView
-                    android:id="@+id/addIngredient"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:src="@drawable/plus"/>
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/ingredients"
+                    android:layout_width="350dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/ingredientsAmount"
+                        android:layout_width="75dp"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/ingredientsAmountHint"
+                        android:textColorHint="#8e9094"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="numberDecimal"
+                            />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/ingredientsUnit"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:hint="@string/ingredientsUnitHint"
+                        android:textColorHint="#8e9094"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/ingredientsName"
+                        android:layout_width="120dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:hint="@string/ingredientsNameHint"
+                        android:textColorHint="#8e9094"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <ImageView
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:src="@drawable/close"
+                        android:layout_marginStart="15dp"
+                        android:id="@+id/removeIngredient" />
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
 
             </LinearLayout>
 
-            <com.google.android.material.chip.ChipGroup
-                android:id="@+id/chipGroup"
-                android:theme="@style/Theme.SDPBootcamp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <LinearLayout
+                android:id="@+id/addIngredients"
+                android:layout_width="350dp"
                 android:layout_below="@+id/ingredientsGroup"
-                android:layout_marginStart="20dp"
-                android:layout_marginLeft="50dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginRight="50dp"
-                android:layout_marginBottom="20dp" />
+                android:layout_centerHorizontal="true"
+                android:layout_height="wrap_content">
+                <Button
+                    android:id="@+id/addIngredientButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/addIngredients"
+                    android:layout_marginTop="10dp"
+                    style="?attr/materialButtonOutlinedStyle"
+                    />
+            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/stepGroup"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_below="@+id/chipGroup"
+                android:layout_marginTop="30dp"
+                android:layout_below="@+id/addIngredients"
                 android:layout_centerHorizontal="true">
 
+                <TextView
+                    android:layout_width="350dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/step"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
                 <androidx.appcompat.widget.LinearLayoutCompat
-                    android:layout_width="wrap_content"
+                    android:id="@+id/step"
+                    android:layout_width="350dp"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical">
-                    <EditText
-                        android:id="@+id/step"
-                        android:layout_width="270dp"
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/stepContent"
+                        android:layout_width="315dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:drawableStart="@drawable/chef_hat"
-                        android:drawablePadding="5dp"
-                        android:gravity="start"
-                        android:hint="@string/step"
-                        android:inputType="text"
+                        android:hint="@string/ingredientsNameHint"
                         android:textColorHint="#8e9094"
-                        android:textCursorDrawable="@null" />
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            />
+
+                    </com.google.android.material.textfield.TextInputLayout>
 
                     <ImageView
-                        android:id="@+id/addStep"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:src="@drawable/plus"/>
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:src="@drawable/close"
+                        android:layout_marginStart="15dp"
+                        android:id="@+id/removeStep" />
+
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
             </LinearLayout>
 
-            <Button
-                android:id="@+id/chooseImg"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <LinearLayout
+                android:id="@+id/addSteps"
+                android:layout_width="350dp"
                 android:layout_below="@+id/stepGroup"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="20dp"
-                android:text="@string/uploadRecipePageChooseImg" />
+                android:layout_height="wrap_content">
+                <Button
+                    android:id="@+id/addStepButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/addSteps"
+                    android:layout_marginTop="10dp"
+                    style="?attr/materialButtonOutlinedStyle"
+                    />
+            </LinearLayout>
 
             <ImageView
-                android:id="@+id/imgView"
-                android:layout_width="200dp"
+                android:id="@+id/recipeImage"
+                android:layout_width="350dp"
                 android:layout_height="200dp"
-                android:layout_below="@+id/chooseImg"
+                android:layout_below="@+id/addSteps"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="10dp"
-                android:src="@drawable/panorama_variant" />
+                android:layout_marginTop="30dp"
+                android:src="@drawable/image_plus" />
 
-            <Button
-                android:id="@+id/uploadButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/imgView"
+            <LinearLayout
+                android:id="@+id/recipeUpload"
+                android:layout_width="350dp"
+                android:layout_below="@+id/recipeImage"
+                android:layout_marginTop="20dp"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="10dp"
-                android:gravity="center"
-                android:text="@string/uploadRecipePageButtonText"
-                app:layout_constraintEnd_toEndOf="parent" />
+                android:layout_height="wrap_content">
+                <Button
+                    android:id="@+id/recipeUploadButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/uploadRecipePageButtonText"
+                    />
+            </LinearLayout>
 
         </RelativeLayout>
     </ScrollView>
