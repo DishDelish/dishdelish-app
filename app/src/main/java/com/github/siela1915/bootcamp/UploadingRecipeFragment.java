@@ -29,6 +29,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -79,7 +80,7 @@ public class UploadingRecipeFragment extends Fragment {
 
         // get view elements
         uploadImg = (Button) view.findViewById(R.id.recipeUploadButton);
-        imgView = (ImageView) view.findViewById(R.id.recipeImage);
+        imgView = (ImageView) view.findViewById(R.id.recipeImageContent);
         addIngredient = (Button) view.findViewById(R.id.addIngredientButton);
         addStep = (Button) view.findViewById(R.id.addStepButton);
         stepListLinearLayout = (LinearLayout) view.findViewById(R.id.stepGroup);
@@ -90,7 +91,9 @@ public class UploadingRecipeFragment extends Fragment {
         // set up dropdown content for the unit of prepTime and cookTime
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.dropdown_item, timeUnits);
         prepTimeUnitAutoComplete.setAdapter(adapter);
+        prepTimeUnitAutoComplete.setText(adapter.getItem(0), false); // select default time unit
         cookTimeUnitAutoComplete.setAdapter(adapter);
+        cookTimeUnitAutoComplete.setText(adapter.getItem(0), false); // select default time unit
 
         pd = new ProgressDialog(getActivity());
         pd.setMessage("Uploading....");
@@ -199,11 +202,11 @@ public class UploadingRecipeFragment extends Fragment {
 
     private Map<String, Object> getRecipe(Uri downloadUri) {
         HashMap<String, Object> hashMap = new HashMap<>();
-        EditText recipeName = view.findViewById(R.id.recipeName);
-        EditText cookTime = view.findViewById(R.id.cookTime);
-        EditText prepTime = view.findViewById(R.id.prepTime);
-        EditText servings = view.findViewById(R.id.servings);
-        EditText utensils = view.findViewById(R.id.utensils);
+        TextInputLayout recipeName = view.findViewById(R.id.recipeNameContent);
+        TextInputLayout cookTime = view.findViewById(R.id.cookTimeContent);
+        TextInputLayout prepTime = view.findViewById(R.id.prepTimeContent);
+        TextInputLayout servings = view.findViewById(R.id.servingsContent);
+        TextInputLayout utensils = view.findViewById(R.id.utensilsContent);
 
 //                    Recipe recipe = new Recipe();
 //                    recipe.setRecipeName(recipeName.getText().toString());
@@ -217,15 +220,15 @@ public class UploadingRecipeFragment extends Fragment {
 
         // should be using Recipe object but as it is not finalized some temp hashmaps are used
         HashMap<String, Object> recipe = new HashMap<>();
-        recipe.put("recipeName", recipeName.getText().toString());
+        recipe.put("recipeName", recipeName.getEditText().getText().toString());
         recipe.put("image", downloadUri.toString());
-        recipe.put("cookTime", Integer.parseInt(cookTime.getText().toString()));
-        recipe.put("prepTime", Integer.parseInt(prepTime.getText().toString()));
-        recipe.put("servings", Integer.parseInt(servings.getText().toString()));
-        recipe.put("utensils", new Utensils(Arrays.asList(utensils.getText().toString())));
+        recipe.put("cookTime", Integer.parseInt(cookTime.getEditText().getText().toString()));
+        recipe.put("prepTime", Integer.parseInt(prepTime.getEditText().getText().toString()));
+        recipe.put("servings", Integer.parseInt(servings.getEditText().getText().toString()));
+        recipe.put("utensils", new Utensils(Arrays.asList(utensils.getEditText().getText().toString())));
         recipe.put("ingredientList", getIngredients());
         recipe.put("steps", getSteps());
-        hashMap.put(recipeName.getText().toString(), recipe);
+        hashMap.put(recipeName.getEditText().getText().toString(), recipe);
 
         return hashMap;
     }
@@ -249,7 +252,7 @@ public class UploadingRecipeFragment extends Fragment {
                 }
             });
 
-            stepListLinearLayout.addView(ingredient);
+            ingredientLinearLayout.addView(ingredient);
         }
     }
 
@@ -259,13 +262,13 @@ public class UploadingRecipeFragment extends Fragment {
 
     private List<Ingredient> getIngredients() {
         ArrayList<Ingredient> ingredients = new ArrayList<Ingredient>();
-        for (int i = 0; i < stepListLinearLayout.getChildCount(); i++) {
-            if (stepListLinearLayout.getChildAt(i) instanceof LinearLayoutCompat) {
-                LinearLayoutCompat step = (LinearLayoutCompat) stepListLinearLayout.getChildAt(i);
-                if (step.getChildAt(0) instanceof EditText && step.getChildAt(1) instanceof EditText && step.getChildAt(2) instanceof EditText) {
-                    String ingredientName = ((EditText) step.getChildAt(2)).getText().toString();
-                    String ingredientUnit = ((EditText) step.getChildAt(1)).getText().toString();
-                    int ingredientAmount = Integer.parseInt(((EditText) step.getChildAt(0)).getText().toString());
+        for (int i = 0; i < ingredientLinearLayout.getChildCount(); i++) {
+            if (ingredientLinearLayout.getChildAt(i) instanceof LinearLayoutCompat) {
+                LinearLayoutCompat step = (LinearLayoutCompat) ingredientLinearLayout.getChildAt(i);
+                if (step.getChildAt(0) instanceof TextInputLayout && step.getChildAt(1) instanceof TextInputLayout && step.getChildAt(2) instanceof TextInputLayout) {
+                    String ingredientName = ((TextInputLayout) step.getChildAt(2)).getEditText().getText().toString();
+                    String ingredientUnit = ((TextInputLayout) step.getChildAt(1)).getEditText().getText().toString();
+                    int ingredientAmount = Integer.parseInt(((TextInputLayout) step.getChildAt(0)).getEditText().getText().toString());
                     ingredients.add(new Ingredient(ingredientName, new Unit(ingredientAmount, ingredientUnit)));
                 }
             }
@@ -277,9 +280,9 @@ public class UploadingRecipeFragment extends Fragment {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             final View step = getLayoutInflater().inflate(R.layout.recipe_step_edittext, null, false);
             ImageView removeStep = (ImageView) step.findViewById(R.id.removeStep);
-            EditText stepContent = (EditText) step.findViewById(R.id.stepContent);
+            TextInputLayout stepContent = (TextInputLayout) step.findViewById(R.id.stepContent);
 
-            stepContent.setHint("Step " + String.valueOf(stepListLinearLayout.getChildCount() + 1));
+            stepContent.setHint("Step " + String.valueOf(stepListLinearLayout.getChildCount()));
 
             removeStep.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -301,8 +304,8 @@ public class UploadingRecipeFragment extends Fragment {
         for (int i = 0; i < stepListLinearLayout.getChildCount(); i++) {
             if (stepListLinearLayout.getChildAt(i) instanceof LinearLayoutCompat) {
                 LinearLayoutCompat step = (LinearLayoutCompat) stepListLinearLayout.getChildAt(i);
-                if (step.getChildAt(0) instanceof EditText) {
-                    steps.add(((EditText) step.getChildAt(0)).getText().toString());
+                if (step.getChildAt(0) instanceof TextInputLayout) {
+                    steps.add(((TextInputLayout) step.getChildAt(0)).getEditText().getText().toString());
                 }
             }
         }

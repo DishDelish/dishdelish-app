@@ -21,9 +21,11 @@
     <string name="addIngredients">Add Ingredient</string>
     <string name="step">Directions</string>
     <string name="addSteps">Add Step</string>
+    <string name="stepHint">e.g. Preheat oven to 350 degrees</string>
     <string name="time_mins">mins</string>
     <string name="time_hours">hours</string>
     <string name="time_days">days</string>
+    <string name="image">Photo</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="home">Home</string>

@@ -55,13 +55,12 @@ public class UploadingRecipeFragmentTest {
         onView(withId(R.id.ingredientsAmount)).check(matches(withEffectiveVisibility(VISIBLE)));
         onView(withId(R.id.ingredientsUnit)).check(matches(withEffectiveVisibility(VISIBLE)));
         onView(withId(R.id.ingredientsName)).check(matches(withEffectiveVisibility(VISIBLE)));
-        onView(withId(R.id.addIngredient)).check(matches(withEffectiveVisibility(VISIBLE)));
+        onView(withId(R.id.addIngredientButton)).check(matches(withEffectiveVisibility(VISIBLE)));
         onView(withId(R.id.stepGroup)).check(matches(withEffectiveVisibility(VISIBLE)));
         onView(withId(R.id.step)).check(matches(withEffectiveVisibility(VISIBLE)));
-        onView(withId(R.id.addStep)).check(matches(withEffectiveVisibility(VISIBLE)));
-        onView(withId(R.id.chooseImg)).check(matches(withEffectiveVisibility(VISIBLE)));
-        onView(withId(R.id.imgView)).check(matches(withEffectiveVisibility(VISIBLE)));
-        onView(withId(R.id.uploadButton)).check(matches(withEffectiveVisibility(VISIBLE)));
+        onView(withId(R.id.addStepButton)).check(matches(withEffectiveVisibility(VISIBLE)));
+        onView(withId(R.id.recipeImage)).check(matches(withEffectiveVisibility(VISIBLE)));
+        onView(withId(R.id.recipeUploadButton)).check(matches(withEffectiveVisibility(VISIBLE)));
     }
 
     @Test
@@ -125,7 +124,7 @@ public class UploadingRecipeFragmentTest {
         onView(withId(R.id.ingredientsName)).perform(ViewActions.replaceText(nameTest));
         onView(withId(R.id.ingredientsUnit)).perform(ViewActions.replaceText(unitTest)).perform(ViewActions.closeSoftKeyboard());
 
-        onView(withId(R.id.addIngredient)).perform(ViewActions.click());
+        onView(withId(R.id.addIngredientButton)).perform(ViewActions.click());
 
         String expectedDisplay = amountTest + " " + unitTest + " " + nameTest;
         onView(allOf(withText(containsString(expectedDisplay)), isAssignableFrom(Chip.class))).check((matches(isDisplayed())));
@@ -143,7 +142,7 @@ public class UploadingRecipeFragmentTest {
         onView(withId(R.id.ingredientsAmount)).perform(ViewActions.replaceText(amountTest));
         onView(withId(R.id.ingredientsName)).perform(ViewActions.replaceText(nameTest));
         onView(withId(R.id.ingredientsUnit)).perform(ViewActions.replaceText(unitTest)).perform(ViewActions.closeSoftKeyboard());
-        onView(withId(R.id.addIngredient)).perform(ViewActions.click());
+        onView(withId(R.id.addIngredientButton)).perform(ViewActions.click());
 
         onView(withId(com.google.android.material.R.id.chip)).perform(ViewActions.click());
 
@@ -175,7 +174,7 @@ public class UploadingRecipeFragmentTest {
 
         onView(withId(R.id.step)).perform(ViewActions.replaceText("step-test"));
 
-        onView(withId(R.id.addStep)).perform(ViewActions.click());
+        onView(withId(R.id.addStepButton)).perform(ViewActions.click());
 
         onView(allOf(withText(containsString("step-test")), isAssignableFrom(EditText.class))).check((matches(isDisplayed())));
     }
@@ -206,11 +205,11 @@ public class UploadingRecipeFragmentTest {
         onView(withId(R.id.ingredientsAmount)).perform(ViewActions.replaceText(ingredientsAmountTest));
         onView(withId(R.id.ingredientsName)).perform(ViewActions.replaceText(ingredientsNameTest));
         onView(withId(R.id.ingredientsUnit)).perform(ViewActions.replaceText(ingredientsUnitTest));
-        onView(withId(R.id.addIngredient)).perform(ViewActions.click());
+        onView(withId(R.id.addIngredientButton)).perform(ViewActions.click());
         onView(withId(R.id.utensils)).perform(ViewActions.replaceText(utensils));
         onView(withId(R.id.step)).perform(ViewActions.replaceText(step));
 
-        onView(withId(R.id.uploadButton)).perform(ViewActions.scrollTo(),ViewActions.click());
+        onView(withId(R.id.recipeUploadButton)).perform(ViewActions.scrollTo(),ViewActions.click());
 
         Database db = new Database();
 
