@@ -27,7 +27,7 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
+        android:layout_marginStart="5dp"
         android:hint="@string/ingredientsUnitHint"
         android:textColorHint="#8e9094">
 
@@ -42,7 +42,7 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="120dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
+        android:layout_marginStart="5dp"
         android:hint="@string/ingredientsNameHint"
         android:textColorHint="#8e9094">
 
@@ -54,8 +54,8 @@
 
     <ImageView
         android:id="@+id/removeIngredient"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
         android:layout_marginStart="5dp"
         android:src="@drawable/close"/>
 
