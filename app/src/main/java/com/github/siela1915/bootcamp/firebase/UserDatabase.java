@@ -32,12 +32,16 @@ public class UserDatabase {
 
     public Task<Void> updateProfile(FirebaseUser user) {
         Map<String, Object> profile = new HashMap<>();
+
         profile.put("displayName", user.getDisplayName());
         profile.put("email", user.getEmail());
         if (user.getPhotoUrl() != null) {
             profile.put("photoUrl", user.getPhotoUrl().toString());
+        } else {
+            profile.put("photoUrl", null);
         }
         profile.put("id", user.getUid());
+
         return db.child(user.getUid()).updateChildren(profile);
     }
 
