@@ -23,7 +23,7 @@ import java.util.concurrent.ExecutionException;
  */
 public class Database {
 
-    private DatabaseReference db;
+    private final DatabaseReference db;
     private final static String RECIPES = "recipes";
     private final static String FAVORITES = "favorites";
 
@@ -41,19 +41,13 @@ public class Database {
      * Retrieves a recipe from the database given its unique id
      * @param uniqueKey the unique id associated to the recipe
      * @return the recipe fetched from the database
-     * @throws ExecutionException
-     * @throws InterruptedException
      * The exceptions are thrown when the retrieval fails.
      * For instance if the method times-out due to a network connection error.
      */
     public Recipe get(String uniqueKey) throws ExecutionException, InterruptedException {
-            Task<DataSnapshot> task = db.child(RECIPES).child(uniqueKey).get();
-            try {
-                DataSnapshot snapshot = Tasks.await(task);
-                return snapshot.getValue(Recipe.class);
-            } catch (ExecutionException | InterruptedException e) {
-                throw e;
-            }
+        Task<DataSnapshot> task = db.child(RECIPES).child(uniqueKey).get();
+        DataSnapshot snapshot = Tasks.await(task);
+        return snapshot.getValue(Recipe.class);
     }
 
     /**
@@ -66,12 +60,8 @@ public class Database {
         String uniqueKey = db.child(RECIPES).child("new").push().getKey();
         Map<String, Object> value = new HashMap<>();
         value.put(uniqueKey, recipe);
-        try {
-            //Tasks.await(db.child(RECIPES).child(uniqueKey).updateChildren(value));
-            Tasks.await(db.child(RECIPES).updateChildren(value));
-        } catch (ExecutionException | InterruptedException e) {
-            throw e;
-        }
+        //Tasks.await(db.child(RECIPES).child(uniqueKey).updateChildren(value));
+        Tasks.await(db.child(RECIPES).updateChildren(value));
         return uniqueKey;
     }
 
@@ -88,8 +78,6 @@ public class Database {
      * Since the name is not unique, this method may return multiple recipes.
      * @param name the name of the recipe to search for
      * @return a map from the recipe's unique key id to the recipe itself
-     * @throws ExecutionException
-     * @throws InterruptedException
      * The exceptions are thrown when the retrieval fails.
      * For instance if the method times-out due to a network connection error.
      */
@@ -102,8 +90,6 @@ public class Database {
      * Since the name is not unique, this method may return multiple recipes.
      * @param userName the name of the user who uploaded the recipe
      * @return a map from the recipe's unique key id to the recipe itself
-     * @throws ExecutionException
-     * @throws InterruptedException
      * The exceptions are thrown when the retrieval fails.
      * For instance if the method times-out due to a network connection error.
      */
@@ -115,8 +101,6 @@ public class Database {
      * Retrieve recipes with lower prep time.
      * @param time the upper bound limit to the prep time.
      * @return recipes with lower prep time than the time specified as parameter.
-     * @throws ExecutionException
-     * @throws InterruptedException
      */
     public Map<String, Recipe> getByUpperLimitOnPrepTime(int time) throws ExecutionException, InterruptedException {
         return getByUpperLimitOnTime("prepTime", time);
@@ -126,8 +110,6 @@ public class Database {
      * Retrieve recipes with lower cook time.
      * @param time the upper bound limit to the prep time.
      * @return recipes with lower prep time than the time specified as parameter.
-     * @throws ExecutionException
-     * @throws InterruptedException
      */
     public Map<String, Recipe> getByUpperLimitOnCookTime(int time) throws ExecutionException, InterruptedException {
         return getByUpperLimitOnTime("cookTime", time);
@@ -137,8 +119,6 @@ public class Database {
      * Retrieve recipes with higher prep time.
      * @param time the upper bound limit to the prep time.
      * @return recipes with lower prep time than the time specified as parameter.
-     * @throws ExecutionException
-     * @throws InterruptedException
      */
     public Map<String, Recipe> getByLowerLimitOnPrepTime(int time) throws ExecutionException, InterruptedException {
         return getByLowerLimitOnTime("prepTime", time);
@@ -148,11 +128,29 @@ public class Database {
      * Retrieve recipes with higher prep time.
      * @param time the upper bound limit to the prep time.
      * @return recipes with lower prep time than the time specified as parameter.
-     * @throws ExecutionException
-     * @throws InterruptedException
      */
     public Map<String, Recipe> getByLowerLimitOnCookTime(int time) throws ExecutionException, InterruptedException {
         return getByLowerLimitOnTime("cookTime", time);
+    }
+
+    /**
+     * Retrieve the top n recipes with the maximum number of likes in the database
+     * i.e. the most popular recipes.
+     * @param n number of top liked recipes to retrieve from the database.
+     * @return the top n recipes.
+     */
+    public Map<String, Recipe> getByMaxLikes(int n) throws ExecutionException, InterruptedException {
+        if (n < 1) {
+            throw new IllegalArgumentException();
+        }
+        Query query = db.child(RECIPES).orderByChild("likes").orderByValue().limitToLast(n);
+        Task<DataSnapshot> task = query.get();
+        DataSnapshot snapshot = Tasks.await(task);
+        Map<String, Recipe> recipes = new HashMap<>();
+        for (DataSnapshot val : snapshot.getChildren()) {
+            recipes.put(val.getKey(), val.getValue(Recipe.class));
+        }
+        return recipes;
     }
 
     private Map<String, Recipe> getByUpperLimitOnTime(String attribute, int time) throws ExecutionException, InterruptedException {
@@ -185,27 +183,6 @@ public class Database {
             recipes.put(val.getKey(), val.getValue(Recipe.class));
         }
         return recipes;
-    }
-
-    private Map<String, Object> recipeToMap(Recipe recipe) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("image", recipe.image);
-        map.put("recipeName", recipe.recipeName);
-        map.put("userName", recipe.userName);
-        map.put("profilePicture", recipe.profilePicture);
-        map.put("rating", recipe.rating);
-        map.put("prepTime", recipe.prepTime);
-        map.put("cookTime", recipe.cookTime);
-        map.put("servings", recipe.servings);
-        map.put("utensils", recipe.utensils);
-        map.put("cuisineTypes", recipe.cuisineTypes);
-        map.put("allergyTypes", recipe.allergyTypes);
-        map.put("dietTypes", recipe.dietTypes);
-        map.put("ingredientList", recipe.ingredientList);
-        map.put("steps", recipe.steps);
-        map.put("comments", recipe.comments);
-        map.put("likes", recipe.likes);
-        return map;
     }
 
     public Task<Void> addFavorite(String recipeId) {

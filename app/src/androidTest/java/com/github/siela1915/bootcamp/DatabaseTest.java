@@ -139,6 +139,98 @@ public class DatabaseTest {
         }
     }
 
+    @Test
+    public void searchByUserNameReturnsSingleRecipe() {
+        Database db = new Database(firebaseInstance);
+        Recipe recipe = createRecipeEggs();
+        try {
+            String key = db.set(recipe);
+            Map<String, Recipe> map = db.getByUserName("randomUser1");
+            assertTrue(map.containsKey(key));
+            assertEquals(recipe, map.get(key));
+        } catch (ExecutionException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Test
+    public void searchByUserNameReturnsMultipleRecipes() {
+        Database db = new Database(firebaseInstance);
+        Recipe recipe1 = createRecipeEggs();
+        Recipe recipe2 = createOtherEggsRecipe();
+        try {
+            String key1 = db.set(recipe1);
+            String key2 = db.set(recipe2);
+            Map<String, Recipe> map = db.getByUserName("randomUser1");
+            assertTrue(map.containsKey(key1));
+            assertTrue(map.containsKey(key2));
+            assertEquals(2, map.size());
+            assertEquals(recipe1, map.get(key1));
+            assertEquals(recipe2, map.get(key2));
+        } catch (ExecutionException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Test
+    public void searchByUserNameFailsWhenNameNotFound() {
+        //Fill database with at least one recipe
+        Database db = new Database(firebaseInstance);
+        Recipe recipe = createRecipeEggs();
+        try {
+            db.set(recipe);
+            Map<String, Recipe> bogus = db.getByUserName("bogusName");
+            assertEquals(bogus.size(), 0);
+        } catch (ExecutionException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Test
+    public void getByUpperLimitReturnsNoValuesAboveLimit() {
+        Database db = new Database(firebaseInstance);
+        List<Recipe> recipes = createRecipesDifferentTimes();
+        try {
+            for (Recipe r : recipes) {
+                db.set(r);
+            }
+            Map<String, Recipe> cook = db.getByUpperLimitOnCookTime(25);
+            Map<String, Recipe> prep = db.getByUpperLimitOnPrepTime(45);
+            assertEquals(cook.size(), 4);
+            assertEquals(prep.size(), 7);
+            boolean check1 = true;
+            for (Recipe r : cook.values()) {
+                if (r.getCookTime() > 25) {
+                    check1 = false;
+                    break;
+                }
+            }
+            assertTrue(check1);
+            boolean check2 = true;
+            for (Recipe r : prep.values()) {
+                if (r.getPrepTime() > 45) {
+                    check2 = false;
+                    break;
+                }
+            }
+            assertTrue(check2);
+        } catch (ExecutionException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private List<Recipe> createRecipesDifferentTimes() {
+        List<Integer> ls = Arrays.asList(4, 8, 15, 20, 30, 36, 45, 90);
+        List<Recipe> recipes = new ArrayList<>();
+        for (Integer i : ls) {
+            Recipe r = new Recipe();
+            r.setCookTime(i);
+            r.setPrepTime(i);
+            recipes.add(r);
+        }
+        return recipes;
+    }
+
     private Recipe createRecipeEggs() {
         List<String> utensils = new ArrayList<>();
         utensils.add("spoon");
@@ -177,7 +269,7 @@ public class DatabaseTest {
         List<Integer> cuisine = Arrays.asList(1, 2, 3, 4, 5);
         List<Integer> allergy = Arrays.asList(1, 2, 3, 4, 5);
         List<Integer> diet = Arrays.asList(1, 2, 3, 4, 5);
-        return new Recipe(97, "testRecipe", "randomUser2", 85, 4.5,
+        return new Recipe(97, "testRecipe", "randomUser1", 85, 4.5,
                 10, 5, 4, new Utensils(utensils), cuisine, allergy, diet, ingredients, steps, comments, 190);
     }
 
