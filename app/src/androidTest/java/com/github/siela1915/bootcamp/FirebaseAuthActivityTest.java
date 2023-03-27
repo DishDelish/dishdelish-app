@@ -26,6 +26,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.FirebaseDatabase;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -85,6 +86,7 @@ public class FirebaseAuthActivityTest {
     @Before
     public void prepare() {
         FirebaseAuth auth = FirebaseAuth.getInstance();
+        FirebaseDatabase.getInstance().useEmulator("10.0.2.2", 9000);
 
         auth.useEmulator("10.0.2.2", 9099);
 
