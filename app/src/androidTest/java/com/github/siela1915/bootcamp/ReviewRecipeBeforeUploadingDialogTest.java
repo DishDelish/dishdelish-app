@@ -2,6 +2,7 @@ package com.github.siela1915.bootcamp;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.RootMatchers.isDialog;
 import static androidx.test.espresso.matcher.ViewMatchers.Visibility.VISIBLE;
 import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
@@ -48,7 +49,7 @@ public class ReviewRecipeBeforeUploadingDialogTest {
 
     @Test
     public void displayTest() {
-        onView(withId(R.id.reviewRecipeTitle)).check(matches(withEffectiveVisibility(VISIBLE)));
+        onView(withId(R.id.reviewRecipeTitle)).inRoot(isDialog()).check(matches(withEffectiveVisibility(VISIBLE)));
         onView(withId(R.id.reviewRecipeTitle)).check(matches(ViewMatchers.withText("Review Recipe")));
         onView(withId(R.id.reviewRecipeNameContainer)).check(matches(withEffectiveVisibility(VISIBLE)));
         onView(withId(R.id.reviewRecipeName)).check(matches(ViewMatchers.withText("test-recipe")));

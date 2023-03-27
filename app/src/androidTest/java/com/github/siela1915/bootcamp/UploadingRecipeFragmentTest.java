@@ -190,7 +190,7 @@ public class UploadingRecipeFragmentTest {
         scenario = FragmentScenario.launchInContainer(UploadingRecipeFragment.class);
 
         onView(withId(R.id.addIngredientButton)).perform(ViewActions.scrollTo(), ViewActions.click());
-        onView(withId(R.id.removeIngredient)).perform(ViewActions.click());
+        onView(withId(R.id.removeIngredient)).perform(ViewActions.scrollTo(), ViewActions.click());
 
         onView(withId(R.id.ingredientsGroup)).check((matches(withChildViewCount(1, withId(R.id.ingredients)))));
     }
@@ -202,7 +202,7 @@ public class UploadingRecipeFragmentTest {
         onView(allOf(
                 isDescendantOfA(withId(R.id.utensilsContent)),
                 withClassName(endsWith("EditText"))
-        )).perform(typeText("utensils-test"));
+        )).perform(ViewActions.scrollTo(), typeText("utensils-test"));
 
         onView(allOf(
                 isDescendantOfA(withId(R.id.utensilsContent)),
@@ -239,7 +239,7 @@ public class UploadingRecipeFragmentTest {
         scenario = FragmentScenario.launchInContainer(UploadingRecipeFragment.class);
 
         onView(withId(R.id.addStepButton)).perform(ViewActions.scrollTo(), ViewActions.click());
-        onView(withId(R.id.removeStep)).perform(ViewActions.click());
+        onView(withId(R.id.removeStep)).perform(ViewActions.scrollTo(), ViewActions.click());
 
         onView(withId(R.id.stepGroup)).check((matches(withChildViewCount(1, withId(R.id.step)))));
     }
@@ -252,15 +252,15 @@ public class UploadingRecipeFragmentTest {
         onView(allOf(
                 isDescendantOfA(withId(R.id.recipeNameContent)),
                 withClassName(endsWith("EditText"))
-        )).perform(typeText("recipe-test"));
+        )).perform(ViewActions.scrollTo(), typeText("recipe-test"));
         onView(allOf(
                 isDescendantOfA(withId(R.id.prepTimeContent)),
                 withClassName(endsWith("EditText"))
-        )).perform(typeText("10"));
+        )).perform(ViewActions.scrollTo(), typeText("10"));
         onView(allOf(
                 isDescendantOfA(withId(R.id.cookTimeContent)),
                 withClassName(endsWith("EditText"))
-        )).perform(typeText("10"));
+        )).perform(ViewActions.scrollTo(), typeText("10"));
         onView(allOf(
                 isDescendantOfA(withId(R.id.servingsContent)),
                 withClassName(endsWith("EditText"))
