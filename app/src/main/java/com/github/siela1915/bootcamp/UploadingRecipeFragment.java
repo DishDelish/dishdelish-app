@@ -1,34 +1,30 @@
 package com.github.siela1915.bootcamp;
 
 import android.app.Activity;
-import androidx.fragment.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.LinearLayoutCompat;
+import androidx.fragment.app.Fragment;
 import com.github.siela1915.bootcamp.Recipes.Ingredient;
 import com.github.siela1915.bootcamp.Recipes.Unit;
 import com.github.siela1915.bootcamp.Recipes.Utensils;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.chip.Chip;
-import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -108,12 +104,7 @@ public class UploadingRecipeFragment extends Fragment {
         uploadImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (filePath != null) {
-                    pd.show();
-                    uploadRecipe(filePath);
-                } else {
-                    Toast.makeText(getActivity(), "Select an image", Toast.LENGTH_SHORT).show();
-                }
+                openRecipeReviewDialog();
             }
         });
 
@@ -170,7 +161,9 @@ public class UploadingRecipeFragment extends Fragment {
                 // get the url of the recipe image using uritask
                 final Uri downloadUri = uriTask.getResult();
                 if (uriTask.isSuccessful()) {
-                    Map<String, Object> hashMap = getRecipe(downloadUri);
+                    Map<String, Object> hashMap = new HashMap<>();
+                    TextInputLayout recipeName = view.findViewById(R.id.recipeNameContent);
+                    hashMap.put(recipeName.getEditText().getText().toString(), getRecipe(downloadUri));
 
                     // should use firebaseUser.getUid()
                     databaseReference.child("ZHANG CHI").updateChildren(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -178,6 +171,7 @@ public class UploadingRecipeFragment extends Fragment {
                         public void onSuccess(Void aVoid) {
                             pd.dismiss();
                             Toast.makeText(getActivity(), "Upload successful", Toast.LENGTH_LONG).show();
+                            requireActivity().getSupportFragmentManager().beginTransaction().remove(UploadingRecipeFragment.this).commit();
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
@@ -201,7 +195,6 @@ public class UploadingRecipeFragment extends Fragment {
     }
 
     private Map<String, Object> getRecipe(Uri downloadUri) {
-        HashMap<String, Object> hashMap = new HashMap<>();
         TextInputLayout recipeName = view.findViewById(R.id.recipeNameContent);
         TextInputLayout cookTime = view.findViewById(R.id.cookTimeContent);
         TextInputLayout prepTime = view.findViewById(R.id.prepTimeContent);
@@ -221,16 +214,19 @@ public class UploadingRecipeFragment extends Fragment {
         // should be using Recipe object but as it is not finalized some temp hashmaps are used
         HashMap<String, Object> recipe = new HashMap<>();
         recipe.put("recipeName", recipeName.getEditText().getText().toString());
-        recipe.put("image", downloadUri.toString());
+        recipe.put("image", uriToString(downloadUri));
         recipe.put("cookTime", Integer.parseInt(cookTime.getEditText().getText().toString()));
         recipe.put("prepTime", Integer.parseInt(prepTime.getEditText().getText().toString()));
         recipe.put("servings", Integer.parseInt(servings.getEditText().getText().toString()));
         recipe.put("utensils", new Utensils(Arrays.asList(utensils.getEditText().getText().toString())));
         recipe.put("ingredientList", getIngredients());
         recipe.put("steps", getSteps());
-        hashMap.put(recipeName.getEditText().getText().toString(), recipe);
 
-        return hashMap;
+        return recipe;
+
+//        hashMap.put(recipeName.getEditText().getText().toString(), recipe);
+//
+//        return hashMap;
     }
 
     private void chooseImg() {
@@ -310,5 +306,34 @@ public class UploadingRecipeFragment extends Fragment {
             }
         }
         return steps;
+    }
+
+    private void openRecipeReviewDialog() {
+        Map<String, Object> recipe = getRecipe(filePath);
+        ReviewRecipeBeforeUploadingDialog reviewRecipeDialog = new ReviewRecipeBeforeUploadingDialog();
+        reviewRecipeDialog.setArguments(getBundleForReview(recipe));
+        reviewRecipeDialog.setDialogResult(() -> {
+            pd.show();
+            uploadRecipe(filePath);
+        });
+        reviewRecipeDialog.show(getActivity().getSupportFragmentManager(), "review_recipe_dialog");
+    }
+
+    private Bundle getBundleForReview(Map<String, Object> recipe) {
+        Bundle bundle = new Bundle();
+        bundle.putString("recipeName", recipe.get("recipeName").toString());
+        bundle.putString("image", uriToString(filePath));
+        bundle.putString("cookTime", recipe.get("cookTime").toString());
+        bundle.putString("prepTime", recipe.get("prepTime").toString());
+        bundle.putString("servings", recipe.get("servings").toString());
+        bundle.putString("utensils", recipe.get("utensils").toString());
+        bundle.putString("ingredientList", recipe.get("ingredientList").toString());
+        bundle.putString("steps", recipe.get("steps").toString());
+        return bundle;
+    }
+
+    private String uriToString(Uri uri) {
+        if (uri != null) return uri.toString();
+        return null;
     }
 }

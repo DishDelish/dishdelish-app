@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/ingredients"
     android:layout_width="350dp"
     android:layout_height="wrap_content"
-    android:gravity="center_vertical">
+    android:gravity="center_vertical"
+    android:theme="@style/Theme.MaterialComponents.DayNight">
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/ingredientsAmount"
@@ -53,7 +56,7 @@
         android:id="@+id/removeIngredient"
         android:layout_width="25dp"
         android:layout_height="25dp"
-        android:layout_marginStart="15dp"
-        android:src="@drawable/close" />
+        android:layout_marginStart="10dp"
+        android:src="@drawable/close"/>
 
 </androidx.appcompat.widget.LinearLayoutCompat>

@@ -17,7 +17,7 @@
     <string name="ingredients">Ingredients</string>
     <string name="ingredientsAmountHint">e.g. 2</string>
     <string name="ingredientsUnitHint">e.g. cups</string>
-    <string name="ingredientsNameHint">e.g. suger</string>
+    <string name="ingredientsNameHint">e.g. sugar</string>
     <string name="addIngredients">Add Ingredient</string>
     <string name="step">Directions</string>
     <string name="addSteps">Add Step</string>
@@ -26,6 +26,9 @@
     <string name="time_hours">hours</string>
     <string name="time_days">days</string>
     <string name="image">Photo</string>
+    <string name="reviewRecipePageTitle">Review Recipe</string>
+    <string name="confirm_uploading">Confirm</string>
+    <string name="cancel_uploading">Cancel</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="home">Home</string>
