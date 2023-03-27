@@ -190,9 +190,9 @@ public class FirebaseAuthActivity extends AppCompatActivity {
         FirebaseAuth auth = FirebaseAuth.getInstance();
         if (auth.getCurrentUser() != null) {
             FirebaseUser user = auth.getCurrentUser();
-            return user.updateProfile(changeRequest).continueWithTask(task -> new UserDatabase().updateProfile(user));
+            return user.updateProfile(changeRequest);
         }
-        return Tasks.forException(new UserNotAuthenticatedException("User needs to be authenticated to add device token"));
+        return Tasks.forException(new UserNotAuthenticatedException("User needs to be authenticated to update profile"));
     }
 
     public static void promptLogin(Context context, Activity activity, Intent postLoginIntent) {
