@@ -11,7 +11,6 @@ import com.google.firebase.database.Query;
 import com.google.firebase.internal.api.FirebaseNoSignedInUserException;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Collections;
 import java.util.List;
@@ -95,19 +94,97 @@ public class Database {
      * For instance if the method times-out due to a network connection error.
      */
     public Map<String, Recipe> getByName(String name) throws ExecutionException, InterruptedException {
-        Query query = db.child(RECIPES).orderByChild("recipeName").equalTo(name);
-        Task<DataSnapshot> task = query.get();
-        try {
-            DataSnapshot snapshot = Tasks.await(task);
-            Map<String, Recipe> recipes = new HashMap<>();
-            for (DataSnapshot val : snapshot.getChildren()) {
-                recipes.put(val.getKey(), val.getValue(Recipe.class));
-            }
-            return recipes;
-        } catch (ExecutionException | InterruptedException e) {
-            throw e;
-        }
+        return getByStringAttribute("recipeName", name);
+    }
 
+    /**
+     * Retrieve a recipe with a given name (not the unique id).
+     * Since the name is not unique, this method may return multiple recipes.
+     * @param userName the name of the user who uploaded the recipe
+     * @return a map from the recipe's unique key id to the recipe itself
+     * @throws ExecutionException
+     * @throws InterruptedException
+     * The exceptions are thrown when the retrieval fails.
+     * For instance if the method times-out due to a network connection error.
+     */
+    public Map<String, Recipe> getByUserName(String userName) throws ExecutionException, InterruptedException {
+        return getByStringAttribute("userName", userName);
+    }
+
+    /**
+     * Retrieve recipes with lower prep time.
+     * @param time the upper bound limit to the prep time.
+     * @return recipes with lower prep time than the time specified as parameter.
+     * @throws ExecutionException
+     * @throws InterruptedException
+     */
+    public Map<String, Recipe> getByUpperLimitOnPrepTime(int time) throws ExecutionException, InterruptedException {
+        return getByUpperLimitOnTime("prepTime", time);
+    }
+
+    /**
+     * Retrieve recipes with lower cook time.
+     * @param time the upper bound limit to the prep time.
+     * @return recipes with lower prep time than the time specified as parameter.
+     * @throws ExecutionException
+     * @throws InterruptedException
+     */
+    public Map<String, Recipe> getByUpperLimitOnCookTime(int time) throws ExecutionException, InterruptedException {
+        return getByUpperLimitOnTime("cookTime", time);
+    }
+
+    /**
+     * Retrieve recipes with higher prep time.
+     * @param time the upper bound limit to the prep time.
+     * @return recipes with lower prep time than the time specified as parameter.
+     * @throws ExecutionException
+     * @throws InterruptedException
+     */
+    public Map<String, Recipe> getByLowerLimitOnPrepTime(int time) throws ExecutionException, InterruptedException {
+        return getByLowerLimitOnTime("prepTime", time);
+    }
+
+    /**
+     * Retrieve recipes with higher prep time.
+     * @param time the upper bound limit to the prep time.
+     * @return recipes with lower prep time than the time specified as parameter.
+     * @throws ExecutionException
+     * @throws InterruptedException
+     */
+    public Map<String, Recipe> getByLowerLimitOnCookTime(int time) throws ExecutionException, InterruptedException {
+        return getByLowerLimitOnTime("cookTime", time);
+    }
+
+    private Map<String, Recipe> getByUpperLimitOnTime(String attribute, int time) throws ExecutionException, InterruptedException {
+        Query query = db.child(RECIPES).orderByChild(attribute).endAt(time);
+        Task<DataSnapshot> task = query.get();
+        DataSnapshot snapshot = Tasks.await(task);
+        Map<String, Recipe> recipes = new HashMap<>();
+        for (DataSnapshot val : snapshot.getChildren()) {
+            recipes.put(val.getKey(), val.getValue(Recipe.class));
+        }
+        return recipes;
+    }
+
+    private Map<String, Recipe> getByLowerLimitOnTime(String attribute, int time) throws ExecutionException, InterruptedException {
+        Query query = db.child(RECIPES).orderByChild(attribute).startAt(time);
+        Task<DataSnapshot> task = query.get();
+        DataSnapshot snapshot = Tasks.await(task);
+        Map<String, Recipe> recipes = new HashMap<>();
+        for (DataSnapshot val : snapshot.getChildren()) {
+            recipes.put(val.getKey(), val.getValue(Recipe.class));
+        }
+        return recipes;
+    }
+    private Map<String, Recipe> getByStringAttribute(String attribute, String name) throws ExecutionException, InterruptedException {
+        Query query = db.child(RECIPES).orderByChild(attribute).equalTo(name);
+        Task<DataSnapshot> task = query.get();
+        DataSnapshot snapshot = Tasks.await(task);
+        Map<String, Recipe> recipes = new HashMap<>();
+        for (DataSnapshot val : snapshot.getChildren()) {
+            recipes.put(val.getKey(), val.getValue(Recipe.class));
+        }
+        return recipes;
     }
 
     private Map<String, Object> recipeToMap(Recipe recipe) {
