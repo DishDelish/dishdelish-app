@@ -44,10 +44,10 @@ public class UtensilsTest {
      */
 
 
-    /*@Test
+    @Test
     public void equalsReturnsTrueOnDifferentListOrder() {
         Utensils utensils1 = new Utensils(Arrays.asList("fork", "spoon", "knife"));
         Utensils utensils2 = new Utensils(Arrays.asList("knife", "fork", "spoon"));
         assertTrue(utensils2.equals(utensils1));
-    }*/
+    }
 }

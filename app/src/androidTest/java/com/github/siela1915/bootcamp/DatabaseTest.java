@@ -49,9 +49,7 @@ public class DatabaseTest {
     @Test
     public void setAfterGetReturnsRecipe() {
         Database db = new Database(firebaseInstance);
-
         Recipe recipe = createRecipeEggs();
-
         try {
             String key = db.set(recipe);
             Recipe retrieval = db.get(key);
@@ -59,8 +57,6 @@ public class DatabaseTest {
         } catch (ExecutionException | InterruptedException e) {
             throw new RuntimeException(e);
         }
-
-
     }
 
     @Test
@@ -84,7 +80,6 @@ public class DatabaseTest {
     @Test
     public void removeMakesRecipeNotRetrievable() {
         Database db = new Database(firebaseInstance);
-
         Recipe recipe = createRecipeEggs();
         try {
             String key = db.set(recipe);
@@ -193,7 +188,6 @@ public class DatabaseTest {
     @Test
     public void addAndGetSingleFavoriteRecipeTest() {
         FirebaseAuthActivityTest.loginSync("addAndGetSingle@example.com");
-
         Database db = new Database(firebaseInstance);
         Task<Void> addTask = db.addFavorite("testRecipe1");
         Task<List<String>> resultTask = addTask.continueWithTask(t -> db.getFavorites());
@@ -203,14 +197,12 @@ public class DatabaseTest {
         } catch (ExecutionException | InterruptedException e) {
             throw new RuntimeException(e);
         }
-
         FirebaseAuthActivityTest.logoutSync();
     }
 
     @Test
     public void addAndGetMultipleFavoriteRecipesTest() {
         FirebaseAuthActivityTest.loginSync("addAndGetMultiple@example.com");
-
         Database db = new Database(firebaseInstance);
         Task<Void> addTask = db.addFavorite("testRecipe1");
         addTask = addTask.continueWithTask(t -> db.addFavorite("testRecipe2"));
@@ -223,14 +215,12 @@ public class DatabaseTest {
         } catch (ExecutionException | InterruptedException e) {
             throw new RuntimeException(e);
         }
-
         FirebaseAuthActivityTest.logoutSync();
     }
 
     @Test
     public void addMultipleFavoriteRecipesAndRemoveOneTest() {
         FirebaseAuthActivityTest.loginSync("addMultipleAndRemove@example.com");
-
         Database db = new Database(firebaseInstance);
         Task<Void> addTask = db.addFavorite("testRecipe1");
         addTask = addTask.continueWithTask(t -> db.addFavorite("testRecipe2"));
@@ -244,14 +234,12 @@ public class DatabaseTest {
         } catch (ExecutionException | InterruptedException e) {
             throw new RuntimeException(e);
         }
-
         FirebaseAuthActivityTest.logoutSync();
     }
 
     @Test
     public void addingSameFavoriteRecipeKeepsOrderTest() {
         FirebaseAuthActivityTest.loginSync("addingSameFavoriteKeepsOrder@example.com");
-
         Database db = new Database(firebaseInstance);
         Task<Void> addTask = db.addFavorite("testRecipe1");
         addTask = addTask.continueWithTask(t -> db.addFavorite("testRecipe2"));
@@ -265,7 +253,6 @@ public class DatabaseTest {
         } catch (ExecutionException | InterruptedException e) {
             throw new RuntimeException(e);
         }
-
         FirebaseAuthActivityTest.logoutSync();
     }
 }
