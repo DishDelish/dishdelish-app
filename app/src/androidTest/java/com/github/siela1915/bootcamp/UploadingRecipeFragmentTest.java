@@ -190,7 +190,7 @@ public class UploadingRecipeFragmentTest {
         scenario = FragmentScenario.launchInContainer(UploadingRecipeFragment.class);
 
         onView(withId(R.id.addIngredientButton)).perform(ViewActions.scrollTo(), ViewActions.click());
-        onView(withId(R.id.removeIngredient)).perform(ViewActions.scrollTo(), ViewActions.click());
+        onView(withId(R.id.removeIngredient)).perform(ViewActions.click());
 
         onView(withId(R.id.ingredientsGroup)).check((matches(withChildViewCount(1, withId(R.id.ingredients)))));
     }
@@ -239,7 +239,7 @@ public class UploadingRecipeFragmentTest {
         scenario = FragmentScenario.launchInContainer(UploadingRecipeFragment.class);
 
         onView(withId(R.id.addStepButton)).perform(ViewActions.scrollTo(), ViewActions.click());
-        onView(withId(R.id.removeStep)).perform(ViewActions.scrollTo(), ViewActions.click());
+        onView(withId(R.id.removeStep)).perform(ViewActions.click());
 
         onView(withId(R.id.stepGroup)).check((matches(withChildViewCount(1, withId(R.id.step)))));
     }

@@ -23,9 +23,9 @@
 
     <ImageView
         android:id="@+id/removeStep"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:layout_marginStart="10dp"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="5dp"
         android:src="@drawable/close" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>
