@@ -15,9 +15,9 @@
     <string name="utensils">Utensils</string>
     <string name="utensilsHint">e.g. chopsticks</string>
     <string name="ingredients">Ingredients</string>
-    <string name="ingredientsAmountHint">e.g. 2</string>
-    <string name="ingredientsUnitHint">e.g. cups</string>
-    <string name="ingredientsNameHint">e.g. sugar</string>
+    <string name="ingredientsAmountHint">2</string>
+    <string name="ingredientsUnitHint">cups</string>
+    <string name="ingredientsNameHint">sugar</string>
     <string name="addIngredients">Add Ingredient</string>
     <string name="step">Directions</string>
     <string name="addSteps">Add Step</string>
