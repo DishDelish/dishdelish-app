@@ -7,6 +7,7 @@
     android:layout_height="match_parent"
     android:backgroundTint="#DACFCF"
     android:fitsSystemWindows="true"
+    android:pointerIcon="hand"
     tools:context=".MainActivity">
 
 
@@ -49,7 +50,7 @@
                 android:layout_marginBottom="8dp"
                 android:foreground="@android:drawable/btn_dropdown"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/pantryBtn"
+                app:layout_constraintStart_toStartOf="@+id/cuisineBtn"
                 tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
             <Button
@@ -73,7 +74,7 @@
                 tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
             <Button
-                android:id="@+id/pantryBtn"
+                android:id="@+id/cuisineBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
                 android:layout_marginStart="4dp"
@@ -85,33 +86,33 @@
                 app:layout_constraintStart_toStartOf="parent"
                 tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck,DuplicateClickableBoundsCheck" />
 
+            <Button
+                android:id="@+id/filterBtn"
+                android:layout_width="42dp"
+                android:layout_height="51dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginBottom="8dp"
+                android:text="@string/cuisine"
+                app:icon="@drawable/baseline_filter_alt_24"
+                app:iconGravity="top"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:ignore="TouchTargetSizeCheck" />
+
             <TextView
-                android:id="@+id/includLabel"
+                android:id="@+id/cuisineLabel"
                 android:layout_width="86dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="@string/pantry"
+                android:text="@string/cuisine"
                 android:textSize="18sp"
-                app:layout_constraintBottom_toTopOf="@+id/pantryBtn"
-                app:layout_constraintEnd_toEndOf="@id/pantryBtn"
-                app:layout_constraintLeft_toLeftOf="@id/pantryBtn"
+                app:layout_constraintBottom_toTopOf="@+id/cuisineBtn"
+                app:layout_constraintEnd_toEndOf="@id/cuisineBtn"
+                app:layout_constraintLeft_toLeftOf="@id/cuisineBtn"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.931"
                 tools:ignore="HardcodedText,TextContrastCheck,TextSizeCheck,VisualLintOverlap" />
 
-            <TextView
-                android:id="@+id/includLabel2"
-                android:layout_width="86dp"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="@string/pantry"
-                android:textSize="18sp"
-                app:layout_constraintBottom_toTopOf="@+id/pantryBtn"
-                app:layout_constraintEnd_toEndOf="@id/pantryBtn"
-                app:layout_constraintLeft_toLeftOf="@id/pantryBtn"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.931"
-                tools:ignore="HardcodedText,TextContrastCheck,TextSizeCheck" />
 
             <TextView
                 android:id="@+id/notIncludLabel"

@@ -3,29 +3,25 @@ package com.github.siela1915.bootcamp;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentContainer;
 import androidx.fragment.app.FragmentContainerView;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.github.siela1915.bootcamp.Labelling.AllergyType;
+import com.github.siela1915.bootcamp.Labelling.CuisineType;
 import com.github.siela1915.bootcamp.Labelling.DietType;
-import com.github.siela1915.bootcamp.Recipes.Diet;
-import com.github.siela1915.bootcamp.Recipes.Ingredient;
+import com.github.siela1915.bootcamp.Labelling.RecipeFetcher;
 import com.github.siela1915.bootcamp.Recipes.PreparationTime;
-import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
@@ -37,7 +33,7 @@ public class MainHomeActivity extends AppCompatActivity {
     ActionBarDrawerToggle toggle;
     ConstraintLayout constraintLayout;
     FragmentContainerView fragmentContainerView;
-    Button pantryBtn,timeBtn,allergyBtn, dietBtn;
+    Button cuisineBtn,timeBtn,allergyBtn, dietBtn,filterBtn;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -51,33 +47,64 @@ public class MainHomeActivity extends AppCompatActivity {
         }
         drawerLayout= findViewById(R.id.drawer_layout);
         navigationView= findViewById(R.id.navView);
-        pantryBtn=findViewById(R.id.pantryBtn);
+        cuisineBtn =findViewById(R.id.cuisineBtn);
         timeBtn=findViewById(R.id.timingBtn);
         allergyBtn=findViewById(R.id.notIncludIngBtn);
         dietBtn=findViewById(R.id.dietBtn);
-        pantryBtn.setOnClickListener(v -> {
-            String [] pantry= Ingredient.getAll();
-            boolean[] checksum= new boolean[pantry.length];
-            String title = "Chose the ingredients you have";
-            popUpDialogBuilder(pantry,checksum,title);
+        filterBtn=findViewById(R.id.filterBtn);
+        List<String> selectedCuisine = new ArrayList<>();
+        List<String> selectedDiet = new ArrayList<>();
+        List<String> selectedAllery= new ArrayList<>();
+        List<String> selectedPrepTime= new ArrayList<>();
+        cuisineBtn.setOnClickListener(v -> {
+            String [] cuisineTypes= CuisineType.getAll();
+            boolean[] checksum= new boolean[cuisineTypes.length];
+            String title = "Chose your preferred cuisine";
+            popUpDialogBuilder(cuisineTypes,checksum,title,selectedCuisine);
         });
         dietBtn.setOnClickListener(v -> {
             String [] diets= DietType.getAll();
             boolean[] checksum= new boolean[diets.length];
             String title = "Chose your diet";
-            popUpDialogBuilder(diets,checksum,title);
+            popUpDialogBuilder(diets,checksum,title,selectedDiet);
         });
         timeBtn.setOnClickListener(v -> {
             String [] prepTime= PreparationTime.getAll();
             boolean[] checksum= new boolean[prepTime.length];
             String title = "Chose your the preparation time";
-            popUpDialogBuilder(prepTime,checksum,title);
+            popUpDialogBuilder(prepTime,checksum,title,selectedPrepTime);
         });
         allergyBtn.setOnClickListener(v -> {
             String [] allergies= AllergyType.getAll();
             boolean[] checksum= new boolean[allergies.length];
             String title = "what are you allergic to";
-            popUpDialogBuilder(allergies,checksum,title);
+            popUpDialogBuilder(allergies,checksum,title,selectedAllery);
+        });
+        filterBtn.setOnClickListener(v -> {
+            List<Integer> allergy= new ArrayList<>();
+            List<Integer> cuisineType= new ArrayList<>();
+            List<Integer>  dietType= new ArrayList<>();
+            for(String elem: selectedAllery){
+                //allergy.add(new AllergyType(elem).ordinal());
+            }
+            for(String elem: selectedDiet){
+                dietType.add(DietType.valueOf(elem).ordinal());
+            }
+            for(String elem: selectedCuisine){
+                cuisineType.add(CuisineType.valueOf(elem).ordinal());
+            }
+            RecipeFetcher recipeFetcher = new RecipeFetcher(allergy,cuisineType,dietType);
+            List<String> filteredRecipes= recipeFetcher.fetchRecipeList();
+            HomePageFragment homePageFragment= new HomePageFragment();
+            FragmentTransaction fragmentTransaction= getSupportFragmentManager().beginTransaction();
+            Bundle cuisine= new Bundle();
+            String str="";
+            for(int i=0; i<filteredRecipes.size(); i++){
+                str+= filteredRecipes.get(i)+ " ";
+            }
+            cuisine.putString("selected cuisine", str);
+            homePageFragment.setArguments(cuisine);
+            fragmentTransaction.replace(R.id.fragContainer,homePageFragment).commit();
         });
         toggle= new ActionBarDrawerToggle(this,drawerLayout,R.string.open,R.string.close);
         drawerLayout.addDrawerListener(toggle);
@@ -147,11 +174,11 @@ public class MainHomeActivity extends AppCompatActivity {
         }
     }
 
-    private void popUpDialogBuilder(String[] items, boolean[] checksum, String title){
+    private void popUpDialogBuilder(String[] items, boolean[] checksum, String title, List<String> selected){
         AlertDialog.Builder builder= new AlertDialog.Builder(MainHomeActivity.this,R.style.AlertDialogTheme);
         builder.setTitle(title);
         builder.setCancelable(false);
-        List<String> selected = new ArrayList<>();
+        //List<String> selected = new ArrayList<>();
 
         builder.setMultiChoiceItems(items,checksum,(dialog,which,isChecked)->{
             checksum[which]=isChecked;
