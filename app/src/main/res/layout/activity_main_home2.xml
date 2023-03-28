@@ -17,7 +17,7 @@
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/fragContainer"
             android:layout_width="match_parent"
-            android:layout_height="648dp"
+            android:layout_height="627dp"
             android:layoutDirection="ltr"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

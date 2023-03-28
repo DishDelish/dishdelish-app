@@ -177,9 +177,4 @@ public class MainHomeActivity extends AppCompatActivity {
         });
         dialog.show();
     }
-    private void printing(boolean[] s){
-        for(int i=0; i< s.length; i++){
-            System.out.print(s[i]);
-        }
-    }
 }
