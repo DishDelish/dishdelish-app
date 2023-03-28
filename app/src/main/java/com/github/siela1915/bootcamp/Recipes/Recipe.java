@@ -24,7 +24,6 @@ public class Recipe implements Parcelable {
     public Utensils utensils;
     public List<Integer> cuisineTypes;
     public List<Integer> allergyTypes;
-
     public List<Integer> dietTypes;
     public List<Ingredient> ingredientList;
     //Every step and comment will be a separate String in the list
