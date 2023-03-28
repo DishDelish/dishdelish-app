@@ -20,6 +20,8 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.github.siela1915.bootcamp.Labelling.AllergyType;
+import com.github.siela1915.bootcamp.Labelling.DietType;
 import com.github.siela1915.bootcamp.Recipes.Diet;
 import com.github.siela1915.bootcamp.Recipes.Ingredient;
 import com.github.siela1915.bootcamp.Recipes.PreparationTime;
@@ -60,7 +62,7 @@ public class MainHomeActivity extends AppCompatActivity {
             popUpDialogBuilder(pantry,checksum,title);
         });
         dietBtn.setOnClickListener(v -> {
-            String [] diets= Diet.getAll();
+            String [] diets= DietType.getAll();
             boolean[] checksum= new boolean[diets.length];
             String title = "Chose your diet";
             popUpDialogBuilder(diets,checksum,title);
@@ -72,10 +74,10 @@ public class MainHomeActivity extends AppCompatActivity {
             popUpDialogBuilder(prepTime,checksum,title);
         });
         allergyBtn.setOnClickListener(v -> {
-            String [] ingredients= Ingredient.getAll();
-            boolean[] checksum= new boolean[ingredients.length];
+            String [] allergies= AllergyType.getAll();
+            boolean[] checksum= new boolean[allergies.length];
             String title = "what are you allergic to";
-            popUpDialogBuilder(ingredients,checksum,title);
+            popUpDialogBuilder(allergies,checksum,title);
         });
         toggle= new ActionBarDrawerToggle(this,drawerLayout,R.string.open,R.string.close);
         drawerLayout.addDrawerListener(toggle);

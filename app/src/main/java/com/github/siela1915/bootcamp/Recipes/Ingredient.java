@@ -1,35 +1,68 @@
 package com.github.siela1915.bootcamp.Recipes;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import androidx.annotation.NonNull;
 
 import java.util.List;
 
-public enum Ingredient {
-    //TODO have different classes of ingredients: countable, measurable...
-    //Maybe add optional additional text in addition to ingredient, to specify how to prepare/form of ingredient
-    //For example lemon zest
-    EGGS("Eggs"), FISH("Fish"), OIL("Oil"), MILK("Milk"),
-    BUTTER("Butter"), FLOUR("Flour"), SALT("Salt"), PEPPER("Pepper"),
-    CARROTS("Carrots"), CHICKEN("Chicken"), LEMON("Lemon"), HUMMUS("Hummus"),
-    CAULIFLOWER("Cauliflower"), CORIANDER("Coriander"), SUGAR("Sugar"),BEEF("Beef"),
-    CHEESE("Cheese");
+public class Ingredient implements Parcelable {
+    String ingredient;
+    Unit unit;
 
-    private final String display_string;
+    public Ingredient(){}
 
 
     // constructor to set the string
-    Ingredient(String name){display_string = name;}
+    public void setIngredient(String ingredient) {
+        this.ingredient = ingredient.toLowerCase();
+    }
+
+    public void setUnit(Unit unit) {
+        this.unit = unit;
+    }
+
+    public Ingredient(String ingredient, Unit unit) {
+        this.ingredient = ingredient.toLowerCase();
+        this.unit = unit;
+    }
+
+    protected Ingredient(Parcel in) {
+        ingredient = in.readString();
+        unit = in.readParcelable(Unit.class.getClassLoader());
+    }
+
+    public static final Creator<Ingredient> CREATOR = new Creator<Ingredient>() {
+        @Override
+        public Ingredient createFromParcel(Parcel in) {
+            return new Ingredient(in);
+        }
+
+        @Override
+        public Ingredient[] newArray(int size) {
+            return new Ingredient[size];
+        }
+    };
+
+    public String getIngredient() {
+        return ingredient;
+    }
+
+    public Unit getUnit() {
+        return unit;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(@NonNull Parcel dest, int flags) {
+        dest.writeString(ingredient);
+        dest.writeParcelable(unit, flags);
+    }
 
     // toString returns the display string
-    @NonNull
-    @Override
-    public String toString() {
-        return display_string;
-    }
-    public static String[] getAll(){
-        String[] res= {EGGS.toString(), FISH.display_string, OIL.display_string, MILK.display_string,
-                BUTTER.display_string, FLOUR.display_string, CARROTS.display_string, CHICKEN.display_string, HUMMUS.display_string,
-                CAULIFLOWER.display_string, LEMON.display_string, BEEF.display_string, CHEESE.display_string};
-        return res;
-    }
 }

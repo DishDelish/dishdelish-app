@@ -1,6 +1,5 @@
 package com.github.siela1915.bootcamp;
 
-import static com.github.siela1915.bootcamp.Recipes.Ingredient.LEMON;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -16,7 +15,9 @@ import com.github.siela1915.bootcamp.Labelling.CuisineType;
 import com.github.siela1915.bootcamp.Labelling.DietType;
 import com.github.siela1915.bootcamp.Labelling.RecipeFetcher;
 import com.github.siela1915.bootcamp.Recipes.Ingredient;
+import com.github.siela1915.bootcamp.Recipes.Unit;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,12 +31,11 @@ public class RecipePageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_recipe_page);
 
 
-        List<AllergyType> allergies = Arrays.asList(AllergyType.EGGS);
-        List<CuisineType> cuisines = Arrays.asList(CuisineType.FRENCH);
-        List<DietType> diets = Arrays.asList();
-        List<Ingredient> favorites = Arrays.asList(LEMON);
+        List<Integer> allergies = Arrays.asList(AllergyType.EGGS.ordinal());
+        List<Integer> cuisines = Arrays.asList(CuisineType.FRENCH.ordinal());
+        List<Integer> diets = new ArrayList<>();
 
-        fetcher = new RecipeFetcher(allergies, cuisines, diets, favorites);
+        fetcher = new RecipeFetcher(allergies, cuisines, diets);
     }
 
     public void buttonClicked(View view) {
