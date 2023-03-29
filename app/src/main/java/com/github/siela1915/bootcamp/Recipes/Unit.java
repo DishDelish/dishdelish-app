@@ -16,7 +16,7 @@ public class Unit implements Parcelable {
     public Unit(){}
     public Unit(int value, String info) {
         this.value = value;
-        this.info = info;
+        this.info = info.toLowerCase();
     }
 
     protected Unit(Parcel in) {
@@ -49,15 +49,23 @@ public class Unit implements Parcelable {
     }
 
     public void setInfo(String info) {
-        this.info = info;
+        this.info = info.toLowerCase();
     }
 
+    @NonNull
     @Override
     public String toString(){
         return value + " " + info;
     }
 
     @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Unit) {
+            return value == ((Unit) obj).value && info.equals(((Unit) obj).info);
+        }
+        return false;
+    }
+
     public int describeContents() {
         return 0;
     }

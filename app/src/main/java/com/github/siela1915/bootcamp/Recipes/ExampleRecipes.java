@@ -23,7 +23,7 @@ public class ExampleRecipes {
     public static List<Recipe> recipes = Arrays.asList(
             new Recipe(R.drawable.omelette_pic, "Omelette", "John Johnathan",
                     R.drawable.pfp, 5., 5, 5, 1, new Utensils(Arrays.asList("Pan")),
-                    new int[] {FRENCH.ordinal()}, new int[] {EGGS.ordinal()}, new int[] {DAIRY.ordinal()},
+                    Arrays.asList(FRENCH.ordinal()), Arrays.asList(EGGS.ordinal()), Arrays.asList(DAIRY.ordinal()),
                     Arrays.asList(new Ingredient("eggs", new Unit(5, "pieces")), new Ingredient("oil", new Unit(5, "g")), new Ingredient("butter", new Unit(5, "g"))),
                     Arrays.asList("STEP 1\nSeason the beaten eggs well with salt and pepper. Heat the oil and butter in a non-stick frying pan over a medium-low heat until the butter has melted and is foaming.",
                             "STEP 2\nPour the eggs into the pan, tilt the pan ever so slightly from one side to another to allow the eggs to swirl and cover the surface of the pan completely. Let the mixture cook for about 20 seconds then scrape a line through the middle with a spatula.",
@@ -32,29 +32,29 @@ public class ExampleRecipes {
                             "STEP 4\n" +
                                     "At this point you can fill the omelette with whatever you like – some grated cheese, sliced ham, fresh herbs, sautéed mushrooms or smoked salmon all work well. Scatter the filling over the top of the omelette and fold gently in half with the spatula. Slide onto a plate to serve."
                     ),
-                    commentsList
+                    commentsList, 12
             ),
 
             new Recipe(R.drawable.cauli, "Cauliflower Rice", "Money Bob",
                        R.drawable.pfp, 3.4, 3, 7, 4, new Utensils(Arrays.asList("Pan")),
-                    new int[] {ASIAN.ordinal()}, new int[]{}, new int[]{},
+                    Arrays.asList(ASIAN.ordinal()), Arrays.asList(), Arrays.asList(),
                     Arrays.asList(new Ingredient("cauliflower", new Unit(1, "piece")), new Ingredient("coriander", new Unit(3, "g"))),
                     Arrays.asList("STEP 1\n" +
                                     "Cut the hard core and stalks from the cauliflower and pulse the rest in a food processor to make grains the size of rice. Tip into a heatproof bowl, cover with cling film, then pierce and microwave for 7 mins on high – there is no need to add any water. Stir in the coriander. For spicier rice, add some toasted cumin seeds."
                             ),
-                    commentsList
+                    commentsList, 456
                     ),
 
             new Recipe(R.drawable.lemon_pudding, "Lemon Pudding", "Smaug the Golden",
                        R.drawable.pfp, 5., 5, 4, 4, new Utensils(Arrays.asList("Pan")),
-                    new int[] {FRENCH.ordinal()}, new int[] {EGGS.ordinal()}, new int[] {DAIRY.ordinal()},
+                    Arrays.asList(FRENCH.ordinal()), Arrays.asList(EGGS.ordinal()), Arrays.asList(DAIRY.ordinal()),
                     Arrays.asList(new Ingredient("lemon", new Unit(1, "piece")), new Ingredient("sugar", new Unit(100, "g")), new Ingredient("butter", new Unit(100, "g")), new Ingredient("flour", new Unit(100, "g")), new Ingredient("eggs", new Unit(5, "pieces"))),
                     Arrays.asList("STEP 1\n" +
                             "Mix the sugar, butter, flour, eggs, lemon zest and vanilla together until creamy, then spoon into a medium microwave-proof baking dish. Microwave on High for 3 mins, turning halfway through cooking, until risen and set all the way through. Leave to stand for 1 min.",
                                "STEP 2\n" +
                             "Meanwhile, heat the lemon curd for 30 secs in the microwave and stir until smooth. Pour all over the top of the pudding and serve with a dollop of crème fraîche or scoops of ice cream."
                               ),
-                    commentsList
+                    commentsList, 1
             )
     );
 
