@@ -8,7 +8,9 @@ import com.github.siela1915.bootcamp.AutocompleteApi.ApiResponse;
 import com.github.siela1915.bootcamp.AutocompleteApi.ApiService;
 import com.github.siela1915.bootcamp.AutocompleteApi.IngredientAutocomplete;
 
+import org.checkerframework.checker.units.qual.A;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import java.io.IOException;
@@ -16,6 +18,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import okhttp3.Request;
+import okio.Timeout;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

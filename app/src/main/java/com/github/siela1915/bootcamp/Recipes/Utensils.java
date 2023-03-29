@@ -13,6 +13,10 @@ public class Utensils implements Parcelable {
     private List<String> utensils;
 
     public void setUtensils(List<String> utensils) {
+        //can't be null, empty is fine
+        if(utensils == null){
+            throw new IllegalArgumentException();
+        }
         this.utensils = utensils;
     }
 
