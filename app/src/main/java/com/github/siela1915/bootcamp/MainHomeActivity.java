@@ -153,6 +153,7 @@ public class MainHomeActivity extends AppCompatActivity {
                     if(!homeFragmentCheck) {
                         setContainerContent(R.id.fragContainer,HomePageFragment.class,false);
                     }
+                    break;
                 case R.id.menuItem_favorites:
                     setContainerContent(R.id.fragContainer, RecipeListFragment.newInstance(
                                         ExampleRecipes.recipes
