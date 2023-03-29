@@ -99,22 +99,46 @@ public class MainHomeActivityTest {
                     .perform(ViewActions.click());
             onView(withText("Chose your preferred cuisine")).check(matches(isDisplayed()));
         } catch (PerformException e) {
-           
+
             e.printStackTrace();
         }
 
     }
     @Test
     public void testingDietTypeBtn(){
-
+        onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
+        onView(withId(R.id.navView)).perform(NavigationViewActions.navigateTo(R.id.menuItem_filter));
+        onView(withId(R.id.drawer_layout)).perform(DrawerActions.close());
+        try {
+            onView(withId(R.id.dietBtn)).perform(ViewActions.click());
+            onView((withText("Chose your diet"))).check(matches(isDisplayed()));
+        }catch (PerformException e){
+            e.printStackTrace();
+        }
     }
     @Test
     public void testingAllergyBtn(){
-
+        onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
+        onView(withId(R.id.navView)).perform(NavigationViewActions.navigateTo(R.id.menuItem_filter));
+        onView(withId(R.id.drawer_layout)).perform(DrawerActions.close());
+        try {
+            onView(withId(R.id.notIncludIngBtn)).perform(ViewActions.click());
+            onView((withText("what are you allergic to"))).check(matches(isDisplayed()));
+        }catch (PerformException e){
+            e.printStackTrace();
+        }
     }
     @Test
     public void testingPrepTimeBtn(){
-
+        onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
+        onView(withId(R.id.navView)).perform(NavigationViewActions.navigateTo(R.id.menuItem_filter));
+        onView(withId(R.id.drawer_layout)).perform(DrawerActions.close());
+        try {
+            onView(withId(R.id.timingBtn)).perform(ViewActions.click());
+            onView((withText("Chose the preparation time"))).check(matches(isDisplayed()));
+        }catch (PerformException e){
+            e.printStackTrace();
+        }
     }
     @Test
     public void testingFilterBtn(){

@@ -80,7 +80,7 @@ public class MainHomeActivity extends AppCompatActivity {
         timeBtn.setOnClickListener(v -> {
             String [] prepTime= PreparationTime.getAll();
             boolean[] checksum= new boolean[prepTime.length];
-            String title = "Chose your the preparation time";
+            String title = "Chose the preparation time";
             popUpDialogBuilder(prepTime,checksum,title,selectedPrepTime);
         });
         allergyBtn.setOnClickListener(v -> {
