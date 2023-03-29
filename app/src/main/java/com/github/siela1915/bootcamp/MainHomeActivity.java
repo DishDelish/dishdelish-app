@@ -40,8 +40,6 @@ public class MainHomeActivity extends AppCompatActivity {
         toggle.syncState();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        Database database = new Database();
-
         navigationView.setNavigationItemSelectedListener(item ->{
             switch (item.getItemId()){
                 case R.id.menuItem_home:
@@ -59,10 +57,6 @@ public class MainHomeActivity extends AppCompatActivity {
                     break;
                 case R.id.menuItem_favorites:
                     setContainerContent(R.id.fragContainer, RecipeListFragment.newInstance(
-//                                        Tasks.await(database.getFavorites()
-//                                                .continueWith((favoriteIds) -> {
-//                                                    return favoriteIds.getResult().stream().map(database::get).collect(Collectors.toList());
-//                                                }))
                                         ExampleRecipes.recipes
                                 ), false);
                     break;
