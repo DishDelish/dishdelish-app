@@ -1,5 +1,8 @@
 package com.github.siela1915.bootcamp;
 
+import android.os.Bundle;
+import android.view.MenuItem;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -8,6 +11,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentContainerView;
 import androidx.fragment.app.FragmentTransaction;
+
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -22,6 +26,11 @@ import com.github.siela1915.bootcamp.Labelling.CuisineType;
 import com.github.siela1915.bootcamp.Labelling.DietType;
 import com.github.siela1915.bootcamp.Labelling.RecipeFetcher;
 import com.github.siela1915.bootcamp.Recipes.PreparationTime;
+
+import com.github.siela1915.bootcamp.Recipes.ExampleRecipes;
+import com.github.siela1915.bootcamp.Recipes.Recipe;
+import com.github.siela1915.bootcamp.firebase.Database;
+
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
@@ -98,16 +107,17 @@ public class MainHomeActivity extends AppCompatActivity {
             }
             RecipeFetcher recipeFetcher = new RecipeFetcher(allergy,cuisineType,dietType);
             List<String> filteredRecipes= recipeFetcher.fetchRecipeList();
-            HomePageFragment homePageFragment= new HomePageFragment();
-            FragmentTransaction fragmentTransaction= getSupportFragmentManager().beginTransaction();
-            Bundle cuisine= new Bundle();
-            String str="The recipes which match your requirement";
-            for(int i=0; i<filteredRecipes.size(); i++){
-                str+= filteredRecipes.get(i)+ " ";
+            List<Recipe> recipeList = new ArrayList<>();
+            for (String recipeName: filteredRecipes){
+                for(int i=0; i<ExampleRecipes.recipes.size();i++){
+                    if(ExampleRecipes.recipes.get(i).recipeName.equalsIgnoreCase(recipeName)){
+                        recipeList.add(ExampleRecipes.recipes.get(i));
+                    }
+                }
+
             }
-            cuisine.putString("selected cuisine", str);
-            homePageFragment.setArguments(cuisine);
-            fragmentTransaction.replace(R.id.fragContainer,homePageFragment).commit();
+            setContainerContent(R.id.fragContainer,RecipeListFragment.newInstance(recipeList),false);
+
         });
         toggle= new ActionBarDrawerToggle(this,drawerLayout,R.string.open,R.string.close);
         drawerLayout.addDrawerListener(toggle);
@@ -143,6 +153,10 @@ public class MainHomeActivity extends AppCompatActivity {
                     if(!homeFragmentCheck) {
                         setContainerContent(R.id.fragContainer,HomePageFragment.class,false);
                     }
+                case R.id.menuItem_favorites:
+                    setContainerContent(R.id.fragContainer, RecipeListFragment.newInstance(
+                                        ExampleRecipes.recipes
+                                ), false);
                     break;
                 default:
             }
@@ -185,7 +199,6 @@ public class MainHomeActivity extends AppCompatActivity {
 
         builder.setMultiChoiceItems(items,checksum,(dialog,which,isChecked)->{
             checksum[which]=isChecked;
-            Toast.makeText(MainHomeActivity.this, items[which] + " " + isChecked,Toast.LENGTH_SHORT).show();
         });
         builder.setPositiveButton("Ok", (dialog, which) -> {
             for(int i=0; i< checksum.length; i++){
@@ -208,5 +221,18 @@ public class MainHomeActivity extends AppCompatActivity {
             dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.teal_700));
         });
         dialog.show();
+    }
+    private void setContainerContent(int containerId, @NonNull Fragment fragment, boolean setOrReplace){
+        if(setOrReplace){
+            getSupportFragmentManager().beginTransaction()
+                    .setReorderingAllowed(true)
+                    .add(containerId,fragment,null)
+                    .commit();
+        }else{
+            getSupportFragmentManager().beginTransaction()
+                    .setReorderingAllowed(true)
+                    .replace(containerId,fragment,null)
+                    .commit();
+        }
     }
 }

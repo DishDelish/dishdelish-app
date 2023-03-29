@@ -35,7 +35,7 @@ public class RecipeConverter {
         i.putExtra("cookTime", recipe.cookTime);
         i.putExtra("servings", recipe.servings);
         i.putExtra("utensils", recipe.utensils.getUtensils().toArray());
-        i.putStringArrayListExtra("ingredients", convertIngredientList(recipe.ingredientList));
+        i.putExtra("ingredients", convertIngredientList(recipe.ingredientList));
         i.putExtra("steps", recipe.steps.toArray());
         i.putExtra("comments", recipe.comments.toArray());
 
