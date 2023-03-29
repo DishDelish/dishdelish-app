@@ -62,7 +62,7 @@ public class RecipeItemRecyclerViewAdapter extends RecyclerView.Adapter<RecipeIt
             mRecipeItemImage = binding.recipeItemImage;
             mRecipeItemName = binding.recipeItemName;
             mRecipeItemAuthor = binding.recipeItemAuthor;
-            binding.constraintLayout.setOnClickListener((view) -> {
+            binding.recipeItemLayout.setOnClickListener((view) -> {
                 Context context = binding.getRoot().getContext();
                 context.startActivity(RecipeConverter.convertToIntent(mItem, context));
             });
