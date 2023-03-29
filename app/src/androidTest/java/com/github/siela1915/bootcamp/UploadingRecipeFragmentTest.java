@@ -11,6 +11,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.endsWith;
+import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertTrue;
 
 import android.view.View;
@@ -23,6 +24,9 @@ import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.matcher.BoundedMatcher;
 import androidx.test.espresso.matcher.ViewMatchers;
 
+import com.github.siela1915.bootcamp.Labelling.AllergyType;
+import com.github.siela1915.bootcamp.Labelling.CuisineType;
+import com.github.siela1915.bootcamp.Labelling.DietType;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -77,6 +81,9 @@ public class UploadingRecipeFragmentTest {
         onView(withId(R.id.ingredientsUnit)).check(matches(withEffectiveVisibility(VISIBLE)));
         onView(withId(R.id.ingredientsName)).check(matches(withEffectiveVisibility(VISIBLE)));
         onView(withId(R.id.addIngredientButton)).check(matches(withEffectiveVisibility(VISIBLE)));
+        onView(withId(R.id.cuisineTypes)).check(matches(withEffectiveVisibility(VISIBLE)));
+        onView(withId(R.id.allergyTypes)).check(matches(withEffectiveVisibility(VISIBLE)));
+        onView(withId(R.id.dietTypes)).check(matches(withEffectiveVisibility(VISIBLE)));
         onView(withId(R.id.stepGroup)).check(matches(withEffectiveVisibility(VISIBLE)));
         onView(withId(R.id.step)).check(matches(withEffectiveVisibility(VISIBLE)));
         onView(withId(R.id.addStepButton)).check(matches(withEffectiveVisibility(VISIBLE)));
@@ -193,6 +200,51 @@ public class UploadingRecipeFragmentTest {
         onView(withId(R.id.removeIngredient)).perform(ViewActions.scrollTo(), ViewActions.click());
 
         onView(withId(R.id.ingredientsGroup)).check((matches(withChildViewCount(1, withId(R.id.ingredients)))));
+    }
+
+    @Test
+    public void editRecipeCuisineTypesTest() {
+        scenario = FragmentScenario.launchInContainer(UploadingRecipeFragment.class);
+
+        onView(allOf(
+                isDescendantOfA(withId(R.id.cuisineTypesContent)),
+                withClassName(endsWith("AutoCompleteTextView"))
+        )).perform(ViewActions.scrollTo(), typeText(CuisineType.AMERICAN.toString()));
+
+        onView(allOf(
+                isDescendantOfA(withId(R.id.cuisineTypesContent)),
+                withClassName(endsWith("AutoCompleteTextView"))
+        )).check(matches(ViewMatchers.withText(CuisineType.AMERICAN.toString())));
+    }
+
+    @Test
+    public void editRecipeAllergyTypesTest() {
+        scenario = FragmentScenario.launchInContainer(UploadingRecipeFragment.class);
+
+        onView(allOf(
+                isDescendantOfA(withId(R.id.allergyTypesContent)),
+                withClassName(endsWith("AutoCompleteTextView"))
+        )).perform(ViewActions.scrollTo(), typeText(AllergyType.EGGS.toString()));
+
+        onView(allOf(
+                isDescendantOfA(withId(R.id.allergyTypesContent)),
+                withClassName(endsWith("AutoCompleteTextView"))
+        )).check(matches(ViewMatchers.withText(AllergyType.EGGS.toString())));
+    }
+
+    @Test
+    public void editRecipeDietTypesTest() {
+        scenario = FragmentScenario.launchInContainer(UploadingRecipeFragment.class);
+
+        onView(allOf(
+                isDescendantOfA(withId(R.id.dietTypesContent)),
+                withClassName(endsWith("AutoCompleteTextView"))
+        )).perform(ViewActions.scrollTo(), typeText(DietType.DAIRY.toString()));
+
+        onView(allOf(
+                isDescendantOfA(withId(R.id.dietTypesContent)),
+                withClassName(endsWith("AutoCompleteTextView"))
+        )).check(matches(ViewMatchers.withText(DietType.DAIRY.toString())));
     }
 
     @Test

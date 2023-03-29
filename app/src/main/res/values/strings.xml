@@ -19,6 +19,9 @@
     <string name="ingredientsUnitHint">cups</string>
     <string name="ingredientsNameHint">sugar</string>
     <string name="addIngredients">Add Ingredient</string>
+    <string name="cuisineTypes">Cuisine Types</string>
+    <string name="allergyTypes">Allergy Types</string>
+    <string name="dietTypes">Diet Types</string>
     <string name="step">Directions</string>
     <string name="addSteps">Add Step</string>
     <string name="stepHint">e.g. Preheat oven to 350 degrees</string>

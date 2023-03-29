@@ -13,6 +13,10 @@ import androidx.fragment.app.testing.FragmentScenario;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
+import com.github.siela1915.bootcamp.Labelling.AllergyType;
+import com.github.siela1915.bootcamp.Labelling.CuisineType;
+import com.github.siela1915.bootcamp.Labelling.DietType;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,6 +36,9 @@ public class ReviewRecipeBeforeUploadingDialogTest {
         bundle.putString("servings", "10");
         bundle.putString("utensils", "test-utensils");
         bundle.putString("ingredientList", "test-ingredients");
+        bundle.putString("cuisineTypes", CuisineType.AMERICAN.toString());
+        bundle.putString("allergyTypes", AllergyType.EGGS.toString());
+        bundle.putString("dietTypes", DietType.DAIRY.toString());
         bundle.putString("steps", "test-steps");
 
         return bundle;
@@ -63,6 +70,12 @@ public class ReviewRecipeBeforeUploadingDialogTest {
         onView(withId(R.id.reviewRecipeUtensils)).check(matches(ViewMatchers.withText("test-utensils")));
         onView(withId(R.id.reviewRecipeIngredientsContainer)).check(matches(withEffectiveVisibility(VISIBLE)));
         onView(withId(R.id.reviewRecipeIngredients)).check(matches(ViewMatchers.withText("test-ingredients")));
+        onView(withId(R.id.reviewRecipeCuisineTypesContainer)).check(matches(withEffectiveVisibility(VISIBLE)));
+        onView(withId(R.id.reviewRecipeCuisineTypes)).check(matches(ViewMatchers.withText(CuisineType.AMERICAN.toString())));
+        onView(withId(R.id.reviewRecipeAllergyTypesContainer)).check(matches(withEffectiveVisibility(VISIBLE)));
+        onView(withId(R.id.reviewRecipeAllergyTypes)).check(matches(ViewMatchers.withText(AllergyType.EGGS.toString())));
+        onView(withId(R.id.reviewRecipeDietTypesContainer)).check(matches(withEffectiveVisibility(VISIBLE)));
+        onView(withId(R.id.reviewRecipeDietTypes)).check(matches(ViewMatchers.withText(DietType.DAIRY.toString())));
         onView(withId(R.id.reviewRecipeStepsContainer)).check(matches(withEffectiveVisibility(VISIBLE)));
         onView(withId(R.id.reviewRecipeSteps)).check(matches(ViewMatchers.withText("test-steps")));
         onView(withId(R.id.reviewRecipeImageContainer)).check(matches(withEffectiveVisibility(VISIBLE)));
