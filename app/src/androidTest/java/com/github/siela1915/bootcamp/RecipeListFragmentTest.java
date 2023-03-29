@@ -1,8 +1,10 @@
 package com.github.siela1915.bootcamp;
 
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition;
 import static androidx.test.espresso.contrib.RecyclerViewActions.scrollTo;
 import static androidx.test.espresso.matcher.ViewMatchers.withChild;
 import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
@@ -20,6 +22,8 @@ import androidx.fragment.app.testing.FragmentScenario;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.test.espresso.NoMatchingViewException;
 import androidx.test.espresso.ViewAssertion;
+import androidx.test.espresso.intent.Intents;
+import androidx.test.espresso.intent.matcher.IntentMatchers;
 
 import com.github.siela1915.bootcamp.Recipes.ExampleRecipes;
 import com.github.siela1915.bootcamp.Recipes.Recipe;
@@ -99,6 +103,22 @@ public class RecipeListFragmentTest {
                 .check(matches(withText(recipeList.get(2).recipeName)));
     }
 
+    @Test
+    public void clickingOnItemLaunchesDetailedRecipeView() {
+        Bundle bundle = new Bundle();
+        ArrayList<Recipe> recipeList = new ArrayList<>(Collections.singletonList(ExampleRecipes.recipes.get(0)));
+        bundle.putParcelableArrayList(RecipeListFragment.ARG_RECIPE_LIST, recipeList);
+        scenario = FragmentScenario.launchInContainer(RecipeListFragment.class, bundle);
+
+        Intents.init();
+
+        onView(withId(R.id.recipeList)).perform(actionOnItemAtPosition(0, click()));
+
+        Intents.intended(IntentMatchers.hasComponent(RecipeActivity.class.getName()));
+
+        Intents.release();
+    }
+
     /**
      * Class to check item count in recycler view, taken from https://stackoverflow.com/a/43207009
      */
@@ -169,7 +189,7 @@ public class RecipeListFragmentTest {
 
                     if (childView == null) {
                         RecyclerView recyclerView =
-                                (RecyclerView) view.getRootView().findViewById(recyclerViewId);
+                                view.getRootView().findViewById(recyclerViewId);
                         if (recyclerView != null && recyclerView.getId() == recyclerViewId) {
                             childView = Objects.requireNonNull(recyclerView.findViewHolderForAdapterPosition(position)).itemView;
                         } else {
