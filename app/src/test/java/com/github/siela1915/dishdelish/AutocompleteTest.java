@@ -2,70 +2,96 @@ package com.github.siela1915.dishdelish;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 
 import com.github.siela1915.bootcamp.AutocompleteApi.ApiResponse;
 import com.github.siela1915.bootcamp.AutocompleteApi.ApiService;
 import com.github.siela1915.bootcamp.AutocompleteApi.IngredientAutocomplete;
-import com.github.siela1915.dishdelish.ApiTests.MockApi;
 
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class AutocompleteTest {
-    IngredientAutocomplete fetcher = new IngredientAutocomplete();
+    private final String apiKey = "44a82829c64d4202a18b887e47e76bdd";
 
     @Test
-    public void apiCallReturnsListOfIngredients() throws InterruptedException {
-        List<String> correctResponse = Arrays.asList("apple", "apple juice", "apple cider", "apple jelly");
-        List<ApiResponse> rep = new ArrayList<>();
-        fetcher.completeSearch("app", rep);
-        Thread.sleep(100);
-        for (String r: rep.stream().map(r -> r.name).collect(Collectors.toList())) {
-            assertTrue(correctResponse.contains(r));
-        }
-    }
-
-    @Test
-    public void mockApiCallReturnsNonEmptyResponse(){
-        IngredientAutocomplete fetcher = new IngredientAutocomplete();
-        fetcher.service = new MockApi(false);
-        List<ApiResponse> ing = new ArrayList<>();
-        assertEquals("apple", fetcher.completeSearch("app", ing).get(0).name);
-    }
-
-    @Test
-    public void failedCallReturnsEmptyList() throws InterruptedException {
-        IngredientAutocomplete fetcher = new IngredientAutocomplete();
-        fetcher.service = new MockApi(true);
-        List<ApiResponse> ing = new ArrayList<>();
-        assertTrue(ing.isEmpty());
-
-    }
-
-    @Test
-    public void failedCallDoesntChangeList(){
-        IngredientAutocomplete fetcher = new IngredientAutocomplete();
-        fetcher.service = new MockApi(true);
-
-
-        IngredientAutocomplete fetcher2 = new IngredientAutocomplete();
-        fetcher2.service = new MockApi(false);
-        List<ApiResponse> ing = new ArrayList<>();
-        fetcher.completeSearch("a", ing);
-        assertEquals("apple", fetcher2.completeSearch("app", ing).get(0).name);
-        fetcher.completeSearch("a", ing);
-        assertEquals("apple", ing.get(0).name);
-
-    }
-
-    @Test
-    public void mockitoTest(){
+    public void fetcherReturnsNonemptyIngredient(){
         ApiService mockedApi = Mockito.mock(ApiService.class);
+        Call<List<ApiResponse>> mockedCall = Mockito.mock(Call.class);
+        Mockito.when(mockedApi.fetchIngredients("app", 5, apiKey)).thenReturn(mockedCall);
+
+        Mockito.doAnswer(invocation -> {
+            Callback callback = invocation.getArgument(0, Callback.class);
+            callback.onResponse(mockedCall, Response.success(Arrays.asList(new ApiResponse("apple", "not used", 0, "Not used", new String[]{"piece"}))));
+            // or callback.onResponse(mockedCall, Response.error(404. ...);
+            // or callback.onFailure(mockedCall, new IOException());
+            return null;
+        }).when(mockedCall).enqueue(any(Callback.class));
+
+        IngredientAutocomplete fetcher = new IngredientAutocomplete();
+        fetcher.service = mockedApi;
+        List<ApiResponse> ret = new ArrayList<>();
+        fetcher.completeSearch("app", ret);
+        assertTrue(!ret.isEmpty());
+        assertEquals("apple", ret.get(0).name);
+
+    }
+
+    @Test
+    public void nullIngredientResponseHandledCorrectly(){
+        ApiService mockedApi = Mockito.mock(ApiService.class);
+        Call<List<ApiResponse>> mockedCall = Mockito.mock(Call.class);
+        Mockito.when(mockedApi.fetchIngredients("app", 5, apiKey)).thenReturn(mockedCall);
+
+        Mockito.doAnswer(invocation -> {
+            Callback callback = invocation.getArgument(0, Callback.class);
+            callback.onResponse(mockedCall, Response.success(null));
+            return null;
+        }).when(mockedCall).enqueue(any(Callback.class));
+
+        IngredientAutocomplete fetcher = new IngredientAutocomplete();
+        fetcher.service = mockedApi;
+        List<ApiResponse> ret = new ArrayList<>();
+        fetcher.completeSearch("app", ret);
+        assertTrue(ret.isEmpty());
+    }
+
+    @Test
+    public void failedCallDoesntOverwritePreviousCall(){
+        ApiService mockedApi = Mockito.mock(ApiService.class);
+        Call<List<ApiResponse>> mockedCall = Mockito.mock(Call.class);
+        Mockito.when(mockedApi.fetchIngredients("app", 5, apiKey)).thenReturn(mockedCall);
+
+        Mockito.doAnswer(invocation -> {
+            Callback callback = invocation.getArgument(0, Callback.class);
+            callback.onResponse(mockedCall, Response.success(Arrays.asList(new ApiResponse("apple", "not used", 0, "Not used", new String[]{"piece"}))));
+            return null;
+        }).when(mockedCall).enqueue(any(Callback.class));
+
+        IngredientAutocomplete fetcher = new IngredientAutocomplete();
+        fetcher.service = mockedApi;
+        List<ApiResponse> ret = new ArrayList<>();
+        fetcher.completeSearch("app", ret);
+
+        Mockito.doAnswer(invocation -> {
+            Callback callback = invocation.getArgument(0, Callback.class);
+            callback.onFailure(mockedCall, new IOException());
+            return null;
+        }).when(mockedCall).enqueue(any(Callback.class));
+
+        fetcher.completeSearch("app", ret);
+
+        assertTrue(!ret.isEmpty());
+        assertEquals("apple", ret.get(0).name);
 
     }
 

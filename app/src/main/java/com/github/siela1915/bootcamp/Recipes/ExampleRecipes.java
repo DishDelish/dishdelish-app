@@ -2,8 +2,11 @@ package com.github.siela1915.bootcamp.Recipes;
 import android.util.Pair;
 
 import static com.github.siela1915.bootcamp.Labelling.AllergyType.EGGS;
+import static com.github.siela1915.bootcamp.Labelling.AllergyType.SESAME;
 import static com.github.siela1915.bootcamp.Labelling.CuisineType.*;
 import static com.github.siela1915.bootcamp.Labelling.DietType.DAIRY;
+import static com.github.siela1915.bootcamp.Labelling.DietType.VEGAN;
+import static com.github.siela1915.bootcamp.Labelling.DietType.VEGETARIAN;
 import static com.github.siela1915.bootcamp.Recipes.Ingredient.*;
 
 
@@ -55,7 +58,23 @@ public class ExampleRecipes {
                             "Meanwhile, heat the lemon curd for 30 secs in the microwave and stir until smooth. Pour all over the top of the pudding and serve with a dollop of crème fraîche or scoops of ice cream."
                               ),
                     commentsList
+            ),
+
+            new Recipe(R.drawable.krabby_patty, "Krabby Patty", "Spongebob Squarepants",
+                       R.drawable.pfp, 5., 20, 30, 1, new Utensils(Arrays.asList("Pan", "Spatula")),
+                    Arrays.asList(AMERICAN.ordinal()), Arrays.asList(SESAME.ordinal()), Arrays.asList(VEGAN.ordinal(), VEGETARIAN.ordinal()),
+                    Arrays.asList(new Ingredient("burger bun", new Unit(1, "piece")), new Ingredient("sea lettuce", new Unit(1, "piece")), new Ingredient("sea pickles", new Unit(2, "pieces")), new Ingredient("sea ketchup", new Unit(1, "bottle")), new Ingredient("sea patty", new Unit(1, "piece")), new Ingredient("sea tomato", new Unit(1, "slice")), new Ingredient(" sea cheese", new Unit(1, "piece")), new Ingredient("sea onions", new Unit(2, "slices"))),
+                    Arrays.asList("STEP 1\n" +
+                            "Obtain the Secret Krabby Patty formula, located in a safe inside the Krusty Krab."+
+                            "STEP 2\n" +
+                            "Do NOT, under any circumstances, allow yourself to be seen with the formula. Failing to do so may have fatal consequences"+
+                            "STEP 3\n" +
+                            "Follow the formula, and remember, it's not a Krabby Patty if it's not made with love \u2764"),
+                    commentsList
             )
+
+
+
     );
 
 

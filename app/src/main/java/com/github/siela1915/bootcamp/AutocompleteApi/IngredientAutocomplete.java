@@ -45,14 +45,11 @@ public class IngredientAutocomplete {
 
             }
 
+            //Somehow indicate to the user that there was an error while fetching
+            //Now just ignores it, since we want the autocomplete option to be empty in this case,
+            //without disrupting the user too much.
             @Override
             public void onFailure(Call<List<ApiResponse>> call, Throwable t) {
-                System.out.println(t.getMessage());
-                try {
-                    throw t;
-                } catch (Throwable e) {
-                    throw new RuntimeException(e);
-                }
             }
         });
         return ingredients;
