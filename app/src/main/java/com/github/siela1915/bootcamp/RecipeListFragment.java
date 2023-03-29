@@ -23,7 +23,7 @@ import java.util.Objects;
  */
 public class RecipeListFragment extends Fragment {
 
-    private static final String ARG_RECIPE_LIST = "recipe-list";
+    public static final String ARG_RECIPE_LIST = "recipe-list";
     private List<Recipe> mRecipeList = Collections.emptyList();
 
     /**
