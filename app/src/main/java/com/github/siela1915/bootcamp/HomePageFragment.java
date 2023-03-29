@@ -29,7 +29,7 @@ public class HomePageFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    private  String cuis= "here is ";
+    private  String cuis= "";
     private TextView homeTextView;
 
     public HomePageFragment() {

@@ -25,5 +25,13 @@ public enum AllergyType {
         }
         return all;
     }
+    public static AllergyType fromString(String text) {
+        for (AllergyType b : AllergyType.values()) {
+            if (b.display_string.equalsIgnoreCase(text)) {
+                return b;
+            }
+        }
+        return null;
+    }
 
 }

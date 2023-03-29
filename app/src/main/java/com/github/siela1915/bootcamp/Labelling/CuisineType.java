@@ -27,6 +27,14 @@ public enum CuisineType {
         }
         return all;
     }
+    public static CuisineType fromString(String text) {
+        for (CuisineType b : CuisineType.values()) {
+            if (b.display_string.equalsIgnoreCase(text)) {
+                return b;
+            }
+        }
+        return null;
+    }
 }
 
 

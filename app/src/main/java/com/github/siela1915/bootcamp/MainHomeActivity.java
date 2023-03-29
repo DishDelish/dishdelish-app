@@ -85,20 +85,23 @@ public class MainHomeActivity extends AppCompatActivity {
             List<Integer> cuisineType= new ArrayList<>();
             List<Integer>  dietType= new ArrayList<>();
             for(String elem: selectedAllery){
-                //allergy.add(new AllergyType(elem).ordinal());
+                AllergyType at= AllergyType.fromString(elem);
+                allergy.add(at.ordinal());
             }
             for(String elem: selectedDiet){
-                dietType.add(DietType.valueOf(elem).ordinal());
+                DietType dt= DietType.fromString(elem);
+                dietType.add(dt.ordinal());
             }
             for(String elem: selectedCuisine){
-                cuisineType.add(CuisineType.valueOf(elem).ordinal());
+                CuisineType ct= CuisineType.fromString(elem);
+                cuisineType.add(ct.ordinal());
             }
             RecipeFetcher recipeFetcher = new RecipeFetcher(allergy,cuisineType,dietType);
             List<String> filteredRecipes= recipeFetcher.fetchRecipeList();
             HomePageFragment homePageFragment= new HomePageFragment();
             FragmentTransaction fragmentTransaction= getSupportFragmentManager().beginTransaction();
             Bundle cuisine= new Bundle();
-            String str="";
+            String str="The recipes which match your requirement";
             for(int i=0; i<filteredRecipes.size(); i++){
                 str+= filteredRecipes.get(i)+ " ";
             }

@@ -27,4 +27,12 @@ public enum DietType {
         }
         return all;
     }
+    public static DietType fromString(String text) {
+        for (DietType b : DietType.values()) {
+            if (b.display_string.equalsIgnoreCase(text)) {
+                return b;
+            }
+        }
+        return null;
+    }
 }
