@@ -14,43 +14,47 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class IngredientAutocomplete {
     private final int numberOfIngredients = 5;
     private final String apiKey = "44a82829c64d4202a18b887e47e76bdd";
-
-    Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl("https://api.spoonacular.com/food/ingredients/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build();
-    ApiService service = retrofit.create(ApiService.class);
+    public ApiService service;
 
 
-    public List<String> completeSearch(String query){
-        List<String> temp = new ArrayList<>();
+
+    //default constructor, no need to specify URL
+    public IngredientAutocomplete() {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://api.spoonacular.com/food/ingredients/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        service = retrofit.create(ApiService.class);
+    }
+
+    //will store the responses inside the ingredients list
+    //implementation will have to work even with empty lists, i.e. while the call is still ongoing.
+    public List<ApiResponse> completeSearch(String query, List<ApiResponse> ingredients){
         service.fetchIngredients(query, numberOfIngredients, apiKey).enqueue(new Callback<List<ApiResponse>>() {
             @Override
             public void onResponse(Call<List<ApiResponse>> call, Response<List<ApiResponse>> response) {
-                for(ApiResponse ing: response.body()) {
-                    System.out.println(ing.name);
-                    temp.add(ing.name);
+                if(response.isSuccessful()) {
+                    if (response.body() != null) {
+                        for (ApiResponse ing : response.body()) {
+                            //Adds the ingredients to the passed list
+                            ingredients.add(ing);
+                        }
+                    }
+                    //add a case for not successful?
                 }
-
-
-
-
-                if(response.isSuccessful()){
-//                    val temp = response.body() as BoredActivity
-//                    dataView.setText(temp.activity)
-//                    dao.insertAll(temp)
-                }else{
-                    //dataView.setText("Fetch was unsuccessful :(")
-                }
-                System.out.println("yay");
 
             }
 
             @Override
             public void onFailure(Call<List<ApiResponse>> call, Throwable t) {
-                System.out.println("nay");
+                System.out.println(t.getMessage());
+                try {
+                    throw t;
+                } catch (Throwable e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
-        return temp;
+        return ingredients;
     }
 }

@@ -44,18 +44,18 @@ public class RecipeFetcher{
             float weight = 5;
             weight += (cuisines).stream()
                     .distinct()
-                    .filter(x -> (r.cuisineTypes).stream().anyMatch(y -> y == x))
+                    .filter(x -> (r.cuisineTypes).stream().anyMatch(y -> y.equals(x)))
                     .toArray().length*10;
 
             //checking if the recipe violates allergy or diet constraint
             //List<Boolean> temp= allergies.stream().map(a -> r.allergyTypes.contains(a)).collect(Collectors.toList());
             if((allergies).stream()
                     .distinct()
-                    .filter(x -> (r.allergyTypes).stream().anyMatch(y -> y == x))
+                    .filter(x -> (r.allergyTypes).stream().anyMatch(y -> y.equals(x)))
                     .toArray().length > 0
             || (diets).stream()
                     .distinct()
-                    .filter(x -> (r.dietTypes).stream().anyMatch(y -> y == x))
+                    .filter(x -> (r.dietTypes).stream().anyMatch(y -> y.equals(x)))
                     .toArray().length > 0){
 
                 weight=0;
