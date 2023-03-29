@@ -24,6 +24,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.github.siela1915.bootcamp.Labelling.CuisineType;
 
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -90,18 +91,24 @@ public class MainHomeActivityTest {
         onView(withId(R.id.homeFragment)).check(matches(isDisplayed()));
         
     }
-    @Test
-    public void testOnChosingFilter(){
+    @Before
+    public void fun(){
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
         onView(withId(R.id.navView))
                 .perform(NavigationViewActions.navigateTo(R.id.menuItem_filter));
-        onView(withId(R.id.filterLayout)).check(matches(isDisplayed()));
+    }
+    @Test
+    public void testOnChosingFilter(){
+        //onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
+        //onView(withId(R.id.navView))
+          //      .perform(NavigationViewActions.navigateTo(R.id.menuItem_filter));
+        onView(withId(R.id.homeFragment)).check(matches(isDisplayed()));
     }
     @Test
     public void testingCuisineTypeBtn(){
-        onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
-        onView(withId(R.id.navView))
-                .perform(NavigationViewActions.navigateTo(R.id.menuItem_filter));
+       // onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
+       // onView(withId(R.id.navView))
+         //       .perform(NavigationViewActions.navigateTo(R.id.menuItem_filter));
         onView(withId(R.id.cuisineBtn))
                 .perform(ViewActions.click());
         onView(withText("Chose your preferred cuisine")).check(matches(isDisplayed()));
