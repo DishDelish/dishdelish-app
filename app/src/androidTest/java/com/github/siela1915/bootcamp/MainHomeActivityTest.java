@@ -2,10 +2,13 @@ package com.github.siela1915.bootcamp;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.RootMatchers.isDialog;
 import static androidx.test.espresso.matcher.ViewMatchers.isClickable;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast;
+import static androidx.test.espresso.matcher.ViewMatchers.isRoot;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
@@ -84,8 +87,8 @@ public class MainHomeActivityTest {
         onView(withId(R.id.navView))
                 .perform(NavigationViewActions.navigateTo(R.id.menuItem_filter));
         onView(withId(R.id.homeFragment)).check(matches(isDisplayed()));
-        /*onView(withId(R.id.filterLayout)).check(matches(isDisplayed()));
-        onView(withId(R.id.cuisineBtn)).check(matches(isDisplayed()));
+        onView(withId(R.id.filterLayout)).check(matches(isDisplayed()));
+        /*onView(withId(R.id.cuisineBtn)).check(matches(isDisplayed()));
         onView(withId(R.id.notIncludIngBtn)).check(matches(isDisplayed()));
         onView(withId(R.id.dietBtn)).check(matches(isDisplayed()));
         onView(withId(R.id.timingBtn)).check(matches(isDisplayed()));
@@ -102,7 +105,7 @@ public class MainHomeActivityTest {
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
         onView(withId(R.id.navView))
                 .perform(NavigationViewActions.navigateTo(R.id.menuItem_filter));
-        onView(withId(R.id.cuisineBtn)).perform(click());
+        onView(withId(R.id.cuisineBtn)).perform(click(),closeSoftKeyboard());
         onView(withText("Chose your preferred cuisine")).check(matches(isDisplayed()));
         /*onView(withText("Ok")).inRoot(isDialog()).check(matches(isClickable()));
         onView(withText("Ok")).inRoot(isDialog()).check(matches(isDisplayed()));
