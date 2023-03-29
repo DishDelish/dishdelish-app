@@ -61,15 +61,6 @@
             app:layout_constraintTop_toBottomOf="@+id/ratingBar" />
 
         <ImageView
-            android:id="@+id/favoriteImage"
-            android:layout_width="50dp"
-            android:layout_height="47dp"
-            android:layout_marginTop="20dp"
-            app:layout_constraintEnd_toEndOf="@+id/recipePicture"
-            app:layout_constraintTop_toBottomOf="@+id/recipeNameText"
-            app:srcCompat="@drawable/heart" />
-
-        <ImageView
             android:id="@+id/infoBoxes"
             android:layout_width="325dp"
             android:layout_height="126dp"
@@ -196,23 +187,11 @@
             app:layout_constraintStart_toEndOf="@+id/nbServings"
             app:layout_constraintTop_toBottomOf="@+id/ingredientsIcon" />
 
-        <TextView
-            android:id="@+id/ingredientsList"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:fontFamily="@font/inter"
-            android:text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
-            android:textColor="#090909"
-            android:textSize="18sp"
-            app:layout_constraintStart_toStartOf="@+id/recipePicture"
-            app:layout_constraintTop_toBottomOf="@+id/servingsIcon" />
-
         <ImageView
             android:id="@+id/utensilsIcon"
             android:layout_width="45dp"
             android:layout_height="40dp"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="16dp"
             app:layout_constraintStart_toStartOf="@+id/recipePicture"
             app:layout_constraintTop_toBottomOf="@+id/ingredientsList"
             app:srcCompat="@drawable/appliances_sauce_pan" />
@@ -222,7 +201,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="56dp"
+            android:layout_marginTop="20dp"
             android:fontFamily="@font/inter_bold"
             android:text="Utensils"
             android:textColor="#0E0E0E"
@@ -276,20 +255,6 @@
             app:layout_constraintStart_toStartOf="@+id/recipePicture"
             app:layout_constraintTop_toBottomOf="@+id/stepsIcon" />
 
-        <TextView
-            android:id="@+id/commentsText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:layout_marginTop="16dp"
-            android:fontFamily="@font/inter"
-            android:text="The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from &quot;de Finibus Bonorum et Malorum&quot; by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham."
-            android:textAlignment="center"
-            android:textColor="#090808"
-            android:textSize="18sp"
-            app:layout_constraintStart_toStartOf="@+id/recipePicture"
-            app:layout_constraintTop_toBottomOf="@+id/commentsIcon" />
-
         <ImageView
             android:id="@+id/commentsIcon"
             android:layout_width="46dp"
@@ -340,6 +305,67 @@
             app:layout_constraintHorizontal_bias="0.492"
             app:layout_constraintStart_toStartOf="@+id/recipePicture"
             app:layout_constraintTop_toBottomOf="@+id/stepsText" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/commentsList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:layout_constraintEnd_toEndOf="@+id/stepsText"
+            app:layout_constraintStart_toStartOf="@+id/stepsText"
+            app:layout_constraintTop_toBottomOf="@+id/commentsIcon" />
+
+        <EditText
+            android:id="@+id/enterComment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/write_comment_box"
+            android:hint="Say Something"
+            android:paddingStart="10dp"
+            android:paddingLeft="15dp"
+            android:paddingTop="5dp"
+            android:paddingEnd="45dp"
+            android:paddingBottom="5dp"
+            android:textColor="@color/black"
+            android:text=""
+            android:textColorHint="@color/material_dynamic_neutral60"
+            app:layout_constraintEnd_toEndOf="@+id/commentsList"
+            app:layout_constraintStart_toStartOf="@+id/commentsList"
+            app:layout_constraintTop_toBottomOf="@+id/commentsList" />
+
+        <Button
+            android:id="@+id/sendCommentButton"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginEnd="10dp"
+            android:background="@android:drawable/ic_menu_send"
+            android:text="Button"
+            app:layout_constraintBottom_toBottomOf="@+id/enterComment"
+            app:layout_constraintEnd_toEndOf="@+id/enterComment"
+            app:layout_constraintTop_toTopOf="@+id/enterComment" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/ingredientsList"
+            android:layout_width="317dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="18dp"
+            app:layout_constraintEnd_toEndOf="@+id/recipePicture"
+            app:layout_constraintStart_toStartOf="@+id/recipePicture"
+            app:layout_constraintTop_toBottomOf="@+id/servingsIcon" />
+
+        <ToggleButton
+            android:id="@+id/favoriteButton"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="25dp"
+            android:background="@drawable/heart_empty"
+            android:textOff=""
+            android:textOn=""
+            app:layout_constraintEnd_toEndOf="@+id/recipePicture"
+            app:layout_constraintTop_toBottomOf="@+id/recipeNameText" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
