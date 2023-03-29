@@ -1,5 +1,6 @@
 package com.github.siela1915.bootcamp.firebase;
 
+import com.github.siela1915.bootcamp.Recipes.Recipe;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
@@ -10,6 +11,8 @@ import com.google.firebase.database.Query;
 import com.google.firebase.internal.api.FirebaseNoSignedInUserException;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -25,45 +28,107 @@ public class Database {
     private final static String RECIPES = "recipes";
     private final static String FAVORITES = "favorites";
 
-    public Database() {
-        db = FirebaseDatabase.getInstance().getReference();
+    /**
+     * Constructor instantiates the connection to the database
+     * @param database the database instance
+     * Pass FirebaseDatabase.getInstance() to get default database
+     */
+    public Database(FirebaseDatabase database) {
+        db = database.getReference();
     }
 
 
-
-    public String get(String uniqueKey) {
-        for (int i = 0; i < 5; ++i) {
+    /**
+     * Retrieves a recipe from the database given its unique id
+     * @param uniqueKey the unique id associated to the recipe
+     * @return the recipe fetched from the database
+     * @throws ExecutionException
+     * @throws InterruptedException
+     * The exceptions are thrown when the retrieval fails.
+     * For instance if the method times-out due to a network connection error.
+     */
+    public Recipe get(String uniqueKey) throws ExecutionException, InterruptedException {
             Task<DataSnapshot> task = db.child(RECIPES).child(uniqueKey).get();
             try {
                 DataSnapshot snapshot = Tasks.await(task);
-                return snapshot.getValue() == null ? null : snapshot.getValue().toString();
+                return snapshot.getValue(Recipe.class);
             } catch (ExecutionException | InterruptedException e) {
-                continue;
+                throw e;
             }
-        }
-        return null;
     }
 
-    public String set(Map<String, Object> value) {
+    /**
+     * Adds a recipe to the database.
+     * @param recipe the recipe to add to the database
+     * @return the unique key id associated to this specific recipe in the database
+     */
+    public String set(Recipe recipe) throws ExecutionException, InterruptedException {
+        //Map<String, Object> value = recipeToMap(recipe);
         String uniqueKey = db.child(RECIPES).child("new").push().getKey();
-        db.child(RECIPES).child(uniqueKey).updateChildren(value);
+        Map<String, Object> value = new HashMap<>();
+        value.put(uniqueKey, recipe);
+        try {
+            //Tasks.await(db.child(RECIPES).child(uniqueKey).updateChildren(value));
+            Tasks.await(db.child(RECIPES).updateChildren(value));
+        } catch (ExecutionException | InterruptedException e) {
+            throw e;
+        }
         return uniqueKey;
     }
 
+    /**
+     * Removes a recipe from the database.
+     * @param key the unique identifying key of the recipe
+     */
     public void remove(String key) {
         db.child(RECIPES).child(key).removeValue();
     }
 
-    public String getByName(String name) {
-        Query query = db.child(RECIPES).orderByChild("name");
+    /**
+     * Retrieve a recipe with a given name (not the unique id).
+     * Since the name is not unique, this method may return multiple recipes.
+     * @param name the name of the recipe to search for
+     * @return a map from the recipe's unique key id to the recipe itself
+     * @throws ExecutionException
+     * @throws InterruptedException
+     * The exceptions are thrown when the retrieval fails.
+     * For instance if the method times-out due to a network connection error.
+     */
+    public Map<String, Recipe> getByName(String name) throws ExecutionException, InterruptedException {
+        Query query = db.child(RECIPES).orderByChild("recipeName").equalTo(name);
         Task<DataSnapshot> task = query.get();
         try {
             DataSnapshot snapshot = Tasks.await(task);
-            return snapshot.getValue() == null ? null : snapshot.getValue().toString();
+            Map<String, Recipe> recipes = new HashMap<>();
+            for (DataSnapshot val : snapshot.getChildren()) {
+                recipes.put(val.getKey(), val.getValue(Recipe.class));
+            }
+            return recipes;
         } catch (ExecutionException | InterruptedException e) {
-            throw new RuntimeException(e.getMessage());
+            throw e;
         }
 
+    }
+
+    private Map<String, Object> recipeToMap(Recipe recipe) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("image", recipe.image);
+        map.put("recipeName", recipe.recipeName);
+        map.put("userName", recipe.userName);
+        map.put("profilePicture", recipe.profilePicture);
+        map.put("rating", recipe.rating);
+        map.put("prepTime", recipe.prepTime);
+        map.put("cookTime", recipe.cookTime);
+        map.put("servings", recipe.servings);
+        map.put("utensils", recipe.utensils);
+        map.put("cuisineTypes", recipe.cuisineTypes);
+        map.put("allergyTypes", recipe.allergyTypes);
+        map.put("dietTypes", recipe.dietTypes);
+        map.put("ingredientList", recipe.ingredientList);
+        map.put("steps", recipe.steps);
+        map.put("comments", recipe.comments);
+        map.put("likes", recipe.likes);
+        return map;
     }
 
     public Task<Void> addFavorite(String recipeId) {
