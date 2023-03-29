@@ -44,6 +44,11 @@ public class Utensils implements Parcelable {
     }
 
     @Override
+    public String toString() {
+        return utensils.toString();
+    }
+
+    @Override
     public int describeContents() {
         return 0;
     }

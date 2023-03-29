@@ -62,5 +62,10 @@ public class Ingredient implements Parcelable {
         dest.writeParcelable(unit, flags);
     }
 
+    @Override
+    public String toString() {
+        return ingredient + " " + unit.toString();
+    }
+
     // toString returns the display string
 }

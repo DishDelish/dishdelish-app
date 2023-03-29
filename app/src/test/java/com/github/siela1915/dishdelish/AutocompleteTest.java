@@ -66,6 +66,7 @@ public class AutocompleteTest {
     @Test
     public void mockitoTest(){
         ApiService mockedApi = Mockito.mock(ApiService.class);
+
     }
 
 }
