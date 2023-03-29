@@ -1,18 +1,11 @@
 package com.github.siela1915.bootcamp.Recipes;
 
-import android.media.Image;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Pair;
 
 import androidx.annotation.NonNull;
 
-import com.github.siela1915.bootcamp.Labelling.AllergyType;
-import com.github.siela1915.bootcamp.Labelling.CuisineType;
-import com.github.siela1915.bootcamp.Labelling.DietType;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -167,12 +160,13 @@ public class Recipe implements Parcelable {
         this.likes = likes;
     }
 
+
     public Recipe() {}
 
     public Recipe(int image, String recipeName, String userName, int profilePicture, double rating,
                   int prepTime, int cookTime, int servings, Utensils utensils, List<Integer> cuisineTypes,
                   List<Integer> allergyTypes, List<Integer> dietTypes, List<Ingredient> ingredientList,
-                  List<String> steps, List<String> comments) {
+                  List<String> steps, List<String> comments, int likes) {
         this.image = image;
         this.recipeName = recipeName;
         this.userName = userName;
@@ -188,6 +182,7 @@ public class Recipe implements Parcelable {
         this.ingredientList = ingredientList;
         this.steps = steps;
         this.comments = comments;
+        this.likes = likes;
     }
 
 
@@ -244,6 +239,36 @@ public class Recipe implements Parcelable {
         dest.writeStringList(steps);
         dest.writeStringList(comments);
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Recipe) {
+            Recipe recipe = (Recipe) obj;
+            return image == recipe.image
+                    && recipeName.equals(recipe.recipeName)
+                    && userName.equals(recipe.userName)
+                    && profilePicture == recipe.profilePicture
+                    && Math.abs(rating - recipe.rating) < 1e-6      //Never compare double types with strict equality
+                    && prepTime == recipe.prepTime
+                    && cookTime == recipe.cookTime
+                    && servings == recipe.servings
+                    && utensils.equals(recipe.utensils)
+                    && ingredientList.equals(recipe.ingredientList)
+                    && steps.equals(recipe.steps)
+                    && comments.equals(recipe.comments)
+                    && likes == recipe.likes
+                    && allergyTypes.equals(recipe.allergyTypes)
+                    && cuisineTypes.equals(recipe.cuisineTypes)
+                    && dietTypes.equals(recipe.dietTypes);
+        }
+        return false;
+    }
+
+    @Override
+    public String toString() {
+        return recipeName;
+    }
+
 }
 
 
