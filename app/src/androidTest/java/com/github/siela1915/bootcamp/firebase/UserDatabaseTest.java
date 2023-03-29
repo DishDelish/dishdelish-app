@@ -1,4 +1,4 @@
-package com.github.siela1915.bootcamp;
+package com.github.siela1915.bootcamp.firebase;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -9,6 +9,8 @@ import static org.junit.Assert.assertThrows;
 import android.net.Uri;
 import android.security.keystore.UserNotAuthenticatedException;
 
+import com.github.siela1915.bootcamp.FirebaseAuthActivity;
+import com.github.siela1915.bootcamp.FirebaseAuthActivityTest;
 import com.github.siela1915.bootcamp.firebase.User;
 import com.github.siela1915.bootcamp.firebase.UserDatabase;
 import com.google.android.gms.tasks.Task;
