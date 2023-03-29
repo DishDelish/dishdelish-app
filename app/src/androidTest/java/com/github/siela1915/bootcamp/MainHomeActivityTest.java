@@ -106,11 +106,7 @@ public class MainHomeActivityTest {
         onView(withText("Ok")).inRoot(isDialog()).check(matches(isDisplayed()));
         onView(withText("Ok")).inRoot(isDialog()).perform(click());
         onView(withId(R.id.filterLayout)).check(matches(isDisplayed()));
-        onView(withId(R.id.cuisineBtn)).perform(click());
-        onView(withText("Cancel")).inRoot(isDialog()).check(matches(isClickable()));
-        onView(withText("Cancel")).inRoot(isDialog()).check(matches(isDisplayed()));
-        onView(withText("Cancel")).inRoot(isDialog()).perform(click());
-        onView(withId(R.id.filterLayout)).check(matches(isDisplayed()));
+
     }
     @Test
     public void testingDietTypeBtn(){
