@@ -142,6 +142,15 @@ public class MainHomeActivityTest {
     }
     @Test
     public void testingFilterBtn(){
+        onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
+        onView(withId(R.id.navView)).perform(NavigationViewActions.navigateTo(R.id.menuItem_filter));
+        onView(withId(R.id.drawer_layout)).perform(DrawerActions.close());
+        try {
+            onView(withId(R.id.filterBtn)).perform(ViewActions.click());
+            onView((withId(R.id.recipeList))).check(matches(isDisplayed()));
+        }catch (PerformException e){
+            e.printStackTrace();
+        }
 
     }
 }
