@@ -65,7 +65,7 @@ public class MainHomeActivityTest {
     @Test
     public void choosingOtherMenusThanHomeAndAboutDoesNotChangeContentForTheMomentTest(){
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
-        onView(withId(R.id.navView)).perform(NavigationViewActions.navigateTo(R.id.menuItem_favorites));
+        onView(withId(R.id.navView)).perform(NavigationViewActions.navigateTo(R.id.menuItem_filter));
         onView(withId(R.id.homeFragment)).check(matches(isDisplayed()));
         
     }
