@@ -62,7 +62,7 @@ public class ExampleRecipes {
 
             new Recipe(R.drawable.krabby_patty, "Krabby Patty", "Spongebob Squarepants",
                        R.drawable.pfp, 5., 20, 30, 1, new Utensils(Arrays.asList("Pan", "Spatula")),
-                    Arrays.asList(AMERICAN.ordinal()), Arrays.asList(SESAME.ordinal()), Arrays.asList(VEGAN.ordinal(), VEGETARIAN.ordinal()),
+                    Arrays.asList(AMERICAN.ordinal()), Arrays.asList(SESAME.ordinal(), EGGS.ordinal()), Arrays.asList(VEGAN.ordinal(), VEGETARIAN.ordinal()),
                     Arrays.asList(new Ingredient("burger bun", new Unit(1, "piece")), new Ingredient("sea lettuce", new Unit(1, "piece")), new Ingredient("sea pickles", new Unit(2, "pieces")), new Ingredient("sea ketchup", new Unit(1, "bottle")), new Ingredient("sea patty", new Unit(1, "piece")), new Ingredient("sea tomato", new Unit(1, "slice")), new Ingredient(" sea cheese", new Unit(1, "piece")), new Ingredient("sea onions", new Unit(2, "slices"))),
                     Arrays.asList("STEP 1\n" +
                             "Obtain the Secret Krabby Patty formula, located in a safe inside the Krusty Krab."+

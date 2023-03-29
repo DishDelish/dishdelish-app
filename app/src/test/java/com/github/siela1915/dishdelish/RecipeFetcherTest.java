@@ -34,7 +34,7 @@ public class RecipeFetcherTest {
 
         fetcher = new RecipeFetcher(allergies, cuisines, diets);
         assertEquals(
-                Arrays.asList(ExampleRecipes.recipes.get(0).recipeName, ExampleRecipes.recipes.get(2).recipeName, ExampleRecipes.recipes.get(1).recipeName),
+                Arrays.asList(ExampleRecipes.recipes.get(0).recipeName, ExampleRecipes.recipes.get(2).recipeName, ExampleRecipes.recipes.get(1).recipeName, ExampleRecipes.recipes.get(3).recipeName),
                 fetcher.fetchRecipeList()
         );
 
@@ -83,9 +83,10 @@ public class RecipeFetcherTest {
         List<String> expectedList = ExampleRecipes.recipes.stream().map(r -> r.recipeName).collect(Collectors.toList());
         List<String> actualList = fetcher.sortRecipesByPreparationTime(ExampleRecipes.recipes, false);
 
-        assertEquals(expectedList.get(2), actualList.get(2));
-        assertTrue(expectedList.get(0).equals(actualList.get(1)) ||
-                expectedList.get(0).equals(actualList.get(0)));
+        assertEquals(expectedList.get(2), actualList.get(3));
+        assertTrue(expectedList.get(0).equals(actualList.get(2)) ||
+                expectedList.get(0).equals(actualList.get(1)));
+        assertEquals(expectedList.get(3), actualList.get(0));
     }
 
     @Test
@@ -97,12 +98,13 @@ public class RecipeFetcherTest {
 
         //The example recipes are already sorted by prep time
         List<String> expectedList = ExampleRecipes.recipes.stream().map(r -> r.recipeName).collect(Collectors.toList());
-        Collections.reverse(expectedList);
+
         List<String> actualList = fetcher.sortRecipesByPreparationTime(ExampleRecipes.recipes, true);
 
-        assertEquals(expectedList.get(0), actualList.get(0));
-        assertTrue(expectedList.get(2).equals(actualList.get(1)) ||
-                expectedList.get(2).equals(actualList.get(2)));
+        assertEquals(expectedList.get(2), actualList.get(0));
+        assertTrue(expectedList.get(1).equals(actualList.get(1)) ||
+                expectedList.get(1).equals(actualList.get(2)));
+        assertEquals(expectedList.get(3), actualList.get(3));
     }
 
     @Test
