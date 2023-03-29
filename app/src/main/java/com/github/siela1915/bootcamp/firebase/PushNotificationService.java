@@ -20,6 +20,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 public class PushNotificationService extends FirebaseMessagingService {
@@ -51,7 +53,12 @@ public class PushNotificationService extends FirebaseMessagingService {
         // Check if message contains a notification payload.
         if (message.getNotification() != null) {
             Log.d(TAG, "Message Notification Body: " + message.getNotification().getBody());
-            sendNotification(message.getNotification());
+            Map<String, String> notifMap = new HashMap<>();
+            notifMap.put("title", message.getNotification().getTitle());
+            notifMap.put("body", message.getNotification().getBody());
+            notifMap.put("color", message.getNotification().getColor());
+            notifMap.put("channelId", message.getNotification().getChannelId());
+            sendNotification(this, notifMap);
         }
     }
 
@@ -64,31 +71,35 @@ public class PushNotificationService extends FirebaseMessagingService {
         }
     }
 
-    private void sendNotification(RemoteMessage.Notification notification) {
-        Intent intent = new Intent(this, MainHomeActivity.class);
+    static void sendNotification(Context context, Map<String, String> notification) {
+        Intent intent = new Intent(context, MainHomeActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0 /* Request code */, intent,
                 PendingIntent.FLAG_IMMUTABLE);
 
-        String channelId = Optional.ofNullable(notification.getChannelId()).orElse(getString(R.string.default_notification_channel_id));
+        String channelId = Optional.ofNullable(notification.get("channelId")).orElse(context.getString(R.string.default_notification_channel_id));
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder =
-                new NotificationCompat.Builder(this, channelId)
+                new NotificationCompat.Builder(context, channelId)
                         .setSmallIcon(R.drawable.chef_hat)
-                        .setContentTitle(notification.getTitle())
-                        .setContentText(notification.getBody())
+                        .setContentTitle(notification.get("title"))
+                        .setContentText(notification.get("body"))
                         .setAutoCancel(true)
                         .setSound(defaultSoundUri)
                         .setContentIntent(pendingIntent);
 
-        if (notification.getColor() != null) {
-            notificationBuilder.setColor(Color.parseColor(notification.getColor().toUpperCase()));
+        if (notification.containsKey("color")) {
+            notificationBuilder.setColor(Color.parseColor(notification.get("color").toUpperCase()));
         }
 
         NotificationManager notificationManager =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
+        String idString = notification.get("id");
+        if (idString == null) {
+            idString = "0";
+        }
+        notificationManager.notify(Integer.parseInt(idString), notificationBuilder.build());
     }
 
     private void createNotificationChannel() {
