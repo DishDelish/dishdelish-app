@@ -320,7 +320,7 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginTop="20dp"
-            android:background="@drawable/write_comment_box"
+
             android:hint="Say Something"
             android:paddingStart="10dp"
             android:paddingLeft="15dp"
