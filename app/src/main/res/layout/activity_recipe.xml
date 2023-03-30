@@ -333,7 +333,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/commentsList"
             app:layout_constraintStart_toStartOf="@+id/commentsList"
-            app:layout_constraintTop_toBottomOf="@+id/commentsList" /> -->
+            app:layout_constraintTop_toBottomOf="@+id/commentsList" />
 
         <Button
             android:id="@+id/sendCommentButton"
@@ -345,6 +345,7 @@
             app:layout_constraintBottom_toBottomOf="@+id/enterComment"
             app:layout_constraintEnd_toEndOf="@+id/enterComment"
             app:layout_constraintTop_toTopOf="@+id/enterComment" />
+            -->
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/ingredientsList"
