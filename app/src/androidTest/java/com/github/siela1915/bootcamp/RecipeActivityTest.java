@@ -11,7 +11,9 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import android.content.Intent;
 import android.content.res.Resources;
@@ -103,7 +105,7 @@ public class RecipeActivityTest {
         });
         scenario.close();
     }
-
+/*
     @Test
     public void commentsListStaysTheSameAfterEmptyStringIsSent() {
         ActivityScenario scenario = ActivityScenario.launch(i);
@@ -125,6 +127,8 @@ public class RecipeActivityTest {
 
 
     }
+
+
 
     @Test
     public void commentsListUpdatesAfterNonEmptyStringIsSent() {
@@ -320,51 +324,41 @@ public class RecipeActivityTest {
         });
 
         scenario.close();
-    }
-    
-     */
-/*
+    } */
 
     @Test
-    public void favoriteButtonChangesWhenClicked(){
+    public void heartButtonBecomesFullWhenClicked(){
         ActivityScenario scenario = ActivityScenario.launch(i);
 
         scenario.onActivity(activity -> {
-
-
             // Check that the background drawable has changed to the checked state drawable
+            ToggleButton heart = (ToggleButton) activity.findViewById(R.id.favoriteButton);
+            heart.performClick();
+            String actual = (String) heart.getTag();
+            String expected = "full";
+            assertTrue(actual.equals(expected));
 
-        });
-
-        onView(withId(R.id.favoriteButton)).check(matches(withDrawableId(R.drawable.heart_full)));
-
-
-        scenario.close();
-    }/*
-
-
-    @Test
-    public void favoriteButtonChangesWhenClicked1() {
-        ActivityScenario scenario = ActivityScenario.launch(i);
-        scenario.onActivity(activity -> {
-            ToggleButton toggleButton = activity.findViewById(R.id.favoriteButton);
-            Drawable expectedDrawable = activity.getDrawable(R.drawable.heart_empty);
-            toggleButton.performClick();
-
-
-
-            if(toggleButton.getBackground().getConstantState().equals(expectedDrawable.getConstantState())){
-                assertEquals(2, 2);
-            }
-            else{
-                assertEquals(2,1);
-            }
-            //toggleButton.performClick();
-            //assertThat(toggleButton, withToggleButtonBackgroundDrawable(R.drawable.heart_empty));
         });
         scenario.close();
     }
-*/
+
+
+    @Test
+    public void heartButtonBecomesEmptyWhenClicked2Times() {
+        ActivityScenario scenario = ActivityScenario.launch(i);
+        scenario.onActivity(activity -> {
+            ToggleButton heart = activity.findViewById(R.id.favoriteButton);
+
+            heart.performClick();
+            heart.performClick();
+
+            String actual = (String) heart.getTag();
+            String expected = "empty";
+            assertTrue(actual.equals(expected));
+
+        });
+        scenario.close();
+    }
 
 
     public static Matcher<View> withRating(final float rating) {
@@ -432,7 +426,7 @@ public class RecipeActivityTest {
             }
         };
     }
-
+/*
     public static Matcher<View> withDrawableId(@DrawableRes final int id) {
         return new DrawableMatcher(id);
     }
@@ -481,4 +475,6 @@ public class RecipeActivityTest {
         }
 
 
-}}
+}*/
+}
+ 

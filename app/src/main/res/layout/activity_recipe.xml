@@ -314,7 +314,7 @@
             app:layout_constraintEnd_toEndOf="@+id/stepsText"
             app:layout_constraintStart_toStartOf="@+id/stepsText"
             app:layout_constraintTop_toBottomOf="@+id/commentsIcon" />
-
+<!---
         <EditText
             android:id="@+id/enterComment"
             android:layout_width="match_parent"
@@ -333,7 +333,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/commentsList"
             app:layout_constraintStart_toStartOf="@+id/commentsList"
-            app:layout_constraintTop_toBottomOf="@+id/commentsList" />
+            app:layout_constraintTop_toBottomOf="@+id/commentsList" /> -->
 
         <Button
             android:id="@+id/sendCommentButton"

@@ -48,8 +48,12 @@ public class RecipeActivity extends AppCompatActivity {
         heart.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 heart.setBackground(getDrawable(R.drawable.heart_full));
+
+                // for testing
+                heart.setTag("full");
             } else {
                 heart.setBackground(getDrawable(R.drawable.heart_empty));
+                heart.setTag("empty");
             }
         });
 
@@ -139,6 +143,8 @@ public class RecipeActivity extends AppCompatActivity {
         CommentAdapter commentAdapter = new CommentAdapter(getApplicationContext(), recipe.comments);
         commentsList.setAdapter(commentAdapter);
 
+        /*
+
         EditText commentBox = (EditText) findViewById(R.id.enterComment);
         Button sendComment = (Button) findViewById(R.id.sendCommentButton);
 
@@ -151,7 +157,7 @@ public class RecipeActivity extends AppCompatActivity {
                 commentAdapter.notifyItemInserted(recipe.comments.size()-1);
 
             }
-        });
+        });*/
 
     }
 
