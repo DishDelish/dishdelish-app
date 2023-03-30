@@ -26,6 +26,7 @@ public class RecipeConverter {
 
         Intent i = new Intent(c, RecipeActivity.class);
         i.putExtra("Recipe", recipe);
+
         return i;
 
     }

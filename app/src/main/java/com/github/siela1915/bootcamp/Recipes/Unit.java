@@ -52,12 +52,20 @@ public class Unit implements Parcelable {
         this.info = info.toLowerCase();
     }
 
+    @NonNull
     @Override
     public String toString(){
         return value + " " + info;
     }
 
     @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Unit) {
+            return value == ((Unit) obj).value && info.equals(((Unit) obj).info);
+        }
+        return false;
+    }
+
     public int describeContents() {
         return 0;
     }
