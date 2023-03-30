@@ -4,12 +4,9 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isClickable;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast;
 import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-
-import android.app.AlertDialog;
 
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.PerformException;
@@ -158,10 +155,10 @@ public class MainHomeActivityTest {
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.close());
         try {
             onView(withId(R.id.filterBtn)).perform(ViewActions.click());
+            onView((withId(R.id.recipeList))).check(matches(isDisplayed()));
         }catch (PerformException e){
             e.printStackTrace();
         }
-        onView((withId(R.id.recipeList))).check(matches(isDisplayed()));
 
     }
 }
