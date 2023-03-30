@@ -13,6 +13,8 @@ public class Ingredient implements Parcelable {
 
     public Ingredient(){}
 
+
+    // constructor to set the string
     public void setIngredient(String ingredient) {
         this.ingredient = ingredient.toLowerCase();
     }

@@ -2,12 +2,18 @@ package com.github.siela1915.bootcamp;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.isClickable;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 import androidx.test.core.app.ActivityScenario;
+import androidx.test.espresso.PerformException;
+import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.contrib.DrawerActions;
 import androidx.test.espresso.contrib.NavigationViewActions;
+import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
@@ -76,5 +82,83 @@ public class MainHomeActivityTest {
         onView(withId(R.id.navView)).perform(NavigationViewActions.navigateTo(R.id.menuItem_filter));
         onView(withId(R.id.homeFragment)).check(matches(isDisplayed()));
         
+    }
+    @Test
+    public void testOnChoosingFilter(){
+        onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
+        onView(withId(R.id.navView))
+                .perform(NavigationViewActions.navigateTo(R.id.menuItem_filter));
+        onView(withId(R.id.homeFragment)).check(matches(isDisplayed()));
+        onView(withId(R.id.filterLayout)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+        onView(withId(R.id.cuisineBtn)).check(matches(isClickable()));
+        onView(withId(R.id.notIncludIngBtn)).check(matches(isClickable()));
+        onView(withId(R.id.dietBtn)).check(matches(isClickable()));
+        onView(withId(R.id.timingBtn)).check(matches(isClickable()));
+        onView(withId(R.id.filterBtn)).check(matches(isClickable()));
+    }
+    @Test
+    public void testingCuisineTypeBtn(){
+        onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
+        onView(withId(R.id.navView))
+                .perform(NavigationViewActions.navigateTo(R.id.menuItem_filter));
+        onView(withId(R.id.drawer_layout)).perform(DrawerActions.close());
+        try {
+            onView(withId(R.id.cuisineBtn))
+                    .perform(ViewActions.click());
+            onView(withText("Chose your preferred cuisine")).check(matches(isDisplayed()));
+
+        } catch (PerformException e) {
+
+            e.printStackTrace();
+        }
+    }
+    @Test
+    public void testingDietTypeBtn(){
+        onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
+        onView(withId(R.id.navView)).perform(NavigationViewActions.navigateTo(R.id.menuItem_filter));
+        onView(withId(R.id.drawer_layout)).perform(DrawerActions.close());
+        try {
+            onView(withId(R.id.dietBtn)).perform(ViewActions.click());
+            onView((withText("Chose your diet"))).check(matches(isDisplayed()));
+        }catch (PerformException e){
+            e.printStackTrace();
+        }
+    }
+    @Test
+    public void testingAllergyBtn(){
+        onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
+        onView(withId(R.id.navView)).perform(NavigationViewActions.navigateTo(R.id.menuItem_filter));
+        onView(withId(R.id.drawer_layout)).perform(DrawerActions.close());
+        try {
+            onView(withId(R.id.notIncludIngBtn)).perform(ViewActions.click());
+            onView((withText("what are you allergic to"))).check(matches(isDisplayed()));
+        }catch (PerformException e){
+            e.printStackTrace();
+        }
+    }
+    @Test
+    public void testingPrepTimeBtn(){
+        onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
+        onView(withId(R.id.navView)).perform(NavigationViewActions.navigateTo(R.id.menuItem_filter));
+        onView(withId(R.id.drawer_layout)).perform(DrawerActions.close());
+        try {
+            onView(withId(R.id.timingBtn)).perform(ViewActions.click());
+            onView((withText("Chose the preparation time"))).check(matches(isDisplayed()));
+        }catch (PerformException e){
+            e.printStackTrace();
+        }
+    }
+    @Test
+    public void testingFilterBtn(){
+        onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
+        onView(withId(R.id.navView)).perform(NavigationViewActions.navigateTo(R.id.menuItem_filter));
+        onView(withId(R.id.drawer_layout)).perform(DrawerActions.close());
+        try {
+            onView(withId(R.id.filterBtn)).perform(ViewActions.click());
+            onView((withId(R.id.recipeList))).check(matches(isDisplayed()));
+        }catch (PerformException e){
+            e.printStackTrace();
+        }
+
     }
 }

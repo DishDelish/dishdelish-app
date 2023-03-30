@@ -15,6 +15,14 @@
     <string name="utensils">Utensils</string>
     <string name="utensilsHint">e.g. chopsticks</string>
     <string name="ingredients">Ingredients</string>
+    <string name="ingredientsAmount">No.</string>
+    <string name="ingredientsUnit">Unit</string>
+    <string name="ingredientsName">Name</string>
+    <string name="steps">Steps</string>
+    <string name="pantry">Pantry</string>
+    <string name="allergy">Allergy</string>
+    <string name="diet">Diet</string>
+    <string name="cuisine">Cuisine</string>
     <string name="ingredientsAmountHint">2</string>
     <string name="ingredientsUnitHint">cups</string>
     <string name="ingredientsNameHint">sugar</string>
@@ -37,6 +45,7 @@
     <string name="home">Home</string>
     <string name="open">Open</string>
     <string name="close">Close</string>
+    <string name="btnIcon">v</string>
 
     <string name="home_menu">Home</string>
     <string name="favorites_menu">Favorites</string>
