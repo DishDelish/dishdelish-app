@@ -1,5 +1,6 @@
 package com.github.siela1915.bootcamp;
 
+import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
@@ -87,6 +88,7 @@ public class FirebaseAuthActivityTest {
     @Before
     public void prepare() {
         FirebaseApp.clearInstancesForTest();
+        FirebaseApp.initializeApp(getApplicationContext());
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseDatabase.getInstance().useEmulator("10.0.2.2", 9000);
 

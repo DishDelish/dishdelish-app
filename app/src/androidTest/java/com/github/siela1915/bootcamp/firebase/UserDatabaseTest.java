@@ -1,5 +1,6 @@
 package com.github.siela1915.bootcamp.firebase;
 
+import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
@@ -33,6 +34,7 @@ public class UserDatabaseTest {
     @Before
     public void prepareEmulator() {
         FirebaseApp.clearInstancesForTest();
+        FirebaseApp.initializeApp(getApplicationContext());
         FirebaseAuth.getInstance().useEmulator("10.0.2.2", 9099);
         FirebaseDatabase.getInstance().useEmulator("10.0.2.2", 9000);
 
