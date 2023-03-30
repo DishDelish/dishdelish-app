@@ -96,15 +96,15 @@ public class RecipeActivity extends AppCompatActivity {
 
         stepsText.setText(String.join("\n\n", recipe.steps));
 
-        // Set Comment fields
-        setCommentContents(commentsList);
-
         // Set Ingredient List content
         setIngredientListContents(ingredientsList);
 
         // Set servings info
         setServingInfo(nbServings, servings, ingredientsList);
 
+        // Set Comment fields
+        setCommentContents(commentsList);
+        
     }
 
     private void modifyIngredientAmounts(int n, int previous, RecyclerView ingredientsList) {
