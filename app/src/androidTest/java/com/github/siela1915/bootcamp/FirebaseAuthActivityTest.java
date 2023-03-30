@@ -21,6 +21,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -85,6 +86,7 @@ public class FirebaseAuthActivityTest {
 
     @Before
     public void prepare() {
+        FirebaseApp.clearInstancesForTest();
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseDatabase.getInstance().useEmulator("10.0.2.2", 9000);
 

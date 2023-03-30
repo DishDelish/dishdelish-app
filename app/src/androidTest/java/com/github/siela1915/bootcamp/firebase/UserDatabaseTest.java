@@ -15,6 +15,7 @@ import com.github.siela1915.bootcamp.firebase.User;
 import com.github.siela1915.bootcamp.firebase.UserDatabase;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.FirebaseDatabase;
@@ -31,6 +32,7 @@ public class UserDatabaseTest {
 
     @Before
     public void prepareEmulator() {
+        FirebaseApp.clearInstancesForTest();
         FirebaseAuth.getInstance().useEmulator("10.0.2.2", 9099);
         FirebaseDatabase.getInstance().useEmulator("10.0.2.2", 9000);
 
