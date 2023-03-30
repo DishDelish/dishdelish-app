@@ -370,14 +370,12 @@
 
         <Button
             android:id="@+id/minusButton"
-            android:layout_width="40dp"
-            android:layout_height="50dp"
-            android:layout_marginStart="30dp"
-            android:layout_marginTop="56dp"
+            android:layout_width="50dp"
+            android:layout_height="60dp"
             android:text="-"
             android:textSize="20sp"
-            app:layout_constraintStart_toEndOf="@+id/ingredientsTitle"
-            app:layout_constraintTop_toBottomOf="@+id/infoBoxes" />
+            app:layout_constraintBottom_toTopOf="@+id/ingredientsList"
+            app:layout_constraintStart_toEndOf="@+id/servingsText" />
 
         <TextView
             android:id="@+id/servings"
@@ -393,8 +391,8 @@
 
         <Button
             android:id="@+id/plusButton"
-            android:layout_width="40dp"
-            android:layout_height="50dp"
+            android:layout_width="50dp"
+            android:layout_height="60dp"
             android:text="+"
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="@+id/minusButton"
