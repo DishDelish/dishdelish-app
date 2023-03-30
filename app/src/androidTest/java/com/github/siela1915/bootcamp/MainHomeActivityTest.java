@@ -9,6 +9,8 @@ import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibilit
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
+import android.app.AlertDialog;
+
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.PerformException;
 import androidx.test.espresso.action.ViewActions;
@@ -156,11 +158,10 @@ public class MainHomeActivityTest {
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.close());
         try {
             onView(withId(R.id.filterBtn)).perform(ViewActions.click());
-            onView((withId(R.id.recipeList))).check(matches(isDisplayed()));
         }catch (PerformException e){
             e.printStackTrace();
         }
-
+        onView((withId(R.id.recipeList))).check(matches(isDisplayed()));
 
     }
 }

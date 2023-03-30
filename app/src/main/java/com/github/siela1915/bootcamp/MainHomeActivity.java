@@ -217,7 +217,6 @@ public class MainHomeActivity extends AppCompatActivity {
         });
 
         AlertDialog dialog=builder.create();
-
         dialog.setOnShowListener(arg0 -> {
             dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.teal_700));
             dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.teal_700));
