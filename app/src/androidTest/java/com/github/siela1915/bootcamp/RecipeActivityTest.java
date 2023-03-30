@@ -24,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.ToggleButton;
 
+import androidx.annotation.DrawableRes;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.core.app.ApplicationProvider;
@@ -319,28 +320,23 @@ public class RecipeActivityTest {
         scenario.close();
     }
 
-/*
+
     @Test
     public void favoriteButtonChangesWhenClicked(){
         ActivityScenario scenario = ActivityScenario.launch(i);
 
         scenario.onActivity(activity -> {
 
-            ToggleButton button = activity.findViewById(R.id.favoriteButton);
-
-            Drawable checkedDrawable = ContextCompat.getDrawable(ApplicationProvider.getApplicationContext(), R.drawable.heart_full);
-            Drawable uncheckedDrawable = ContextCompat.getDrawable(ApplicationProvider.getApplicationContext(), R.drawable.heart_empty);
-
-            button.performClick();
 
             // Check that the background drawable has changed to the checked state drawable
-            assertThat(button.getBackground().getConstantState(),
-                    is(uncheckedDrawable.getConstantState()));
+
         });
+
+        onView(withId(R.id.favoriteButton)).check(matches(withDrawableId(R.drawable.heart_full)));
 
 
         scenario.close();
-    }
+    }/*
 
 
     @Test
@@ -433,5 +429,52 @@ public class RecipeActivityTest {
         };
     }
 
+    public static Matcher<View> withDrawableId(@DrawableRes final int id) {
+        return new DrawableMatcher(id);
+    }
 
-}
+
+    public static class DrawableMatcher extends TypeSafeMatcher<View> {
+
+        private final int expectedId;
+        private String resourceName;
+
+        public DrawableMatcher(@DrawableRes int expectedId) {
+            super(View.class);
+            this.expectedId = expectedId;
+        }
+
+        @Override
+        protected boolean matchesSafely(View target) {
+            if (!(target instanceof ImageView)) {
+                return false;
+            }
+            ImageView imageView = (ImageView) target;
+            if (expectedId < 0) {
+                return imageView.getDrawable() == null;
+            }
+            Resources resources = target.getContext().getResources();
+            Drawable expectedDrawable = resources.getDrawable(expectedId);
+            resourceName = resources.getResourceEntryName(expectedId);
+            if (expectedDrawable != null && expectedDrawable.getConstantState() != null) {
+                return expectedDrawable.getConstantState().equals(
+                        imageView.getDrawable().getConstantState()
+                );
+            } else {
+                return false;
+            }
+        }
+
+        @Override
+        public void describeTo(Description description) {
+            description.appendText("with drawable from resource id: ");
+            description.appendValue(expectedId);
+            if (resourceName != null) {
+                description.appendText("[");
+                description.appendText(resourceName);
+                description.appendText("]");
+            }
+        }
+
+
+}}
