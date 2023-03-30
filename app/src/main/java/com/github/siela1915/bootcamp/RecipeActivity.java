@@ -96,42 +96,15 @@ public class RecipeActivity extends AppCompatActivity {
 
         stepsText.setText(String.join("\n\n", recipe.steps));
 
-        commentsList.setLayoutManager(new LinearLayoutManager(this));
-        CommentAdapter commentAdapter = new CommentAdapter(getApplicationContext(), recipe.comments);
-        commentsList.setAdapter(commentAdapter);
-
-        EditText commentBox = (EditText) findViewById(R.id.enterComment);
-        Button sendComment = (Button) findViewById(R.id.sendCommentButton);
-
-        sendComment.setOnClickListener(view -> {
-            String input = commentBox.getText().toString();
-            System.out.println(input);
-            if(!input.isEmpty()){
-
-                // if logged in
-                // update
-                commentBox.setText("");
-                recipe.comments.add(input);
-                commentAdapter.notifyItemInserted(recipe.comments.size()-1);
-                // else
-                // login popup
-
-            }
-        });
-
-        ingredientsList.setLayoutManager(new LinearLayoutManager(this));
-        IngredientAdapter ingredientAdapter = new IngredientAdapter(getApplicationContext(), new ArrayList<>(recipe.getIngredientList()));
-        ingredientsList.setAdapter(ingredientAdapter);
-
 
         // Set Ingredient List content
-        //setIngredientListContents(ingredientsList);
+        setIngredientListContents(ingredientsList);
 
         // Set servings info
         setServingInfo(nbServings, servings, ingredientsList);
 
         // Set Comment fields
-        //setCommentContents(commentsList);
+        setCommentContents(commentsList);
 
     }
 

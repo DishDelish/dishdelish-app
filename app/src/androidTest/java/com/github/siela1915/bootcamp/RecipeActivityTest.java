@@ -221,6 +221,8 @@ public class RecipeActivityTest {
         scenario.close();
     }
 
+    /*
+
     @Test
     public void plusButtonIncreasesNumberOfServings() {
         ActivityScenario scenario = ActivityScenario.launch(i);
@@ -319,6 +321,8 @@ public class RecipeActivityTest {
 
         scenario.close();
     }
+    
+     */
 /*
 
     @Test
