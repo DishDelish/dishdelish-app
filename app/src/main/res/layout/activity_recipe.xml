@@ -315,6 +315,7 @@
             app:layout_constraintStart_toStartOf="@+id/stepsText"
             app:layout_constraintTop_toBottomOf="@+id/commentsIcon" />
 
+        <!---
         <EditText
             android:id="@+id/enterComment"
             android:layout_width="match_parent"
@@ -346,7 +347,7 @@
             android:text=" "
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/recipePicture"
-            app:layout_constraintTop_toBottomOf="@+id/enterComment" />
+            app:layout_constraintTop_toBottomOf="@+id/enterComment" />-->
 
 
         <androidx.recyclerview.widget.RecyclerView
