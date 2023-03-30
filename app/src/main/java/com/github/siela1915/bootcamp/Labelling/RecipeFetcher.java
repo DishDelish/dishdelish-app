@@ -44,18 +44,18 @@ public class RecipeFetcher{
             float weight = 5;
             weight += (cuisines).stream()
                     .distinct()
-                    .filter(x -> (r.cuisineTypes).stream().anyMatch(y -> y == x))
+                    .filter(x -> (r.cuisineTypes).stream().anyMatch(y -> y.equals(x)))
                     .toArray().length*10;
 
             //checking if the recipe violates allergy or diet constraint
             //List<Boolean> temp= allergies.stream().map(a -> r.allergyTypes.contains(a)).collect(Collectors.toList());
             if((allergies).stream()
                     .distinct()
-                    .filter(x -> (r.allergyTypes).stream().anyMatch(y -> y == x))
+                    .filter(x -> (r.allergyTypes).stream().anyMatch(y -> y.equals(x)))
                     .toArray().length > 0
             || (diets).stream()
                     .distinct()
-                    .filter(x -> (r.dietTypes).stream().anyMatch(y -> y == x))
+                    .filter(x -> (r.dietTypes).stream().anyMatch(y -> y.equals(x)))
                     .toArray().length > 0){
 
                 weight=0;
@@ -76,35 +76,35 @@ public class RecipeFetcher{
     //doesn't have to wait a long time for the best recipes to be shown to him
 
 
-//    /**
-//     * Sorts a list of recipes by cook + preparation time.
-//     * @param recipes list of recipes
-//     * @return sorted recipe names
-//     */
-//    public List<String> sortRecipesByPreparationTime(List<Recipe> recipes, Boolean ascending){
-//        Objects.requireNonNull(recipes);
-//        List<Recipe> ret = new ArrayList<>(recipes);
-//        //default sort is ascending
-//        ret.sort(Comparator.comparing(r -> r.prepTime + r.cookTime));
-//        if(!ascending)
-//            Collections.reverse(ret);
-//        return ret.stream().map(r -> r.recipeName).collect(Collectors.toList());
-//    }
-//
-//    /**
-//     * Filters recipes to only contain recipes using all ingredients in the ingredients list
-//     * @param recipes to be filtered
-//     * @param ingredients to consider for filtering
-//     * @return filtered recipe names
-//     */
-//    public List<String> filterByIngredients(List<Recipe> recipes, List<Ingredient> ingredients){
-//        Objects.requireNonNull(recipes);
-//        List<Recipe> ret = new ArrayList<>(recipes);
-//        return ret.stream()
-//                .filter(r ->
-//                        new HashSet<>(r.ingredientList.stream().map(Ingredient::getIngredient).collect(Collectors.toList()))
-//                        .containsAll(ingredients.stream().map(Ingredient::getIngredient).collect(Collectors.toList())))
-//                .map(r -> r.recipeName)
-//                .collect(Collectors.toList());
-//    }
+    /**
+     * Sorts a list of recipes by cook + preparation time.
+     * @param recipes list of recipes
+     * @return sorted recipe names
+     */
+    public List<String> sortRecipesByPreparationTime(List<Recipe> recipes, Boolean ascending){
+        Objects.requireNonNull(recipes);
+        List<Recipe> ret = new ArrayList<>(recipes);
+        //default sort is ascending
+        ret.sort(Comparator.comparing(r -> r.prepTime + r.cookTime));
+        if(!ascending)
+            Collections.reverse(ret);
+        return ret.stream().map(r -> r.recipeName).collect(Collectors.toList());
+    }
+
+    /**
+     * Filters recipes to only contain recipes using all ingredients in the ingredients list
+     * @param recipes to be filtered
+     * @param ingredients to consider for filtering
+     * @return filtered recipe names
+     */
+    public List<String> filterByIngredients(List<Recipe> recipes, List<Ingredient> ingredients){
+        Objects.requireNonNull(recipes);
+        List<Recipe> ret = new ArrayList<>(recipes);
+        return ret.stream()
+                .filter(r ->
+                        new HashSet<>(r.ingredientList.stream().map(Ingredient::getIngredient).collect(Collectors.toList()))
+                        .containsAll(ingredients.stream().map(Ingredient::getIngredient).collect(Collectors.toList())))
+                .map(r -> r.recipeName)
+                .collect(Collectors.toList());
+    }
 }
