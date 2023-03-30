@@ -2,6 +2,7 @@ package com.github.siela1915.bootcamp;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.isClickable;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast;
 import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
@@ -96,8 +97,26 @@ public class MainHomeActivityTest {
         onView(withId(R.id.navView))
                 .perform(NavigationViewActions.navigateTo(R.id.menuItem_filter));
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.close());
-        //onView(withId(R.id.filterLayout)).check(matches(isDisplayingAtLeast(5)));
         onView(withId(R.id.filterLayout)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+    }
+    @Test
+    public void testOnChoosingFilter3(){
+        onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
+        onView(withId(R.id.navView))
+                .perform(NavigationViewActions.navigateTo(R.id.menuItem_filter));
+        onView(withId(R.id.drawer_layout)).perform(DrawerActions.close());
+        onView(withId(R.id.cuisineBtn)).check(matches(isClickable()));
+    }
+    @Test
+    public void testOnChoosingFilter4(){
+        onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
+        onView(withId(R.id.navView))
+                .perform(NavigationViewActions.navigateTo(R.id.menuItem_filter));
+        onView(withId(R.id.drawer_layout)).perform(DrawerActions.close());
+        onView(withId(R.id.notIncludIngBtn)).check(matches(isClickable()));
+        onView(withId(R.id.dietBtn)).check(matches(isClickable()));
+        onView(withId(R.id.timingBtn)).check(matches(isClickable()));
+        onView(withId(R.id.filterBtn)).check(matches(isClickable()));
     }
     @Test
     public void testingCuisineTypeBtn(){
