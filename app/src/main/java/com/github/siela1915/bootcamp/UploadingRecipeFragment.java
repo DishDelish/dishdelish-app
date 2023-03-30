@@ -44,25 +44,21 @@ import java.util.concurrent.ExecutionException;
 import java.util.stream.Stream;
 
 public class UploadingRecipeFragment extends Fragment {
-    private static String recipeImageStoragePath = "recipes_image/";
-    private static String storagePath = "gs://dish-delish-recipes.appspot.com";
-    private static String[] timeUnits = new String[]{"mins", "hours", "days"};
-    private static int PICK_IMAGE_REQUEST = 111;
-    private static String reviewPageTag = "review_recipe_dialog";
-    View view;
-    Button uploadImg, addIngredient, addStep;
-    ImageView imgView;
-    LinearLayout stepListLinearLayout, ingredientLinearLayout;
-    Uri filePath;
-    ProgressDialog pd;
-    AutoCompleteTextView prepTimeUnitAutoComplete, cookTimeUnitAutoComplete, cuisineTypesAutoComplete, allergyTypesAutoComplete, dietTypesAutoComplete;
+    private final String storagePath = "gs://dish-delish-recipes.appspot.com";
+    private final String[] timeUnits = new String[]{"mins", "hours", "days"};
+    private final int PICK_IMAGE_REQUEST = 111;
+    private View view;
+    private ImageView imgView;
+    private LinearLayout stepListLinearLayout, ingredientLinearLayout;
+    private Uri filePath;
+    private ProgressDialog pd;
 
     //creating reference to firebase storage
-    FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-    FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-    FirebaseStorage storage = FirebaseStorage.getInstance();
-    StorageReference storageRef = storage.getReferenceFromUrl(storagePath);
-    Database database = new Database(firebaseDatabase);
+    private final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+    private final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+    private final FirebaseStorage storage = FirebaseStorage.getInstance();
+    private final StorageReference storageRef = storage.getReferenceFromUrl(storagePath);
+    private final Database database = new Database(firebaseDatabase);
     // the below line will keep commented until some form of auth guard is implemented
     // i.e. user is logged in before accessing this page
     // String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -86,14 +82,14 @@ public class UploadingRecipeFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_upload_recipes, container, false);
 
         // get view elements
-        uploadImg = (Button) view.findViewById(R.id.recipeUploadButton);
+        Button uploadImg = (Button) view.findViewById(R.id.recipeUploadButton);
         imgView = (ImageView) view.findViewById(R.id.recipeImageContent);
-        addIngredient = (Button) view.findViewById(R.id.addIngredientButton);
-        addStep = (Button) view.findViewById(R.id.addStepButton);
+        Button addIngredient = (Button) view.findViewById(R.id.addIngredientButton);
+        Button addStep = (Button) view.findViewById(R.id.addStepButton);
         stepListLinearLayout = (LinearLayout) view.findViewById(R.id.stepGroup);
         ingredientLinearLayout = (LinearLayout) view.findViewById(R.id.ingredientsGroup);
-        prepTimeUnitAutoComplete = (AutoCompleteTextView) view.findViewById(R.id.prepTimeUnitAutoComplete);
-        cookTimeUnitAutoComplete = (AutoCompleteTextView) view.findViewById(R.id.cookTimeUnitAutoComplete);
+        AutoCompleteTextView prepTimeUnitAutoComplete = (AutoCompleteTextView) view.findViewById(R.id.prepTimeUnitAutoComplete);
+        AutoCompleteTextView cookTimeUnitAutoComplete = (AutoCompleteTextView) view.findViewById(R.id.cookTimeUnitAutoComplete);
 
         // set up dropdown content for the unit of prepTime and cookTime
         ArrayAdapter<String> recipeTimeAdapter = new ArrayAdapter<>(getActivity(), R.layout.dropdown_item, timeUnits);
@@ -115,13 +111,13 @@ public class UploadingRecipeFragment extends Fragment {
         ArrayAdapter<String> allergyTypesAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.select_dialog_item, allergyTypes);
         ArrayAdapter<String> dietTypesAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.select_dialog_item, dietTypes);
 
-        cuisineTypesAutoComplete = (AutoCompleteTextView) view.findViewById(R.id.cuisineTypesAutoComplete);
+        AutoCompleteTextView cuisineTypesAutoComplete = (AutoCompleteTextView) view.findViewById(R.id.cuisineTypesAutoComplete);
         cuisineTypesAutoComplete.setThreshold(1); //will start working from first character
         cuisineTypesAutoComplete.setAdapter(cuisineTypesAdapter);
-        allergyTypesAutoComplete = (AutoCompleteTextView) view.findViewById(R.id.allergyTypesAutoComplete);
+        AutoCompleteTextView allergyTypesAutoComplete = (AutoCompleteTextView) view.findViewById(R.id.allergyTypesAutoComplete);
         allergyTypesAutoComplete.setThreshold(1); //will start working from first character
         allergyTypesAutoComplete.setAdapter(allergyTypesAdapter);
-        dietTypesAutoComplete = (AutoCompleteTextView) view.findViewById(R.id.dietTypesAutoComplete);
+        AutoCompleteTextView dietTypesAutoComplete = (AutoCompleteTextView) view.findViewById(R.id.dietTypesAutoComplete);
         dietTypesAutoComplete.setThreshold(1); //will start working from first character
         dietTypesAutoComplete.setAdapter(dietTypesAdapter);
 
@@ -183,6 +179,7 @@ public class UploadingRecipeFragment extends Fragment {
         pd.show();
 
         // We are taking the filepath as storagePath + firebaseUser.getUid()+".png"
+        String recipeImageStoragePath = "recipes_image/";
         String filePathName = recipeImageStoragePath + "_" + userId + ".png";
         storageRef.child(filePathName).putFile(recipeImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
@@ -333,6 +330,7 @@ public class UploadingRecipeFragment extends Fragment {
             pd.show();
             uploadRecipe(filePath);
         });
+        String reviewPageTag = "review_recipe_dialog";
         reviewRecipeDialog.show(getActivity().getSupportFragmentManager(), reviewPageTag);
     }
 
