@@ -7,20 +7,16 @@ import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
-import static androidx.test.espresso.matcher.ViewMatchers.assertThat;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.view.View;
@@ -28,13 +24,11 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.ToggleButton;
 
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.espresso.matcher.BoundedMatcher;
-import androidx.test.espresso.matcher.ViewMatchers;
 
 import com.github.siela1915.bootcamp.Recipes.ExampleRecipes;
 import com.github.siela1915.bootcamp.Recipes.Ingredient;
@@ -110,7 +104,7 @@ public class RecipeActivityTest {
     }
 
     @Test
-    public void commentsListStaysTheSameAfterEmptyStringIsSent(){
+    public void commentsListStaysTheSameAfterEmptyStringIsSent() {
         ActivityScenario scenario = ActivityScenario.launch(i);
 
         onView(withId(R.id.sendCommentButton))
@@ -132,7 +126,7 @@ public class RecipeActivityTest {
     }
 
     @Test
-    public void commentsListUpdatesAfterNonEmptyStringIsSent(){
+    public void commentsListUpdatesAfterNonEmptyStringIsSent() {
         ActivityScenario scenario = ActivityScenario.launch(i);
 
         String test = "test";
@@ -157,11 +151,7 @@ public class RecipeActivityTest {
         });
         scenario.close();
 
-
-
     }
-
-
 
     @Test
     public void isCorrectUtensilsListOnDisplay() {
@@ -178,7 +168,7 @@ public class RecipeActivityTest {
     }
 
     @Test
-    public void isCorrectIngredientsListOnDisplay(){
+    public void isCorrectIngredientsListOnDisplay() {
         ActivityScenario scenario = ActivityScenario.launch(i);
 
         scenario.onActivity(activity -> {
@@ -198,7 +188,6 @@ public class RecipeActivityTest {
         });
         scenario.close();
     }
-
 
 
     @Test
@@ -230,6 +219,106 @@ public class RecipeActivityTest {
                 .check(matches(withDrawable(omelette.image)));
         scenario.close();
     }
+
+    @Test
+    public void plusButtonIncreasesNumberOfServings() {
+        ActivityScenario scenario = ActivityScenario.launch(i);
+        onView(withId(R.id.plusButton))
+                .perform(scrollTo(), click());
+
+        onView(withId(R.id.nbServings)).check(matches(withText(String.valueOf(omelette.servings + 1))));
+        onView(withId(R.id.servings)).check(matches(withText(String.valueOf(omelette.servings + 1))));
+
+        scenario.close();
+
+    }
+
+    @Test
+    public void minusButtonDecreasesNumberOfServings() {
+
+        ActivityScenario scenario = ActivityScenario.launch(i);
+
+        onView(withId(R.id.plusButton))
+                .perform(scrollTo(), click());
+
+        onView(withId(R.id.minusButton))
+                .perform(scrollTo(), click());
+
+        onView(withId(R.id.nbServings)).check(matches(withText(String.valueOf(omelette.servings))));
+        onView(withId(R.id.servings)).check(matches(withText(String.valueOf(omelette.servings))));
+
+        scenario.close();
+
+    }
+
+    @Test
+    public void numberOfServingsCannotGoBelowOne() {
+
+        ActivityScenario scenario = ActivityScenario.launch(i);
+
+        for (int i = 0; i < omelette.servings; i++) {
+            onView(withId(R.id.minusButton))
+                    .perform(scrollTo(), click());
+        }
+
+        onView(withId(R.id.nbServings)).check(matches(withText(String.valueOf(1))));
+        onView(withId(R.id.servings)).check(matches(withText(String.valueOf(1))));
+
+        scenario.close();
+
+    }
+
+    @Test
+    public void ingredientAmountsAreCorrectlyUpdatedAfterPlusButtonIsClicked() {
+        ActivityScenario scenario = ActivityScenario.launch(i);
+        onView(withId(R.id.plusButton))
+                .perform(scrollTo(), click());
+        int newServings = omelette.getServings() + 1;
+
+        scenario.onActivity(activity -> {
+            RecyclerView ingList = activity.findViewById(R.id.ingredientsList);
+            IngredientAdapter ingAdapter = (IngredientAdapter) ingList.getAdapter();
+            List<Ingredient> data = ingAdapter.getData();
+            for (int i = 0; i < data.size(); i++) {
+                Ingredient original = omelette.getIngredientList().get(i);
+                int oldValue = original.getUnit().getValue();
+                double ratio = ((double) newServings / omelette.getServings());
+                int expectedValue = (int) Math.ceil(ratio * oldValue);
+                int actualValue = data.get(i).getUnit().getValue();
+
+                assertEquals(expectedValue, actualValue);
+            }
+        });
+        scenario.close();
+    }
+
+    @Test
+    public void ingredientAmountsAreCorrectlyUpdatedAfterMinusButtonIsClicked() {
+
+        ActivityScenario scenario = ActivityScenario.launch(i);
+        onView(withId(R.id.plusButton))
+                .perform(scrollTo(), click());
+        onView(withId(R.id.minusButton))
+                .perform(scrollTo(), click());
+
+        scenario.onActivity(activity -> {
+            RecyclerView ingList = activity.findViewById(R.id.ingredientsList);
+            IngredientAdapter ingAdapter = (IngredientAdapter) ingList.getAdapter();
+            List<Ingredient> data = ingAdapter.getData();
+
+            for (int i = 0; i < data.size(); i++) {
+                Ingredient original = omelette.getIngredientList().get(i);
+                int oldValue = original.getUnit().getValue();
+                int expectedValue = (int) Math.ceil(1 * oldValue);
+                int actualValue = data.get(i).getUnit().getValue();
+
+                assertEquals(expectedValue, actualValue);
+            }
+        });
+
+        scenario.close();
+    }
+
 /*
     @Test
     public void favoriteButtonChangesWhenClicked(){
@@ -276,9 +365,6 @@ public class RecipeActivityTest {
         scenario.close();
     }
 */
-
-
-
 
 
     public static Matcher<View> withRating(final float rating) {
@@ -346,9 +432,6 @@ public class RecipeActivityTest {
             }
         };
     }
-
-
-
 
 
 }

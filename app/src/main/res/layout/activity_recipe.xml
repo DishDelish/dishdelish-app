@@ -327,8 +327,8 @@
             android:paddingTop="5dp"
             android:paddingEnd="45dp"
             android:paddingBottom="5dp"
-            android:textColor="@color/black"
             android:text=""
+            android:textColor="@color/black"
             android:textColorHint="@color/material_dynamic_neutral60"
             app:layout_constraintEnd_toEndOf="@+id/commentsList"
             app:layout_constraintStart_toStartOf="@+id/commentsList"
@@ -365,6 +365,40 @@
             android:textOn=""
             app:layout_constraintEnd_toEndOf="@+id/recipePicture"
             app:layout_constraintTop_toBottomOf="@+id/recipeNameText" />
+
+        <Button
+            android:id="@+id/minusButton"
+            android:layout_width="40dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="56dp"
+            android:text="-"
+            android:textSize="20sp"
+            app:layout_constraintStart_toEndOf="@+id/ingredientsTitle"
+            app:layout_constraintTop_toBottomOf="@+id/infoBoxes" />
+
+        <TextView
+            android:id="@+id/servings"
+            android:layout_width="30dp"
+            android:layout_height="40dp"
+            android:gravity="center_vertical"
+            android:text="000"
+            android:textAlignment="center"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="@+id/minusButton"
+            app:layout_constraintStart_toEndOf="@+id/minusButton"
+            app:layout_constraintTop_toTopOf="@+id/minusButton" />
+
+        <Button
+            android:id="@+id/plusButton"
+            android:layout_width="40dp"
+            android:layout_height="50dp"
+            android:text="+"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="@+id/minusButton"
+            app:layout_constraintStart_toEndOf="@+id/servings"
+            app:layout_constraintTop_toTopOf="@+id/minusButton" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

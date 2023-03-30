@@ -8,13 +8,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class IngredientViewHolder extends RecyclerView.ViewHolder {
 
-    TextView ingredientName, unitInfo, ingredientValue;
+    TextView ingredientName, amountInfo;
 
 
     public IngredientViewHolder(@NonNull View itemView) {
         super(itemView);
         ingredientName = itemView.findViewById(R.id.ingredientName);
-        unitInfo = itemView.findViewById(R.id.unitInfo);
-        ingredientValue = itemView.findViewById(R.id.ingredientValue);
+        amountInfo = itemView.findViewById(R.id.amountInfo);
     }
 }

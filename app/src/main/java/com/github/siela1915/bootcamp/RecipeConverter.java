@@ -25,20 +25,6 @@ public class RecipeConverter {
     public static Intent convertToIntent(Recipe recipe, Context c){
 
         Intent i = new Intent(c, RecipeActivity.class);
-/*
-        i.putExtra("image", recipe.image);
-        i.putExtra("recipeName", recipe.recipeName);
-        i.putExtra("userName", recipe.userName);
-        i.putExtra("profilePicture", recipe.profilePicture);
-        i.putExtra("rating", recipe.rating);
-        i.putExtra("prepTime", recipe.prepTime);
-        i.putExtra("cookTime", recipe.cookTime);
-        i.putExtra("servings", recipe.servings);
-        i.putExtra("utensils", recipe.utensils.getUtensils().toArray());
-        i.putStringArrayListExtra("ingredients", convertIngredientList(recipe.ingredientList));
-        i.putExtra("steps", recipe.steps.toArray());
-        i.putExtra("comments", recipe.comments.toArray());
-*/
         i.putExtra("Recipe", recipe);
         return i;
 

@@ -30,9 +30,9 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull IngredientViewHolder holder, int position) {
-        holder.ingredientName.setText(ingredients.get(position).getIngredient());
-        holder.ingredientValue.setText(String.valueOf(ingredients.get(position).getUnit().getValue()));
-        holder.unitInfo.setText(ingredients.get(position).getUnit().getInfo());
+        Ingredient ingredient = ingredients.get(position);
+        holder.ingredientName.setText(ingredient.getIngredient());
+        holder.amountInfo.setText(String.valueOf(ingredient.getUnit().getValue()) + "  " + ingredient.getUnit().getInfo() );
 
     }
 

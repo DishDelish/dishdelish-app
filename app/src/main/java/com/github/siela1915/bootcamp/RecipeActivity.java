@@ -15,7 +15,12 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import com.github.siela1915.bootcamp.Recipes.Ingredient;
 import com.github.siela1915.bootcamp.Recipes.Recipe;
+import com.github.siela1915.bootcamp.Recipes.Unit;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class RecipeActivity extends AppCompatActivity {
 
@@ -72,6 +77,7 @@ public class RecipeActivity extends AppCompatActivity {
         TextView stepsText=(TextView) findViewById(R.id.stepsText);
         RecyclerView commentsList=(RecyclerView) findViewById(R.id.commentsList);
         RatingBar ratingBar = (RatingBar) findViewById(R.id.ratingBar);
+        TextView servings = (TextView) findViewById(R.id.servings);
 
         Bitmap recipeImage = BitmapFactory.decodeResource(this.getResources(), recipe.image);
         recipePicture.setImageBitmap(recipeImage);
@@ -86,12 +92,47 @@ public class RecipeActivity extends AppCompatActivity {
         prepTime.setText(String.valueOf(recipe.prepTime));
 
         cookTime.setText(String.valueOf(recipe.cookTime));
-        nbServings.setText(String.valueOf(recipe.servings));
         utensilsList.setText(String.join(", ", recipe.utensils.getUtensils()));
 
         stepsText.setText(String.join("\n\n", recipe.steps));
 
         // Set Comment fields
+        setCommentContents(commentsList);
+
+        // Set Ingredient List content
+        setIngredientListContents(ingredientsList);
+
+        // Set servings info
+        setServingInfo(nbServings, servings, ingredientsList);
+
+    }
+
+    private void modifyIngredientAmounts(int n, int previous, RecyclerView ingredientsList) {
+        IngredientAdapter adapter = (IngredientAdapter) ingredientsList.getAdapter();
+        List<Ingredient> data = adapter.getData();
+
+        for(int i = 0; i < data.size(); i++){
+            Ingredient original = recipe.getIngredientList().get(i);
+            String ingredient = original.getIngredient();
+            String info = original.getUnit().getInfo();
+            int oldValue = original.getUnit().getValue();
+            double temp = ((double)n/recipe.servings);
+            int newValue = (int)(Math.ceil(temp * oldValue));
+
+            data.set(i, new Ingredient(ingredient, new Unit(newValue , info)));
+            adapter.notifyItemChanged(i);
+        }
+    }
+
+    private void setIngredientListContents(RecyclerView ingredientsList){
+
+        ingredientsList.setLayoutManager(new LinearLayoutManager(this));
+        IngredientAdapter ingredientAdapter = new IngredientAdapter(getApplicationContext(), new ArrayList<>(recipe.getIngredientList()));
+        ingredientsList.setAdapter(ingredientAdapter);
+
+    }
+
+    private void setCommentContents(RecyclerView commentsList){
 
         commentsList.setLayoutManager(new LinearLayoutManager(this));
         CommentAdapter commentAdapter = new CommentAdapter(getApplicationContext(), recipe.comments);
@@ -102,24 +143,47 @@ public class RecipeActivity extends AppCompatActivity {
 
         sendComment.setOnClickListener(view -> {
             String input = commentBox.getText().toString();
-            System.out.println(input);
             if(!input.isEmpty()){
 
-                // if logged in
-                // update
                 commentBox.setText("");
                 recipe.comments.add(input);
                 commentAdapter.notifyItemInserted(recipe.comments.size()-1);
-                // else
-                // login popup
 
             }
         });
 
-        // Set Ingredient List fields
-        ingredientsList.setLayoutManager(new LinearLayoutManager(this));
-        IngredientAdapter ingredientAdapter = new IngredientAdapter(getApplicationContext(), recipe.ingredientList);
-        ingredientsList.setAdapter(ingredientAdapter);
+    }
+
+    private void setServingInfo(TextView nbServings, TextView servings, RecyclerView ingredientsList){
+
+        nbServings.setText(String.valueOf(recipe.servings));
+        servings.setText(String.valueOf(recipe.servings));
+
+        Button plusButton = (Button) findViewById(R.id.plusButton);
+        Button minusButton = (Button) findViewById(R.id.minusButton);
+
+        plusButton.setOnClickListener(v -> {
+
+            int old = Integer.valueOf(nbServings.getText().toString());
+            int newVal = old+1;
+
+            nbServings.setText(String.valueOf(newVal));
+            servings.setText(String.valueOf(newVal));
+
+            modifyIngredientAmounts(newVal, old, ingredientsList);
+
+        });
+
+        minusButton.setOnClickListener(v -> {
+            int old = Integer.valueOf(nbServings.getText().toString());
+            if(old > 1){
+                int newVal = old-1;
+                nbServings.setText(String.valueOf(newVal));
+                servings.setText(String.valueOf(newVal));
+
+                modifyIngredientAmounts(newVal, old, ingredientsList);
+            }
+        });
 
     }
 }
