@@ -90,29 +90,8 @@ public class MainHomeActivityTest {
         onView(withId(R.id.navView))
                 .perform(NavigationViewActions.navigateTo(R.id.menuItem_filter));
         onView(withId(R.id.homeFragment)).check(matches(isDisplayed()));
-    }
-    @Test
-    public void testOnChoosingFilter2(){
-        onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
-        onView(withId(R.id.navView))
-                .perform(NavigationViewActions.navigateTo(R.id.menuItem_filter));
-        onView(withId(R.id.drawer_layout)).perform(DrawerActions.close());
         onView(withId(R.id.filterLayout)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
-    }
-    @Test
-    public void testOnChoosingFilter3(){
-        onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
-        onView(withId(R.id.navView))
-                .perform(NavigationViewActions.navigateTo(R.id.menuItem_filter));
-        onView(withId(R.id.drawer_layout)).perform(DrawerActions.close());
         onView(withId(R.id.cuisineBtn)).check(matches(isClickable()));
-    }
-    @Test
-    public void testOnChoosingFilter4(){
-        onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
-        onView(withId(R.id.navView))
-                .perform(NavigationViewActions.navigateTo(R.id.menuItem_filter));
-        onView(withId(R.id.drawer_layout)).perform(DrawerActions.close());
         onView(withId(R.id.notIncludIngBtn)).check(matches(isClickable()));
         onView(withId(R.id.dietBtn)).check(matches(isClickable()));
         onView(withId(R.id.timingBtn)).check(matches(isClickable()));
