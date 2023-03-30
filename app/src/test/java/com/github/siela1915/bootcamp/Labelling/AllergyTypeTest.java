@@ -2,13 +2,14 @@ package com.github.siela1915.bootcamp.Labelling;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertEquals;
 
 
 import junit.framework.TestCase;
 
 import org.junit.Test;
 
-public class AllergyTypeTest extends TestCase {
+public class AllergyTypeTest{
 
     @Test
     public void getAllReturnsAllAllergyEnums(){
