@@ -156,7 +156,7 @@ public class RecipeActivityTest {
         });
         scenario.close();
 
-    }
+    } */
 
     @Test
     public void isCorrectUtensilsListOnDisplay() {
@@ -225,7 +225,7 @@ public class RecipeActivityTest {
         scenario.close();
     }
 
-    /*
+
 
     @Test
     public void plusButtonIncreasesNumberOfServings() {
@@ -324,7 +324,7 @@ public class RecipeActivityTest {
         });
 
         scenario.close();
-    } */
+    }
 
     @Test
     public void heartButtonBecomesFullWhenClicked(){
@@ -426,7 +426,7 @@ public class RecipeActivityTest {
             }
         };
     }
-/*
+
     public static Matcher<View> withDrawableId(@DrawableRes final int id) {
         return new DrawableMatcher(id);
     }
@@ -475,6 +475,6 @@ public class RecipeActivityTest {
         }
 
 
-}*/
+}
 }
 
