@@ -314,11 +314,11 @@
             app:layout_constraintEnd_toEndOf="@+id/stepsText"
             app:layout_constraintStart_toStartOf="@+id/stepsText"
             app:layout_constraintTop_toBottomOf="@+id/commentsIcon" />
-<!---
+
         <EditText
             android:id="@+id/enterComment"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:layout_marginTop="20dp"
             android:background="@drawable/write_comment_box"
             android:hint="Say Something"
@@ -337,15 +337,15 @@
 
         <Button
             android:id="@+id/sendCommentButton"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_marginEnd="10dp"
             android:background="@android:drawable/ic_menu_send"
-            android:text="Button"
+            android:text=" "
             app:layout_constraintBottom_toBottomOf="@+id/enterComment"
             app:layout_constraintEnd_toEndOf="@+id/enterComment"
             app:layout_constraintTop_toTopOf="@+id/enterComment" />
-            -->
+
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/ingredientsList"
