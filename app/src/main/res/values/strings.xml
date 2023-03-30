@@ -7,7 +7,6 @@
     <string name="uploadRecipePageChooseImg">Choose Image</string>
     <string name="uploadRecipePageButtonText">Upload Recipe</string>
     <string name="prepTime">Prep Time</string>
-    <string name="cookTime">Cooking Time</string>
     <string name="prepTimeHint">0</string>
     <string name="cookTime">Cook Time</string>
     <string name="cookTimeHint">0</string>
