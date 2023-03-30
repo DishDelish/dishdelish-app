@@ -14,6 +14,9 @@ public class Utensils implements Parcelable {
 
     public Utensils(){}
     public Utensils(List<String> utensils) {
+        if(utensils == null){
+            throw new IllegalArgumentException();
+        }
         this.utensils = utensils;
     }
     protected Utensils(Parcel in) {
@@ -36,6 +39,9 @@ public class Utensils implements Parcelable {
         return utensils;
     }
     public void setUtensils(List<String> utensils) {
+        if(utensils == null){
+            throw new IllegalArgumentException();
+        }
         this.utensils = utensils;
     }
     @Override
@@ -50,10 +56,17 @@ public class Utensils implements Parcelable {
         }
         return false;
     }
+
+    @Override
+    public String toString() {
+        return utensils.toString();
+    }
+
     @Override
     public int describeContents() {
         return 0;
     }
+
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
         dest.writeStringList(utensils);

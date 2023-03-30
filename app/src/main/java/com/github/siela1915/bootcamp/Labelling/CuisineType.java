@@ -1,5 +1,8 @@
 package com.github.siela1915.bootcamp.Labelling;
 
+import java.util.Arrays;
+import java.util.List;
+
 public enum CuisineType {
     AMERICAN("American"), CHINESE("Chinese"), INDIAN("Indian"), LIBYAN("Libyan"),
     MEXICAN("Mexican"), ITALIAN("Italian"), GREEK("Greek"), FRENCH("French"),
@@ -15,6 +18,22 @@ public enum CuisineType {
     @Override
     public String toString() {
         return display_string;
+    }
+    public static String[] getAll(){
+        List<CuisineType> allCuisine= Arrays.asList(CuisineType.values());
+        String[] all= new String[allCuisine.size()];
+        for(int i= 0; i<allCuisine.size();i++){
+            all[i]=allCuisine.get(i).display_string;
+        }
+        return all;
+    }
+    public static CuisineType fromString(String text) {
+        for (CuisineType b : CuisineType.values()) {
+            if (b.display_string.equalsIgnoreCase(text)) {
+                return b;
+            }
+        }
+        return null;
     }
 }
 

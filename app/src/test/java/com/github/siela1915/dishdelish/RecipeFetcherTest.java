@@ -14,7 +14,6 @@ import com.github.siela1915.bootcamp.Recipes.Unit;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,7 +32,7 @@ public class RecipeFetcherTest {
 
         fetcher = new RecipeFetcher(allergies, cuisines, diets);
         assertEquals(
-                Arrays.asList(ExampleRecipes.recipes.get(0).recipeName, ExampleRecipes.recipes.get(2).recipeName, ExampleRecipes.recipes.get(1).recipeName),
+                Arrays.asList(ExampleRecipes.recipes.get(0).recipeName, ExampleRecipes.recipes.get(2).recipeName, ExampleRecipes.recipes.get(1).recipeName, ExampleRecipes.recipes.get(3).recipeName),
                 fetcher.fetchRecipeList()
         );
 
@@ -71,64 +70,66 @@ public class RecipeFetcherTest {
         assertTrue(actualList.containsAll(expectedList));
     }
 
-//    @Test
-//    public void sortByPrepTimeSortsCorrectlyDescending(){
-//        List<Integer> allergies = new ArrayList<>();
-//        List<Integer> cuisines = new ArrayList<>();
-//        List<Integer> diets = new ArrayList<>();
-//        fetcher = new RecipeFetcher(allergies, cuisines, diets);
-//
-//        //The example recipes are already sorted by prep time
-//        List<String> expectedList = ExampleRecipes.recipes.stream().map(r -> r.recipeName).collect(Collectors.toList());
-//        List<String> actualList = fetcher.sortRecipesByPreparationTime(ExampleRecipes.recipes, false);
-//
-//        assertEquals(expectedList.get(2), actualList.get(2));
-//        assertTrue(expectedList.get(0).equals(actualList.get(1)) ||
-//                expectedList.get(0).equals(actualList.get(0)));
-//    }
-//
-//    @Test
-//    public void sortByPrepTimeSortsCorrectlyAscending(){
-//        List<Integer> allergies = new ArrayList<>();
-//        List<Integer> cuisines = new ArrayList<>();
-//        List<Integer> diets = new ArrayList<>();
-//        fetcher = new RecipeFetcher(allergies, cuisines, diets);
-//
-//        //The example recipes are already sorted by prep time
-//        List<String> expectedList = ExampleRecipes.recipes.stream().map(r -> r.recipeName).collect(Collectors.toList());
-//        Collections.reverse(expectedList);
-//        List<String> actualList = fetcher.sortRecipesByPreparationTime(ExampleRecipes.recipes, true);
-//
-//        assertEquals(expectedList.get(0), actualList.get(0));
-//        assertTrue(expectedList.get(2).equals(actualList.get(1)) ||
-//                expectedList.get(2).equals(actualList.get(2)));
-//    }
-//
-//    @Test
-//    public void filterByIngredientFiltersCorrectly(){
-//        List<Integer> allergies = new ArrayList<>();
-//        List<Integer> cuisines = new ArrayList<>();
-//        List<Integer> diets = new ArrayList<>();
-//        fetcher = new RecipeFetcher(allergies, cuisines, diets);
-//
-//        List<String> expectedList = Arrays.asList(ExampleRecipes.recipes.get(2).recipeName);
-//        List<String> actualList = fetcher.filterByIngredients(ExampleRecipes.recipes, Arrays.asList(new Ingredient("lemon", new Unit(1, ""))));
-//
-//        assertEquals(expectedList, actualList);
-//    }
-//
-//    @Test
-//    public void ingredientFilteringConvertsToLowerCase(){
-//        List<Integer> allergies = new ArrayList<>();
-//        List<Integer> cuisines = new ArrayList<>();
-//        List<Integer> diets = new ArrayList<>();
-//        fetcher = new RecipeFetcher(allergies, cuisines, diets);
-//
-//        List<String> expectedList = Arrays.asList(ExampleRecipes.recipes.get(2).recipeName);
-//        List<String> actualList = fetcher.filterByIngredients(ExampleRecipes.recipes, Arrays.asList(new Ingredient("LeMON", new Unit(1, ""))));
-//
-//        assertEquals(expectedList, actualList);
-//    }
+    @Test
+    public void sortByPrepTimeSortsCorrectlyDescending(){
+        List<Integer> allergies = new ArrayList<>();
+        List<Integer> cuisines = new ArrayList<>();
+        List<Integer> diets = new ArrayList<>();
+        fetcher = new RecipeFetcher(allergies, cuisines, diets);
+
+        //The example recipes are already sorted by prep time
+        List<String> expectedList = ExampleRecipes.recipes.stream().map(r -> r.recipeName).collect(Collectors.toList());
+        List<String> actualList = fetcher.sortRecipesByPreparationTime(ExampleRecipes.recipes, false);
+
+        assertEquals(expectedList.get(2), actualList.get(3));
+        assertTrue(expectedList.get(0).equals(actualList.get(2)) ||
+                expectedList.get(0).equals(actualList.get(1)));
+        assertEquals(expectedList.get(3), actualList.get(0));
+    }
+
+    @Test
+    public void sortByPrepTimeSortsCorrectlyAscending(){
+        List<Integer> allergies = new ArrayList<>();
+        List<Integer> cuisines = new ArrayList<>();
+        List<Integer> diets = new ArrayList<>();
+        fetcher = new RecipeFetcher(allergies, cuisines, diets);
+
+        //The example recipes are already sorted by prep time
+        List<String> expectedList = ExampleRecipes.recipes.stream().map(r -> r.recipeName).collect(Collectors.toList());
+
+        List<String> actualList = fetcher.sortRecipesByPreparationTime(ExampleRecipes.recipes, true);
+
+        assertEquals(expectedList.get(2), actualList.get(0));
+        assertTrue(expectedList.get(1).equals(actualList.get(1)) ||
+                expectedList.get(1).equals(actualList.get(2)));
+        assertEquals(expectedList.get(3), actualList.get(3));
+    }
+
+    @Test
+    public void filterByIngredientFiltersCorrectly(){
+        List<Integer> allergies = new ArrayList<>();
+        List<Integer> cuisines = new ArrayList<>();
+        List<Integer> diets = new ArrayList<>();
+        fetcher = new RecipeFetcher(allergies, cuisines, diets);
+
+        List<String> expectedList = Arrays.asList(ExampleRecipes.recipes.get(2).recipeName);
+        List<String> actualList = fetcher.filterByIngredients(ExampleRecipes.recipes, Arrays.asList(new Ingredient("lemon", new Unit(1, ""))));
+
+        assertEquals(expectedList, actualList);
+    }
+
+    @Test
+    public void ingredientFilteringConvertsToLowerCase(){
+        List<Integer> allergies = new ArrayList<>();
+        List<Integer> cuisines = new ArrayList<>();
+        List<Integer> diets = new ArrayList<>();
+        fetcher = new RecipeFetcher(allergies, cuisines, diets);
+
+        List<String> expectedList = Arrays.asList(ExampleRecipes.recipes.get(2).recipeName);
+        List<String> actualList = fetcher.filterByIngredients(ExampleRecipes.recipes, Arrays.asList(new Ingredient("LeMON", new Unit(1, ""))));
+
+        assertEquals(expectedList, actualList);
+    }
 
 
 }

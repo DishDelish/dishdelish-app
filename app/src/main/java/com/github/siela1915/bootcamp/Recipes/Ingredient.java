@@ -13,6 +13,8 @@ public class Ingredient implements Parcelable {
 
     public Ingredient(){}
 
+
+    // constructor to set the string
     public void setIngredient(String ingredient) {
         this.ingredient = ingredient.toLowerCase();
     }
@@ -60,6 +62,11 @@ public class Ingredient implements Parcelable {
     public void writeToParcel(@NonNull Parcel dest, int flags) {
         dest.writeString(ingredient);
         dest.writeParcelable(unit, flags);
+    }
+
+    @Override
+    public String toString() {
+        return ingredient + " " + unit.toString();
     }
 
     // toString returns the display string
