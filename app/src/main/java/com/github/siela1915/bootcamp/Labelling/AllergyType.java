@@ -17,6 +17,7 @@ public enum AllergyType {
 
     // constructor to set the string
     AllergyType(String name){display_string = name;}
+
     public static String[] getAll(){
         List<AllergyType> allAllergies= Arrays.asList(AllergyType.values());
         String[] all= new String[allAllergies.size()];
@@ -34,4 +35,9 @@ public enum AllergyType {
         return null;
     }
 
+
+    @Override
+    public String toString() {
+        return display_string;
+    }
 }

@@ -88,6 +88,9 @@ dependencies {
     implementation 'com.squareup.okhttp3:logging-interceptor:4.9.0'
 
     implementation 'com.google.code.gson:gson:2.8.7'
+
+    //API testing dependencies
+    testImplementation 'org.mockito:mockito-core:3.0.0'
 }
 
 tasks.withType(Test) {
