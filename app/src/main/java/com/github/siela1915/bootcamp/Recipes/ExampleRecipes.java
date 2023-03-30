@@ -35,7 +35,7 @@ public class ExampleRecipes {
                             "STEP 4\n" +
                                     "At this point you can fill the omelette with whatever you like – some grated cheese, sliced ham, fresh herbs, sautéed mushrooms or smoked salmon all work well. Scatter the filling over the top of the omelette and fold gently in half with the spatula. Slide onto a plate to serve."
                     ),
-                    commentsList
+                    commentsList, 12
             ),
 
             new Recipe(R.drawable.cauli, "Cauliflower Rice", "Money Bob",
@@ -45,7 +45,7 @@ public class ExampleRecipes {
                     Arrays.asList("STEP 1\n" +
                                     "Cut the hard core and stalks from the cauliflower and pulse the rest in a food processor to make grains the size of rice. Tip into a heatproof bowl, cover with cling film, then pierce and microwave for 7 mins on high – there is no need to add any water. Stir in the coriander. For spicier rice, add some toasted cumin seeds."
                             ),
-                    commentsList
+                    commentsList, 456
                     ),
 
             new Recipe(R.drawable.lemon_pudding, "Lemon Pudding", "Smaug the Golden",
@@ -57,7 +57,7 @@ public class ExampleRecipes {
                                "STEP 2\n" +
                             "Meanwhile, heat the lemon curd for 30 secs in the microwave and stir until smooth. Pour all over the top of the pudding and serve with a dollop of crème fraîche or scoops of ice cream."
                               ),
-                    commentsList
+                    commentsList, 1
             ),
 
             new Recipe(R.drawable.krabby_patty, "Krabby Patty", "Spongebob Squarepants",
@@ -70,11 +70,8 @@ public class ExampleRecipes {
                             "Do NOT, under any circumstances, allow yourself to be seen with the formula. Failing to do so may have fatal consequences"+
                             "STEP 3\n" +
                             "Follow the formula, and remember, it's not a Krabby Patty if it's not made with love \u2764"),
-                    commentsList
+                    commentsList, 5000
             )
-
-
-
     );
 
 

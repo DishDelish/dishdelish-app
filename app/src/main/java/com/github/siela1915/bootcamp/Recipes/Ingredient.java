@@ -68,4 +68,13 @@ public class Ingredient implements Parcelable {
     }
 
     // toString returns the display string
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Ingredient) {
+            return ingredient.equals(((Ingredient) obj).ingredient)
+                    && unit.equals(((Ingredient) obj).unit);
+        }
+        return false;
+    }
 }

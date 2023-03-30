@@ -12,21 +12,10 @@ import java.util.List;
 public class Utensils implements Parcelable {
     private List<String> utensils;
 
-    public void setUtensils(List<String> utensils) {
-        //can't be null, empty is fine
-        if(utensils == null){
-            throw new IllegalArgumentException();
-        }
-        this.utensils = utensils;
-    }
-
     public Utensils(){}
-
-
     public Utensils(List<String> utensils) {
         this.utensils = utensils;
     }
-
     protected Utensils(Parcel in) {
         utensils = in.createStringArrayList();
     }
@@ -45,6 +34,21 @@ public class Utensils implements Parcelable {
 
     public List<String> getUtensils() {
         return utensils;
+    }
+    public void setUtensils(List<String> utensils) {
+        this.utensils = utensils;
+    }
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Utensils) {
+            for (String u : ((Utensils) obj).utensils) {
+                if (!utensils.contains(u)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
     }
 
     @Override

@@ -1,14 +1,16 @@
 package com.github.siela1915.bootcamp;
 
+import android.os.Bundle;
+import android.view.MenuItem;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 
-import android.os.Bundle;
-import android.view.MenuItem;
-
+import com.github.siela1915.bootcamp.Recipes.ExampleRecipes;
+import com.github.siela1915.bootcamp.firebase.Database;
 import com.google.android.material.navigation.NavigationView;
 
 public class MainHomeActivity extends AppCompatActivity {
@@ -53,6 +55,11 @@ public class MainHomeActivity extends AppCompatActivity {
                 case R.id.menuItem_upload:
                     setContainerContent(R.id.fragContainer, UploadingRecipeFragment.class, false);
                     break;
+                case R.id.menuItem_favorites:
+                    setContainerContent(R.id.fragContainer, RecipeListFragment.newInstance(
+                                        ExampleRecipes.recipes
+                                ), false);
+                    break;
                 default:
             }
             drawerLayout.close();
@@ -85,4 +92,19 @@ public class MainHomeActivity extends AppCompatActivity {
                     .commit();
         }
     }
+
+    private void setContainerContent(int containerId, @NonNull Fragment fragment, boolean setOrReplace){
+        if(setOrReplace){
+            getSupportFragmentManager().beginTransaction()
+                    .setReorderingAllowed(true)
+                    .add(containerId,fragment,null)
+                    .commit();
+        }else{
+            getSupportFragmentManager().beginTransaction()
+                    .setReorderingAllowed(true)
+                    .replace(containerId,fragment,null)
+                    .commit();
+        }
+    }
+
 }
