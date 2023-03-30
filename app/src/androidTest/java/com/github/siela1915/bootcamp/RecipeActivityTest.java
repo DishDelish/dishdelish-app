@@ -226,12 +226,11 @@ public class RecipeActivityTest {
     }
 
 
-/*
     @Test
     public void plusButtonIncreasesNumberOfServings() {
         ActivityScenario scenario = ActivityScenario.launch(i);
         onView(withId(R.id.plusButton))
-                .perform( click());
+                .perform( scrollTo(), click());
 
         onView(withId(R.id.nbServings)).check(matches(withText(String.valueOf(omelette.servings + 1))));
         onView(withId(R.id.servings)).check(matches(withText(String.valueOf(omelette.servings + 1))));
@@ -246,10 +245,10 @@ public class RecipeActivityTest {
         ActivityScenario scenario = ActivityScenario.launch(i);
 
         onView(withId(R.id.plusButton))
-                .perform(click());
+                .perform(scrollTo(), click());
 
         onView(withId(R.id.minusButton))
-                .perform(click());
+                .perform(scrollTo(), click());
 
         onView(withId(R.id.nbServings)).check(matches(withText(String.valueOf(omelette.servings))));
         onView(withId(R.id.servings)).check(matches(withText(String.valueOf(omelette.servings))));
@@ -257,7 +256,7 @@ public class RecipeActivityTest {
         scenario.close();
 
     }
-    */
+
 
     @Test
     public void numberOfServingsCannotGoBelowOne() {
