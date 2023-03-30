@@ -105,7 +105,7 @@ public class RecipeActivityTest {
         });
         scenario.close();
     }
-/*
+
     @Test
     public void commentsListStaysTheSameAfterEmptyStringIsSent() {
         ActivityScenario scenario = ActivityScenario.launch(i);
@@ -156,7 +156,7 @@ public class RecipeActivityTest {
         });
         scenario.close();
 
-    } */
+    }
 
     @Test
     public void isCorrectUtensilsListOnDisplay() {
