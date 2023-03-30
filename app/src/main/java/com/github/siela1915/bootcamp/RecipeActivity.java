@@ -119,9 +119,13 @@ public class RecipeActivity extends AppCompatActivity {
             }
         });
 
+        ingredientsList.setLayoutManager(new LinearLayoutManager(this));
+        IngredientAdapter ingredientAdapter = new IngredientAdapter(getApplicationContext(), new ArrayList<>(recipe.getIngredientList()));
+        ingredientsList.setAdapter(ingredientAdapter);
+
 
         // Set Ingredient List content
-        setIngredientListContents(ingredientsList);
+        //setIngredientListContents(ingredientsList);
 
         // Set servings info
         setServingInfo(nbServings, servings, ingredientsList);
