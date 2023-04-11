@@ -66,6 +66,14 @@ public class DatabaseTest {
     }
 
     @Test
+    public void setAfterGetAsyncReturnsRecipe() {
+        Database db = new Database(firebaseInstance);
+        Recipe recipe = createRecipeEggs();
+        Task<String> setTask = db.setAsync(recipe);
+
+    }
+
+    @Test
     public void getFailsWithExceptionOnBogusKey() {
         Database db = new Database(firebaseInstance);
         Recipe recipe = createRecipeEggs(); //add at least one recipe to database

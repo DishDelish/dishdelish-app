@@ -74,6 +74,7 @@ public class Database {
     public String set(Recipe recipe) throws ExecutionException, InterruptedException {
         //Map<String, Object> value = recipeToMap(recipe);
         String uniqueKey = db.child(RECIPES).child("new").push().getKey();
+        recipe.setUniqueKey(uniqueKey);
         Map<String, Object> value = new HashMap<>();
         value.put(uniqueKey, recipe);
         try {
@@ -85,11 +86,12 @@ public class Database {
         return uniqueKey;
     }
 
-    public Task<Void> setAsync(Recipe recipe) {
+    public Task<String> setAsync(Recipe recipe) {
         String uniqueKey = db.child(RECIPES).child("new").push().getKey();
+        recipe.setUniqueKey(uniqueKey);
         Map<String, Object> value = new HashMap<>();
         value.put(uniqueKey, recipe);
-        return db.child(RECIPES).updateChildren(value);
+        return db.child(RECIPES).updateChildren(value).continueWith(snapshot -> uniqueKey);
     }
 
     /**
