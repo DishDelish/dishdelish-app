@@ -5,10 +5,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
-
-import android.util.Pair;
 
 import com.github.siela1915.bootcamp.Recipes.Ingredient;
 import com.github.siela1915.bootcamp.Recipes.Recipe;
@@ -29,7 +26,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
 public class DatabaseTest {
@@ -70,17 +66,37 @@ public class DatabaseTest {
         Database db = new Database(firebaseInstance);
         Recipe recipe = createRecipeEggs();
         Task<String> setTask = db.setAsync(recipe);
-
+        Task<Recipe> getTask = setTask.continueWithTask(t -> db.getAsync(t.getResult()));
+        try {
+            Recipe r = Tasks.await(getTask);
+            assertEquals(recipe, r);
+        } catch (ExecutionException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Test
-    public void getFailsWithExceptionOnBogusKey() {
+    public void getFailsOnBogusKey() {
         Database db = new Database(firebaseInstance);
         Recipe recipe = createRecipeEggs(); //add at least one recipe to database
         try {
             db.set(recipe);
             Recipe bogus = db.get("bogus");
             assertNull(bogus);
+        } catch (ExecutionException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Test
+    public void getAsyncFailsOnBogusKey() {
+        Database db = new Database(firebaseInstance);
+        Recipe recipe = createRecipeEggs();
+        Task<String> setTask = db.setAsync(recipe);
+        Task<Recipe> getTask = setTask.continueWithTask(t -> db.getAsync("bogus"));
+        try {
+            Recipe r = Tasks.await(getTask);
+            assertNull(r);
         } catch (ExecutionException | InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -107,6 +123,21 @@ public class DatabaseTest {
     }
 
     @Test
+    public void removeAsyncMakesRecipeNotRetrievable() {
+        Database db = new Database(firebaseInstance);
+        Recipe recipe = createRecipeEggs();
+        Task<String> setTask = db.setAsync(recipe);
+        Task<Void> remove = setTask.continueWithTask(t -> db.removeAsync(recipe.uniqueKey));
+        Task<Recipe> getTask = remove.continueWithTask(t -> db.getAsync(recipe.uniqueKey));
+        try {
+            Recipe r = Tasks.await(getTask);
+            assertNull(r);
+        } catch (ExecutionException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Test
     public void searchByNameReturnsSingleRecipe() {
         Database db = new Database(firebaseInstance);
         Recipe recipe = createRecipeEggs();
@@ -115,6 +146,24 @@ public class DatabaseTest {
             Map<String, Recipe> map = db.getByName("testRecipe");
             assertTrue(map.containsKey(key));
             assertEquals(recipe, map.get(key));
+        } catch (ExecutionException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Test
+    public void searchByNameAsyncReturnsList() {
+        Database db = new Database(firebaseInstance);
+        Recipe recipe1 = createRecipeEggs();
+        Recipe recipe2 = createOtherEggsRecipe();
+        Task<String> set1 = db.setAsync(recipe1);
+        Task<String> set2 = set1.continueWithTask(t -> db.setAsync(recipe2));
+        Task<List<Recipe>> listTask = set2.continueWithTask(t -> db.getByNameAsync("testRecipe"));
+        try {
+            List<Recipe> ls = Tasks.await(listTask);
+            assertEquals(ls.size(), 2);
+            assertTrue(ls.contains(recipe1));
+            assertTrue(ls.contains(recipe2));
         } catch (ExecutionException | InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -148,6 +197,20 @@ public class DatabaseTest {
             db.set(recipe);
             Map<String, Recipe> bogus = db.getByName("bogusName");
             assertEquals(bogus.size(), 0);
+        } catch (ExecutionException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Test
+    public void searchByNameAsyncFailsWhenNameNotFound() {
+        Database db = new Database(firebaseInstance);
+        Recipe recipe1 = createRecipeEggs();
+        Task<String> set1 = db.setAsync(recipe1);
+        Task<List<Recipe>> listTask = set1.continueWithTask(t -> db.getByNameAsync("bogus"));
+        try {
+            List<Recipe> ls = Tasks.await(listTask);
+            assertEquals(ls.size(), 0);
         } catch (ExecutionException | InterruptedException e) {
             throw new RuntimeException(e);
         }
