@@ -57,6 +57,15 @@ public class Database {
             }
     }
 
+    public Task<Recipe> getAsync(String uniqueKey) {
+        Task<DataSnapshot> task = db.child(RECIPES).child(uniqueKey).get();
+        return task.continueWith(snapshot -> {
+            DataSnapshot data = snapshot.getResult();
+            Recipe recipe = data.getValue(Recipe.class);
+            return recipe;
+        });
+    }
+
     /**
      * Adds a recipe to the database.
      * @param recipe the recipe to add to the database
@@ -76,12 +85,23 @@ public class Database {
         return uniqueKey;
     }
 
+    public Task<Void> setAsync(Recipe recipe) {
+        String uniqueKey = db.child(RECIPES).child("new").push().getKey();
+        Map<String, Object> value = new HashMap<>();
+        value.put(uniqueKey, recipe);
+        return db.child(RECIPES).updateChildren(value);
+    }
+
     /**
      * Removes a recipe from the database.
      * @param key the unique identifying key of the recipe
      */
     public void remove(String key) {
         db.child(RECIPES).child(key).removeValue();
+    }
+
+    public Task<Void> removeAsync(String key) {
+        return db.child(RECIPES).child(key).removeValue();
     }
 
     /**
@@ -107,7 +127,18 @@ public class Database {
         } catch (ExecutionException | InterruptedException e) {
             throw e;
         }
+    }
 
+    public Task<List<Recipe>> getByNameAsync(String name) {
+        Query query = db.child(RECIPES).orderByChild("recipeName").equalTo(name);
+        Task<DataSnapshot> task = query.get();
+        return task.continueWith(snapshot -> {
+            List<Recipe> recipes = new ArrayList<>();
+            for (DataSnapshot s : snapshot.getResult().getChildren()) {
+                recipes.add(s.getValue(Recipe.class));
+            }
+            return recipes;
+        });
     }
 
     private Map<String, Object> recipeToMap(Recipe recipe) {
