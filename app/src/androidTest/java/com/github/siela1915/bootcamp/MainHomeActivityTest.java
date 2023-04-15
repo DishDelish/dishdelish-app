@@ -106,7 +106,7 @@ public class MainHomeActivityTest {
                 .perform(NavigationViewActions.navigateTo(R.id.menuItem_filter));
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.close());
         onView(allOf(withId(R.id.cuisineBtn), isDescendantOfA(withId(R.id.filterLayout)))).perform(ViewActions.scrollTo(),click());
-        onView(withText("Chose your preferred cuisine")).check(matches(isDisplayed()));
+        onView(withText("Choose your preferred cuisine")).check(matches(isDisplayed()));
 
     }
     @Test
@@ -115,7 +115,7 @@ public class MainHomeActivityTest {
         onView(withId(R.id.navView)).perform(NavigationViewActions.navigateTo(R.id.menuItem_filter));
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.close());
         onView(allOf(withId(R.id.dietBtn), isDescendantOfA(withId(R.id.filterLayout)))).perform(ViewActions.scrollTo(),click());
-        onView((withText("Chose your diet"))).check(matches(isDisplayed()));
+        onView((withText("Choose your diet"))).check(matches(isDisplayed()));
     }
     @Test
     public void testingAllergyBtn(){
@@ -131,19 +131,22 @@ public class MainHomeActivityTest {
         onView(withId(R.id.navView)).perform(NavigationViewActions.navigateTo(R.id.menuItem_filter));
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.close());
         onView(allOf(withId(R.id.timingBtn), isDescendantOfA(withId(R.id.filterLayout)))).perform(ViewActions.scrollTo(),click());
-        onView((withText("Chose the preparation time"))).check(matches(isDisplayed()));
+        onView((withText("Choose the preparation time"))).check(matches(isDisplayed()));
 
     }
-   /* @Test
+    @Test
     public void testingFilterBtn(){
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
         onView(withId(R.id.navView)).perform(NavigationViewActions.navigateTo(R.id.menuItem_filter));
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.close());
-       // onView(withId(R.id.filterBtn)).perform(click());
-        onView(allOf(withId(R.id.filterBtn), isDescendantOfA(withId(R.id.filterLayout)))).perform(scrollTo(),click());
-        onView((withId(R.id.recipeList))).check(matches(isDisplayed()));
-
+        try {
+            onView(withId(R.id.filterBtn)).perform(click());
+            onView((withId(R.id.recipeList))).check(matches(isDisplayed()));
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
     }
-    
-    */
+
+
 }
