@@ -91,7 +91,7 @@ public class MainHomeActivityTest {
         onView(withId(R.id.homeFragment)).check(matches(isDisplayed()));
         onView(withId(R.id.filterLayout)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.cuisineBtn)).check(matches(isClickable()));
-        onView(withId(R.id.notIncludIngBtn)).check(matches(isClickable()));
+        onView(withId(R.id.allergyBtn)).check(matches(isClickable()));
         onView(withId(R.id.dietBtn)).check(matches(isClickable()));
         onView(withId(R.id.timingBtn)).check(matches(isClickable()));
         onView(withId(R.id.filterBtn)).check(matches(isClickable()));
@@ -130,7 +130,7 @@ public class MainHomeActivityTest {
         onView(withId(R.id.navView)).perform(NavigationViewActions.navigateTo(R.id.menuItem_filter));
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.close());
         try {
-            onView(withId(R.id.notIncludIngBtn)).perform(ViewActions.click());
+            onView(withId(R.id.allergyBtn)).perform(ViewActions.click());
             onView((withText("what are you allergic to"))).check(matches(isDisplayed()));
         }catch (PerformException e){
             e.printStackTrace();
