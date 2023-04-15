@@ -4,10 +4,13 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isClickable;
+import static androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+
+import static org.hamcrest.Matchers.allOf;
 
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.PerformException;
@@ -103,9 +106,7 @@ public class MainHomeActivityTest {
         onView(withId(R.id.navView))
                 .perform(NavigationViewActions.navigateTo(R.id.menuItem_filter));
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.close());
-        onView(withId(R.id.scrollView)).perform(ViewActions.scrollTo(),click());
-        onView(withId(R.id.cuisineBtn))
-                .perform(click());
+        onView(allOf(withId(R.id.cuisineBtn), isDescendantOfA(withId(R.id.filterLayout)))).perform(ViewActions.scrollTo(),click());
         onView(withText("Chose your preferred cuisine")).check(matches(isDisplayed()));
 
     }
@@ -114,12 +115,8 @@ public class MainHomeActivityTest {
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
         onView(withId(R.id.navView)).perform(NavigationViewActions.navigateTo(R.id.menuItem_filter));
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.close());
-        try {
-            onView(withId(R.id.dietBtn)).perform(click());
-            onView((withText("Chose your diet"))).check(matches(isDisplayed()));
-        }catch (PerformException e){
-            e.printStackTrace();
-        }
+        onView(withId(R.id.dietBtn)).perform(click());
+        onView((withText("Chose your diet"))).check(matches(isDisplayed()));
     }
     @Test
     public void testingAllergyBtn(){
@@ -138,12 +135,9 @@ public class MainHomeActivityTest {
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
         onView(withId(R.id.navView)).perform(NavigationViewActions.navigateTo(R.id.menuItem_filter));
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.close());
-        try {
-            onView(withId(R.id.timingBtn)).perform(click());
-            onView((withText("Chose the preparation time"))).check(matches(isDisplayed()));
-        }catch (PerformException e){
-            e.printStackTrace();
-        }
+        onView(withId(R.id.timingBtn)).perform(click());
+        onView((withText("Chose the preparation time"))).check(matches(isDisplayed()));
+
     }
     @Test
     public void testingFilterBtn(){
