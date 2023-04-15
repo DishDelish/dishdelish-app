@@ -1,6 +1,7 @@
 package com.github.siela1915.bootcamp;
 
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isClickable;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -91,7 +92,7 @@ public class MainHomeActivityTest {
         onView(withId(R.id.homeFragment)).check(matches(isDisplayed()));
         onView(withId(R.id.filterLayout)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.cuisineBtn)).check(matches(isClickable()));
-        onView(withId(R.id.notIncludIngBtn)).check(matches(isClickable()));
+        onView(withId(R.id.allergyBtn)).check(matches(isClickable()));
         onView(withId(R.id.dietBtn)).check(matches(isClickable()));
         onView(withId(R.id.timingBtn)).check(matches(isClickable()));
         onView(withId(R.id.filterBtn)).check(matches(isClickable()));
@@ -102,15 +103,11 @@ public class MainHomeActivityTest {
         onView(withId(R.id.navView))
                 .perform(NavigationViewActions.navigateTo(R.id.menuItem_filter));
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.close());
-        try {
-            onView(withId(R.id.cuisineBtn))
-                    .perform(ViewActions.click());
-            onView(withText("Chose your preferred cuisine")).check(matches(isDisplayed()));
+        onView(withId(R.id.scrollView)).perform(ViewActions.scrollTo(),click());
+        onView(withId(R.id.cuisineBtn))
+                .perform(click());
+        onView(withText("Chose your preferred cuisine")).check(matches(isDisplayed()));
 
-        } catch (PerformException e) {
-
-            e.printStackTrace();
-        }
     }
     @Test
     public void testingDietTypeBtn(){
@@ -118,7 +115,7 @@ public class MainHomeActivityTest {
         onView(withId(R.id.navView)).perform(NavigationViewActions.navigateTo(R.id.menuItem_filter));
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.close());
         try {
-            onView(withId(R.id.dietBtn)).perform(ViewActions.click());
+            onView(withId(R.id.dietBtn)).perform(click());
             onView((withText("Chose your diet"))).check(matches(isDisplayed()));
         }catch (PerformException e){
             e.printStackTrace();
@@ -130,7 +127,7 @@ public class MainHomeActivityTest {
         onView(withId(R.id.navView)).perform(NavigationViewActions.navigateTo(R.id.menuItem_filter));
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.close());
         try {
-            onView(withId(R.id.notIncludIngBtn)).perform(ViewActions.click());
+            onView(withId(R.id.allergyBtn)).perform(click());
             onView((withText("what are you allergic to"))).check(matches(isDisplayed()));
         }catch (PerformException e){
             e.printStackTrace();
@@ -142,7 +139,7 @@ public class MainHomeActivityTest {
         onView(withId(R.id.navView)).perform(NavigationViewActions.navigateTo(R.id.menuItem_filter));
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.close());
         try {
-            onView(withId(R.id.timingBtn)).perform(ViewActions.click());
+            onView(withId(R.id.timingBtn)).perform(click());
             onView((withText("Chose the preparation time"))).check(matches(isDisplayed()));
         }catch (PerformException e){
             e.printStackTrace();
@@ -154,7 +151,7 @@ public class MainHomeActivityTest {
         onView(withId(R.id.navView)).perform(NavigationViewActions.navigateTo(R.id.menuItem_filter));
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.close());
         try {
-            onView(withId(R.id.filterBtn)).perform(ViewActions.click());
+            onView(withId(R.id.filterBtn)).perform(click());
             onView((withId(R.id.recipeList))).check(matches(isDisplayed()));
         }catch (PerformException e){
             e.printStackTrace();

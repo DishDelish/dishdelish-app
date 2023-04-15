@@ -65,9 +65,7 @@ public class MainHomeActivity extends AppCompatActivity {
         List<String> selectedDiet = new ArrayList<>();
         List<String> selectedAllery= new ArrayList<>();
         List<String> selectedPrepTime= new ArrayList<>();
-        /*
-        some comments
-         */
+
         cuisineBtn.setOnClickListener(v -> {
             String [] cuisineTypes= CuisineType.getAll();
             boolean[] checksum= new boolean[cuisineTypes.length];
