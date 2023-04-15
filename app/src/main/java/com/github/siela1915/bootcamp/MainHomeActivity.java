@@ -159,6 +159,9 @@ public class MainHomeActivity extends AppCompatActivity {
                                         ExampleRecipes.recipes
                                 ), false);
                     break;
+                case R.id.menuItem_help:
+                    setContainerContent(R.id.fragContainer, NearbyHelpFragment.class, false);
+                    break;
                 default:
             }
             drawerLayout.close();
