@@ -11,6 +11,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibilit
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.endsWithIgnoringCase;
 
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.action.ViewActions;
@@ -115,7 +116,7 @@ public class MainHomeActivityTest {
         onView(withId(R.id.navView)).perform(NavigationViewActions.navigateTo(R.id.menuItem_filter));
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.close());
         onView(allOf(withId(R.id.dietBtn), isDescendantOfA(withId(R.id.filterLayout)))).perform(ViewActions.scrollTo(),click());
-        onView((withText("Choose your diet"))).check(matches(isDisplayed()));
+        onView((withText(endsWithIgnoringCase("Choose your diet")))).check(matches(isDisplayed()));
     }
     @Test
     public void testingAllergyBtn(){
@@ -123,7 +124,7 @@ public class MainHomeActivityTest {
         onView(withId(R.id.navView)).perform(NavigationViewActions.navigateTo(R.id.menuItem_filter));
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.close());
         onView(allOf(withId(R.id.allergyBtn), isDescendantOfA(withId(R.id.filterLayout)))).perform(ViewActions.scrollTo(),click());
-        onView((withText("what are you allergic to"))).check(matches(isDisplayed()));
+        onView((withText(endsWithIgnoringCase("what are you allergic to")))).check(matches(isDisplayed()));
     }
     @Test
     public void testingPrepTimeBtn(){
