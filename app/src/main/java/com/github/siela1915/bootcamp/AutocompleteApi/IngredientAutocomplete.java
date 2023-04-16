@@ -30,7 +30,7 @@ public class IngredientAutocomplete {
     //will store the responses inside the ingredients list
     //implementation will have to work even with empty lists, i.e. while the call is still ongoing.
     public List<ApiResponse> completeSearch(String query, List<ApiResponse> ingredients){
-        service.fetchIngredients(query, numberOfIngredients, apiKey).enqueue(new Callback<List<ApiResponse>>() {
+        service.fetchIngredients(query, numberOfIngredients, apiKey, true).enqueue(new Callback<List<ApiResponse>>() {
             @Override
             public void onResponse(Call<List<ApiResponse>> call, Response<List<ApiResponse>> response) {
                 if(response.isSuccessful()) {

@@ -31,7 +31,7 @@ public class AutocompleteTest {
     public void fetcherReturnsNonemptyIngredient(){
         ApiService mockedApi = Mockito.mock(ApiService.class);
         Call<List<ApiResponse>> mockedCall = Mockito.mock(Call.class);
-        Mockito.when(mockedApi.fetchIngredients("app", 5, apiKey)).thenReturn(mockedCall);
+        Mockito.when(mockedApi.fetchIngredients("app", 5, apiKey, true)).thenReturn(mockedCall);
 
         Mockito.doAnswer(invocation -> {
             Callback callback = invocation.getArgument(0, Callback.class);
@@ -54,7 +54,7 @@ public class AutocompleteTest {
     public void nullIngredientResponseHandledCorrectly(){
         ApiService mockedApi = Mockito.mock(ApiService.class);
         Call<List<ApiResponse>> mockedCall = Mockito.mock(Call.class);
-        Mockito.when(mockedApi.fetchIngredients("app", 5, apiKey)).thenReturn(mockedCall);
+        Mockito.when(mockedApi.fetchIngredients("app", 5, apiKey, true)).thenReturn(mockedCall);
 
         Mockito.doAnswer(invocation -> {
             Callback callback = invocation.getArgument(0, Callback.class);
@@ -73,7 +73,7 @@ public class AutocompleteTest {
     public void failedCallDoesntOverwritePreviousCall(){
         ApiService mockedApi = Mockito.mock(ApiService.class);
         Call<List<ApiResponse>> mockedCall = Mockito.mock(Call.class);
-        Mockito.when(mockedApi.fetchIngredients("app", 5, apiKey)).thenReturn(mockedCall);
+        Mockito.when(mockedApi.fetchIngredients("app", 5, apiKey, true)).thenReturn(mockedCall);
 
         Mockito.doAnswer(invocation -> {
             Callback callback = invocation.getArgument(0, Callback.class);

@@ -19,4 +19,20 @@ public enum AllergyType {
     public String toString() {
         return display_string;
     }
+
+    /**
+     * returns the enum matching the display string or null if no such enum type exists
+     * @param str to find the enum of
+     * @return the corresponding enum, or null if no such enum found
+     */
+    public static AllergyType fromString(String str){
+        for (AllergyType t : AllergyType.values()) {
+            if (t.toString().equalsIgnoreCase(str)) {
+                return t;
+            }
+        }
+        return null;
+    }
+
+
 }

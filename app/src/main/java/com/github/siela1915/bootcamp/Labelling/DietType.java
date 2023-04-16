@@ -10,9 +10,22 @@ public enum DietType {
     // constructor to set the string
     DietType(String name){display_string = name;}
 
-    // toString returns the display string
     @Override
     public String toString() {
         return display_string;
+    }
+
+    /**
+     * returns the enum matching the display string or null if no such enum type exists
+     * @param str to find the enum of
+     * @return the corresponding enum, or null if no such enum found
+     */
+    public static DietType fromString(String str){
+        for (DietType t : DietType.values()) {
+            if (t.toString().equalsIgnoreCase(str)) {
+                return t;
+            }
+        }
+        return null;
     }
 }
