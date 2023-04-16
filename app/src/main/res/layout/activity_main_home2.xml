@@ -18,15 +18,24 @@
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/fragContainer"
             android:layout_width="match_parent"
-            android:layout_height="627dp"
+            android:layout_height="575dp"
+            android:layout_marginTop="12dp"
             android:layoutDirection="ltr"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.753"
+            app:layout_constraintTop_toBottomOf="@+id/filterLayout"
+            app:layout_constraintBottom_toTopOf="@+id/bottomAppBar"
             tools:ignore="VisualLintBounds" />
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/bottomAppBar"
+            app:layout_constraintTop_toBottomOf="@+id/fragContainer"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+
+            app:menu="@menu/bottom_appbar_menu"/>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/filterLayout"

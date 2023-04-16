@@ -31,6 +31,8 @@ import com.github.siela1915.bootcamp.Recipes.ExampleRecipes;
 import com.github.siela1915.bootcamp.Recipes.Recipe;
 import com.github.siela1915.bootcamp.firebase.Database;
 
+import com.google.android.material.bottomappbar.BottomAppBar;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
@@ -43,6 +45,7 @@ public class MainHomeActivity extends AppCompatActivity {
     ConstraintLayout constraintLayout;
     FragmentContainerView fragmentContainerView;
     Button cuisineBtn,timeBtn,allergyBtn, dietBtn,filterBtn;
+    BottomNavigationView bottomAppBar;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -61,6 +64,12 @@ public class MainHomeActivity extends AppCompatActivity {
         allergyBtn=findViewById(R.id.notIncludIngBtn);
         dietBtn=findViewById(R.id.dietBtn);
         filterBtn=findViewById(R.id.filterBtn);
+        bottomAppBar=findViewById(R.id.bottomAppBar);
+
+        bottomAppBar.setOnItemSelectedListener(menu ->{
+            Toast.makeText(getApplicationContext(),"Shopping list is clicked",Toast.LENGTH_SHORT).show();
+            return true;
+        });
         List<String> selectedCuisine = new ArrayList<>();
         List<String> selectedDiet = new ArrayList<>();
         List<String> selectedAllery= new ArrayList<>();
