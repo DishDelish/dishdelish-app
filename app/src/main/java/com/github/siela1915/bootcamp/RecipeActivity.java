@@ -144,7 +144,7 @@ public class RecipeActivity extends AppCompatActivity {
         commentsList.setAdapter(commentAdapter);
 
 
-/*
+
         EditText commentBox = (EditText) findViewById(R.id.enterComment);
         Button sendComment = (Button) findViewById(R.id.sendCommentButton);
 
@@ -159,8 +159,6 @@ public class RecipeActivity extends AppCompatActivity {
             }
         });
 
-
- */
 
     }
 

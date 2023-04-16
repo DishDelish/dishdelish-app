@@ -1,5 +1,6 @@
 package com.github.siela1915.bootcamp;
 
+import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.junit.Assert.assertEquals;
@@ -16,6 +17,7 @@ import com.github.siela1915.bootcamp.Recipes.Utensils;
 import com.github.siela1915.bootcamp.firebase.Database;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -35,14 +37,18 @@ public class DatabaseTest {
 
     @Before
     public void connectToEmulator() {
+        FirebaseApp.clearInstancesForTest();
+        FirebaseApp.initializeApp(getApplicationContext());
         FirebaseAuth.getInstance().useEmulator("10.0.2.2", 9099);
         firebaseInstance = FirebaseDatabase.getInstance();
-        firebaseInstance.useEmulator("10.0.2.2",9000);
+        firebaseInstance.useEmulator("10.0.2.2", 9000);
     }
 
     @After
     public void clearDatabase() {
-        firebaseInstance.getReference().setValue(null);
+        if (firebaseInstance != null) {
+            firebaseInstance.getReference().setValue(null);
+        }
     }
 
 
