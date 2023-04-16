@@ -96,6 +96,10 @@ public class MainHomeActivity extends AppCompatActivity {
             menu.add("item2");
             menu.add("item3");
             popupMenu.getMenuInflater().inflate(R.menu.nav_header_menu, menu);
+            popupMenu.setOnMenuItemClickListener(m_item -> {
+                popupMenu.getMenu().removeItem(m_item.getItemId());
+                return true;
+            });
             popupMenu.show();
             return true;
         });
