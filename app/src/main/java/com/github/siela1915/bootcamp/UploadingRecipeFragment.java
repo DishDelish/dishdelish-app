@@ -13,8 +13,10 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -67,6 +69,10 @@ public class UploadingRecipeFragment extends Fragment {
     CuisineType[] cuisineTypeValues;
     AllergyType[] allergyTypeValues;
     DietType[] dietTypeValues;
+    private boolean isRecipeNameValid = false;
+    private boolean isCookTimeValid = false;
+    private boolean isPrepTimeValid = false;
+    private boolean isServingsValid = false;
 
     public UploadingRecipeFragment() {
         // Required empty public constructor
@@ -82,10 +88,6 @@ public class UploadingRecipeFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_upload_recipes, container, false);
 
         // get view elements
-        Button uploadImg = (Button) view.findViewById(R.id.recipeUploadButton);
-        imgView = (ImageView) view.findViewById(R.id.recipeImageContent);
-        Button addIngredient = (Button) view.findViewById(R.id.addIngredientButton);
-        Button addStep = (Button) view.findViewById(R.id.addStepButton);
         stepListLinearLayout = (LinearLayout) view.findViewById(R.id.stepGroup);
         ingredientLinearLayout = (LinearLayout) view.findViewById(R.id.ingredientsGroup);
         AutoCompleteTextView prepTimeUnitAutoComplete = (AutoCompleteTextView) view.findViewById(R.id.prepTimeUnitAutoComplete);
@@ -124,6 +126,33 @@ public class UploadingRecipeFragment extends Fragment {
         pd = new ProgressDialog(getActivity());
         pd.setMessage("Uploading....");
 
+        addListeners(view);
+
+        return view;
+    }
+
+    private void addListeners(View view) {
+        Button uploadImg = (Button) view.findViewById(R.id.recipeUploadButton);
+        imgView = (ImageView) view.findViewById(R.id.recipeImageContent);
+        Button addIngredient = (Button) view.findViewById(R.id.addIngredientButton);
+        Button addStep = (Button) view.findViewById(R.id.addStepButton);
+        TextInputLayout recipeNameLayout = view.findViewById(R.id.recipeNameContent);
+        EditText recipeName = recipeNameLayout.getEditText();
+        TextInputLayout cookTimeLayout = view.findViewById(R.id.cookTimeContent);
+        EditText cookTime = cookTimeLayout.getEditText();
+        TextInputLayout prepTimeLayout = view.findViewById(R.id.prepTimeContent);
+        EditText prepTime = prepTimeLayout.getEditText();
+        TextInputLayout servingsLayout = view.findViewById(R.id.servingsContent);
+        EditText servings = servingsLayout.getEditText();
+        TextInputLayout ingredientsAmountLayout = view.findViewById(R.id.ingredientsAmount);
+        EditText ingredientsAmount = ingredientsAmountLayout.getEditText();
+        TextInputLayout ingredientsUnitLayout = view.findViewById(R.id.ingredientsUnit);
+        EditText ingredientsUnit = ingredientsUnitLayout.getEditText();
+        TextInputLayout ingredientsNameLayout = view.findViewById(R.id.ingredientsName);
+        EditText ingredientsName = ingredientsNameLayout.getEditText();
+        TextInputLayout stepContentLayout = view.findViewById(R.id.stepContent);
+        EditText stepContent = stepContentLayout.getEditText();
+
         imgView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -134,7 +163,8 @@ public class UploadingRecipeFragment extends Fragment {
         uploadImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openRecipeReviewDialog();
+                if (isInputValid()) openRecipeReviewDialog();
+                else Toast.makeText(getActivity(), "Please fill required fields before uploading", Toast.LENGTH_LONG).show();
             }
         });
 
@@ -152,7 +182,76 @@ public class UploadingRecipeFragment extends Fragment {
             }
         });
 
-        return view;
+        recipeName.addTextChangedListener(new TextValidator(recipeName) {
+            @Override public void validate(TextView textView, String text) {
+                if (!isTextValid(text)) textView.setError("Recipe name is required!");
+                isRecipeNameValid = !isTextValid(text);
+            }
+        });
+
+        cookTime.addTextChangedListener(new TextValidator(cookTime) {
+            @Override public void validate(TextView textView, String text) {
+                if (!isTextValid(text)) textView.setError("Cooking time is required!");
+                else if (!isNumberPositive(text)) textView.setError("Cooking time must be positive!");
+                isCookTimeValid = !isTextValid(text) && !isNumberPositive(text);
+            }
+        });
+
+        prepTime.addTextChangedListener(new TextValidator(prepTime) {
+            @Override public void validate(TextView textView, String text) {
+                if (!isTextValid(text)) textView.setError( "Preparation time is required!" );
+                else if (!isNumberPositive(text)) textView.setError("Preparation time must be positive!");
+                isPrepTimeValid = !isTextValid(text) && !isNumberPositive(text);
+            }
+        });
+
+        servings.addTextChangedListener(new TextValidator(servings) {
+            @Override public void validate(TextView textView, String text) {
+                if (!isTextValid(text)) textView.setError( "Number of serving is required!" );
+                else if (!isNumberPositive(text)) textView.setError("Number of serving must be positive!");
+                isServingsValid = !isTextValid(text) && !isNumberPositive(text);
+            }
+        });
+
+        addIngredientValidators(ingredientsAmount, ingredientsUnit, ingredientsName);
+        addStepValidators(stepContent);
+    }
+
+    private boolean isTextValid(String text) {
+        return text != null && !text.isEmpty();
+    }
+
+    private boolean isNumberPositive(String text) {
+        return Integer.parseInt(text) > 0;
+    }
+
+    private void addStepValidators(EditText stepContent) {
+        stepContent.addTextChangedListener(new TextValidator(stepContent) {
+            @Override public void validate(TextView textView, String text) {
+                if (isTextValid(text)) textView.setError("Step is required!");
+            }
+        });
+    }
+
+    private void addIngredientValidators(EditText ingredientsAmount, EditText ingredientsUnit, EditText ingredientsName) {
+        ingredientsAmount.addTextChangedListener(new TextValidator(ingredientsAmount) {
+            @Override public void validate(TextView textView, String text) {
+                if (isTextValid(text)) textView.setError( "Ingredient amount is required!" );
+                else if (isNumberPositive(text)) textView.setError("Ingredient amount must be positive!");
+            }
+        });
+
+        ingredientsUnit.addTextChangedListener(new TextValidator(ingredientsUnit) {
+            @Override public void validate(TextView textView, String text) {
+                if (isTextValid(text)) textView.setError("Ingredient unit is required!");
+            }
+        });
+
+        ingredientsName.addTextChangedListener(new TextValidator(ingredientsName) {
+            @Override public void validate(TextView textView, String text) {
+                if (isTextValid(text)) textView.setError("Ingredient name is required!");
+            }
+        });
     }
 
     @Override
@@ -217,6 +316,40 @@ public class UploadingRecipeFragment extends Fragment {
         });
     }
 
+    private boolean isInputValid() {
+        return isRecipeNameValid && isCookTimeValid && isPrepTimeValid && isServingsValid && isIngredientValid() && isStepValid();
+    }
+
+    private boolean isStepValid() {
+        for (int i = 0; i < stepListLinearLayout.getChildCount(); i++) {
+            if (stepListLinearLayout.getChildAt(i) instanceof ConstraintLayout) {
+                ConstraintLayout step = (ConstraintLayout) stepListLinearLayout.getChildAt(i);
+                if (step.getChildAt(0) instanceof TextInputLayout) {
+                    if (((TextInputLayout) step.getChildAt(0)).getEditText() == null || !isTextValid((((TextInputLayout) step.getChildAt(0)).getEditText().getText().toString()))) return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    private boolean isIngredientValid() {
+        for (int i = 0; i < ingredientLinearLayout.getChildCount(); i++) {
+            if (ingredientLinearLayout.getChildAt(i) instanceof ConstraintLayout) {
+                ConstraintLayout step = (ConstraintLayout) ingredientLinearLayout.getChildAt(i);
+                if (step.getChildAt(0) instanceof TextInputLayout && step.getChildAt(1) instanceof TextInputLayout && step.getChildAt(2) instanceof TextInputLayout) {
+                    if (((TextInputLayout) step.getChildAt(2)).getEditText() == null
+                            || ((TextInputLayout) step.getChildAt(1)).getEditText() == null
+                            || ((TextInputLayout) step.getChildAt(1)).getEditText() == null) return false;
+                    String ingredientName = ((TextInputLayout) step.getChildAt(2)).getEditText().getText().toString();
+                    String ingredientUnit = ((TextInputLayout) step.getChildAt(1)).getEditText().getText().toString();
+                    String ingredientAmount = ((TextInputLayout) step.getChildAt(0)).getEditText().getText().toString();
+                    if (!isTextValid(ingredientAmount) || !isTextValid(ingredientName) || !isTextValid(ingredientUnit) || !isNumberPositive(ingredientAmount)) return false;
+                }
+            }
+        }
+        return true;
+    }
+
     private Recipe getRecipe(Uri downloadUri) {
         TextInputLayout recipeName = view.findViewById(R.id.recipeNameContent);
         TextInputLayout cookTime = view.findViewById(R.id.cookTimeContent);
@@ -254,6 +387,14 @@ public class UploadingRecipeFragment extends Fragment {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             final View ingredient = getLayoutInflater().inflate(R.layout.recipe_ingredient_edittext, null, false);
             ImageView removeIngredient = (ImageView) ingredient.findViewById(R.id.removeIngredient);
+            TextInputLayout ingredientsAmountLayout = ingredient.findViewById(R.id.ingredientsAmount);
+            EditText ingredientsAmount = ingredientsAmountLayout.getEditText();
+            TextInputLayout ingredientsUnitLayout = ingredient.findViewById(R.id.ingredientsUnit);
+            EditText ingredientsUnit = ingredientsUnitLayout.getEditText();
+            TextInputLayout ingredientsNameLayout = ingredient.findViewById(R.id.ingredientsName);
+            EditText ingredientsName = ingredientsNameLayout.getEditText();
+
+            addIngredientValidators(ingredientsAmount, ingredientsUnit, ingredientsName);
 
             removeIngredient.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -291,8 +432,10 @@ public class UploadingRecipeFragment extends Fragment {
             final View step = getLayoutInflater().inflate(R.layout.recipe_step_edittext, null, false);
             ImageView removeStep = (ImageView) step.findViewById(R.id.removeStep);
             TextInputLayout stepContent = (TextInputLayout) step.findViewById(R.id.stepContent);
+            EditText stepContentEditText = stepContent.getEditText();
 
             stepContent.setHint("Step " + String.valueOf(stepListLinearLayout.getChildCount()));
+            addStepValidators(stepContentEditText);
 
             removeStep.setOnClickListener(new View.OnClickListener() {
                 @Override
