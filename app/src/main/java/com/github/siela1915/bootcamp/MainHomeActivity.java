@@ -19,6 +19,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import com.github.siela1915.bootcamp.Labelling.AllergyType;
@@ -67,6 +68,9 @@ public class MainHomeActivity extends AppCompatActivity {
         bottomAppBar=findViewById(R.id.bottomAppBar);
 
         bottomAppBar.setOnItemSelectedListener(menu ->{
+            PopupMenu popupMenu = new PopupMenu(MainHomeActivity.this, bottomAppBar);
+            popupMenu.getMenuInflater().inflate(R.menu.nav_header_menu, popupMenu.getMenu());
+            popupMenu.show();
             Toast.makeText(getApplicationContext(),"Shopping list is clicked",Toast.LENGTH_SHORT).show();
             return true;
         });
