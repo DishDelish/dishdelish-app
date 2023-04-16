@@ -1,6 +1,7 @@
 package com.github.siela1915.bootcamp;
 
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
@@ -18,7 +19,9 @@ import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
@@ -26,6 +29,7 @@ import com.github.siela1915.bootcamp.Labelling.AllergyType;
 import com.github.siela1915.bootcamp.Labelling.CuisineType;
 import com.github.siela1915.bootcamp.Labelling.DietType;
 import com.github.siela1915.bootcamp.Labelling.RecipeFetcher;
+import com.github.siela1915.bootcamp.Recipes.DropdownMenuAdapter;
 import com.github.siela1915.bootcamp.Recipes.PreparationTime;
 
 import com.github.siela1915.bootcamp.Recipes.ExampleRecipes;
@@ -67,11 +71,32 @@ public class MainHomeActivity extends AppCompatActivity {
         filterBtn=findViewById(R.id.filterBtn);
         bottomAppBar=findViewById(R.id.bottomAppBar);
 
-        bottomAppBar.setOnItemSelectedListener(menu ->{
-            PopupMenu popupMenu = new PopupMenu(MainHomeActivity.this, bottomAppBar);
-            popupMenu.getMenuInflater().inflate(R.menu.nav_header_menu, popupMenu.getMenu());
+        bottomAppBar.setOnItemSelectedListener(item ->{
+            PopupMenu popupMenu = new PopupMenu(this, findViewById(item.getItemId()));
+            Menu menu= popupMenu.getMenu();
+            menu.add("item1");
+            menu.add("item2");
+            menu.add("item3");
+            menu.add("item1");
+            menu.add("item2");
+            menu.add("item3");
+            menu.add("item1");
+            menu.add("item2");
+            menu.add("item3");
+            menu.add("item1");
+            menu.add("item2");
+            menu.add("item3");
+            menu.add("item1");
+            menu.add("item2");
+            menu.add("item3");
+            menu.add("item1");
+            menu.add("item2");
+            menu.add("item3");
+            menu.add("item1");
+            menu.add("item2");
+            menu.add("item3");
+            popupMenu.getMenuInflater().inflate(R.menu.nav_header_menu, menu);
             popupMenu.show();
-            Toast.makeText(getApplicationContext(),"Shopping list is clicked",Toast.LENGTH_SHORT).show();
             return true;
         });
         List<String> selectedCuisine = new ArrayList<>();
