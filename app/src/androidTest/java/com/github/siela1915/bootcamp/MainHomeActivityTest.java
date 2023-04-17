@@ -122,12 +122,8 @@ public class MainHomeActivityTest {
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
         onView(withId(R.id.navView)).perform(NavigationViewActions.navigateTo(R.id.menuItem_filter));
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.close());
-        try {
-            onView(allOf(withId(R.id.allergyBtn), isDescendantOfA(withId(R.id.filterLayout)))).perform(ViewActions.scrollTo(),click());
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        onView((withText(endsWithIgnoringCase("what are you allergic to")))).check(matches(isDisplayed()));
+        onView(allOf(withId(R.id.allergyBtn), isDescendantOfA(withId(R.id.filterLayout)))).perform(ViewActions.scrollTo(),click());
+        onView((withText("what are you allergic to"))).check(matches(isDisplayed()));
     }
     @Test
     public void testingPrepTimeBtn(){
