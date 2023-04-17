@@ -7,6 +7,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import com.github.siela1915.bootcamp.Recipes.Comment;
 import com.github.siela1915.bootcamp.Recipes.Ingredient;
 import com.github.siela1915.bootcamp.Recipes.Recipe;
 import com.github.siela1915.bootcamp.Recipes.Unit;
@@ -217,46 +218,49 @@ public class DatabaseTest {
     }
 
     private Recipe createRecipeEggs() {
-        List<String> utensils = new ArrayList<>();
-        utensils.add("spoon");
-        utensils.add("fork");
-        utensils.add("knife");
-        List<Ingredient> ingredients = new ArrayList<>();
-        ingredients.add(new Ingredient("Eggs", new Unit(4, "some info")));
-        List<String> steps = new ArrayList<>();
-        steps.add("Just mash them up!");
-        List<String> comments = new ArrayList<>();
-        comments.add("mmm just love it!");
-        comments.add("Steps unclear, bad recipe");
-        List<Integer> cuisine = Arrays.asList(1, 2, 3, 4, 5);
-        List<Integer> allergy = Arrays.asList(1, 2, 3, 4, 5);
-        List<Integer> diet = Arrays.asList(1, 2, 3, 4, 5);
-        return new Recipe(98, "testRecipe", "randomUser1", 86, 4.5,
-                10, 5, 4, new Utensils(utensils), cuisine, allergy, diet, ingredients, steps, comments, 190);
+        return new Recipe("URL", "testRecipe", "randomUser1", 86, 4.5,
+                10, 5, 4, new Utensils(createUtensils()), cuisine, allergy, diet,
+                createIngredients().subList(0, 2), createSteps(), createListComments().subList(0, 2), 190);
     }
 
     private Recipe createOtherEggsRecipe() {
-        List<String> utensils = new ArrayList<>();
-        utensils.add("spoon");
-        utensils.add("fork");
-        utensils.add("knife");
+        return new Recipe("URL", "testRecipe", "randomUser2", 85, 4.5,
+                10, 5, 4, new Utensils(createUtensils()), cuisine, allergy, diet,
+                createIngredients(), createSteps(), createListComments(), 190);
+    }
+
+    private List<Comment> createListComments() {
+        String[] cs = new String[]{"Love it!", "Nah not me.", "What???"};
+        List<Comment> ls = new ArrayList<>();
+        for (String s : cs) {
+            ls.add(new Comment(s));
+        }
+        return ls;
+    }
+
+    private List<String> createUtensils() {
+        String[] us = new String[] {"spoon", "fork", "knife"};
+        return Arrays.asList(us);
+    }
+
+    private List<Ingredient> createIngredients() {
         List<Ingredient> ingredients = new ArrayList<>();
         ingredients.add(new Ingredient("Eggs", new Unit(4, "some info")));
         ingredients.add(new Ingredient("Pepper", new Unit(4, "some info")));
         ingredients.add(new Ingredient("Salt", new Unit(4, "some info")));
-        List<String> steps = new ArrayList<>();
-        steps.add("Crack the eggs open in a frying pan.");
-        steps.add("Stir while eggs cook.");
-        steps.add("Season with some salt and pepper.");
-        List<String> comments = new ArrayList<>();
-        comments.add("mmm just love it!");
-        comments.add("Steps are clear! Much better than that other recipe I checked out.");
-        List<Integer> cuisine = Arrays.asList(1, 2, 3, 4, 5);
-        List<Integer> allergy = Arrays.asList(1, 2, 3, 4, 5);
-        List<Integer> diet = Arrays.asList(1, 2, 3, 4, 5);
-        return new Recipe(97, "testRecipe", "randomUser2", 85, 4.5,
-                10, 5, 4, new Utensils(utensils), cuisine, allergy, diet, ingredients, steps, comments, 190);
+        return ingredients;
     }
+
+    private List<String> createSteps() {
+        String[] ss = new String[]{"Crack the eggs open in a frying pan.",
+                "Stir while eggs cook.", "Season with some salt and pepper."};
+        return Arrays.asList(ss);
+    }
+
+    private final List<Integer> cuisine = Arrays.asList(1, 2, 3, 4, 5);
+    private final List<Integer> allergy = Arrays.asList(1, 2, 3, 4, 5);
+    private final List<Integer> diet = Arrays.asList(1, 2, 3, 4, 5);
+
 
 
 

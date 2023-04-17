@@ -23,7 +23,7 @@ import java.util.concurrent.ExecutionException;
  */
 public class Database {
 
-    private DatabaseReference db;
+    private final DatabaseReference db;
     private final static String RECIPES = "recipes";
     private final static String FAVORITES = "favorites";
 

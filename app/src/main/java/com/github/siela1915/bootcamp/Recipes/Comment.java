@@ -1,11 +1,14 @@
 package com.github.siela1915.bootcamp.Recipes;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import androidx.annotation.NonNull;
 
 import java.util.LinkedList;
 import java.util.List;
 
-public class Comment {
+public class Comment implements Parcelable {
     private int likes;
     private String content;
 
@@ -110,6 +113,34 @@ public class Comment {
             return true;
         }
         return false;
+    }
+
+    protected Comment(Parcel in) {
+        likes = in.readInt();
+        content = in.readString();
+    }
+
+    public static final Parcelable.Creator<Comment> CREATOR = new Parcelable.Creator<Comment>() {
+        @Override
+        public Comment createFromParcel(Parcel in) {
+            return new Comment(in);
+        }
+
+        @Override
+        public Comment[] newArray(int size) {
+            return new Comment[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(@NonNull Parcel dest, int flags) {
+        dest.writeInt(likes);
+        dest.writeString(content);
     }
 
 }
