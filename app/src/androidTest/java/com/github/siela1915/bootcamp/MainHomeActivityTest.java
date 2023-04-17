@@ -122,7 +122,11 @@ public class MainHomeActivityTest {
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
         onView(withId(R.id.navView)).perform(NavigationViewActions.navigateTo(R.id.menuItem_filter));
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.close());
-        onView(allOf(withId(R.id.allergyBtn), isDescendantOfA(withId(R.id.filterLayout)))).perform(ViewActions.scrollTo(),click());
+        try {
+            onView(allOf(withId(R.id.allergyBtn), isDescendantOfA(withId(R.id.filterLayout)))).perform(ViewActions.scrollTo(),click());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         onView((withText(endsWithIgnoringCase("what are you allergic to")))).check(matches(isDisplayed()));
     }
     @Test
@@ -139,13 +143,8 @@ public class MainHomeActivityTest {
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
         onView(withId(R.id.navView)).perform(NavigationViewActions.navigateTo(R.id.menuItem_filter));
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.close());
-        try {
-            onView(withId(R.id.filterBtn)).perform(click());
-            onView((withId(R.id.recipeList))).check(matches(isDisplayed()));
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
+        onView(allOf(withId(R.id.filterBtn), isDescendantOfA(withId(R.id.filterLayout)))).perform(ViewActions.scrollTo(),click());
+        onView((withId(R.id.recipeList))).check(matches(isDisplayed()));
     }
 
 

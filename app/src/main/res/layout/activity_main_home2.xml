@@ -92,17 +92,17 @@
                 <Button
                     android:id="@+id/filterBtn"
                     android:layout_width="67dp"
-                    android:layout_height="86dp"
-                    android:layout_marginTop="40dp"
+                    android:layout_height="70dp"
+                    android:layout_marginTop="70dp"
                     android:layout_marginEnd="16dp"
                     android:background="@color/buttonColor"
                     app:icon="@drawable/baseline_filter_alt_24"
-                    app:iconGravity="top"
+                    app:iconGravity="textTop"
                     app:iconPadding="0dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:rippleColor="#A3A2A2"
-                    tools:ignore="TouchTargetSizeCheck,TextSizeCheck,DuplicateSpeakableTextCheck,SpeakableTextPresentCheck" />
+                    tools:ignore="SpeakableTextPresentCheck" />
 
                 <TextView
                     android:id="@+id/cuisineLabel"
