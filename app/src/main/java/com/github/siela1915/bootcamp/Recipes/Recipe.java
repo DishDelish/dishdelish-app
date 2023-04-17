@@ -15,7 +15,7 @@ public class Recipe implements Parcelable {
     //Images should be usable in activity classes like this:
     //Bitmap image = BitmapFactory.decodeResource(this.getResources(), image);
     public String image, recipeName, userName, uniqueKey = "";
-    public int profilePicture, prepTime, cookTime, servings, likes;
+    public int profilePicture, prepTime, cookTime, servings, likes, numRatings = 0;
     public double rating;
     public Utensils utensils;
     public List<Integer> cuisineTypes, allergyTypes, dietTypes;
@@ -155,6 +155,10 @@ public class Recipe implements Parcelable {
     public String getUniqueKey() {return uniqueKey;}
 
     public void setUniqueKey(String key) {this.uniqueKey = key;}
+
+    public int getNumRatings() {return numRatings;}
+
+    public void setNumRatings(int numRatings) {this.numRatings = numRatings;}
 
     public Recipe() {}
 

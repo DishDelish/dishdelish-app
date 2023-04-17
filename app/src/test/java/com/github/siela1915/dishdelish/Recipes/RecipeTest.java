@@ -287,6 +287,12 @@ public class RecipeTest {
         assertEquals(recipe.getUniqueKey(), "unique");
     }
 
+    @Test
+    public void getAfterSetReturnsNumRatings() {
+        Recipe recipe = new Recipe();
+        recipe.setNumRatings(100);
+        assertEquals(recipe.getNumRatings(), 100);
+    }
 
 
 }
