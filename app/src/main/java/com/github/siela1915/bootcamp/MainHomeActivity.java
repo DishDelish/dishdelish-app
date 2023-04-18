@@ -72,35 +72,7 @@ public class MainHomeActivity extends AppCompatActivity {
         bottomAppBar=findViewById(R.id.bottomAppBar);
 
         bottomAppBar.setOnItemSelectedListener(item ->{
-            PopupMenu popupMenu = new PopupMenu(this, findViewById(item.getItemId()));
-            Menu menu= popupMenu.getMenu();
-            menu.add("item1");
-            menu.add("item2");
-            menu.add("item3");
-            menu.add("item1");
-            menu.add("item2");
-            menu.add("item3");
-            menu.add("item1");
-            menu.add("item2");
-            menu.add("item3");
-            menu.add("item1");
-            menu.add("item2");
-            menu.add("item3");
-            menu.add("item1");
-            menu.add("item2");
-            menu.add("item3");
-            menu.add("item1");
-            menu.add("item2");
-            menu.add("item3");
-            menu.add("item1");
-            menu.add("item2");
-            menu.add("item3");
-            popupMenu.getMenuInflater().inflate(R.menu.nav_header_menu, menu);
-            popupMenu.setOnMenuItemClickListener(m_item -> {
-                popupMenu.getMenu().removeItem(m_item.getItemId());
-                return true;
-            });
-            popupMenu.show();
+            setContainerContent(R.id.fragContainer,ShoppingCartFragment.class,false);
             return true;
         });
         List<String> selectedCuisine = new ArrayList<>();
