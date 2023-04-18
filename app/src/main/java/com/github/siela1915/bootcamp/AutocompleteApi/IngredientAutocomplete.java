@@ -1,7 +1,12 @@
 package com.github.siela1915.bootcamp.AutocompleteApi;
 
-import com.github.siela1915.bootcamp.Recipes.Ingredient;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 
+import com.github.siela1915.bootcamp.Recipes.Ingredient;
+import com.github.siela1915.bootcamp.UploadingRecipeFragment;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,6 +50,36 @@ public class IngredientAutocomplete {
                     //add a case for not successful?
                 }
 
+            }
+
+            //Somehow indicate to the user that there was an error while fetching
+            //Now just ignores it, since we want the autocomplete option to be empty in this case,
+            //without disrupting the user too much.
+            @Override
+            public void onFailure(Call<List<ApiResponse>> call, Throwable t) {
+            }
+        });
+        return ingredients;
+    }
+
+    //Method that only returns the names of the ingredients, used when uploading recipe
+    public List<String> completeSearchNames(String query, AutoCompleteTextView view){
+        List<String> ingredients = new ArrayList<>();
+        service.fetchIngredients(query, numberOfIngredients, apiKey, true).enqueue(new Callback<List<ApiResponse>>() {
+            @Override
+            public void onResponse(Call<List<ApiResponse>> call, Response<List<ApiResponse>> response) {
+                if(response.isSuccessful()) {
+                    if (response.body() != null) {
+                        for (ApiResponse ing : response.body()) {
+                            //Adds the ingredients to the passed list
+                            ingredients.add(ing.name);
+                        }
+                    }
+                    //add a case for not successful?
+                }
+                ArrayAdapter<String> ingredientAdapter = new ArrayAdapter<String>(view.getContext(), android.R.layout.select_dialog_item, ingredients);
+                view.setAdapter(ingredientAdapter);
+                view.showDropDown();
             }
 
             //Somehow indicate to the user that there was an error while fetching

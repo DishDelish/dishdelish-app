@@ -1,5 +1,7 @@
 package com.github.siela1915.bootcamp;
 
+import static android.content.ContentValues.TAG;
+
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -7,6 +9,9 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +25,8 @@ import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
+import com.github.siela1915.bootcamp.AutocompleteApi.ApiResponse;
+import com.github.siela1915.bootcamp.AutocompleteApi.IngredientAutocomplete;
 import com.github.siela1915.bootcamp.Labelling.AllergyType;
 import com.github.siela1915.bootcamp.Labelling.CuisineType;
 import com.github.siela1915.bootcamp.Labelling.DietType;
@@ -40,6 +47,8 @@ import com.google.firebase.storage.UploadTask;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Stream;
 
@@ -118,7 +127,60 @@ public class UploadingRecipeFragment extends Fragment {
         allergyTypesAutoComplete.setThreshold(1); //will start working from first character
         allergyTypesAutoComplete.setAdapter(allergyTypesAdapter);
         AutoCompleteTextView dietTypesAutoComplete = (AutoCompleteTextView) view.findViewById(R.id.dietTypesAutoComplete);
-        //here autocomplete
+
+
+
+        //ingredient autocompletion
+        IngredientAutocomplete apiService = new IngredientAutocomplete();
+        AutoCompleteTextView ingredientAutoComplete = (AutoCompleteTextView) view.findViewById(R.id.ingredientAutoComplete);
+        ingredientAutoComplete.setThreshold(1);
+        ingredientAutoComplete.addTextChangedListener(new TextWatcher() {
+            String prevString;
+            boolean isTyping = false;
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            private Timer timer = new Timer();
+            private final long DELAY = 1000; // milliseconds
+
+            @Override
+            public void afterTextChanged(final Editable s) {
+                //doesn't consider defocusing and refocusing the text field as typing
+                if(s.toString() != prevString){
+                    Log.d("", "");
+                    if (!isTyping) {
+                        Log.d(TAG, "started typing");
+                        // Send notification for start typing event
+                        isTyping = true;
+                    }
+                    timer.cancel();
+                    timer = new Timer();
+                    timer.schedule(
+                            new TimerTask() {
+                                @Override
+                                public void run() {
+                                    isTyping = false;
+                                    prevString = s.toString();
+                                    Log.d(TAG, "stopped typing, " + s);
+                                    //send notification for stopped typing event
+                                    apiService.completeSearchNames(s.toString(), ingredientAutoComplete);
+                                }
+                            },
+                            DELAY
+                    );
+                }
+            }
+        });
+
+
+
+
         dietTypesAutoComplete.setThreshold(1); //will start working from first character
         dietTypesAutoComplete.setAdapter(dietTypesAdapter);
 
