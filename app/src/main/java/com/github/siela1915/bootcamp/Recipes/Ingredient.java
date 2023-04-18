@@ -10,9 +10,13 @@ import java.util.List;
 public class Ingredient implements Parcelable {
     String ingredient;
     Unit unit;
+    private double calories;
+    private double fat;
+    private double carbs;
+    private double protein;
+    private double sugar;
 
     public Ingredient(){}
-
 
     // constructor to set the string
     public void setIngredient(String ingredient) {
@@ -23,14 +27,30 @@ public class Ingredient implements Parcelable {
         this.unit = unit;
     }
 
-    public Ingredient(String ingredient, Unit unit) {
+    public Ingredient(String ingredient, Unit unit){
         this.ingredient = ingredient.toLowerCase();
         this.unit = unit;
+    }
+
+    //constructor for parcels
+    public Ingredient(String ingredient, Unit unit, double calories, double fat, double carbs, double protein, double sugar) {
+        this.ingredient = ingredient.toLowerCase();
+        this.unit = unit;
+        this.calories = calories;
+        this.fat = fat;
+        this.carbs = carbs;
+        this.protein = protein;
+        this.sugar = sugar;
     }
 
     protected Ingredient(Parcel in) {
         ingredient = in.readString();
         unit = in.readParcelable(Unit.class.getClassLoader());
+        calories = in.readDouble();
+        fat = in.readDouble();
+        carbs = in.readDouble();
+        protein = in.readDouble();
+        sugar = in.readDouble();
     }
 
     public static final Creator<Ingredient> CREATOR = new Creator<Ingredient>() {
@@ -78,5 +98,45 @@ public class Ingredient implements Parcelable {
                     && unit.equals(((Ingredient) obj).unit);
         }
         return false;
+    }
+
+    public double getCalories() {
+        return calories;
+    }
+
+    public void setCalories(double calories) {
+        this.calories = calories;
+    }
+
+    public double getFat() {
+        return fat;
+    }
+
+    public void setFat(double fat) {
+        this.fat = fat;
+    }
+
+    public double getCarbs() {
+        return carbs;
+    }
+
+    public void setCarbs(double carbs) {
+        this.carbs = carbs;
+    }
+
+    public double getProtein() {
+        return protein;
+    }
+
+    public void setProtein(double protein) {
+        this.protein = protein;
+    }
+
+    public double getSugar() {
+        return sugar;
+    }
+
+    public void setSugar(double sugar) {
+        this.sugar = sugar;
     }
 }

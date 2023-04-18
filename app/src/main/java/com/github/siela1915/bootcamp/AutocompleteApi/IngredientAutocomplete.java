@@ -2,8 +2,9 @@ package com.github.siela1915.bootcamp.AutocompleteApi;
 
 import com.github.siela1915.bootcamp.Recipes.Ingredient;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -13,6 +14,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class IngredientAutocomplete {
     private final int numberOfIngredients = 5;
+    private final int numberOfNutrition = 3;
     private final String apiKey = "44a82829c64d4202a18b887e47e76bdd";
     public ApiService service;
 
@@ -54,4 +56,49 @@ public class IngredientAutocomplete {
         });
         return ingredients;
     }
+
+    public void getNutritionFromIngredient(int id, Ingredient ingredient){
+        service.getNutrition(id, ingredient.getUnit().getValue(), ingredient.getUnit().getInfo(), apiKey).enqueue(new Callback<NutrientsResponse>() {
+            @Override
+            public void onResponse(Call<NutrientsResponse> call, Response<NutrientsResponse> response) {
+                if(response.isSuccessful()) {
+                    if (response.body() != null) {
+                        for (Nutrient nut : response.body().nutrients) {
+                            //Select which nutrient information we want
+                            switch(nut.name){
+                                case "Calories":
+                                    ingredient.setCalories(nut.amount);
+                                    break;
+                                case "Fat":
+                                    ingredient.setFat(nut.amount);
+                                case "Carbohydrates":
+                                    ingredient.setCarbs(nut.amount);
+                                    break;
+                                case "Sugar":
+                                    ingredient.setSugar(nut.amount);
+                                case "Protein":
+                                    ingredient.setProtein(nut.amount);
+                                    break;
+                            }
+                        }
+                    }
+                    //add a case for not successful?
+                }
+            }
+            //Somehow indicate to the user that there was an error while fetching
+            //Now just ignores it, since we want the autocomplete option to be empty in this case,
+            //without disrupting the user too much.
+            @Override
+            public void onFailure(Call<NutrientsResponse> call, Throwable t) {
+            }
+        });
+    }
+
+    public Map<String, Double> getNutritionValues(List<Ingredient> ing, Map<String, Double> ret){
+        ing.forEach(i -> i.getIngredient());
+        ret = new HashMap<>();
+
+        return null;
+    }
+
 }

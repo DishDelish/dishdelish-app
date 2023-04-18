@@ -118,6 +118,7 @@ public class UploadingRecipeFragment extends Fragment {
         allergyTypesAutoComplete.setThreshold(1); //will start working from first character
         allergyTypesAutoComplete.setAdapter(allergyTypesAdapter);
         AutoCompleteTextView dietTypesAutoComplete = (AutoCompleteTextView) view.findViewById(R.id.dietTypesAutoComplete);
+        //here autocomplete
         dietTypesAutoComplete.setThreshold(1); //will start working from first character
         dietTypesAutoComplete.setAdapter(dietTypesAdapter);
 
