@@ -130,11 +130,4 @@ public class IngredientAutocomplete {
         });
     }
 
-    public Map<String, Double> getNutritionValues(List<Ingredient> ing, Map<String, Double> ret){
-        ing.forEach(i -> i.getIngredient());
-        ret = new HashMap<>();
-
-        return null;
-    }
-
 }

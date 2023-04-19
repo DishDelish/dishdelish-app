@@ -20,8 +20,8 @@ public class Nutrient {
         return (
                 name.equals(other.name)
                         && unit.equals(other.unit)
-                        && amount-other.amount < 1e-5
-                        && percentOfDailyNeeds- other.percentOfDailyNeeds < 1e-5
+                        && Math.abs(amount-other.amount) < 1e-5
+                        && Math.abs(percentOfDailyNeeds- other.percentOfDailyNeeds) < 1e-5
                 );
     }
 }

@@ -1,10 +1,14 @@
 package com.github.siela1915.dishdelish;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 import com.github.siela1915.bootcamp.AutocompleteApi.ApiResponse;
 import com.github.siela1915.bootcamp.AutocompleteApi.IngredientAutocomplete;
+import com.github.siela1915.bootcamp.AutocompleteApi.Nutrient;
+import com.github.siela1915.bootcamp.AutocompleteApi.NutrientsResponse;
 import com.github.siela1915.bootcamp.Recipes.Ingredient;
 
 import org.checkerframework.checker.units.qual.A;
@@ -27,13 +31,20 @@ import retrofit2.Response;
 public class NutritionTest {
 
     @Test
-    public void tempTest() throws InterruptedException {
-        IngredientAutocomplete fetcher = new IngredientAutocomplete();
-        String toFetch = "lemo";
-        List<ApiResponse> ingredients = new ArrayList<>();
-        fetcher.completeSearch(toFetch, ingredients);
-        Thread.sleep(100);
-        ingredients.forEach(r -> System.out.println(r.id));
-        assertEquals(new ArrayList<>(), ingredients.stream().map(i -> i.name).collect(Collectors.toList()));
+    public void nutritionEqualsWorks() throws InterruptedException {
+        Nutrient n1 = new Nutrient("apple", 1, "g", 1);
+        Nutrient n2 = new Nutrient("apple", 1, "g", 1);
+        Nutrient n3 = new Nutrient("pear", 1, "g", 1);
+        assertTrue(n1.equals(n2));
+        assertFalse(n1.equals(n3));
+    }
+
+    @Test
+    public void nutritionResponseEqualsWorks(){
+        NutrientsResponse r1 = new NutrientsResponse(Arrays.asList(new Nutrient("apple", 1, "g", 1)));
+        NutrientsResponse r2 = new NutrientsResponse(Arrays.asList(new Nutrient("apple", 1, "g", 1)));
+        NutrientsResponse r3 = new NutrientsResponse(Arrays.asList(new Nutrient("pear", 1, "g", 1)));
+        assertTrue(r1.equals(r2));
+        assertFalse(r1.equals(r3));
     }
 }
