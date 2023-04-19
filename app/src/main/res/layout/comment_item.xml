@@ -31,5 +31,27 @@
         android:text="This is a comment"
         android:textColor="@color/black" />
 
+    <ToggleButton
+        android:id="@+id/thumbButton"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:background="@drawable/ic_thumb_empty"
+        android:layout_below="@id/commentText"
+        android:layout_alignStart="@+id/userName"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:textOn=""
+        android:textOff="" />
+
+    <TextView
+        android:id="@+id/likeCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/thumbButton"
+        android:layout_alignBaseline="@id/thumbButton"
+        android:layout_marginStart="5dp"
+        android:text="5"
+        android:textColor="#333333"
+        android:fontFamily="@font/poppins"/>
 
 </RelativeLayout>
