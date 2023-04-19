@@ -100,30 +100,27 @@ public class IngredientAutocomplete {
                 if(response.isSuccessful()) {
                     if (response.body() != null) {
                         for (Nutrient nut : response.body().nutrients) {
-                            //Select which nutrient information we want
                             switch(nut.name){
                                 case "Calories":
                                     ingredient.setCalories(nut.amount);
                                     break;
                                 case "Fat":
                                     ingredient.setFat(nut.amount);
+                                    break;
                                 case "Carbohydrates":
                                     ingredient.setCarbs(nut.amount);
                                     break;
                                 case "Sugar":
                                     ingredient.setSugar(nut.amount);
+                                    break;
                                 case "Protein":
                                     ingredient.setProtein(nut.amount);
                                     break;
                             }
                         }
                     }
-                    //add a case for not successful?
                 }
             }
-            //Somehow indicate to the user that there was an error while fetching
-            //Now just ignores it, since we want the autocomplete option to be empty in this case,
-            //without disrupting the user too much.
             @Override
             public void onFailure(Call<NutrientsResponse> call, Throwable t) {
             }

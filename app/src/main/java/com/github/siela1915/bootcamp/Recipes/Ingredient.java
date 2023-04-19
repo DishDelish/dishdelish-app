@@ -10,11 +10,11 @@ import java.util.List;
 public class Ingredient implements Parcelable {
     String ingredient;
     Unit unit;
-    private double calories;
-    private double fat;
-    private double carbs;
-    private double protein;
-    private double sugar;
+    private double calories = 0;
+    private double fat = 0;
+    private double carbs = 0;
+    private double protein = 0;
+    private double sugar = 0;
 
     public Ingredient(){}
 
@@ -46,6 +46,7 @@ public class Ingredient implements Parcelable {
     protected Ingredient(Parcel in) {
         ingredient = in.readString();
         unit = in.readParcelable(Unit.class.getClassLoader());
+
         calories = in.readDouble();
         fat = in.readDouble();
         carbs = in.readDouble();
@@ -82,6 +83,11 @@ public class Ingredient implements Parcelable {
     public void writeToParcel(@NonNull Parcel dest, int flags) {
         dest.writeString(ingredient);
         dest.writeParcelable(unit, flags);
+        dest.writeDouble(calories);
+        dest.writeDouble(fat);
+        dest.writeDouble(carbs);
+        dest.writeDouble(protein);
+        dest.writeDouble(sugar);
     }
 
     @Override

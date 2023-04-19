@@ -180,9 +180,9 @@ public class UploadingRecipeFragment extends Fragment {
         return view;
     }
 
+
     public void setupIngredientAutocomplete(AutoCompleteTextView ingredientAutoComplete, Map<String, Integer> idMap, IngredientAutocomplete apiService){
         ingredientAutoComplete.setThreshold(1);
-
         //clear the field if the user wants to re-enter the ingredient name
         ingredientAutoComplete.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -195,18 +195,14 @@ public class UploadingRecipeFragment extends Fragment {
         ingredientAutoComplete.addTextChangedListener(new TextWatcher() {
             String prevString;
             boolean isTyping = false;
-
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
-
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
             }
-
             private Timer timer = new Timer();
             private final long DELAY = 1000; // milliseconds
-
             @Override
             public void afterTextChanged(final Editable s) {
                 //doesn't consider defocusing and refocusing the text field as typing
