@@ -84,7 +84,8 @@ public class RecipeActivity extends AppCompatActivity {
         RatingBar ratingBar = (RatingBar) findViewById(R.id.ratingBar);
         TextView servings = (TextView) findViewById(R.id.servings);
 
-        Bitmap recipeImage = BitmapFactory.decodeResource(this.getResources(), recipe.image);
+        // not sure about this
+        Bitmap recipeImage = BitmapFactory.decodeResource(this.getResources(), Integer.valueOf(recipe.image));
         recipePicture.setImageBitmap(recipeImage);
 
         Bitmap avatar = BitmapFactory.decodeResource(this.getResources(), recipe.profilePicture);
