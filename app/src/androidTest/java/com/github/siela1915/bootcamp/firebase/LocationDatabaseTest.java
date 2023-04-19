@@ -96,7 +96,7 @@ public class LocationDatabaseTest {
     }
 
     @Test
-    public void updateOfferedoggedOutReturnsExceptionTask() {
+    public void updateOfferedLoggedOutReturnsExceptionTask() {
         Ingredient ing = ExampleRecipes.recipes.get(0).getIngredientList().get(0);
 
         assertThrows(ExecutionException.class, () -> Tasks.await(locDb.updateOffered(ing)));
