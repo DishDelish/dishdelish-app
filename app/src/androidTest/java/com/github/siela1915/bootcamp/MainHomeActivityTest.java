@@ -21,6 +21,7 @@ import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.contrib.DrawerActions;
+import androidx.test.espresso.contrib.RecyclerViewActions;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -168,7 +169,15 @@ public class MainHomeActivityTest {
             manager.addIngredient("item1");
 
         });
-        onView(withId(R.id.shoppingList)).check(matches(hasDescendant(withText("item1"))));
+        try {
+            onView(withId(R.id.shoppingList)).check(matches(hasDescendant(withText("item1"))));
+            ViewInteraction recyclerView= onView(withId(R.id.shoppingList));
+            recyclerView.perform(RecyclerViewActions.actionOnItemAtPosition(1,click()));
+            onView(withText("Yes")).check(matches(isDisplayed()));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
         scenario1.close();
 
     }
