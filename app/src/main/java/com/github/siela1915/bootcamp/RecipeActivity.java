@@ -15,6 +15,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import com.github.siela1915.bootcamp.Recipes.Comment;
 import com.github.siela1915.bootcamp.Recipes.Ingredient;
 import com.github.siela1915.bootcamp.Recipes.Recipe;
 import com.github.siela1915.bootcamp.Recipes.Unit;
@@ -153,7 +154,7 @@ public class RecipeActivity extends AppCompatActivity {
             if(!input.isEmpty()){
 
                 commentBox.setText("");
-                recipe.comments.add(input);
+                recipe.comments.add(new Comment(input));
                 commentAdapter.notifyItemInserted(recipe.comments.size()-1);
 
             }
