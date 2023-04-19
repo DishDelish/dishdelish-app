@@ -1,9 +1,7 @@
 package com.github.siela1915.dishdelish.Recipes;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertTrue;
 
 import com.github.siela1915.bootcamp.Recipes.Utensils;
 
@@ -26,14 +24,14 @@ public class UtensilsTest {
     public void equalsReturnsFalseOnDifferentList() {
         Utensils utensils1 = new Utensils(Arrays.asList("fork", "spoon", "knife"));
         Utensils utensils2 = new Utensils(Arrays.asList("fork", "stick", "knife"));
-        assertFalse(utensils2.equals(utensils1));
+        assertNotEquals(utensils2, utensils1);
     }
 
     @Test
     public void equalsReturnsTrueOnIdenticalUtensils() {
         Utensils utensils1 = new Utensils(Arrays.asList("fork", "spoon", "knife"));
         Utensils utensils2 = new Utensils(Arrays.asList("fork", "spoon", "knife"));
-        assertTrue(utensils2.equals(utensils1));
+        assertEquals(utensils2, utensils1);
     }
 
 
@@ -48,6 +46,6 @@ public class UtensilsTest {
     public void equalsReturnsTrueOnDifferentListOrder() {
         Utensils utensils1 = new Utensils(Arrays.asList("fork", "spoon", "knife"));
         Utensils utensils2 = new Utensils(Arrays.asList("knife", "fork", "spoon"));
-        assertTrue(utensils2.equals(utensils1));
+        assertEquals(utensils2, utensils1);
     }
 }
