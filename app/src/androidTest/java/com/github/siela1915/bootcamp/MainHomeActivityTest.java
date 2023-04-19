@@ -149,10 +149,9 @@ public class MainHomeActivityTest {
         onView((withId(R.id.recipeList))).check(matches(isDisplayed()));
     }
     @Test
-    public void test(){
-        ViewInteraction bottomAppBar =onView(withId(R.id.bottomAppBar));
-        ViewInteraction menu =bottomAppBar.perform();
-        menu.perform(click());
+    public void clickingOnShoppingCartMenuDisplaysAppropriateFragment(){
+        onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
+        onView(withId(R.id.navView)).perform(navigateTo(R.id.menuItem_soppingCart));
         onView(withId(R.id.shoppingCartFragment)).check(matches(isDisplayed()));
     }
 

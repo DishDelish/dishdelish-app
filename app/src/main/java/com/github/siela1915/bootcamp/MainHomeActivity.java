@@ -54,13 +54,7 @@ public class MainHomeActivity extends AppCompatActivity {
         allergyBtn=findViewById(R.id.allergyBtn);
         dietBtn=findViewById(R.id.dietBtn);
         filterBtn=findViewById(R.id.filterBtn);
-        bottomAppBar=findViewById(R.id.bottomAppBar);
 
-        bottomAppBar.setOnItemSelectedListener(item ->{
-            constraintLayout.setVisibility(View.GONE);
-            setContainerContent(R.id.fragContainer,ShoppingCartFragment.class,false);
-            return true;
-        });
         List<String> selectedCuisine = new ArrayList<>();
         List<String> selectedDiet = new ArrayList<>();
         List<String> selectedAllery= new ArrayList<>();
@@ -159,6 +153,10 @@ public class MainHomeActivity extends AppCompatActivity {
                     setContainerContent(R.id.fragContainer, RecipeListFragment.newInstance(
                                         ExampleRecipes.recipes
                                 ), false);
+                    break;
+                case R.id.menuItem_soppingCart:
+                    constraintLayout.setVisibility(View.GONE);
+                    setContainerContent(R.id.fragContainer,ShoppingCartFragment.class,false);
                     break;
                 default:
             }
