@@ -220,7 +220,7 @@ public class UploadingRecipeFragment extends Fragment {
                                     isTyping = false;
                                     prevString = s.toString();
                                     //send notification for stopped typing event
-                                    apiService.completeSearchNames(s.toString(), ingredientAutoComplete, idMap);
+                                    //apiService.completeSearchNames(s.toString(), ingredientAutoComplete, idMap);
                                 }
                             },
                             DELAY
