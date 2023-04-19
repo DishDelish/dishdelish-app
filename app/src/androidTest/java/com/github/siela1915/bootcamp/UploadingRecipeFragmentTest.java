@@ -161,7 +161,7 @@ public class UploadingRecipeFragmentTest {
         )).perform(ViewActions.scrollTo(), typeText("10"));
         onView(allOf(
                 isDescendantOfA(withId(R.id.ingredientsName)),
-                withClassName(endsWith("EditText"))
+                withClassName(endsWith("AutoCompleteTextView"))
         )).perform(typeText("ingredient-name-test"));
         onView(allOf(
                 isDescendantOfA(withId(R.id.ingredientsUnit)),
@@ -175,7 +175,7 @@ public class UploadingRecipeFragmentTest {
         )).check(matches(ViewMatchers.withText("10")));
         onView(allOf(
                 isDescendantOfA(withId(R.id.ingredientsName)),
-                withClassName(endsWith("EditText"))
+                withClassName(endsWith("AutoCompleteTextView"))
         )).check(matches(ViewMatchers.withText("ingredient-name-test")));
         onView(allOf(
                 isDescendantOfA(withId(R.id.ingredientsUnit)),
@@ -323,7 +323,7 @@ public class UploadingRecipeFragmentTest {
         )).perform(ViewActions.scrollTo(), typeText("10"));
         onView(allOf(
                 isDescendantOfA(withId(R.id.ingredientsName)),
-                withClassName(endsWith("EditText"))
+                withClassName(endsWith("AutoCompleteTextView"))
         )).perform(ViewActions.scrollTo(), typeText("ingredient-name-test"));
         onView(allOf(
                 isDescendantOfA(withId(R.id.ingredientsUnit)),
