@@ -1,10 +1,8 @@
 package com.github.siela1915.dishdelish.Recipes;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
-
-import android.util.Pair;
 
 import com.github.siela1915.bootcamp.Recipes.Ingredient;
 import com.github.siela1915.bootcamp.Recipes.Recipe;
@@ -29,7 +27,7 @@ public class RecipeTest {
         ls2.add("string1");
         ls2.add("string2");
         ls2.add("string3");
-        assertTrue(ls1.equals(ls2));
+        assertEquals(ls1, ls2);
     }
 
     @Test
@@ -42,14 +40,14 @@ public class RecipeTest {
     public void equalsReturnsTrueOnSameRecipe() {
         Recipe recipe1 = createRecipe();
         Recipe recipe2 = createRecipe();
-        assertTrue(recipe1.equals(recipe2));
+        assertEquals(recipe1, recipe2);
     }
 
     @Test
     public void equalsReturnsTrueOnMoreElaborateRecipes() {
         Recipe recipe1 = createOtherRecipe();
         Recipe recipe2 = createOtherRecipe();
-        assertTrue(recipe1.equals(recipe2));
+        assertEquals(recipe1, recipe2);
     }
 
 
@@ -57,28 +55,28 @@ public class RecipeTest {
     public void equalsFailsWhenRecipesDoNotHaveSameName() {
         Recipe recipe1 = createRecipe();
         Recipe recipe2 = createRecipeDifferentName();
-        assertFalse(recipe1.equals(recipe2));
+        assertNotEquals(recipe1, recipe2);
     }
 
     @Test
     public void equalsFailsWhenRecipesDoNotHaveSameIngredients() {
         Recipe recipe1 = createOtherRecipe();
         Recipe recipe2 = createOtherRecipeDifferentIngredients();
-        assertFalse(recipe1.equals(recipe2));
+        assertNotEquals(recipe1, recipe2);
     }
 
     @Test
     public void equalsFailsWhenRecipesDoNotHaveSameSteps() {
         Recipe recipe1 = createOtherRecipe();
         Recipe recipe2 = createOtherRecipeDifferentSteps();
-        assertFalse(recipe1.equals(recipe2));
+        assertNotEquals(recipe1, recipe2);
     }
 
     @Test
     public void equalsFailsWhenRecipesDoNotHaveSameDietTypes() {
         Recipe recipe1 = createOtherRecipe();
         Recipe recipe2 = createOtherRecipeDifferentDiet();
-        assertFalse(recipe1.equals(recipe2));
+        assertNotEquals(recipe1, recipe2);
 
     }
 
@@ -281,7 +279,7 @@ public class RecipeTest {
         List<Integer> array = Arrays.asList(1, 2, 3, 4, 5);
         Recipe recipe = new Recipe();
         recipe.setCuisineTypes(array);
-        assertTrue(array.equals(recipe.getCuisineTypes()));
+        assertEquals(array, recipe.getCuisineTypes());
     }
 
     @Test
@@ -289,7 +287,7 @@ public class RecipeTest {
         List<Integer> array = Arrays.asList(1, 2, 3, 4, 5);
         Recipe recipe = new Recipe();
         recipe.setAllergyTypes(array);
-        assertTrue(array.equals(recipe.getAllergyTypes()));
+        assertEquals(array, recipe.getAllergyTypes());
     }
 
     @Test
@@ -297,7 +295,7 @@ public class RecipeTest {
         List<Integer> array = Arrays.asList(1, 2, 3, 4, 5);
         Recipe recipe = new Recipe();
         recipe.setDietTypes(array);
-        assertTrue(array.equals(recipe.getDietTypes()));
+        assertEquals(array, recipe.getDietTypes());
     }
 
     @Test
@@ -331,6 +329,13 @@ public class RecipeTest {
         Recipe recipe = new Recipe();
         recipe.setLikes(450);
         assertEquals(recipe.getLikes(), 450);
+    }
+
+    @Test
+    public void getAfterSetReturnsUniqueKey() {
+        Recipe recipe = new Recipe();
+        recipe.setUniqueKey("unique");
+        assertEquals(recipe.getUniqueKey(), "unique");
     }
 
 
