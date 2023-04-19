@@ -15,6 +15,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.endsWithIgnoringCase;
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 
 import androidx.test.core.app.ActivityScenario;
@@ -174,6 +175,8 @@ public class MainHomeActivityTest {
             ViewInteraction recyclerView= onView(withId(R.id.shoppingList));
             recyclerView.perform(RecyclerViewActions.actionOnItemAtPosition(1,click()));
             onView(withText("Yes")).check(matches(isDisplayed()));
+            onView(withText("Yes")).perform(click());
+            onView(withId(R.id.shoppingCartFragment)).check(matches(isDisplayed()));
         }catch (Exception e){
             e.printStackTrace();
         }
