@@ -148,14 +148,12 @@ public class MainHomeActivityTest {
         onView(allOf(withId(R.id.filterBtn), isDescendantOfA(withId(R.id.filterLayout)))).perform(ViewActions.scrollTo(),click());
         onView((withId(R.id.recipeList))).check(matches(isDisplayed()));
     }
-    /*
     @Test
     public void test(){
         ViewInteraction bottomAppBar =onView(withId(R.id.bottomAppBar));
-        ViewInteraction menu =bottomAppBar.perform(navigateTo(R.id.soppingCart));
+        ViewInteraction menu =bottomAppBar.perform();
         menu.perform(click());
         onView(withId(R.id.shoppingCartFragment)).check(matches(isDisplayed()));
     }
-         */
 
 }
