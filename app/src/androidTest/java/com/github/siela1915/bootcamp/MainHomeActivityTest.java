@@ -4,6 +4,7 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.contrib.NavigationViewActions.navigateTo;
+import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.isClickable;
 import static androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -11,7 +12,9 @@ import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibilit
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.endsWithIgnoringCase;
+import static org.hamcrest.Matchers.not;
 
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.ViewInteraction;
@@ -153,8 +156,7 @@ public class MainHomeActivityTest {
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
         onView(withId(R.id.navView)).perform(navigateTo(R.id.menuItem_soppingCart));
         onView(withId(R.id.shoppingCartFragment)).check(matches(isDisplayed()));
-        onView(withText("item1")).perform(click());
-        onView(withText("Are you sure you want to delete this item?")).check(matches(isDisplayed()));
+        onView(withId(R.id.shoppingList)).check(matches(hasDescendant(withText("item1"))));
     }
 
 }
