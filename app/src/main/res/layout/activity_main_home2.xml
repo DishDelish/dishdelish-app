@@ -9,22 +9,22 @@
     android:fitsSystemWindows="true"
     android:pointerIcon="hand"
     tools:context=".MainActivity">
-
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:id="@+id/content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/fragContainer"
             android:layout_width="match_parent"
             android:layout_height="575dp"
-            android:layout_marginTop="12dp"
-            android:layoutDirection="ltr"
+            android:layout_marginTop="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/filterLayout"
             app:layout_constraintBottom_toTopOf="@+id/bottomAppBar"
+            app:layout_constraintTop_toBottomOf="@+id/scrollview"
             tools:ignore="VisualLintBounds" />
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:layout_width="match_parent"
@@ -37,141 +37,138 @@
 
             app:menu="@menu/bottom_appbar_menu"/>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/filterLayout"
+        <ScrollView
+            android:id="@+id/scrollview"
             android:layout_width="match_parent"
-            android:layout_height="74dp"
-            app:layout_constraintBottom_toTopOf="@+id/fragContainer"
+            android:layout_height="90dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0"
-            tools:ignore="MissingConstraints">
+            app:layout_constraintTop_toTopOf="parent">
 
-            <!--app:layout_constraintTop_toBottomOf="@id/notIncludLabel"-->
-
-
-            <Button
-                android:id="@+id/timingBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:layout_marginStart="92dp"
-                android:layout_marginBottom="8dp"
-                android:foreground="@android:drawable/btn_dropdown"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/cuisineBtn"
-                tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
-
-            <Button
-                android:id="@+id/notIncludIngBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:layout_marginBottom="8dp"
-                android:foreground="@android:drawable/btn_dropdown"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/timingBtn"
-                tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
-
-            <Button
-                android:id="@+id/dietBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:layout_marginBottom="8dp"
-                android:foreground="@android:drawable/btn_dropdown"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/notIncludIngBtn"
-                tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
-
-            <Button
-                android:id="@+id/cuisineBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:layout_marginStart="4dp"
-                android:layout_marginEnd="4dp"
-                android:layout_marginBottom="8dp"
-                android:foreground="@android:drawable/btn_dropdown"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/timingBtn"
-                app:layout_constraintStart_toStartOf="parent"
-                tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck,DuplicateClickableBoundsCheck" />
-
-            <Button
-                android:id="@+id/filterBtn"
-                android:layout_width="42dp"
-                android:layout_height="51dp"
-                android:layout_marginEnd="4dp"
-                android:layout_marginBottom="8dp"
-                android:text="@string/cuisine"
-                app:icon="@drawable/baseline_filter_alt_24"
-                app:iconGravity="top"
-                app:layout_constraintBottom_toBottomOf="parent"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/filterLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
-                tools:ignore="TouchTargetSizeCheck" />
-
-            <TextView
-                android:id="@+id/cuisineLabel"
-                android:layout_width="86dp"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="@string/cuisine"
-                android:textSize="18sp"
-                app:layout_constraintBottom_toTopOf="@+id/cuisineBtn"
-                app:layout_constraintEnd_toEndOf="@id/cuisineBtn"
-                app:layout_constraintLeft_toLeftOf="@id/cuisineBtn"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.931"
-                tools:ignore="HardcodedText,TextContrastCheck,TextSizeCheck,VisualLintOverlap" />
+                app:layout_constraintBottom_toBottomOf="parent">
+
+                <Button
+                    android:id="@+id/timingBtn"
+                    android:layout_width="150dp"
+                    android:layout_height="32dp"
+                    android:layout_marginTop="4dp"
+                    android:background="@color/buttonColor"
+                    android:foreground="@android:drawable/btn_dropdown"
+                    app:iconPadding="0dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/prepTimeLabel"
+                    tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+
+                <Button
+                    android:id="@+id/allergyBtn"
+                    android:layout_width="150dp"
+                    android:layout_height="32dp"
+                    android:layout_marginStart="16dp"
+                    android:background="@color/buttonColor"
+                    android:foreground="@android:drawable/btn_dropdown"
+                    app:layout_constraintStart_toEndOf="@+id/cuisineBtn"
+                    app:layout_constraintTop_toBottomOf="@+id/allergyLabel"
+                    tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+
+                <Button
+                    android:id="@+id/dietBtn"
+                    android:layout_width="150dp"
+                    android:layout_height="32dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="4dp"
+                    android:background="@color/buttonColor"
+                    android:foreground="@android:drawable/btn_dropdown"
+                    app:layout_constraintStart_toEndOf="@+id/timingBtn"
+                    app:layout_constraintTop_toBottomOf="@+id/dietLabel"
+                    tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+
+                <Button
+                    android:id="@+id/cuisineBtn"
+                    android:layout_width="150dp"
+                    android:layout_height="32dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@color/buttonColor"
+                    android:foreground="@android:drawable/btn_dropdown"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/cuisineLabel"
+                    tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck,DuplicateClickableBoundsCheck" />
+
+                <Button
+                    android:id="@+id/filterBtn"
+                    android:layout_width="67dp"
+
+                    android:layout_height="60dp"
+                    android:layout_marginTop="70dp"
+                    android:layout_marginEnd="16dp"
+                    android:background="@color/buttonColor"
+                    app:icon="@drawable/baseline_filter_alt_24"
+                    app:iconGravity="textTop"
+
+                    app:iconPadding="0dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:rippleColor="#A3A2A2"
+                    tools:ignore="SpeakableTextPresentCheck" />
 
 
-            <TextView
-                android:id="@+id/notIncludLabel"
-                android:layout_width="86dp"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="@string/allergy"
-                android:textSize="18sp"
-                app:layout_constraintBottom_toTopOf="@+id/notIncludIngBtn"
-                app:layout_constraintEnd_toEndOf="@id/notIncludIngBtn"
-                app:layout_constraintLeft_toLeftOf="@id/notIncludIngBtn"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.931"
-                tools:ignore="HardcodedText,TextContrastCheck,TextSizeCheck" />
+                <TextView
+                    android:id="@+id/cuisineLabel"
+                    android:layout_width="86dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/cuisine"
+                    android:textSize="18sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/timingBtn"
+                    tools:ignore="HardcodedText,TextContrastCheck,TextSizeCheck,VisualLintOverlap" />
 
-            <TextView
-                android:id="@+id/prepTimeLabel"
-                android:layout_width="90dp"
-                android:layout_height="24dp"
-                android:text="@string/prepTime"
-                android:textSize="18sp"
-                app:layout_constraintBottom_toTopOf="@+id/timingBtn"
-                app:layout_constraintEnd_toEndOf="@id/timingBtn"
-                app:layout_constraintLeft_toLeftOf="@id/timingBtn"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.931"
-                tools:ignore="HardcodedText,TextContrastCheck,TextSizeCheck" />
+                <TextView
+                    android:id="@+id/allergyLabel"
+                    android:layout_width="86dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="120dp"
+                    android:gravity="center"
+                    android:text="@string/allergy"
+                    android:textSize="18sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/dietBtn"
+                    tools:ignore="HardcodedText,TextContrastCheck,TextSizeCheck,VisualLintOverlap" />
 
-            <TextView
-                android:id="@+id/dietLabel"
-                android:layout_width="86dp"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="@string/diet"
-                android:textSize="18sp"
-                app:layout_constraintBottom_toTopOf="@+id/dietBtn"
-                app:layout_constraintEnd_toEndOf="@id/dietBtn"
-                app:layout_constraintLeft_toLeftOf="@id/dietBtn"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.931"
-                tools:ignore="HardcodedText,TextContrastCheck,TextSizeCheck,VisualLintOverlap" />
+                <TextView
+                    android:id="@+id/prepTimeLabel"
+                    android:layout_width="90dp"
+                    android:layout_height="24dp"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/prepTime"
+                    android:textSize="18sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="HardcodedText,TextContrastCheck,TextSizeCheck,VisualLintOverlap" />
 
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guideline2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layout_constraintGuide_begin="20dp" />
+                <TextView
+                    android:id="@+id/dietLabel"
+                    android:layout_width="86dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="120dp"
+                    android:gravity="center"
+                    android:text="@string/diet"
+                    android:textSize="18sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="HardcodedText,TextContrastCheck,TextSizeCheck,VisualLintOverlap" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </ScrollView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
