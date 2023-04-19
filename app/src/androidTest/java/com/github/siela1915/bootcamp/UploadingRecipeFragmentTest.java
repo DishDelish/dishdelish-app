@@ -192,15 +192,15 @@ public class UploadingRecipeFragmentTest {
         onView(withId(R.id.ingredientsGroup)).check((matches(withChildViewCount(2, withId(R.id.ingredients)))));
     }
 
-//    @Test
-//    public void deleteRecipeIngredientTest() {
-//        scenario = FragmentScenario.launchInContainer(UploadingRecipeFragment.class);
-//
-//        onView(withId(R.id.addIngredientButton)).perform(ViewActions.scrollTo(), ViewActions.click());
-//        onView(withId(R.id.removeIngredient)).perform(ViewActions.scrollTo(), ViewActions.click());
-//
-//        onView(withId(R.id.ingredientsGroup)).check((matches(withChildViewCount(1, withId(R.id.ingredients)))));
-//    }
+    @Test
+    public void deleteRecipeIngredientTest() {
+        scenario = FragmentScenario.launchInContainer(UploadingRecipeFragment.class);
+
+        onView(withId(R.id.addIngredientButton)).perform(ViewActions.scrollTo(), ViewActions.click());
+        onView(withId(R.id.removeIngredient)).perform(ViewActions.scrollTo(), ViewActions.click());
+
+        onView(withId(R.id.ingredientsGroup)).check((matches(withChildViewCount(1, withId(R.id.ingredients)))));
+    }
 
     @Test
     public void editRecipeCuisineTypesTest() {
@@ -277,14 +277,14 @@ public class UploadingRecipeFragmentTest {
         )).check(matches(ViewMatchers.withText("step-test")));
     }
 
-//    @Test
-//    public void addRecipeStepTest() {
-//        scenario = FragmentScenario.launchInContainer(UploadingRecipeFragment.class);
-//
-//        onView(withId(R.id.addStepButton)).perform(ViewActions.scrollTo(), ViewActions.click());
-//
-//        onView(withId(R.id.stepGroup)).check((matches(withChildViewCount(2, withId(R.id.step)))));
-//    }
+    @Test
+    public void addRecipeStepTest() {
+        scenario = FragmentScenario.launchInContainer(UploadingRecipeFragment.class);
+
+        onView(withId(R.id.addStepButton)).perform(ViewActions.scrollTo(), ViewActions.click());
+
+        onView(withId(R.id.stepGroup)).check((matches(withChildViewCount(2, withId(R.id.step)))));
+    }
 
     @Test
     public void deleteRecipeStepTest() {
