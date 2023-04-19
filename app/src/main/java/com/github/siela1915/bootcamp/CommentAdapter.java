@@ -30,6 +30,8 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull CommentViewHolder holder, int position) {
         holder.comment.setText(comments.get(position));
+        // TODO: once the new comment class is created, change this
+        holder.likes.setText("5");
     }
 
     @Override
