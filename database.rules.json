@@ -1,7 +1,7 @@
 {
   "rules": {
     "recipes": {
-      ".indexOn": ["recipeName"]
+      ".indexOn": ["recipeName", "userName", "cookTime", "prepTime", "likes"]
     },
     "favorites": {
       "$user_id": {
@@ -44,7 +44,7 @@
         }
       }
     },
-    ".read": "now < 1686838524000",  // 2023-6-15
-    ".write": "now < 1686838524000",  // 2023-6-15
+    ".read": true,  //Allow read and write access to anyone 
+    ".write": true,  //Not recommended for release production 
   }
 }

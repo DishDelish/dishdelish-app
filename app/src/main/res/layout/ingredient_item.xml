@@ -11,22 +11,31 @@
             android:layout_width="40dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:layout_weight="1"
+            android:layout_weight="0.01"
             android:fontFamily="@font/poppins_semibold"
             android:textAlignment="textStart"
             android:textColor="#000000"
-            android:textSize="18sp" />
-
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/ingredientName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:layout_weight="10"
+            android:layout_weight="100"
             android:fontFamily="@font/poppins_semibold"
             android:textColor="#000000"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
+
+        <ToggleButton
+            android:id="@+id/AddToListButton"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/ic_plus_circle_full"
+            android:textOff=""
+            android:textOn=""/>
+
 
     </TableRow>
 
