@@ -167,17 +167,16 @@ public class MainHomeActivityTest {
         scenario.onActivity(activity -> {
             ShoppingListManager manager =new ShoppingListManager(activity.getApplicationContext());
             manager.addIngredient("item1");
-
         });
         try {
-            onView(withId(R.id.shoppingList)).check(matches(hasDescendant(withText("item1"))));
+            //onView(withId(R.id.shoppingList)).check(matches(hasDescendant(withText("item1"))));
+            onView(withText("item1")).check(matches(isDisplayed()));
             ViewInteraction recyclerView= onView(withId(R.id.shoppingList));
             recyclerView.perform(RecyclerViewActions.actionOnItemAtPosition(1,click()));
             onView(withText("Yes")).check(matches(isDisplayed()));
         }catch (Exception e){
             e.printStackTrace();
         }
-
         scenario1.close();
 
     }
