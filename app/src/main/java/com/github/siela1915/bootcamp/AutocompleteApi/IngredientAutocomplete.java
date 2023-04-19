@@ -63,7 +63,7 @@ public class IngredientAutocomplete {
     }
 
     //Method that only returns the names of the ingredients, used when uploading recipe
-    public List<String> completeSearchNames(String query, AutoCompleteTextView view){
+    public List<String> completeSearchNames(String query, AutoCompleteTextView view, Map<String, Integer> idMap){
         List<String> ingredients = new ArrayList<>();
         service.fetchIngredients(query, numberOfIngredients, apiKey, true).enqueue(new Callback<List<ApiResponse>>() {
             @Override
@@ -73,6 +73,7 @@ public class IngredientAutocomplete {
                         for (ApiResponse ing : response.body()) {
                             //Adds the ingredients to the passed list
                             ingredients.add(ing.name);
+                            idMap.put(ing.name, ing.id);
                         }
                     }
                     //add a case for not successful?

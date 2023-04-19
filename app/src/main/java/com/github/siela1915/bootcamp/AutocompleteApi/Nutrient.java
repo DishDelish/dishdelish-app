@@ -15,4 +15,13 @@ public class Nutrient {
         this.unit = unit;
         this.percentOfDailyNeeds = percentOfDailyNeeds;
     }
+
+    public boolean equals(Nutrient other){
+        return (
+                name.equals(other.name)
+                        && unit.equals(other.unit)
+                        && amount-other.amount < 1e-5
+                        && percentOfDailyNeeds- other.percentOfDailyNeeds < 1e-5
+                );
+    }
 }

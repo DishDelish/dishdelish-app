@@ -46,7 +46,9 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ExecutionException;
@@ -133,50 +135,10 @@ public class UploadingRecipeFragment extends Fragment {
         //ingredient autocompletion
         IngredientAutocomplete apiService = new IngredientAutocomplete();
         AutoCompleteTextView ingredientAutoComplete = (AutoCompleteTextView) view.findViewById(R.id.ingredientAutoComplete);
-        ingredientAutoComplete.setThreshold(1);
-        ingredientAutoComplete.addTextChangedListener(new TextWatcher() {
-            String prevString;
-            boolean isTyping = false;
+        //map of Ingredient IDs, will be used when uploading a recipe to get nutritional values
+        Map<String, Integer> idMap = new HashMap<>();
+        setupIngredientAutocomplete(ingredientAutoComplete, idMap, apiService);
 
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            private Timer timer = new Timer();
-            private final long DELAY = 1000; // milliseconds
-
-            @Override
-            public void afterTextChanged(final Editable s) {
-                //doesn't consider defocusing and refocusing the text field as typing
-                if(s.toString() != prevString){
-                    Log.d("", "");
-                    if (!isTyping) {
-                        Log.d(TAG, "started typing");
-                        // Send notification for start typing event
-                        isTyping = true;
-                    }
-                    timer.cancel();
-                    timer = new Timer();
-                    timer.schedule(
-                            new TimerTask() {
-                                @Override
-                                public void run() {
-                                    isTyping = false;
-                                    prevString = s.toString();
-                                    Log.d(TAG, "stopped typing, " + s);
-                                    //send notification for stopped typing event
-                                    apiService.completeSearchNames(s.toString(), ingredientAutoComplete);
-                                }
-                            },
-                            DELAY
-                    );
-                }
-            }
-        });
 
 
 
@@ -204,7 +166,7 @@ public class UploadingRecipeFragment extends Fragment {
         addIngredient.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addIngredient();
+                addIngredient(idMap, apiService);
             }
         });
 
@@ -216,6 +178,60 @@ public class UploadingRecipeFragment extends Fragment {
         });
 
         return view;
+    }
+
+    public void setupIngredientAutocomplete(AutoCompleteTextView ingredientAutoComplete, Map<String, Integer> idMap, IngredientAutocomplete apiService){
+        ingredientAutoComplete.setThreshold(1);
+
+        //clear the field if the user wants to re-enter the ingredient name
+        ingredientAutoComplete.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus){
+                    ingredientAutoComplete.setText("");
+                }
+            }
+        });
+        ingredientAutoComplete.addTextChangedListener(new TextWatcher() {
+            String prevString;
+            boolean isTyping = false;
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            private Timer timer = new Timer();
+            private final long DELAY = 1000; // milliseconds
+
+            @Override
+            public void afterTextChanged(final Editable s) {
+                //doesn't consider defocusing and refocusing the text field as typing
+                if(!s.toString().equals(prevString)){
+                    if (!isTyping) {
+                        // Send notification for start typing event
+                        isTyping = true;
+                    }
+                    timer.cancel();
+                    timer = new Timer();
+                    timer.schedule(
+                            new TimerTask() {
+                                @Override
+                                public void run() {
+                                    isTyping = false;
+                                    prevString = s.toString();
+                                    //send notification for stopped typing event
+                                    apiService.completeSearchNames(s.toString(), ingredientAutoComplete, idMap);
+                                }
+                            },
+                            DELAY
+                    );
+                }
+            }
+        });
     }
 
     @Override
@@ -313,7 +329,7 @@ public class UploadingRecipeFragment extends Fragment {
         startActivityForResult(Intent.createChooser(intent, "Select Image"), PICK_IMAGE_REQUEST);
     }
 
-    private void addIngredient() {
+    private void addIngredient(Map<String, Integer> idMap, IngredientAutocomplete apiService) {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             final View ingredient = getLayoutInflater().inflate(R.layout.recipe_ingredient_edittext, null, false);
             ImageView removeIngredient = (ImageView) ingredient.findViewById(R.id.removeIngredient);
@@ -326,6 +342,8 @@ public class UploadingRecipeFragment extends Fragment {
             });
 
             ingredientLinearLayout.addView(ingredient);
+            AutoCompleteTextView ingredientAutoComplete = (AutoCompleteTextView) ingredient.findViewById(R.id.ingredientAutoComplete);
+            setupIngredientAutocomplete(ingredientAutoComplete, idMap, apiService);
         }
     }
 
