@@ -32,6 +32,9 @@ public class RecipeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe);
 
+        shoppingListManager = new ShoppingListManager(this);
+
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         recipe = getIntent().getParcelableExtra("Recipe");
@@ -57,10 +60,6 @@ public class RecipeActivity extends AppCompatActivity {
                 heart.setTag("empty");
             }
         });
-
-        shoppingListManager = new ShoppingListManager(this);
-
-
 
     }
 

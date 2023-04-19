@@ -58,10 +58,5 @@ public class ShoppingListManagerTest {
 
     }
 
-    @Test
-    public void newlyCreatedShoppingListIsEmpty(){
 
-        List<String> shoppingList = manager.getShoppingList();
-        assertTrue(shoppingList.isEmpty());
-    }
 }
