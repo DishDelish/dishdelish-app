@@ -1,6 +1,8 @@
 package com.github.siela1915.bootcamp;
 
+import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.Visibility.VISIBLE;
@@ -10,9 +12,11 @@ import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibilit
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.endsWith;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,20 +26,44 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.testing.FragmentScenario;
 import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.matcher.BoundedMatcher;
+import androidx.test.espresso.matcher.RootMatchers;
 import androidx.test.espresso.matcher.ViewMatchers;
 
+import com.github.siela1915.bootcamp.AutocompleteApi.ApiResponse;
+import com.github.siela1915.bootcamp.AutocompleteApi.ApiService;
+import com.github.siela1915.bootcamp.AutocompleteApi.NutrientsResponse;
 import com.github.siela1915.bootcamp.Labelling.AllergyType;
 import com.github.siela1915.bootcamp.Labelling.CuisineType;
 import com.github.siela1915.bootcamp.Labelling.DietType;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 
+
+
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+
+import okhttp3.mockwebserver.MockWebServer;
+import okhttp3.mockwebserver.MockResponse;
+import okhttp3.mockwebserver.internal.duplex.DuplexResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class UploadingRecipeFragmentTest {
+    private MockWebServer mockWebServer = new MockWebServer();
+    @Before
+    public void setup() throws IOException {
+        mockWebServer.enqueue(new MockResponse().setBody("apple"));
+        mockWebServer.start(8080);
+    }
     FragmentScenario<UploadingRecipeFragment> scenario;
 
     // create a matcher to check the number of children elements which have the same id
@@ -62,8 +90,9 @@ public class UploadingRecipeFragmentTest {
     }
 
     @After
-    public void cleanUp() {
+    public void cleanUp() throws IOException {
         scenario.close();
+        mockWebServer.shutdown();
     }
 
     @Test
@@ -152,6 +181,29 @@ public class UploadingRecipeFragmentTest {
     }
 
     @Test
+    public void ingredientAutocompleteTest() throws InterruptedException {
+        scenario = FragmentScenario.launchInContainer(UploadingRecipeFragment.class);
+
+        onView(allOf(
+                isDescendantOfA(withId(R.id.ingredientsAmount)),
+                withClassName(endsWith("EditText"))
+        )).perform(ViewActions.scrollTo(), typeText("10"));
+        onView(allOf(
+                isDescendantOfA(withId(R.id.ingredientsName)),
+                withClassName(endsWith("AutoCompleteTextView"))
+        )).perform(typeText("app"));
+        //click on the first item in list
+        onData(anything())
+                .atPosition(0)
+                .inRoot(RootMatchers.isPlatformPopup())
+                .perform(click());
+        onView(allOf(
+                isDescendantOfA(withId(R.id.ingredientsName)),
+                withClassName(endsWith("AutoCompleteTextView"))
+        )).check(matches(ViewMatchers.withText("apple")));
+    }
+
+    @Test
     public void editRecipeIngredientTest() {
         scenario = FragmentScenario.launchInContainer(UploadingRecipeFragment.class);
 
@@ -187,7 +239,7 @@ public class UploadingRecipeFragmentTest {
     public void addRecipeIngredientTest() {
         scenario = FragmentScenario.launchInContainer(UploadingRecipeFragment.class);
 
-        onView(withId(R.id.addIngredientButton)).perform(ViewActions.scrollTo(), ViewActions.click());
+        onView(withId(R.id.addIngredientButton)).perform(ViewActions.scrollTo(), click());
 
         onView(withId(R.id.ingredientsGroup)).check((matches(withChildViewCount(2, withId(R.id.ingredients)))));
     }
@@ -196,8 +248,8 @@ public class UploadingRecipeFragmentTest {
     public void deleteRecipeIngredientTest() {
         scenario = FragmentScenario.launchInContainer(UploadingRecipeFragment.class);
 
-        onView(withId(R.id.addIngredientButton)).perform(ViewActions.scrollTo(), ViewActions.click());
-        onView(withId(R.id.removeIngredient)).perform(ViewActions.scrollTo(), ViewActions.click());
+        onView(withId(R.id.addIngredientButton)).perform(ViewActions.scrollTo(), click());
+        onView(withId(R.id.removeIngredient)).perform(ViewActions.scrollTo(), click());
 
         onView(withId(R.id.ingredientsGroup)).check((matches(withChildViewCount(1, withId(R.id.ingredients)))));
     }
@@ -281,7 +333,7 @@ public class UploadingRecipeFragmentTest {
     public void addRecipeStepTest() {
         scenario = FragmentScenario.launchInContainer(UploadingRecipeFragment.class);
 
-        onView(withId(R.id.addStepButton)).perform(ViewActions.scrollTo(), ViewActions.click());
+        onView(withId(R.id.addStepButton)).perform(ViewActions.scrollTo(), click());
 
         onView(withId(R.id.stepGroup)).check((matches(withChildViewCount(2, withId(R.id.step)))));
     }
@@ -290,8 +342,8 @@ public class UploadingRecipeFragmentTest {
     public void deleteRecipeStepTest() {
         scenario = FragmentScenario.launchInContainer(UploadingRecipeFragment.class);
 
-        onView(withId(R.id.addStepButton)).perform(ViewActions.scrollTo(), ViewActions.click());
-        onView(withId(R.id.removeStep)).perform(ViewActions.scrollTo(), ViewActions.click());
+        onView(withId(R.id.addStepButton)).perform(ViewActions.scrollTo(), click());
+        onView(withId(R.id.removeStep)).perform(ViewActions.scrollTo(), click());
 
         onView(withId(R.id.stepGroup)).check((matches(withChildViewCount(1, withId(R.id.step)))));
     }
@@ -338,7 +390,7 @@ public class UploadingRecipeFragmentTest {
                 withClassName(endsWith("EditText"))
         )).perform(ViewActions.scrollTo(), typeText("step-test"));
 
-        onView(withId(R.id.recipeUploadButton)).perform(ViewActions.scrollTo(), ViewActions.click());
+        onView(withId(R.id.recipeUploadButton)).perform(ViewActions.scrollTo(), click());
 
         getInstrumentation().waitForIdleSync();
         scenario.onFragment(fragment -> {

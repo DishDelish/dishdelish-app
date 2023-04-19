@@ -3,10 +3,12 @@ package com.github.siela1915.bootcamp.AutocompleteApi;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 
+import com.github.siela1915.bootcamp.BuildConfig;
 import com.github.siela1915.bootcamp.Recipes.Ingredient;
 import com.github.siela1915.bootcamp.UploadingRecipeFragment;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,7 +22,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class IngredientAutocomplete {
     private final int numberOfIngredients = 5;
     private final int numberOfNutrition = 3;
-    private final String apiKey = "44a82829c64d4202a18b887e47e76bdd";
+    private final String apiKey = BuildConfig.API_KEY;
     public ApiService service;
 
 
@@ -31,6 +33,7 @@ public class IngredientAutocomplete {
                 .baseUrl("https://api.spoonacular.com/food/ingredients/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
+
         service = retrofit.create(ApiService.class);
     }
 

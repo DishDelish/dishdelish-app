@@ -9,6 +9,7 @@ import com.github.siela1915.bootcamp.AutocompleteApi.ApiService;
 import com.github.siela1915.bootcamp.AutocompleteApi.IngredientAutocomplete;
 import com.github.siela1915.bootcamp.AutocompleteApi.Nutrient;
 import com.github.siela1915.bootcamp.AutocompleteApi.NutrientsResponse;
+import com.github.siela1915.bootcamp.BuildConfig;
 import com.github.siela1915.bootcamp.Recipes.Ingredient;
 import com.github.siela1915.bootcamp.Recipes.Unit;
 
@@ -29,13 +30,12 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class AutocompleteTest {
-    private final String apiKey = "44a82829c64d4202a18b887e47e76bdd";
 
     @Test
     public void fetcherReturnsNonemptyIngredient(){
         ApiService mockedApi = Mockito.mock(ApiService.class);
         Call<List<ApiResponse>> mockedCall = Mockito.mock(Call.class);
-        Mockito.when(mockedApi.fetchIngredients("app", 5, apiKey, true)).thenReturn(mockedCall);
+        Mockito.when(mockedApi.fetchIngredients("app", 5, BuildConfig.API_KEY, true)).thenReturn(mockedCall);
 
         Mockito.doAnswer(invocation -> {
             Callback callback = invocation.getArgument(0, Callback.class);
@@ -58,7 +58,7 @@ public class AutocompleteTest {
     public void nullIngredientResponseHandledCorrectly(){
         ApiService mockedApi = Mockito.mock(ApiService.class);
         Call<List<ApiResponse>> mockedCall = Mockito.mock(Call.class);
-        Mockito.when(mockedApi.fetchIngredients("app", 5, apiKey, true)).thenReturn(mockedCall);
+        Mockito.when(mockedApi.fetchIngredients("app", 5, BuildConfig.API_KEY, true)).thenReturn(mockedCall);
 
         Mockito.doAnswer(invocation -> {
             Callback callback = invocation.getArgument(0, Callback.class);
@@ -77,7 +77,7 @@ public class AutocompleteTest {
     public void failedCallDoesntOverwritePreviousCall(){
         ApiService mockedApi = Mockito.mock(ApiService.class);
         Call<List<ApiResponse>> mockedCall = Mockito.mock(Call.class);
-        Mockito.when(mockedApi.fetchIngredients("app", 5, apiKey, true)).thenReturn(mockedCall);
+        Mockito.when(mockedApi.fetchIngredients("app", 5, BuildConfig.API_KEY, true)).thenReturn(mockedCall);
 
         Mockito.doAnswer(invocation -> {
             Callback callback = invocation.getArgument(0, Callback.class);
@@ -110,7 +110,7 @@ public class AutocompleteTest {
         ApiService mockedApi = Mockito.mock(ApiService.class);
         Call<NutrientsResponse> mockedCall = Mockito.mock(Call.class);
         //9266 = id for pineapple
-        Mockito.when(mockedApi.getNutrition(9266, 1, "piece", apiKey)).thenReturn(mockedCall);
+        Mockito.when(mockedApi.getNutrition(9266, 1, "piece", BuildConfig.API_KEY)).thenReturn(mockedCall);
 
         Mockito.doAnswer(invocation -> {
             Callback callback = invocation.getArgument(0, Callback.class);

@@ -205,6 +205,13 @@ public class UploadingRecipeFragment extends Fragment {
             private final long DELAY = 1000; // milliseconds
             @Override
             public void afterTextChanged(final Editable s) {
+                //couldn't figure out a way to test an api inside UI classes
+                if(BuildConfig.DEBUG){
+                    ArrayAdapter<String> ingredientAdapter = new ArrayAdapter<String>(ingredientAutoComplete.getContext(), android.R.layout.select_dialog_item, Arrays.asList("apple"));
+                    ingredientAutoComplete.setAdapter(ingredientAdapter);
+                    ingredientAutoComplete.showDropDown();
+                    return;
+                }
                 //doesn't consider defocusing and refocusing the text field as typing
                 if(!s.toString().equals(prevString)){
                     if (!isTyping) {
@@ -220,7 +227,7 @@ public class UploadingRecipeFragment extends Fragment {
                                     isTyping = false;
                                     prevString = s.toString();
                                     //send notification for stopped typing event
-                                    //apiService.completeSearchNames(s.toString(), ingredientAutoComplete, idMap);
+                                    apiService.completeSearchNames(s.toString(), ingredientAutoComplete, idMap);
                                 }
                             },
                             DELAY
