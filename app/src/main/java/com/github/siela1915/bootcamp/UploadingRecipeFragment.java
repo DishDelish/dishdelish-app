@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
@@ -32,17 +33,17 @@ import com.github.siela1915.bootcamp.Recipes.Utensils;
 import com.github.siela1915.bootcamp.firebase.Database;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class UploadingRecipeFragment extends Fragment {
@@ -106,9 +107,9 @@ public class UploadingRecipeFragment extends Fragment {
         dietTypeValues = DietType.values();
 
         // set up autocomplete for cuisineTypes, allergyTypes, and dietTypes
-        String[] cuisineTypes = Stream.of(cuisineTypeValues).map(CuisineType::name).toArray(String[]::new);
-        String[] allergyTypes = Stream.of(allergyTypeValues).map(AllergyType::name).toArray(String[]::new);
-        String[] dietTypes = Stream.of(dietTypeValues).map(DietType::name).toArray(String[]::new);
+        String[] cuisineTypes = Stream.of(cuisineTypeValues).map(CuisineType::toString).toArray(String[]::new);
+        String[] allergyTypes = Stream.of(allergyTypeValues).map(AllergyType::toString).toArray(String[]::new);
+        String[] dietTypes = Stream.of(dietTypeValues).map(DietType::toString).toArray(String[]::new);
         ArrayAdapter<String> cuisineTypesAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.select_dialog_item, cuisineTypes);
         ArrayAdapter<String> allergyTypesAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.select_dialog_item, allergyTypes);
         ArrayAdapter<String> dietTypesAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.select_dialog_item, dietTypes);
@@ -152,6 +153,9 @@ public class UploadingRecipeFragment extends Fragment {
         EditText ingredientsName = ingredientsNameLayout.getEditText();
         TextInputLayout stepContentLayout = view.findViewById(R.id.stepContent);
         EditText stepContent = stepContentLayout.getEditText();
+        Button addCuisineType = (Button) view.findViewById(R.id.addCuisineTypeButton);
+        Button addAllergyType = (Button) view.findViewById(R.id.addAllergyTypeButton);
+        Button addDietType = (Button) view.findViewById(R.id.addDietTypeButton);
 
         imgView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -164,7 +168,8 @@ public class UploadingRecipeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (isInputValid()) openRecipeReviewDialog();
-                else Toast.makeText(getActivity(), "Please fill required fields before uploading", Toast.LENGTH_LONG).show();
+                else
+                    Toast.makeText(getActivity(), "Please fill required fields before uploading", Toast.LENGTH_LONG).show();
             }
         });
 
@@ -183,38 +188,84 @@ public class UploadingRecipeFragment extends Fragment {
         });
 
         recipeName.addTextChangedListener(new TextValidator(recipeName) {
-            @Override public void validate(TextView textView, String text) {
+            @Override
+            public void validate(TextView textView, String text) {
                 if (!isTextValid(text)) textView.setError("Recipe name is required!");
-                isRecipeNameValid = !isTextValid(text);
+                isRecipeNameValid = isTextValid(text);
             }
         });
 
         cookTime.addTextChangedListener(new TextValidator(cookTime) {
-            @Override public void validate(TextView textView, String text) {
+            @Override
+            public void validate(TextView textView, String text) {
                 if (!isTextValid(text)) textView.setError("Cooking time is required!");
-                else if (!isNumberPositive(text)) textView.setError("Cooking time must be positive!");
-                isCookTimeValid = !isTextValid(text) && !isNumberPositive(text);
+                else if (!isNumberPositive(text))
+                    textView.setError("Cooking time must be positive!");
+                isCookTimeValid = isTextValid(text) && isNumberPositive(text);
             }
         });
 
         prepTime.addTextChangedListener(new TextValidator(prepTime) {
-            @Override public void validate(TextView textView, String text) {
-                if (!isTextValid(text)) textView.setError( "Preparation time is required!" );
-                else if (!isNumberPositive(text)) textView.setError("Preparation time must be positive!");
-                isPrepTimeValid = !isTextValid(text) && !isNumberPositive(text);
+            @Override
+            public void validate(TextView textView, String text) {
+                if (!isTextValid(text)) textView.setError("Preparation time is required!");
+                else if (!isNumberPositive(text))
+                    textView.setError("Preparation time must be positive!");
+                isPrepTimeValid = isTextValid(text) && isNumberPositive(text);
             }
         });
 
         servings.addTextChangedListener(new TextValidator(servings) {
-            @Override public void validate(TextView textView, String text) {
-                if (!isTextValid(text)) textView.setError( "Number of serving is required!" );
-                else if (!isNumberPositive(text)) textView.setError("Number of serving must be positive!");
-                isServingsValid = !isTextValid(text) && !isNumberPositive(text);
+            @Override
+            public void validate(TextView textView, String text) {
+                if (!isTextValid(text)) textView.setError("Number of serving is required!");
+                else if (!isNumberPositive(text))
+                    textView.setError("Number of serving must be positive!");
+                isServingsValid = isTextValid(text) && isNumberPositive(text);
             }
         });
 
         addIngredientValidators(ingredientsAmount, ingredientsUnit, ingredientsName);
         addStepValidators(stepContent);
+
+        addCuisineType.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AutoCompleteTextView cuisineTypeTextView = (AutoCompleteTextView) view.findViewById(R.id.cuisineTypesAutoComplete);
+                String text = cuisineTypeTextView.getText().toString();
+                cuisineTypeTextView.getText().clear();
+                if (isTextValid(text)) {
+                    LinearLayout cuisineTypeGroup = (LinearLayout) view.findViewById(R.id.cuisineTypeGroup);
+                    addType(cuisineTypeGroup, text);
+                }
+            }
+        });
+
+        addAllergyType.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AutoCompleteTextView allergyTypeTextView = (AutoCompleteTextView) view.findViewById(R.id.allergyTypesAutoComplete);
+                String text = allergyTypeTextView.getText().toString();
+                allergyTypeTextView.getText().clear();
+                if (isTextValid(text)) {
+                    LinearLayout allergyTypeGroup = (LinearLayout) view.findViewById(R.id.allergyTypeGroup);
+                    addType(allergyTypeGroup, text);
+                }
+            }
+        });
+
+        addDietType.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AutoCompleteTextView dietTypeTextView = (AutoCompleteTextView) view.findViewById(R.id.dietTypesAutoComplete);
+                String text = dietTypeTextView.getText().toString();
+                dietTypeTextView.getText().clear();
+                if (isTextValid(text)) {
+                    LinearLayout dietTypeGroup = (LinearLayout) view.findViewById(R.id.dietTypeGroup);
+                    addType(dietTypeGroup, text);
+                }
+            }
+        });
     }
 
     private boolean isTextValid(String text) {
@@ -222,34 +273,45 @@ public class UploadingRecipeFragment extends Fragment {
     }
 
     private boolean isNumberPositive(String text) {
-        return Integer.parseInt(text) > 0;
+        boolean isValid = false;
+        try {
+            isValid = Integer.parseInt(text) > 0;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+        return isValid;
     }
 
     private void addStepValidators(EditText stepContent) {
         stepContent.addTextChangedListener(new TextValidator(stepContent) {
-            @Override public void validate(TextView textView, String text) {
-                if (isTextValid(text)) textView.setError("Step is required!");
+            @Override
+            public void validate(TextView textView, String text) {
+                if (!isTextValid(text)) textView.setError("Step is required!");
             }
         });
     }
 
     private void addIngredientValidators(EditText ingredientsAmount, EditText ingredientsUnit, EditText ingredientsName) {
         ingredientsAmount.addTextChangedListener(new TextValidator(ingredientsAmount) {
-            @Override public void validate(TextView textView, String text) {
-                if (isTextValid(text)) textView.setError( "Ingredient amount is required!" );
-                else if (isNumberPositive(text)) textView.setError("Ingredient amount must be positive!");
+            @Override
+            public void validate(TextView textView, String text) {
+                if (!isTextValid(text)) textView.setError("Ingredient amount is required!");
+                else if (!isNumberPositive(text))
+                    textView.setError("Ingredient amount must be positive!");
             }
         });
 
         ingredientsUnit.addTextChangedListener(new TextValidator(ingredientsUnit) {
-            @Override public void validate(TextView textView, String text) {
-                if (isTextValid(text)) textView.setError("Ingredient unit is required!");
+            @Override
+            public void validate(TextView textView, String text) {
+                if (!isTextValid(text)) textView.setError("Ingredient unit is required!");
             }
         });
 
         ingredientsName.addTextChangedListener(new TextValidator(ingredientsName) {
-            @Override public void validate(TextView textView, String text) {
-                if (isTextValid(text)) textView.setError("Ingredient name is required!");
+            @Override
+            public void validate(TextView textView, String text) {
+                if (!isTextValid(text)) textView.setError("Ingredient name is required!");
             }
         });
     }
@@ -273,47 +335,74 @@ public class UploadingRecipeFragment extends Fragment {
         }
     }
 
-    // Upload the recipe to Firebase.
+    // Upload the recipe to Firebase
     private void uploadRecipe(final Uri recipeImageUri) {
         pd.show();
 
-        // We are taking the filepath as storagePath + firebaseUser.getUid()+".png"
-        String recipeImageStoragePath = "recipes_image/";
-        String filePathName = recipeImageStoragePath + "_" + userId + ".png";
-        storageRef.child(filePathName).putFile(recipeImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+        OnSuccessListener onUploadRecipeToDatabaseSuccessListener = new OnSuccessListener<String>() {
             @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
-                while (!uriTask.isSuccessful()) ;
+            public void onSuccess(String s) {
+                pd.dismiss();
+                Toast.makeText(getActivity(), "Upload Successful", Toast.LENGTH_LONG).show();
 
-                // get the url of the recipe image using uritask
-                final Uri downloadUri = uriTask.getResult();
-                if (uriTask.isSuccessful()) {
-                    try {
-                        database.set(getRecipe(downloadUri));
-
-                        pd.dismiss();
-                        Toast.makeText(getActivity(), "Upload Successful", Toast.LENGTH_LONG).show();
-
-                        // close this fragment and return to the previous page
-                        requireActivity().getSupportFragmentManager().beginTransaction().remove(UploadingRecipeFragment.this).commit();
-                    } catch (ExecutionException | InterruptedException e) {
-                        // if uploading failed
-                        pd.dismiss();
-                        Toast.makeText(getActivity(), "Error Uploading ", Toast.LENGTH_LONG).show();
-                    }
-                } else {
-                    pd.dismiss();
-                    Toast.makeText(getActivity(), "Error Fetching Image", Toast.LENGTH_LONG).show();
-                }
+                // close this fragment and return to the previous page
+                requireActivity().getSupportFragmentManager().beginTransaction().replace(((ViewGroup)getView().getParent()).getId(), new HomePageFragment()).commit();
             }
-        }).addOnFailureListener(new OnFailureListener() {
+        };
+
+        OnFailureListener onUploadRecipeToDatabaseFailureListener = new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
                 pd.dismiss();
-                Toast.makeText(getActivity(), "Error Uploading Image", Toast.LENGTH_LONG).show();
+                // if uploading failed
+                Toast.makeText(getActivity(), "Error Uploading ", Toast.LENGTH_LONG).show();
             }
-        });
+        };
+
+        // If user has chosen a picture to upload
+        if (recipeImageUri != null) {
+            uploadImageToDatabase(recipeImageUri, new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    taskSnapshot.getStorage().getDownloadUrl()
+                            .addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                @Override
+                                public void onSuccess(Uri uri) {
+                                    uploadRecipeToDatabase(uri, onUploadRecipeToDatabaseSuccessListener, onUploadRecipeToDatabaseFailureListener);
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    pd.dismiss();
+                                    Toast.makeText(getActivity(), "Error Fetching Image", Toast.LENGTH_LONG).show();
+                                }
+                            });
+                }
+            }, new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    pd.dismiss();
+                    Toast.makeText(getActivity(), "Error Uploading Image", Toast.LENGTH_LONG).show();
+                }
+            });
+        } else {
+            // When no picture is uploaded by the user
+            uploadRecipeToDatabase(null, onUploadRecipeToDatabaseSuccessListener, onUploadRecipeToDatabaseFailureListener);
+        }
+    }
+
+    private void uploadImageToDatabase(Uri recipeImageUri, OnSuccessListener onSuccessListener, OnFailureListener onFailureListener) {
+        // We are taking the filepath as storagePath + firebaseUser.getUid()+".png"
+        String recipeImageStoragePath = "recipes_image/";
+        String filePathName = recipeImageStoragePath + "_" + userId + ".png";
+        storageRef.child(filePathName).putFile(recipeImageUri).addOnSuccessListener(onSuccessListener).addOnFailureListener(onFailureListener);
+    }
+
+    private void uploadRecipeToDatabase(Uri downloadUri, OnSuccessListener onSuccessListener, OnFailureListener onFailureListener) {
+        database.setAsync(getRecipe(downloadUri))
+                .addOnSuccessListener(onSuccessListener)
+                .addOnFailureListener(onFailureListener);
     }
 
     private boolean isInputValid() {
@@ -325,7 +414,8 @@ public class UploadingRecipeFragment extends Fragment {
             if (stepListLinearLayout.getChildAt(i) instanceof ConstraintLayout) {
                 ConstraintLayout step = (ConstraintLayout) stepListLinearLayout.getChildAt(i);
                 if (step.getChildAt(0) instanceof TextInputLayout) {
-                    if (((TextInputLayout) step.getChildAt(0)).getEditText() == null || !isTextValid((((TextInputLayout) step.getChildAt(0)).getEditText().getText().toString()))) return false;
+                    if (((TextInputLayout) step.getChildAt(0)).getEditText() == null || !isTextValid((((TextInputLayout) step.getChildAt(0)).getEditText().getText().toString())))
+                        return false;
                 }
             }
         }
@@ -339,11 +429,13 @@ public class UploadingRecipeFragment extends Fragment {
                 if (step.getChildAt(0) instanceof TextInputLayout && step.getChildAt(1) instanceof TextInputLayout && step.getChildAt(2) instanceof TextInputLayout) {
                     if (((TextInputLayout) step.getChildAt(2)).getEditText() == null
                             || ((TextInputLayout) step.getChildAt(1)).getEditText() == null
-                            || ((TextInputLayout) step.getChildAt(1)).getEditText() == null) return false;
+                            || ((TextInputLayout) step.getChildAt(1)).getEditText() == null)
+                        return false;
                     String ingredientName = ((TextInputLayout) step.getChildAt(2)).getEditText().getText().toString();
                     String ingredientUnit = ((TextInputLayout) step.getChildAt(1)).getEditText().getText().toString();
                     String ingredientAmount = ((TextInputLayout) step.getChildAt(0)).getEditText().getText().toString();
-                    if (!isTextValid(ingredientAmount) || !isTextValid(ingredientName) || !isTextValid(ingredientUnit) || !isNumberPositive(ingredientAmount)) return false;
+                    if (!isTextValid(ingredientAmount) || !isTextValid(ingredientName) || !isTextValid(ingredientUnit) || !isNumberPositive(ingredientAmount))
+                        return false;
                 }
             }
         }
@@ -356,6 +448,9 @@ public class UploadingRecipeFragment extends Fragment {
         TextInputLayout prepTime = view.findViewById(R.id.prepTimeContent);
         TextInputLayout servings = view.findViewById(R.id.servingsContent);
         TextInputLayout utensils = view.findViewById(R.id.utensilsContent);
+        LinearLayout cuisineTypeGroup = view.findViewById(R.id.cuisineTypeGroup);
+        LinearLayout allergyTypeGroup = view.findViewById(R.id.allergyTypeGroup);
+        LinearLayout dietTypeGroup = view.findViewById(R.id.dietTypeGroup);
 
         Recipe recipe = new Recipe();
         recipe.setRecipeName(recipeName.getEditText().getText().toString());
@@ -368,9 +463,9 @@ public class UploadingRecipeFragment extends Fragment {
         recipe.setServings(Integer.parseInt(servings.getEditText().getText().toString()));
         recipe.setUtensils(new Utensils(Arrays.asList(utensils.getEditText().getText().toString())));
         recipe.setIngredientList(getIngredients());
-        recipe.setCuisineTypes(getCuisineTypes());
-        recipe.setAllergyTypes(getAllergyTypes());
-        recipe.setDietTypes(getDietTypes());
+        recipe.setCuisineTypes(getTypes(cuisineTypeGroup, cuisineTypeValues));
+        recipe.setAllergyTypes(getTypes(allergyTypeGroup, allergyTypeValues));
+        recipe.setDietTypes(getTypes(dietTypeGroup, dietTypeValues));
         recipe.setSteps(getSteps());
 
         return recipe;
@@ -484,12 +579,17 @@ public class UploadingRecipeFragment extends Fragment {
         bundle.putString("cookTime", String.valueOf(recipe.getCookTime()));
         bundle.putString("prepTime", String.valueOf(recipe.getPrepTime()));
         bundle.putString("servings", String.valueOf(recipe.getServings()));
-        bundle.putString("utensils", recipe.getUtensils().toString());
-        bundle.putString("ingredientList", recipe.getIngredientList().toString());
-        bundle.putString("cuisineTypes", recipe.getCuisineTypes().toString());
-        bundle.putString("allergyTypes", recipe.getAllergyTypes().toString());
-        bundle.putString("dietTypes", recipe.getDietTypes().toString());
-        bundle.putString("steps", recipe.getSteps().toString());
+        Utensils utensils = recipe.getUtensils();
+        String utensilsString = "";
+        // as utensils are not mandatory to have, a protector condition is needed
+        if (utensils != null) utensilsString = truncateString(utensils.toString());
+        bundle.putString("utensils", utensilsString);
+        bundle.putString("ingredientList", truncateString(recipe.getIngredientList().toString()));
+        bundle.putString("cuisineTypes", truncateString(Arrays.toString(recipe.getCuisineTypes().stream().map(cuisineType -> cuisineTypeValues[cuisineType].toString()).toArray(String[]::new))));
+        bundle.putString("allergyTypes", truncateString(Arrays.toString(recipe.getAllergyTypes().stream().map(allergyType -> allergyTypeValues[allergyType].toString()).toArray(String[]::new))));
+        bundle.putString("dietTypes", truncateString(Arrays.toString(recipe.getDietTypes().stream().map(dietType -> dietTypeValues[dietType].toString()).toArray(String[]::new))));
+        bundle.putString("steps", truncateString(recipe.getSteps().toString()));
+
         return bundle;
     }
 
@@ -498,18 +598,46 @@ public class UploadingRecipeFragment extends Fragment {
         return null;
     }
 
-    // TODO
-    private List<Integer> getCuisineTypes() {
-        return Arrays.asList(0);
+    // Truncate a string by deleting its first and last char
+    private String truncateString(String str) {
+        return str.substring(1, str.length() - 1);
     }
 
-    // TODO
-    private List<Integer> getAllergyTypes() {
-        return Arrays.asList(0);
+    private void addType(LinearLayout typeLayout, String type) {
+        final View typeView = getLayoutInflater().inflate(R.layout.recipe_type_item, null, false);
+        ImageView removeType = (ImageView) typeView.findViewById(R.id.removeType);
+        TextView typeContent = (TextView) typeView.findViewById(R.id.typeContent);
+
+        typeContent.setText(type);
+
+        removeType.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                removeType(typeLayout, typeView);
+            }
+        });
+
+        typeLayout.addView(typeView);
     }
 
-    // TODO
-    private List<Integer> getDietTypes() {
-        return Arrays.asList(0);
+    private List<Integer> getTypes(LinearLayout typeLayout, Object[] typeValues) {
+        ArrayList<Integer> types = new ArrayList<Integer>();
+        for (int i = 0; i < typeLayout.getChildCount(); i++) {
+            if (typeLayout.getChildAt(i) instanceof ConstraintLayout) {
+                ConstraintLayout type = (ConstraintLayout) typeLayout.getChildAt(i);
+                if (type.getChildAt(0) instanceof TextView) {
+                    String text = ((TextView) type.getChildAt(0)).getText().toString();
+                    types.add(IntStream.range(0, typeValues.length)
+                            .filter(j -> text.equals(typeValues[j].toString()))
+                            .findFirst()
+                            .orElse(-1));
+                }
+            }
+        }
+        return types;
+    }
+
+    private void removeType(LinearLayout typeLayout, View type) {
+        typeLayout.removeView(type);
     }
 }

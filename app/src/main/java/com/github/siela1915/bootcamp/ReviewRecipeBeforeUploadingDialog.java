@@ -2,6 +2,7 @@ package com.github.siela1915.bootcamp;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -18,7 +19,7 @@ import java.io.IOException;
 
 public class ReviewRecipeBeforeUploadingDialog extends DialogFragment
 {
-    OnMyDialogResult mDialogResult;
+    private OnMyDialogResult mDialogResult;
 
     public ReviewRecipeBeforeUploadingDialog()
     {
@@ -50,6 +51,7 @@ public class ReviewRecipeBeforeUploadingDialog extends DialogFragment
         TextView steps = reviewDialogView.findViewById(R.id.reviewRecipeSteps);
         ImageView image = reviewDialogView.findViewById(R.id.reviewRecipeImage);
 
+        // display image if provided
         Bitmap bitmap = null;
         try {
             if (getArguments().getString("image") != null) {

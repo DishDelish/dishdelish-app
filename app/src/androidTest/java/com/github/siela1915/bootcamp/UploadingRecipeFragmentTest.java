@@ -1,5 +1,6 @@
 package com.github.siela1915.bootcamp;
 
+import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
@@ -27,6 +28,7 @@ import androidx.test.espresso.matcher.ViewMatchers;
 import com.github.siela1915.bootcamp.Labelling.AllergyType;
 import com.github.siela1915.bootcamp.Labelling.CuisineType;
 import com.github.siela1915.bootcamp.Labelling.DietType;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -63,7 +65,7 @@ public class UploadingRecipeFragmentTest {
 
     @After
     public void cleanUp() {
-        scenario.close();
+        if (scenario != null) scenario.close();
     }
 
     @Test
@@ -87,6 +89,9 @@ public class UploadingRecipeFragmentTest {
         onView(withId(R.id.stepGroup)).check(matches(withEffectiveVisibility(VISIBLE)));
         onView(withId(R.id.step)).check(matches(withEffectiveVisibility(VISIBLE)));
         onView(withId(R.id.addStepButton)).check(matches(withEffectiveVisibility(VISIBLE)));
+        onView(withId(R.id.cuisineTypes)).check(matches(withEffectiveVisibility(VISIBLE)));
+        onView(withId(R.id.allergyTypes)).check(matches(withEffectiveVisibility(VISIBLE)));
+        onView(withId(R.id.dietTypes)).check(matches(withEffectiveVisibility(VISIBLE)));
         onView(withId(R.id.recipeImage)).check(matches(withEffectiveVisibility(VISIBLE)));
         onView(withId(R.id.recipeUploadButton)).check(matches(withEffectiveVisibility(VISIBLE)));
     }
@@ -297,6 +302,132 @@ public class UploadingRecipeFragmentTest {
     }
 
     @Test
+    public void editCuisineTypeTest() {
+        scenario = FragmentScenario.launchInContainer(UploadingRecipeFragment.class);
+
+        onView(allOf(
+                isDescendantOfA(withId(R.id.cuisineTypesContent)),
+                withId(R.id.cuisineTypesAutoComplete)
+        )).perform(ViewActions.scrollTo(), typeText(CuisineType.getAll()[0]));
+
+        onView(allOf(
+                isDescendantOfA(withId(R.id.cuisineTypesContent)),
+                withId(R.id.cuisineTypesAutoComplete)
+        )).check(matches(ViewMatchers.withText(CuisineType.getAll()[0])));
+    }
+
+    @Test
+    public void addCuisineTypeTest() {
+        scenario = FragmentScenario.launchInContainer(UploadingRecipeFragment.class);
+
+        onView(allOf(
+                isDescendantOfA(withId(R.id.cuisineTypesContent)),
+                withId(R.id.cuisineTypesAutoComplete)
+        )).perform(ViewActions.scrollTo(), typeText(CuisineType.getAll()[0]));
+        onView(withId(R.id.addCuisineTypeButton)).perform(ViewActions.scrollTo(), ViewActions.click());
+
+        onView(withId(R.id.cuisineTypeGroup)).check((matches(withChildViewCount(1, withId(R.id.type)))));
+    }
+
+    @Test
+    public void deleteCuisineTypeTest() {
+        scenario = FragmentScenario.launchInContainer(UploadingRecipeFragment.class);
+
+        onView(allOf(
+                isDescendantOfA(withId(R.id.cuisineTypesContent)),
+                withId(R.id.cuisineTypesAutoComplete)
+        )).perform(ViewActions.scrollTo(), typeText(CuisineType.getAll()[0]));
+        onView(withId(R.id.addCuisineTypeButton)).perform(ViewActions.scrollTo(), ViewActions.click());
+        onView(withId(R.id.removeType)).perform(ViewActions.scrollTo(), ViewActions.click());
+
+        onView(withId(R.id.cuisineTypeGroup)).check((matches(withChildViewCount(0, withId(R.id.type)))));
+    }
+
+    @Test
+    public void editAllergyTypeTest() {
+        scenario = FragmentScenario.launchInContainer(UploadingRecipeFragment.class);
+
+        onView(allOf(
+                isDescendantOfA(withId(R.id.allergyTypesContent)),
+                withId(R.id.allergyTypesAutoComplete))
+        ).perform(ViewActions.scrollTo(), typeText(AllergyType.getAll()[0]));
+
+        onView(allOf(
+                isDescendantOfA(withId(R.id.allergyTypesContent)),
+                withId(R.id.allergyTypesAutoComplete))
+        ).check(matches(ViewMatchers.withText(AllergyType.getAll()[0])));
+    }
+
+    @Test
+    public void addAllergyTypeTest() {
+        scenario = FragmentScenario.launchInContainer(UploadingRecipeFragment.class);
+
+        onView(allOf(
+                isDescendantOfA(withId(R.id.allergyTypesContent)),
+                withId(R.id.allergyTypesAutoComplete))
+        ).perform(ViewActions.scrollTo(), typeText(AllergyType.getAll()[0]));
+        onView(withId(R.id.addAllergyTypeButton)).perform(ViewActions.scrollTo(), ViewActions.click());
+
+        onView(withId(R.id.allergyTypeGroup)).check((matches(withChildViewCount(1, withId(R.id.type)))));
+    }
+
+    @Test
+    public void deleteAllergyTypeTest() {
+        scenario = FragmentScenario.launchInContainer(UploadingRecipeFragment.class);
+
+        onView(allOf(
+                isDescendantOfA(withId(R.id.allergyTypesContent)),
+                withId(R.id.allergyTypesAutoComplete))
+        ).perform(ViewActions.scrollTo(), typeText(AllergyType.getAll()[0]));
+        onView(withId(R.id.addAllergyTypeButton)).perform(ViewActions.scrollTo(), ViewActions.click());
+        onView(withId(R.id.removeType)).perform(ViewActions.scrollTo(), ViewActions.click());
+
+        onView(withId(R.id.allergyTypeGroup)).check((matches(withChildViewCount(0, withId(R.id.type)))));
+    }
+
+    @Test
+    public void editDietTypeTest() {
+        scenario = FragmentScenario.launchInContainer(UploadingRecipeFragment.class);
+
+        onView(allOf(
+                isDescendantOfA(withId(R.id.dietTypesContent)),
+                withId(R.id.dietTypesAutoComplete))
+        ).perform(ViewActions.scrollTo(), typeText(DietType.getAll()[0]));
+
+        onView(allOf(
+                isDescendantOfA(withId(R.id.dietTypesContent)),
+                withId(R.id.dietTypesAutoComplete))
+        ).check(matches(ViewMatchers.withText(DietType.getAll()[0])));
+    }
+
+    @Test
+    public void addDietTypeTest() {
+        scenario = FragmentScenario.launchInContainer(UploadingRecipeFragment.class);
+
+        onView(allOf(
+                isDescendantOfA(withId(R.id.dietTypesContent)),
+                withId(R.id.dietTypesAutoComplete))
+        ).perform(ViewActions.scrollTo(), typeText(DietType.getAll()[0]));
+        onView(withId(R.id.addDietTypeButton)).perform(ViewActions.scrollTo(), ViewActions.click());
+
+        onView(withId(R.id.dietTypeGroup)).check((matches(withChildViewCount(1, withId(R.id.type)))));
+    }
+
+    @Test
+    public void deleteDietTypeTest() {
+        scenario = FragmentScenario.launchInContainer(UploadingRecipeFragment.class);
+
+        onView(allOf(
+                isDescendantOfA(withId(R.id.dietTypesContent)),
+                withId(R.id.dietTypesAutoComplete))
+        ).perform(ViewActions.scrollTo(), typeText(DietType.getAll()[0]));
+        onView(withId(R.id.addDietTypeButton)).perform(ViewActions.scrollTo(), ViewActions.click());
+        onView(withId(R.id.removeType)).perform(ViewActions.scrollTo(), ViewActions.click());
+
+        onView(withId(R.id.dietTypeGroup)).check((matches(withChildViewCount(0, withId(R.id.type)))));
+    }
+
+    @Test
     public void openReviewDialog() {
         scenario = FragmentScenario.launchInContainer(UploadingRecipeFragment.class);
 
@@ -337,6 +468,21 @@ public class UploadingRecipeFragmentTest {
                 isDescendantOfA(withId(R.id.stepContent)),
                 withClassName(endsWith("EditText"))
         )).perform(ViewActions.scrollTo(), typeText("step-test"));
+        onView(allOf(
+                isDescendantOfA(withId(R.id.cuisineTypesContent)),
+                withId(R.id.cuisineTypesAutoComplete))
+        ).perform(ViewActions.scrollTo(), typeText(CuisineType.getAll()[0]));
+        onView(withId(R.id.addCuisineTypeButton)).perform(ViewActions.scrollTo(), ViewActions.click());
+        onView(allOf(
+                isDescendantOfA(withId(R.id.allergyTypesContent)),
+                withId(R.id.allergyTypesAutoComplete))
+        ).perform(ViewActions.scrollTo(), typeText(AllergyType.getAll()[0]));
+        onView(withId(R.id.addAllergyTypeButton)).perform(ViewActions.scrollTo(), ViewActions.click());
+        onView(allOf(
+                isDescendantOfA(withId(R.id.dietTypesContent)),
+                withId(R.id.dietTypesAutoComplete))
+        ).perform(ViewActions.scrollTo(), typeText(DietType.getAll()[0]));
+        onView(withId(R.id.addDietTypeButton)).perform(ViewActions.scrollTo(), ViewActions.click());
 
         onView(withId(R.id.recipeUploadButton)).perform(ViewActions.scrollTo(), ViewActions.click());
 
