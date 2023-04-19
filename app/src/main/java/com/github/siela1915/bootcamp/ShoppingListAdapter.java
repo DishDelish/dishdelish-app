@@ -14,6 +14,7 @@ import java.util.List;
 public class ShoppingListAdapter  extends RecyclerView.Adapter<ShoppingListViewHolder>{
     List<String> shoppingList;
     Context context;
+    ShoppingListManager manager;
 
     public ShoppingListAdapter(List<String> shoppingList, Context context) {
         this.shoppingList = shoppingList;
@@ -29,6 +30,7 @@ public class ShoppingListAdapter  extends RecyclerView.Adapter<ShoppingListViewH
     @SuppressLint("ResourceAsColor")
     @Override
     public void onBindViewHolder(@NonNull ShoppingListViewHolder holder, int position) {
+        manager=new ShoppingListManager(context);
         String item = shoppingList.get(position);
         holder.shopping_items.setText(item);
         holder.itemView.setOnClickListener(view ->{
@@ -36,8 +38,10 @@ public class ShoppingListAdapter  extends RecyclerView.Adapter<ShoppingListViewH
             builder.setTitle("Are you sure you want to delete this item?");
             builder.setCancelable(false);
             builder.setNegativeButton("Yes", (dialog, which) -> {
+                String item_to_remove= shoppingList.get(position);
                 shoppingList.remove(position);
                 notifyDataSetChanged();
+                manager.removeIngredient(item_to_remove);
             });
             builder.setPositiveButton("No",((dialog, which) -> {
                 dialog.cancel();

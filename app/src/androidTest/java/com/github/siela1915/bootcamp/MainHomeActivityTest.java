@@ -2,6 +2,7 @@ package com.github.siela1915.bootcamp;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.contrib.NavigationViewActions.navigateTo;
 import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
@@ -156,7 +157,20 @@ public class MainHomeActivityTest {
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
         onView(withId(R.id.navView)).perform(navigateTo(R.id.menuItem_soppingCart));
         onView(withId(R.id.shoppingCartFragment)).check(matches(isDisplayed()));
+    }
+    @Test
+    public void test(){
+        ActivityScenario scenario1= ActivityScenario.launch(MainHomeActivity.class);
+        onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
+        onView(withId(R.id.navView)).perform(navigateTo(R.id.menuItem_soppingCart));
+        scenario.onActivity(activity -> {
+            ShoppingListManager manager =new ShoppingListManager(activity.getApplicationContext());
+            manager.addIngredient("item1");
+
+        });
         onView(withId(R.id.shoppingList)).check(matches(hasDescendant(withText("item1"))));
+        scenario1.close();
+
     }
 
 }

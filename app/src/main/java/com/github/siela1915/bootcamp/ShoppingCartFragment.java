@@ -27,6 +27,7 @@ public class ShoppingCartFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    ShoppingListManager manager;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -68,14 +69,18 @@ public class ShoppingCartFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        manager=new ShoppingListManager(getContext());
         View view =inflater.inflate(R.layout.fragment_shopping_cart, container, false);
         RecyclerView recyclerView = view.findViewById(R.id.shoppingList);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        List<String> list= manager.getShoppingList();
+        /*
         List<String> list= new ArrayList<>();
         list.add("item1");
         list.add("item2");
         list.add("item3");
         list.add("item4");
+         */
         ShoppingListAdapter adapter= new ShoppingListAdapter(list,getContext());
         recyclerView.setAdapter(adapter);
         return view;
