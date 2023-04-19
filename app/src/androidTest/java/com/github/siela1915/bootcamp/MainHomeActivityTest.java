@@ -153,6 +153,8 @@ public class MainHomeActivityTest {
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
         onView(withId(R.id.navView)).perform(navigateTo(R.id.menuItem_soppingCart));
         onView(withId(R.id.shoppingCartFragment)).check(matches(isDisplayed()));
+        onView(withText("item1")).perform(click());
+        onView(withText("Are you sure you want to delete this item?")).check(matches(isDisplayed()));
     }
 
 }
