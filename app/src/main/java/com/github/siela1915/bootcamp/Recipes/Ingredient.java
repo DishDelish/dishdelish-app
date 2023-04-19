@@ -95,7 +95,7 @@ public class Ingredient implements Parcelable {
         return ingredient + " " + unit.toString();
     }
 
-    // toString returns the display string
+
 
     @Override
     public boolean equals(Object obj) {
