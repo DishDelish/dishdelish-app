@@ -8,10 +8,22 @@
     tools:context=".NearbyHelpFragment">
 
     <androidx.constraintlayout.widget.Group
+        android:id="@+id/offerHelpGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="offerSharePosition,submitOfferHelpButton,offeredIngredient" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/nearbyHelpGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <androidx.constraintlayout.widget.Group
         android:id="@+id/askHelpGroup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:constraint_referenced_ids="askedIngredient,askSharePosition,submitAskHelpButton" />
+        app:constraint_referenced_ids="askedIngredient,askSharePosition,submitAskHelpButton"
+        tools:visibility="gone" />
 
     <androidx.constraintlayout.widget.Group
         android:id="@+id/chooseHelpGroup"
@@ -84,4 +96,39 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/askSharePosition" />
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/offerSharePosition"
+        android:layout_width="377dp"
+        android:layout_height="58dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:text="Accept to share my position in order to find nearby people looking for the ingredient."
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/verticalCenterGuideline"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/verticalCenterGuideline" />
+
+    <Button
+        android:id="@+id/submitOfferHelpButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Offer ingredient"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/offerSharePosition" />
+
+    <EditText
+        android:id="@+id/offeredIngredient"
+        android:layout_width="229dp"
+        android:layout_height="53dp"
+        android:layout_marginBottom="8dp"
+        android:hint="Ingredient you're offering"
+        android:inputType="text"
+        app:layout_constraintBottom_toTopOf="@+id/offerSharePosition"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
