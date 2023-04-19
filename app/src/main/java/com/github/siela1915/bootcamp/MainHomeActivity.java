@@ -58,29 +58,30 @@ public class MainHomeActivity extends AppCompatActivity {
         navigationView= findViewById(R.id.navView);
         cuisineBtn =findViewById(R.id.cuisineBtn);
         timeBtn=findViewById(R.id.timingBtn);
-        allergyBtn=findViewById(R.id.notIncludIngBtn);
+        allergyBtn=findViewById(R.id.allergyBtn);
         dietBtn=findViewById(R.id.dietBtn);
         filterBtn=findViewById(R.id.filterBtn);
         List<String> selectedCuisine = new ArrayList<>();
         List<String> selectedDiet = new ArrayList<>();
         List<String> selectedAllery= new ArrayList<>();
         List<String> selectedPrepTime= new ArrayList<>();
+
         cuisineBtn.setOnClickListener(v -> {
             String [] cuisineTypes= CuisineType.getAll();
             boolean[] checksum= new boolean[cuisineTypes.length];
-            String title = "Chose your preferred cuisine";
+            String title = "Choose your preferred cuisine";
             popUpDialogBuilder(cuisineTypes,checksum,title,selectedCuisine);
         });
         dietBtn.setOnClickListener(v -> {
             String [] diets= DietType.getAll();
             boolean[] checksum= new boolean[diets.length];
-            String title = "Chose your diet";
+            String title = "Choose your diet";
             popUpDialogBuilder(diets,checksum,title,selectedDiet);
         });
         timeBtn.setOnClickListener(v -> {
             String [] prepTime= PreparationTime.getAll();
             boolean[] checksum= new boolean[prepTime.length];
-            String title = "Chose the preparation time";
+            String title = "Choose the preparation time";
             popUpDialogBuilder(prepTime,checksum,title,selectedPrepTime);
         });
         allergyBtn.setOnClickListener(v -> {

@@ -31,6 +31,7 @@ public class Recipe implements Parcelable {
     public List<String> steps;
     public List<String> comments;
     public int likes;
+    public String uniqueKey = "";
 
     public int getImage() {
         return image;
@@ -160,6 +161,9 @@ public class Recipe implements Parcelable {
         this.likes = likes;
     }
 
+    public String getUniqueKey() {return uniqueKey;}
+
+    public void setUniqueKey(String key) {this.uniqueKey = key;}
 
     public Recipe() {}
 
@@ -259,7 +263,8 @@ public class Recipe implements Parcelable {
                     && likes == recipe.likes
                     && allergyTypes.equals(recipe.allergyTypes)
                     && cuisineTypes.equals(recipe.cuisineTypes)
-                    && dietTypes.equals(recipe.dietTypes);
+                    && dietTypes.equals(recipe.dietTypes)
+                    && uniqueKey.equals(recipe.uniqueKey);
         }
         return false;
     }
