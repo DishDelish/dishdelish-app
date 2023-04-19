@@ -1,8 +1,11 @@
 package com.github.siela1915.bootcamp;
 
+import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -12,25 +15,13 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentContainerView;
 
-
-import android.annotation.SuppressLint;
-import android.app.AlertDialog;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.Button;
-
-
 import com.github.siela1915.bootcamp.Labelling.AllergyType;
 import com.github.siela1915.bootcamp.Labelling.CuisineType;
 import com.github.siela1915.bootcamp.Labelling.DietType;
 import com.github.siela1915.bootcamp.Labelling.RecipeFetcher;
-import com.github.siela1915.bootcamp.Recipes.DropdownMenuAdapter;
-import com.github.siela1915.bootcamp.Recipes.PreparationTime;
-
 import com.github.siela1915.bootcamp.Recipes.ExampleRecipes;
+import com.github.siela1915.bootcamp.Recipes.PreparationTime;
 import com.github.siela1915.bootcamp.Recipes.Recipe;
-
-import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
@@ -46,7 +37,7 @@ public class MainHomeActivity extends AppCompatActivity {
     Button cuisineBtn,timeBtn,allergyBtn, dietBtn,filterBtn;
     BottomNavigationView bottomAppBar;
 
-    @SuppressLint("MissingInflatedId")
+    @SuppressLint({"MissingInflatedId", "NonConstantResourceId"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,6 +57,7 @@ public class MainHomeActivity extends AppCompatActivity {
         bottomAppBar=findViewById(R.id.bottomAppBar);
 
         bottomAppBar.setOnItemSelectedListener(item ->{
+            constraintLayout.setVisibility(View.GONE);
             setContainerContent(R.id.fragContainer,ShoppingCartFragment.class,false);
             return true;
         });
@@ -201,6 +193,7 @@ public class MainHomeActivity extends AppCompatActivity {
         }
     }
 
+    @SuppressLint("ResourceAsColor")
     private void popUpDialogBuilder(String[] items, boolean[] checksum, String title, List<String> selected){
         AlertDialog.Builder builder= new AlertDialog.Builder(MainHomeActivity.this,R.style.AlertDialogTheme);
         builder.setTitle(title);
@@ -212,7 +205,7 @@ public class MainHomeActivity extends AppCompatActivity {
         });
         builder.setPositiveButton("Ok", (dialog, which) -> {
             for(int i=0; i< checksum.length; i++){
-                if(checksum[i]== true){
+                if(checksum[i]){
                     selected.add(items[i]);
                 }
             }
@@ -227,8 +220,8 @@ public class MainHomeActivity extends AppCompatActivity {
 
         AlertDialog dialog=builder.create();
         dialog.setOnShowListener(arg0 -> {
-            dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.teal_700));
-            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.teal_700));
+            dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(R.color.teal_700);
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(R.color.teal_700);
         });
         dialog.show();
     }

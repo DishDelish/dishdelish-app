@@ -10,6 +10,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.github.siela1915.bootcamp.Recipes.Ingredient;
+import com.github.siela1915.bootcamp.Recipes.Unit;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,10 +71,6 @@ public class ShoppingCartFragment extends Fragment {
         View view =inflater.inflate(R.layout.fragment_shopping_cart, container, false);
         RecyclerView recyclerView = view.findViewById(R.id.shoppingList);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        if(recyclerView== null){
-            System.out.println("recyclerView is null");
-            return null;
-        }
         List<String> list= new ArrayList<>();
         list.add("item1");
         list.add("item2");
