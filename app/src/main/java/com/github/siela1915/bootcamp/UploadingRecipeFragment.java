@@ -183,15 +183,6 @@ public class UploadingRecipeFragment extends Fragment {
 
     public void setupIngredientAutocomplete(AutoCompleteTextView ingredientAutoComplete, Map<String, Integer> idMap, IngredientAutocomplete apiService){
         ingredientAutoComplete.setThreshold(1);
-        //clear the field if the user wants to re-enter the ingredient name
-        ingredientAutoComplete.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if(hasFocus){
-                    ingredientAutoComplete.setText("");
-                }
-            }
-        });
         ingredientAutoComplete.addTextChangedListener(new TextWatcher() {
             String prevString;
             boolean isTyping = false;
@@ -205,17 +196,19 @@ public class UploadingRecipeFragment extends Fragment {
             private final long DELAY = 1000; // milliseconds
             @Override
             public void afterTextChanged(final Editable s) {
+                //TODO add handler for timer,
                 //couldn't figure out a way to test an api inside UI classes
-                if(BuildConfig.DEBUG){
-                    ArrayAdapter<String> ingredientAdapter = new ArrayAdapter<String>(ingredientAutoComplete.getContext(), android.R.layout.select_dialog_item, Arrays.asList("apple"));
-                    ingredientAutoComplete.setAdapter(ingredientAdapter);
-                    ingredientAutoComplete.showDropDown();
-                    return;
-                }
+//                if(BuildConfig.DEBUG){
+//                    ArrayAdapter<String> ingredientAdapter = new ArrayAdapter<String>(ingredientAutoComplete.getContext(), android.R.layout.select_dialog_item, Arrays.asList("apple"));
+//                    ingredientAutoComplete.setAdapter(ingredientAdapter);
+//                    ingredientAutoComplete.showDropDown();
+//                    return;
+//                }
                 //doesn't consider defocusing and refocusing the text field as typing
                 if(!s.toString().equals(prevString)){
                     if (!isTyping) {
                         // Send notification for start typing event
+                        ingredientAutoComplete.dismissDropDown();
                         isTyping = true;
                     }
                     timer.cancel();

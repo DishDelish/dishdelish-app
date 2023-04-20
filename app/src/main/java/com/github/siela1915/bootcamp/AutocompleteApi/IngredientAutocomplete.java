@@ -5,11 +5,8 @@ import android.widget.AutoCompleteTextView;
 
 import com.github.siela1915.bootcamp.BuildConfig;
 import com.github.siela1915.bootcamp.Recipes.Ingredient;
-import com.github.siela1915.bootcamp.UploadingRecipeFragment;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -40,6 +37,7 @@ public class IngredientAutocomplete {
     //will store the responses inside the ingredients list
     //implementation will have to work even with empty lists, i.e. while the call is still ongoing.
     public List<ApiResponse> completeSearch(String query, List<ApiResponse> ingredients){
+        //TODO add retrying, log something in case of failure
         service.fetchIngredients(query, numberOfIngredients, API_KEY, true).enqueue(new Callback<List<ApiResponse>>() {
             @Override
             public void onResponse(Call<List<ApiResponse>> call, Response<List<ApiResponse>> response) {
