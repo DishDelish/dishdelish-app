@@ -16,16 +16,19 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientViewHolder
     Context context;
     List<Ingredient> ingredients;
 
-    public IngredientAdapter(Context context, List<Ingredient> ingredients) {
+    ShoppingListManager manager;
+
+    public IngredientAdapter(Context context, List<Ingredient> ingredients, ShoppingListManager manager) {
         this.context = context;
         this.ingredients = ingredients;
+        this.manager = manager;
     }
 
 
     @NonNull
     @Override
     public IngredientViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new IngredientViewHolder(LayoutInflater.from(context).inflate(R.layout.ingredient_item, parent, false));
+        return new IngredientViewHolder(LayoutInflater.from(context).inflate(R.layout.ingredient_item, parent, false), manager);
     }
 
     @Override

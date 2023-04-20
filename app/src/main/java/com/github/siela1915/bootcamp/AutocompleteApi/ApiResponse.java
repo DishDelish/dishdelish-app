@@ -1,10 +1,5 @@
 package com.github.siela1915.bootcamp.AutocompleteApi;
 
-import androidx.annotation.NonNull;
-
-import java.util.Arrays;
-import java.util.List;
-
 public class ApiResponse {
     public String name;
     public String image;

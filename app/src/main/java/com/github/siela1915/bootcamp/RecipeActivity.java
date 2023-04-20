@@ -15,6 +15,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import com.github.siela1915.bootcamp.Recipes.Comment;
 import com.github.siela1915.bootcamp.Recipes.Ingredient;
 import com.github.siela1915.bootcamp.Recipes.Recipe;
 import com.github.siela1915.bootcamp.Recipes.Unit;
@@ -25,11 +26,15 @@ import java.util.List;
 public class RecipeActivity extends AppCompatActivity {
 
     private Recipe recipe;
+    private ShoppingListManager shoppingListManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe);
+
+        shoppingListManager = new ShoppingListManager(this);
+
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -57,7 +62,6 @@ public class RecipeActivity extends AppCompatActivity {
             }
         });
 
-
     }
 
     @Override
@@ -83,7 +87,8 @@ public class RecipeActivity extends AppCompatActivity {
         RatingBar ratingBar = (RatingBar) findViewById(R.id.ratingBar);
         TextView servings = (TextView) findViewById(R.id.servings);
 
-        Bitmap recipeImage = BitmapFactory.decodeResource(this.getResources(), recipe.image);
+        // not sure about this
+        Bitmap recipeImage = BitmapFactory.decodeResource(this.getResources(), Integer.valueOf(recipe.image));
         recipePicture.setImageBitmap(recipeImage);
 
         Bitmap avatar = BitmapFactory.decodeResource(this.getResources(), recipe.profilePicture);
@@ -132,7 +137,7 @@ public class RecipeActivity extends AppCompatActivity {
     private void setIngredientListContents(RecyclerView ingredientsList){
 
         ingredientsList.setLayoutManager(new LinearLayoutManager(this));
-        IngredientAdapter ingredientAdapter = new IngredientAdapter(getApplicationContext(), new ArrayList<>(recipe.getIngredientList()));
+        IngredientAdapter ingredientAdapter = new IngredientAdapter(getApplicationContext(), new ArrayList<>(recipe.getIngredientList()), shoppingListManager);
         ingredientsList.setAdapter(ingredientAdapter);
 
     }
@@ -143,8 +148,6 @@ public class RecipeActivity extends AppCompatActivity {
         CommentAdapter commentAdapter = new CommentAdapter(getApplicationContext(), recipe.comments);
         commentsList.setAdapter(commentAdapter);
 
-
-
         EditText commentBox = (EditText) findViewById(R.id.enterComment);
         Button sendComment = (Button) findViewById(R.id.sendCommentButton);
 
@@ -153,7 +156,7 @@ public class RecipeActivity extends AppCompatActivity {
             if(!input.isEmpty()){
 
                 commentBox.setText("");
-                recipe.comments.add(input);
+                recipe.comments.add(new Comment(input));
                 commentAdapter.notifyItemInserted(recipe.comments.size()-1);
 
             }
