@@ -75,7 +75,7 @@ public class LocationDatabaseTest {
             Tasks.await(locDb.updateLocation(loc));
             Tasks.await(locDb.updateOffered(ing));
             Ingredient res = Tasks.await(locDb.getOffered(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid()));
-            assertThat(res, equalTo(ing));
+            assertThat(res.toString(), is(ing.toString());
         } catch (ExecutionException | InterruptedException e) {
             throw new RuntimeException(e);
         }

@@ -60,7 +60,6 @@ public class NearbyHelpFragmentTest {
         scenario = FragmentScenario.launchInContainer(NearbyHelpFragment.class);
 
         onView(withId(R.id.askHelpButton))
-                .perform(scrollTo())
                 .perform(ViewActions.click());
 
         onView(withId(R.id.chooseHelpGroup)).check(matches(not(withEffectiveVisibility(VISIBLE))));
@@ -76,7 +75,6 @@ public class NearbyHelpFragmentTest {
         scenario = FragmentScenario.launchInContainer(NearbyHelpFragment.class);
 
         onView(withId(R.id.offerHelpButton))
-                .perform(scrollTo())
                 .perform(ViewActions.click());
 
         onView(withId(R.id.chooseHelpGroup)).check(matches(not(withEffectiveVisibility(VISIBLE))));
@@ -93,11 +91,10 @@ public class NearbyHelpFragmentTest {
 
         onView(withId(R.id.askHelpButton)).perform(ViewActions.click());
 
-        onView(withId(R.id.askedIngredient)).perform(ViewActions.typeText("testIngredient"));
+        onView(withId(R.id.askedIngredient)).perform(ViewActions.typeText("testIngredient"), ViewActions.closeSoftKeyboard());
         onView(withId(R.id.askSharePosition)).perform(ViewActions.click());
 
         onView(withId(R.id.submitAskHelpButton))
-                .perform(scrollTo())
                 .perform(ViewActions.click());
 
         FirebaseAuthActivityTest.logoutSync();
@@ -111,14 +108,12 @@ public class NearbyHelpFragmentTest {
         scenario = FragmentScenario.launchInContainer(NearbyHelpFragment.class);
 
         onView(withId(R.id.offerHelpButton))
-                .perform(scrollTo())
                 .perform(ViewActions.click());
 
-        onView(withId(R.id.offeredIngredient)).perform(ViewActions.typeText("testIngredient"));
+        onView(withId(R.id.offeredIngredient)).perform(ViewActions.typeText("testIngredient"), ViewActions.closeSoftKeyboard());
         onView(withId(R.id.offerSharePosition)).perform(ViewActions.click());
 
         onView(withId(R.id.submitOfferHelpButton))
-                .perform(scrollTo())
                 .perform(ViewActions.click());
 
         FirebaseAuthActivityTest.logoutSync();
