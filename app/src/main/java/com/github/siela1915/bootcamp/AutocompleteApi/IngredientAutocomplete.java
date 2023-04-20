@@ -40,7 +40,7 @@ public class IngredientAutocomplete {
     //will store the responses inside the ingredients list
     //implementation will have to work even with empty lists, i.e. while the call is still ongoing.
     public List<ApiResponse> completeSearch(String query, List<ApiResponse> ingredients){
-        service.fetchIngredients(query, numberOfIngredients, apiKey, true).enqueue(new Callback<List<ApiResponse>>() {
+        service.fetchIngredients(query, numberOfIngredients, API_KEY, true).enqueue(new Callback<List<ApiResponse>>() {
             @Override
             public void onResponse(Call<List<ApiResponse>> call, Response<List<ApiResponse>> response) {
                 if(response.isSuccessful()) {
@@ -68,7 +68,7 @@ public class IngredientAutocomplete {
     //Method that only returns the names of the ingredients, used when uploading recipe
     public List<String> completeSearchNames(String query, AutoCompleteTextView view, Map<String, Integer> idMap){
         List<String> ingredients = new ArrayList<>();
-        service.fetchIngredients(query, numberOfIngredients, apiKey, true).enqueue(new Callback<List<ApiResponse>>() {
+        service.fetchIngredients(query, numberOfIngredients, API_KEY, true).enqueue(new Callback<List<ApiResponse>>() {
             @Override
             public void onResponse(Call<List<ApiResponse>> call, Response<List<ApiResponse>> response) {
                 if(response.isSuccessful()) {
@@ -97,7 +97,7 @@ public class IngredientAutocomplete {
     }
 
     public void getNutritionFromIngredient(int id, Ingredient ingredient){
-        service.getNutrition(id, ingredient.getUnit().getValue(), ingredient.getUnit().getInfo(), apiKey).enqueue(new Callback<NutrientsResponse>() {
+        service.getNutrition(id, ingredient.getUnit().getValue(), ingredient.getUnit().getInfo(), API_KEY).enqueue(new Callback<NutrientsResponse>() {
             @Override
             public void onResponse(Call<NutrientsResponse> call, Response<NutrientsResponse> response) {
                 if(response.isSuccessful()) {
