@@ -5,8 +5,6 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
-import java.util.List;
-
 public class Ingredient implements Parcelable {
     String ingredient;
     Unit unit;
@@ -90,6 +88,7 @@ public class Ingredient implements Parcelable {
         dest.writeDouble(sugar);
     }
 
+    @NonNull
     @Override
     public String toString() {
         return ingredient + " " + unit.toString();

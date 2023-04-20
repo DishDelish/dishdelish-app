@@ -7,6 +7,7 @@ import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+import static androidx.test.espresso.matcher.ViewMatchers.assertThat;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
@@ -24,6 +25,7 @@ import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RatingBar;
+import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import androidx.annotation.DrawableRes;
@@ -33,6 +35,7 @@ import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.espresso.matcher.BoundedMatcher;
 
+import com.github.siela1915.bootcamp.Recipes.Comment;
 import com.github.siela1915.bootcamp.Recipes.ExampleRecipes;
 import com.github.siela1915.bootcamp.Recipes.Ingredient;
 import com.github.siela1915.bootcamp.Recipes.Recipe;
@@ -97,9 +100,9 @@ public class RecipeActivityTest {
 
             // Iterate through the list and compare each element with the adapter's data set
             for (int i = 0; i < omelette.comments.size(); i++) {
-                String expectedData = omelette.comments.get(i);
-                String actualData = commentAdapter.getData().get(i);
-                assertEquals(expectedData, actualData);
+                Comment expectedData = omelette.comments.get(i);
+                Comment actualData = commentAdapter.getData().get(i);
+                assertEquals(expectedData.getContent(), actualData.getContent());
             }
 
         });
@@ -118,9 +121,9 @@ public class RecipeActivityTest {
             CommentAdapter commentAdapter = (CommentAdapter) commentsList.getAdapter();
 
             for (int i = 0; i < omelette.comments.size(); i++) {
-                String expectedData = omelette.comments.get(i);
-                String actualData = commentAdapter.getData().get(i);
-                assertEquals(expectedData, actualData);
+                Comment expectedData = omelette.comments.get(i);
+                Comment actualData = commentAdapter.getData().get(i);
+                assertEquals(expectedData.getContent(), actualData.getContent());
             }
         });
         scenario.close();
@@ -141,21 +144,79 @@ public class RecipeActivityTest {
         onView(withId(R.id.sendCommentButton))
                 .perform(scrollTo(), click());
 
-        List<String> newCommentsList = new ArrayList<>(omelette.comments);
-        newCommentsList.add(test);
+        List<Comment> newCommentsList = new ArrayList<>(omelette.comments);
+        newCommentsList.add(new Comment(test));
 
         scenario.onActivity(activity -> {
             RecyclerView commentsList = activity.findViewById(R.id.commentsList);
             CommentAdapter commentAdapter = (CommentAdapter) commentsList.getAdapter();
 
             for (int i = 0; i < newCommentsList.size(); i++) {
-                String expectedData = newCommentsList.get(i);
-                String actualData = commentAdapter.getData().get(i);
-                assertEquals(expectedData, actualData);
+                Comment expectedData = newCommentsList.get(i);
+                Comment actualData = commentAdapter.getData().get(i);
+                assertEquals(expectedData.getContent(), actualData.getContent());
             }
         });
         scenario.close();
 
+    }
+
+    @Test
+    public void backgroundOfLikeButtonChangesWhenItIsClicked(){
+
+        ActivityScenario scenario = ActivityScenario.launch(i);
+
+        int commentIndex = 0;
+
+        scenario.onActivity(activity -> {
+            RecyclerView commentsList = activity.findViewById(R.id.commentsList);
+            CommentViewHolder viewHolder = (CommentViewHolder) commentsList.findViewHolderForAdapterPosition(commentIndex);
+
+            // Check that the tag value of the button changes when clicked
+            ToggleButton thumb = viewHolder.itemView.findViewById(R.id.thumbButton);
+            thumb.performClick();
+            String actual = (String) thumb.getTag();
+            String expected = "liked";
+            assertTrue(actual.equals(expected));
+
+            thumb.performClick();
+            actual = (String) thumb.getTag();
+            expected = "unliked";
+            assertTrue(actual.equals(expected));
+        });
+
+        scenario.close();
+
+    }
+
+    @Test
+    public void likeCounterIncreasesWhenCommentIsLiked(){
+        ActivityScenario scenario = ActivityScenario.launch(i);
+
+        int commentIndex = 0;
+
+        scenario.onActivity(activity -> {
+            RecyclerView commentsList = activity.findViewById(R.id.commentsList);
+            CommentViewHolder viewHolder = (CommentViewHolder) commentsList.findViewHolderForAdapterPosition(commentIndex);
+
+            // Check that the tag value of the button changes when clicked
+            ToggleButton thumb = viewHolder.itemView.findViewById(R.id.thumbButton);
+
+            TextView likeCount = viewHolder.itemView.findViewById(R.id.likeCount);
+            int likes = Integer.valueOf(likeCount.getText().toString());
+
+            thumb.performClick();
+            int actual = Integer.valueOf(likeCount.getText().toString());
+            int expected = likes+1;
+            assertThat(actual, is(expected));
+
+            thumb.performClick();
+            actual = Integer.valueOf(likeCount.getText().toString());;
+            expected = likes;
+            assertThat(actual, is(expected));
+        });
+
+        scenario.close();
     }
 
     @Test
@@ -221,7 +282,9 @@ public class RecipeActivityTest {
     public void isCorrectRecipePictureDisplayed() {
         ActivityScenario scenario = ActivityScenario.launch(i);
         onView(withId(R.id.recipePicture))
-                .check(matches(withDrawable(omelette.image)));
+
+                .check(matches(withDrawable(Integer.parseInt(omelette.image))));
+
         scenario.close();
     }
 
@@ -359,6 +422,33 @@ public class RecipeActivityTest {
         });
         scenario.close();
     }
+
+    @Test
+    public void addToListButtonChangesStateOnClick() {
+        ActivityScenario scenario = ActivityScenario.launch(i);
+
+        int ingredientIndex = 0;
+
+        scenario.onActivity(activity -> {
+            RecyclerView ingredientsList = activity.findViewById(R.id.ingredientsList);
+            IngredientViewHolder viewHolder = (IngredientViewHolder) ingredientsList.findViewHolderForAdapterPosition(ingredientIndex);
+
+            // Check that the tag value of the button changes when clicked
+            ToggleButton addButton = viewHolder.itemView.findViewById(R.id.AddToListButton);
+            addButton.performClick();
+            String actual = (String) addButton.getTag();
+            String expected = "added";
+            assertTrue(actual.equals(expected));
+
+            addButton.performClick();
+            actual = (String) addButton.getTag();
+            expected = "removed";
+            assertTrue(actual.equals(expected));
+        });
+
+        scenario.close();
+    }
+
 
 
     public static Matcher<View> withRating(final float rating) {
