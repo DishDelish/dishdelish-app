@@ -1,4 +1,4 @@
-package com.github.siela1915.bootcamp.UploadRecipe;
+package com.github.siela1915.bootcamp;
 
 import android.text.Editable;
 import android.text.TextWatcher;

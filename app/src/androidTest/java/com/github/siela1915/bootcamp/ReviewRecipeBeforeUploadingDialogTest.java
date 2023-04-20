@@ -16,7 +16,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import com.github.siela1915.bootcamp.Labelling.AllergyType;
 import com.github.siela1915.bootcamp.Labelling.CuisineType;
 import com.github.siela1915.bootcamp.Labelling.DietType;
-import com.github.siela1915.bootcamp.UploadRecipe.ReviewRecipeBeforeUploadingDialog;
 
 import org.junit.After;
 import org.junit.Before;

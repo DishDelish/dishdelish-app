@@ -26,7 +26,6 @@ import androidx.test.espresso.matcher.ViewMatchers;
 import com.github.siela1915.bootcamp.Labelling.AllergyType;
 import com.github.siela1915.bootcamp.Labelling.CuisineType;
 import com.github.siela1915.bootcamp.Labelling.DietType;
-import com.github.siela1915.bootcamp.UploadRecipe.UploadingRecipeFragment;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;

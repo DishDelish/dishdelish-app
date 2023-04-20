@@ -25,7 +25,6 @@ import com.github.siela1915.bootcamp.Recipes.PreparationTime;
 
 import com.github.siela1915.bootcamp.Recipes.ExampleRecipes;
 import com.github.siela1915.bootcamp.Recipes.Recipe;
-import com.github.siela1915.bootcamp.UploadRecipe.UploadingRecipeFragment;
 
 import com.google.android.material.navigation.NavigationView;
 

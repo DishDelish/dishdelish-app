@@ -1,4 +1,4 @@
-package com.github.siela1915.bootcamp.UploadRecipe;
+package com.github.siela1915.bootcamp;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -23,11 +23,9 @@ import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
-import com.github.siela1915.bootcamp.HomePageFragment;
 import com.github.siela1915.bootcamp.Labelling.AllergyType;
 import com.github.siela1915.bootcamp.Labelling.CuisineType;
 import com.github.siela1915.bootcamp.Labelling.DietType;
-import com.github.siela1915.bootcamp.R;
 import com.github.siela1915.bootcamp.Recipes.Ingredient;
 import com.github.siela1915.bootcamp.Recipes.Recipe;
 import com.github.siela1915.bootcamp.Recipes.Unit;

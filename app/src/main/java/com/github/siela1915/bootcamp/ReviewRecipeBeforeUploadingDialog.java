@@ -1,4 +1,4 @@
-package com.github.siela1915.bootcamp.UploadRecipe;
+package com.github.siela1915.bootcamp;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -13,8 +13,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.fragment.app.DialogFragment;
-
-import com.github.siela1915.bootcamp.R;
 
 import java.io.IOException;
 
