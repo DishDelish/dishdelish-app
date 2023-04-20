@@ -18,7 +18,7 @@ import java.io.IOException;
 
 public class ReviewRecipeBeforeUploadingDialog extends DialogFragment
 {
-    OnMyDialogResult mDialogResult;
+    private OnMyDialogResult mDialogResult;
 
     public ReviewRecipeBeforeUploadingDialog()
     {
@@ -50,6 +50,7 @@ public class ReviewRecipeBeforeUploadingDialog extends DialogFragment
         TextView steps = reviewDialogView.findViewById(R.id.reviewRecipeSteps);
         ImageView image = reviewDialogView.findViewById(R.id.reviewRecipeImage);
 
+        // display image if provided
         Bitmap bitmap = null;
         try {
             if (getArguments().getString("image") != null) {
