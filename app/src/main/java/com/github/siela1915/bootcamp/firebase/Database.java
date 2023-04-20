@@ -259,7 +259,7 @@ public class Database {
         if (n < 1) {
             throw new IllegalArgumentException();
         }
-        Query query = db.child(RECIPES).orderByChild(attribute).orderByValue().limitToLast(n);
+        Query query = db.child(RECIPES).orderByChild(attribute).limitToLast(n);
         Task<DataSnapshot> task = query.get();
         DataSnapshot snapshot = Tasks.await(task);
         List<Recipe> recipes = new ArrayList<>();
@@ -273,7 +273,7 @@ public class Database {
         if (n < 1) {
             throw new IllegalArgumentException();
         }
-        Query query = db.child(RECIPES).orderByChild(attribute).orderByValue().limitToLast(n);
+        Query query = db.child(RECIPES).orderByChild(attribute).limitToLast(n);
         Task<DataSnapshot> task = query.get();
         return task.continueWith(snapshot -> {
             List<Recipe> recipes = new ArrayList<>();
