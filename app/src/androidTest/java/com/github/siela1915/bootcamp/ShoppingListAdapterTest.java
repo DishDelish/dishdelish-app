@@ -1,15 +1,15 @@
 package com.github.siela1915.bootcamp;
 
-import android.content.Context;
+import static org.junit.Assert.assertEquals;
 
-import junit.framework.TestCase;
+import android.content.Context;
 
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ShoppingListAdapterTest extends TestCase {
+public class ShoppingListAdapterTest {
     private List<String> items= new ArrayList<>();
     private Context context;
 
@@ -30,6 +30,4 @@ public class ShoppingListAdapterTest extends TestCase {
         ShoppingListAdapter shoppingListAdapter = new ShoppingListAdapter(items,null);
         assertEquals(0,shoppingListAdapter.getItemCount());
     }
-    
-
 }
