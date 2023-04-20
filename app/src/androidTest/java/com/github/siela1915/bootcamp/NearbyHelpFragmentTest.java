@@ -49,7 +49,6 @@ public class NearbyHelpFragmentTest {
         onView(withId(R.id.chooseHelpGroup)).check(matches(withEffectiveVisibility(VISIBLE)));
         onView(withId(R.id.askHelpGroup)).check(matches(not(withEffectiveVisibility(VISIBLE))));
         onView(withId(R.id.offerHelpGroup)).check(matches(not(withEffectiveVisibility(VISIBLE))));
-        onView(withId(R.id.nearbyHelpGroup)).check(matches(not(withEffectiveVisibility(VISIBLE))));
         FirebaseAuthActivityTest.logoutSync();
     }
 
@@ -64,7 +63,6 @@ public class NearbyHelpFragmentTest {
         onView(withId(R.id.chooseHelpGroup)).check(matches(not(withEffectiveVisibility(VISIBLE))));
         onView(withId(R.id.askHelpGroup)).check(matches(withEffectiveVisibility(VISIBLE)));
         onView(withId(R.id.offerHelpGroup)).check(matches(not(withEffectiveVisibility(VISIBLE))));
-        onView(withId(R.id.nearbyHelpGroup)).check(matches(not(withEffectiveVisibility(VISIBLE))));
         FirebaseAuthActivityTest.logoutSync();
     }
 
@@ -79,7 +77,6 @@ public class NearbyHelpFragmentTest {
         onView(withId(R.id.chooseHelpGroup)).check(matches(not(withEffectiveVisibility(VISIBLE))));
         onView(withId(R.id.askHelpGroup)).check(matches(not(withEffectiveVisibility(VISIBLE))));
         onView(withId(R.id.offerHelpGroup)).check(matches(withEffectiveVisibility(VISIBLE)));
-        onView(withId(R.id.nearbyHelpGroup)).check(matches(not(withEffectiveVisibility(VISIBLE))));
         FirebaseAuthActivityTest.logoutSync();
     }
 

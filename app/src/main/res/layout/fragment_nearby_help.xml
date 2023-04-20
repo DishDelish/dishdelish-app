@@ -14,11 +14,6 @@
         app:constraint_referenced_ids="offerSharePosition,submitOfferHelpButton,offeredIngredient" />
 
     <androidx.constraintlayout.widget.Group
-        android:id="@+id/nearbyHelpGroup"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <androidx.constraintlayout.widget.Group
         android:id="@+id/askHelpGroup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
