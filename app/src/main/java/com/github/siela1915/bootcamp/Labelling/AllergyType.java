@@ -40,4 +40,5 @@ public enum AllergyType {
     public String toString() {
         return display_string;
     }
+
 }

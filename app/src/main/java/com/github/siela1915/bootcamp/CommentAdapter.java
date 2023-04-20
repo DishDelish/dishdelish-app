@@ -9,14 +9,16 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.github.siela1915.bootcamp.Recipes.Comment;
+
 import java.util.List;
 
 public class CommentAdapter extends RecyclerView.Adapter<CommentViewHolder> {
 
     Context context;
-    List<String> comments;
+    List<Comment> comments;
 
-    public CommentAdapter(Context context, List<String> comments) {
+    public CommentAdapter(Context context, List<Comment> comments) {
         this.context = context;
         this.comments = comments;
     }
@@ -29,9 +31,9 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull CommentViewHolder holder, int position) {
-        holder.comment.setText(comments.get(position));
-        // TODO: once the new comment class is created, change this
-        holder.likes.setText("5");
+
+        holder.comment.setText(comments.get(position).getContent());
+
     }
 
     @Override
@@ -39,7 +41,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentViewHolder> {
         return comments.size();
     }
 
-    public List<String> getData(){
+    public List<Comment> getData(){
         return comments;
     }
 }

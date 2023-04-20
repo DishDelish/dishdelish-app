@@ -28,8 +28,11 @@
     <string name="ingredientsNameHint">sugar</string>
     <string name="addIngredients">Add Ingredient</string>
     <string name="cuisineTypes">Cuisine Types</string>
+    <string name="addCuisineTypeButton">Add</string>
     <string name="allergyTypes">Allergy Types</string>
+    <string name="addAllergyTypeButton">Add</string>
     <string name="dietTypes">Diet Types</string>
+    <string name="addDietTypeButton">Add</string>
     <string name="step">Directions</string>
     <string name="addSteps">Add Step</string>
     <string name="stepHint">e.g. Preheat oven to 350 degrees</string>
@@ -37,6 +40,7 @@
     <string name="time_hours">hours</string>
     <string name="time_days">days</string>
     <string name="image">Photo</string>
+    <string name="shoppingCart">Shopping Cart</string>
     <string name="reviewRecipePageTitle">Review Recipe</string>
     <string name="confirm_uploading">Confirm</string>
     <string name="cancel_uploading">Cancel</string>

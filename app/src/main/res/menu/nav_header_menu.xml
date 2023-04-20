@@ -24,6 +24,10 @@
         android:id="@+id/menuItem_help"
         android:title="Nearby Help" />
     <item
+        android:id="@+id/menuItem_soppingCart"
+        android:title="@string/shoppingCart"
+        android:icon="@drawable/baseline_shopping_cart_24" />
+    <item
         android:id="@+id/menuItem_about"
         android:title="@string/about_menu"
         android:icon="@drawable/baseline_info_24"/>

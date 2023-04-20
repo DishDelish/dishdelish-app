@@ -13,7 +13,6 @@ public enum DietType {
     // constructor to set the string
     DietType(String name){display_string = name;}
 
-    // toString returns the display string
     @Override
     public String toString() {
         return display_string;

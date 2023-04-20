@@ -35,6 +35,7 @@ import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.espresso.matcher.BoundedMatcher;
 
+import com.github.siela1915.bootcamp.Recipes.Comment;
 import com.github.siela1915.bootcamp.Recipes.ExampleRecipes;
 import com.github.siela1915.bootcamp.Recipes.Ingredient;
 import com.github.siela1915.bootcamp.Recipes.Recipe;
@@ -99,9 +100,9 @@ public class RecipeActivityTest {
 
             // Iterate through the list and compare each element with the adapter's data set
             for (int i = 0; i < omelette.comments.size(); i++) {
-                String expectedData = omelette.comments.get(i);
-                String actualData = commentAdapter.getData().get(i);
-                assertEquals(expectedData, actualData);
+                Comment expectedData = omelette.comments.get(i);
+                Comment actualData = commentAdapter.getData().get(i);
+                assertEquals(expectedData.getContent(), actualData.getContent());
             }
 
         });
@@ -120,9 +121,9 @@ public class RecipeActivityTest {
             CommentAdapter commentAdapter = (CommentAdapter) commentsList.getAdapter();
 
             for (int i = 0; i < omelette.comments.size(); i++) {
-                String expectedData = omelette.comments.get(i);
-                String actualData = commentAdapter.getData().get(i);
-                assertEquals(expectedData, actualData);
+                Comment expectedData = omelette.comments.get(i);
+                Comment actualData = commentAdapter.getData().get(i);
+                assertEquals(expectedData.getContent(), actualData.getContent());
             }
         });
         scenario.close();
@@ -143,17 +144,17 @@ public class RecipeActivityTest {
         onView(withId(R.id.sendCommentButton))
                 .perform(scrollTo(), click());
 
-        List<String> newCommentsList = new ArrayList<>(omelette.comments);
-        newCommentsList.add(test);
+        List<Comment> newCommentsList = new ArrayList<>(omelette.comments);
+        newCommentsList.add(new Comment(test));
 
         scenario.onActivity(activity -> {
             RecyclerView commentsList = activity.findViewById(R.id.commentsList);
             CommentAdapter commentAdapter = (CommentAdapter) commentsList.getAdapter();
 
             for (int i = 0; i < newCommentsList.size(); i++) {
-                String expectedData = newCommentsList.get(i);
-                String actualData = commentAdapter.getData().get(i);
-                assertEquals(expectedData, actualData);
+                Comment expectedData = newCommentsList.get(i);
+                Comment actualData = commentAdapter.getData().get(i);
+                assertEquals(expectedData.getContent(), actualData.getContent());
             }
         });
         scenario.close();
@@ -281,7 +282,9 @@ public class RecipeActivityTest {
     public void isCorrectRecipePictureDisplayed() {
         ActivityScenario scenario = ActivityScenario.launch(i);
         onView(withId(R.id.recipePicture))
-                .check(matches(withDrawable(omelette.image)));
+
+                .check(matches(withDrawable(Integer.parseInt(omelette.image))));
+
         scenario.close();
     }
 
