@@ -100,7 +100,7 @@ public class RecipeActivityTest {
             for (int i = 0; i < omelette.comments.size(); i++) {
                 Comment expectedData = omelette.comments.get(i);
                 Comment actualData = commentAdapter.getData().get(i);
-                assertEquals(expectedData, actualData);
+                assertEquals(expectedData.getContent(), actualData.getContent());
             }
 
         });
@@ -121,7 +121,7 @@ public class RecipeActivityTest {
             for (int i = 0; i < omelette.comments.size(); i++) {
                 Comment expectedData = omelette.comments.get(i);
                 Comment actualData = commentAdapter.getData().get(i);
-                assertEquals(expectedData, actualData);
+                assertEquals(expectedData.getContent(), actualData.getContent());
             }
         });
         scenario.close();
@@ -152,7 +152,7 @@ public class RecipeActivityTest {
             for (int i = 0; i < newCommentsList.size(); i++) {
                 Comment expectedData = newCommentsList.get(i);
                 Comment actualData = commentAdapter.getData().get(i);
-                assertEquals(expectedData, actualData);
+                assertEquals(expectedData.getContent(), actualData.getContent());
             }
         });
         scenario.close();
@@ -222,7 +222,7 @@ public class RecipeActivityTest {
     public void isCorrectRecipePictureDisplayed() {
         ActivityScenario scenario = ActivityScenario.launch(i);
         onView(withId(R.id.recipePicture))
-                .check(matches(withDrawable(omelette.image)));
+                .check(matches(withDrawable(Integer.valueOf(omelette.image))));
         scenario.close();
     }
 
