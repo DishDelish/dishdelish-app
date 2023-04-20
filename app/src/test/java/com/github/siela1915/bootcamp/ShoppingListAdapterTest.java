@@ -30,5 +30,6 @@ public class ShoppingListAdapterTest extends TestCase {
         ShoppingListAdapter shoppingListAdapter = new ShoppingListAdapter(items,null);
         assertEquals(0,shoppingListAdapter.getItemCount());
     }
+    
 
 }
