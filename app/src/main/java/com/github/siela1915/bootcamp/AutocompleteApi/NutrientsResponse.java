@@ -10,12 +10,11 @@ public class NutrientsResponse {
     public List<Nutrient> nutrients;
 
     public boolean equals(NutrientsResponse other){
-        boolean eq = true;
         for (int i = 0; i < nutrients.size(); i++) {
             if(!nutrients.get(i).equals(other.nutrients.get(i))){
-                eq=false;
+                return false;
             }
         }
-        return eq;
+        return true;
     }
 }
