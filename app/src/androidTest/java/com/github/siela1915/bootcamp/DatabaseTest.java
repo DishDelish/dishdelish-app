@@ -1,14 +1,13 @@
 package com.github.siela1915.bootcamp;
 
+import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
-import android.util.Pair;
-
+import com.github.siela1915.bootcamp.Recipes.Comment;
 import com.github.siela1915.bootcamp.Recipes.Ingredient;
 import com.github.siela1915.bootcamp.Recipes.Recipe;
 import com.github.siela1915.bootcamp.Recipes.Unit;
@@ -16,6 +15,7 @@ import com.github.siela1915.bootcamp.Recipes.Utensils;
 import com.github.siela1915.bootcamp.firebase.Database;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -27,7 +27,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
 public class DatabaseTest {
@@ -35,14 +34,18 @@ public class DatabaseTest {
 
     @Before
     public void connectToEmulator() {
+        FirebaseApp.clearInstancesForTest();
+        FirebaseApp.initializeApp(getApplicationContext());
         FirebaseAuth.getInstance().useEmulator("10.0.2.2", 9099);
         firebaseInstance = FirebaseDatabase.getInstance();
-        firebaseInstance.useEmulator("10.0.2.2",9000);
+        firebaseInstance.useEmulator("10.0.2.2", 9000);
     }
 
     @After
     public void clearDatabase() {
-        firebaseInstance.getReference().setValue(null);
+        if (firebaseInstance != null) {
+            firebaseInstance.getReference().setValue(null);
+        }
     }
 
 
@@ -60,13 +63,41 @@ public class DatabaseTest {
     }
 
     @Test
-    public void getFailsWithExceptionOnBogusKey() {
+    public void setAfterGetAsyncReturnsRecipe() {
+        Database db = new Database(firebaseInstance);
+        Recipe recipe = createRecipeEggs();
+        Task<String> setTask = db.setAsync(recipe);
+        Task<Recipe> getTask = setTask.continueWithTask(t -> db.getAsync(t.getResult()));
+        try {
+            Recipe r = Tasks.await(getTask);
+            assertEquals(recipe, r);
+        } catch (ExecutionException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Test
+    public void getFailsOnBogusKey() {
         Database db = new Database(firebaseInstance);
         Recipe recipe = createRecipeEggs(); //add at least one recipe to database
         try {
             db.set(recipe);
             Recipe bogus = db.get("bogus");
             assertNull(bogus);
+        } catch (ExecutionException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Test
+    public void getAsyncFailsOnBogusKey() {
+        Database db = new Database(firebaseInstance);
+        Recipe recipe = createRecipeEggs();
+        Task<String> setTask = db.setAsync(recipe);
+        Task<Recipe> getTask = setTask.continueWithTask(t -> db.getAsync("bogus"));
+        try {
+            Recipe r = Tasks.await(getTask);
+            assertNull(r);
         } catch (ExecutionException | InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -93,6 +124,21 @@ public class DatabaseTest {
     }
 
     @Test
+    public void removeAsyncMakesRecipeNotRetrievable() {
+        Database db = new Database(firebaseInstance);
+        Recipe recipe = createRecipeEggs();
+        Task<String> setTask = db.setAsync(recipe);
+        Task<Void> remove = setTask.continueWithTask(t -> db.removeAsync(recipe.uniqueKey));
+        Task<Recipe> getTask = remove.continueWithTask(t -> db.getAsync(recipe.uniqueKey));
+        try {
+            Recipe r = Tasks.await(getTask);
+            assertNull(r);
+        } catch (ExecutionException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Test
     public void searchByNameReturnsSingleRecipe() {
         Database db = new Database(firebaseInstance);
         Recipe recipe = createRecipeEggs();
@@ -101,6 +147,24 @@ public class DatabaseTest {
             Map<String, Recipe> map = db.getByName("testRecipe");
             assertTrue(map.containsKey(key));
             assertEquals(recipe, map.get(key));
+        } catch (ExecutionException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Test
+    public void searchByNameAsyncReturnsList() {
+        Database db = new Database(firebaseInstance);
+        Recipe recipe1 = createRecipeEggs();
+        Recipe recipe2 = createOtherEggsRecipe();
+        Task<String> set1 = db.setAsync(recipe1);
+        Task<String> set2 = set1.continueWithTask(t -> db.setAsync(recipe2));
+        Task<List<Recipe>> listTask = set2.continueWithTask(t -> db.getByNameAsync("testRecipe"));
+        try {
+            List<Recipe> ls = Tasks.await(listTask);
+            assertEquals(ls.size(), 2);
+            assertTrue(ls.contains(recipe1));
+            assertTrue(ls.contains(recipe2));
         } catch (ExecutionException | InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -173,6 +237,20 @@ public class DatabaseTest {
     }
 
     @Test
+    public void searchByNameAsyncFailsWhenNameNotFound() {
+        Database db = new Database(firebaseInstance);
+        Recipe recipe1 = createRecipeEggs();
+        Task<String> set1 = db.setAsync(recipe1);
+        Task<List<Recipe>> listTask = set1.continueWithTask(t -> db.getByNameAsync("bogus"));
+        try {
+            List<Recipe> ls = Tasks.await(listTask);
+            assertEquals(ls.size(), 0);
+        } catch (ExecutionException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Test
     public void searchByUserNameFailsWhenNameNotFound() {
         //Fill database with at least one recipe
         Database db = new Database(firebaseInstance);
@@ -232,46 +310,49 @@ public class DatabaseTest {
     }
 
     private Recipe createRecipeEggs() {
-        List<String> utensils = new ArrayList<>();
-        utensils.add("spoon");
-        utensils.add("fork");
-        utensils.add("knife");
-        List<Ingredient> ingredients = new ArrayList<>();
-        ingredients.add(new Ingredient("Eggs", new Unit(4, "some info")));
-        List<String> steps = new ArrayList<>();
-        steps.add("Just mash them up!");
-        List<String> comments = new ArrayList<>();
-        comments.add("mmm just love it!");
-        comments.add("Steps unclear, bad recipe");
-        List<Integer> cuisine = Arrays.asList(1, 2, 3, 4, 5);
-        List<Integer> allergy = Arrays.asList(1, 2, 3, 4, 5);
-        List<Integer> diet = Arrays.asList(1, 2, 3, 4, 5);
-        return new Recipe(98, "testRecipe", "randomUser1", 86, 4.5,
-                10, 5, 4, new Utensils(utensils), cuisine, allergy, diet, ingredients, steps, comments, 190);
+        return new Recipe("URL", "testRecipe", "randomUser1", 86, 4.5,
+                10, 5, 4, new Utensils(createUtensils()), cuisine, allergy, diet,
+                createIngredients().subList(0, 2), createSteps(), createListComments().subList(0, 2), 190);
     }
 
     private Recipe createOtherEggsRecipe() {
-        List<String> utensils = new ArrayList<>();
-        utensils.add("spoon");
-        utensils.add("fork");
-        utensils.add("knife");
+        return new Recipe("URL", "testRecipe", "randomUser2", 85, 4.5,
+                10, 5, 4, new Utensils(createUtensils()), cuisine, allergy, diet,
+                createIngredients(), createSteps(), createListComments(), 190);
+    }
+
+    private List<Comment> createListComments() {
+        String[] cs = new String[]{"Love it!", "Nah not me.", "What???"};
+        List<Comment> ls = new ArrayList<>();
+        for (String s : cs) {
+            ls.add(new Comment(s));
+        }
+        return ls;
+    }
+
+    private List<String> createUtensils() {
+        String[] us = new String[] {"spoon", "fork", "knife"};
+        return Arrays.asList(us);
+    }
+
+    private List<Ingredient> createIngredients() {
         List<Ingredient> ingredients = new ArrayList<>();
         ingredients.add(new Ingredient("Eggs", new Unit(4, "some info")));
         ingredients.add(new Ingredient("Pepper", new Unit(4, "some info")));
         ingredients.add(new Ingredient("Salt", new Unit(4, "some info")));
-        List<String> steps = new ArrayList<>();
-        steps.add("Crack the eggs open in a frying pan.");
-        steps.add("Stir while eggs cook.");
-        steps.add("Season with some salt and pepper.");
-        List<String> comments = new ArrayList<>();
-        comments.add("mmm just love it!");
-        comments.add("Steps are clear! Much better than that other recipe I checked out.");
-        List<Integer> cuisine = Arrays.asList(1, 2, 3, 4, 5);
-        List<Integer> allergy = Arrays.asList(1, 2, 3, 4, 5);
-        List<Integer> diet = Arrays.asList(1, 2, 3, 4, 5);
-        return new Recipe(97, "testRecipe", "randomUser1", 85, 4.5,
-                10, 5, 4, new Utensils(utensils), cuisine, allergy, diet, ingredients, steps, comments, 190);
+        return ingredients;
     }
+
+    private List<String> createSteps() {
+        String[] ss = new String[]{"Crack the eggs open in a frying pan.",
+                "Stir while eggs cook.", "Season with some salt and pepper."};
+        return Arrays.asList(ss);
+    }
+
+    private final List<Integer> cuisine = Arrays.asList(1, 2, 3, 4, 5);
+    private final List<Integer> allergy = Arrays.asList(1, 2, 3, 4, 5);
+    private final List<Integer> diet = Arrays.asList(1, 2, 3, 4, 5);
+
 
 
 

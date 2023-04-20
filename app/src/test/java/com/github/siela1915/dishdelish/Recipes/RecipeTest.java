@@ -1,11 +1,10 @@
 package com.github.siela1915.dishdelish.Recipes;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
-import android.util.Pair;
-
+import com.github.siela1915.bootcamp.Recipes.Comment;
 import com.github.siela1915.bootcamp.Recipes.Ingredient;
 import com.github.siela1915.bootcamp.Recipes.Recipe;
 import com.github.siela1915.bootcamp.Recipes.Unit;
@@ -29,7 +28,7 @@ public class RecipeTest {
         ls2.add("string1");
         ls2.add("string2");
         ls2.add("string3");
-        assertTrue(ls1.equals(ls2));
+        assertEquals(ls1, ls2);
     }
 
     @Test
@@ -42,14 +41,14 @@ public class RecipeTest {
     public void equalsReturnsTrueOnSameRecipe() {
         Recipe recipe1 = createRecipe();
         Recipe recipe2 = createRecipe();
-        assertTrue(recipe1.equals(recipe2));
+        assertEquals(recipe1, recipe2);
     }
 
     @Test
     public void equalsReturnsTrueOnMoreElaborateRecipes() {
         Recipe recipe1 = createOtherRecipe();
         Recipe recipe2 = createOtherRecipe();
-        assertTrue(recipe1.equals(recipe2));
+        assertEquals(recipe1, recipe2);
     }
 
 
@@ -57,166 +56,114 @@ public class RecipeTest {
     public void equalsFailsWhenRecipesDoNotHaveSameName() {
         Recipe recipe1 = createRecipe();
         Recipe recipe2 = createRecipeDifferentName();
-        assertFalse(recipe1.equals(recipe2));
+        assertNotEquals(recipe1, recipe2);
     }
 
     @Test
     public void equalsFailsWhenRecipesDoNotHaveSameIngredients() {
         Recipe recipe1 = createOtherRecipe();
         Recipe recipe2 = createOtherRecipeDifferentIngredients();
-        assertFalse(recipe1.equals(recipe2));
+        assertNotEquals(recipe1, recipe2);
     }
 
     @Test
     public void equalsFailsWhenRecipesDoNotHaveSameSteps() {
         Recipe recipe1 = createOtherRecipe();
         Recipe recipe2 = createOtherRecipeDifferentSteps();
-        assertFalse(recipe1.equals(recipe2));
+        assertNotEquals(recipe1, recipe2);
     }
 
     @Test
     public void equalsFailsWhenRecipesDoNotHaveSameDietTypes() {
         Recipe recipe1 = createOtherRecipe();
         Recipe recipe2 = createOtherRecipeDifferentDiet();
-        assertFalse(recipe1.equals(recipe2));
+        assertNotEquals(recipe1, recipe2);
 
     }
 
     private Recipe createRecipe() {
-        List<String> utensils = new ArrayList<>();
-        utensils.add("spoon");
-        utensils.add("fork");
-        utensils.add("knife");
-        List<Ingredient> ingredients = new ArrayList<>();
-        ingredients.add(new Ingredient("Eggs", new Unit(4, "some info")));
-        List<String> steps = new ArrayList<>();
-        steps.add("Just mash them up!");
-        List<String> comments = new ArrayList<>();
-        comments.add("mmm just love it!");
-        comments.add("Steps unclear, bad recipe");
-        List<Integer> cuisine = Arrays.asList(1, 2, 3, 4, 5);
-        List<Integer> allergy = Arrays.asList(1, 2, 3, 4, 5);
-        List<Integer> diet = Arrays.asList(1, 2, 3, 4, 5);
-        return new Recipe(98, "randomRecipe", "randomUser1", 86, 4.5,
-                10, 5, 4, new Utensils(utensils), cuisine, allergy, diet, ingredients, steps, comments, 190);
+        return new Recipe("URL", "randomRecipe", "randomUser1", 86, 4.5,
+                10, 5, 4, new Utensils(createUtensils()), cuisine, allergy,
+                diet, createIngredients(), createSteps(), createListComments(), 190);
     }
 
     private Recipe createRecipeDifferentName() {
-        List<String> utensils = new ArrayList<>();
-        utensils.add("spoon");
-        utensils.add("fork");
-        utensils.add("knife");
-        List<Ingredient> ingredients = new ArrayList<>();
-        ingredients.add(new Ingredient("Eggs", new Unit(4, "some info")));
-        List<String> steps = new ArrayList<>();
-        steps.add("Just mash them up!");
-        List<String> comments = new ArrayList<>();
-        comments.add("mmm just love it!");
-        comments.add("Steps unclear, bad recipe");
-        List<Integer> cuisine = Arrays.asList(1, 2, 3, 4, 5);
-        List<Integer> allergy = Arrays.asList(1, 2, 3, 4, 5);
-        List<Integer> diet = Arrays.asList(1, 2, 3, 4, 5);
-        return new Recipe(98, "randomRecipe2", "randomUser1", 86, 4.5,
-                10, 5, 4, new Utensils(utensils), cuisine, allergy, diet, ingredients, steps, comments, 190);
+        return new Recipe("URL", "randomRecipe2", "randomUser1", 86, 4.5,
+                10, 5, 4, new Utensils(createUtensils()), cuisine, allergy,
+                diet, createIngredients(), createSteps(), createListComments(), 190);
     }
 
     private Recipe createOtherRecipe() {
-        List<String> utensils = new ArrayList<>();
-        utensils.add("spoon");
-        utensils.add("fork");
-        utensils.add("knife");
-        List<Ingredient> ingredients = new ArrayList<>();
-        ingredients.add(new Ingredient("Eggs", new Unit(4, "some info")));
-        ingredients.add(new Ingredient("Pepper", new Unit(4, "some info")));
-        ingredients.add(new Ingredient("Salt", new Unit(4, "some info")));
-        List<String> steps = new ArrayList<>();
-        steps.add("Crack the eggs open in a frying pan.");
-        steps.add("Stir while eggs cook.");
-        steps.add("Season with some salt and pepper.");
-        List<String> comments = new ArrayList<>();
-        comments.add("mmm just love it!");
-        comments.add("Steps are clear! Much better than that other recipe I checked out.");
-        List<Integer> cuisine = Arrays.asList(1, 2, 3, 4, 5);
-        List<Integer> allergy = Arrays.asList(1, 2, 3, 4, 5);
-        List<Integer> diet = Arrays.asList(1, 2, 3, 4, 5);
-        return new Recipe(97, "randomRecipe", "randomUser2", 85, 4.5,
-                10, 5, 4, new Utensils(utensils), cuisine, allergy, diet, ingredients, steps, comments, 190);
+        return new Recipe("URL", "randomRecipe", "randomUser2", 85, 4.5,
+                10, 5, 4, new Utensils(createUtensils()), cuisine, allergy,
+                diet, createIngredients(), createSteps(), createListComments(), 190);
     }
 
     private Recipe createOtherRecipeDifferentDiet() {
-        List<String> utensils = new ArrayList<>();
-        utensils.add("spoon");
-        utensils.add("fork");
-        utensils.add("knife");
-        List<Ingredient> ingredients = new ArrayList<>();
-        ingredients.add(new Ingredient("Eggs", new Unit(4, "some info")));
-        ingredients.add(new Ingredient("Pepper", new Unit(4, "some info")));
-        ingredients.add(new Ingredient("Salt", new Unit(4, "some info")));
-        List<String> steps = new ArrayList<>();
-        steps.add("Crack the eggs open in a frying pan.");
-        steps.add("Stir while eggs cook.");
-        steps.add("Season with some salt and pepper.");
-        List<String> comments = new ArrayList<>();
-        comments.add("mmm just love it!");
-        comments.add("Steps are clear! Much better than that other recipe I checked out.");
-        List<Integer> cuisine = Arrays.asList(1, 2, 3, 4, 5);
-        List<Integer> allergy = Arrays.asList(1, 2, 3, 4, 5);
         List<Integer> diet = Arrays.asList(1, 2, 3, 4, 6);
-        return new Recipe(97, "randomRecipe", "randomUser2", 85, 4.5,
-                10, 5, 4, new Utensils(utensils), cuisine, allergy, diet, ingredients, steps, comments, 190);
+        return new Recipe("URL", "randomRecipe", "randomUser2", 85, 4.5,
+                10, 5, 4, new Utensils(createUtensils()), cuisine, allergy,
+                diet, createIngredients(), createSteps(), createListComments(), 190);
     }
 
     private Recipe createOtherRecipeDifferentIngredients() {
-        List<String> utensils = new ArrayList<>();
-        utensils.add("spoon");
-        utensils.add("fork");
-        utensils.add("knife");
         List<Ingredient> ingredients = new ArrayList<>();
         ingredients.add(new Ingredient("Eggs", new Unit(4, "some info")));
         ingredients.add(new Ingredient("Pepper", new Unit(4, "some info")));
         ingredients.add(new Ingredient("Carrots", new Unit(4, "some info")));
-        List<String> steps = new ArrayList<>();
-        steps.add("Crack the eggs open in a frying pan.");
-        steps.add("Stir while eggs cook.");
-        steps.add("Season with some salt and pepper.");
-        List<String> comments = new ArrayList<>();
-        comments.add("mmm just love it!");
-        comments.add("Steps are clear! Much better than that other recipe I checked out.");
-        List<Integer> cuisine = Arrays.asList(1, 2, 3, 4, 5);
-        List<Integer> allergy = Arrays.asList(1, 2, 3, 4, 5);
-        List<Integer> diet = Arrays.asList(1, 2, 3, 4, 5);
-        return new Recipe(97, "randomRecipe", "randomUser2", 85, 4.5,
-                10, 5, 4, new Utensils(utensils), cuisine, allergy, diet, ingredients, steps, comments, 190);
+        return new Recipe("URL", "randomRecipe", "randomUser2", 85, 4.5,
+                10, 5, 4, new Utensils(createUtensils()), cuisine, allergy,
+                diet, ingredients, createSteps(), createListComments(), 190);
     }
 
     private Recipe createOtherRecipeDifferentSteps() {
-        List<String> utensils = new ArrayList<>();
-        utensils.add("spoon");
-        utensils.add("fork");
-        utensils.add("knife");
-        List<Ingredient> ingredients = new ArrayList<>();
-        ingredients.add(new Ingredient("Eggs", new Unit(4, "some info")));
-        ingredients.add(new Ingredient("Pepper", new Unit(4, "some info")));
-        ingredients.add(new Ingredient("Salt", new Unit(4, "some info")));
         List<String> steps = new ArrayList<>();
         steps.add("Crack the eggs open in a frying pan.");
         steps.add("Stir while eggs cook.");
         steps.add("Add the salt THEN the pepper!!!");
-        List<String> comments = new ArrayList<>();
-        comments.add("mmm just love it!");
-        comments.add("Steps are clear! Much better than that other recipe I checked out.");
-        List<Integer> cuisine = Arrays.asList(1, 2, 3, 4, 5);
-        List<Integer> allergy = Arrays.asList(1, 2, 3, 4, 5);
-        List<Integer> diet = Arrays.asList(1, 2, 3, 4, 5);
-        return new Recipe(97, "randomRecipe", "randomUser2", 85, 4.5,
-                10, 5, 4, new Utensils(utensils), cuisine, allergy, diet, ingredients, steps, comments, 190);
+        return new Recipe("URL", "randomRecipe", "randomUser2", 85, 4.5,
+                10, 5, 4, new Utensils(createUtensils()), cuisine, allergy, diet,
+                createIngredients(), steps, createListComments(), 190);
     }
+
+    private List<Comment> createListComments() {
+        String[] cs = new String[]{"Love it!", "Nah not me.", "What???"};
+        List<Comment> ls = new ArrayList<>();
+        for (String s : cs) {
+            ls.add(new Comment(s));
+        }
+        return ls;
+    }
+
+    private List<String> createUtensils() {
+        String[] us = new String[] {"spoon", "fork", "knife"};
+        return Arrays.asList(us);
+    }
+
+    private List<Ingredient> createIngredients() {
+        List<Ingredient> ingredients = new ArrayList<>();
+        ingredients.add(new Ingredient("Eggs", new Unit(4, "some info")));
+        ingredients.add(new Ingredient("Pepper", new Unit(4, "some info")));
+        ingredients.add(new Ingredient("Salt", new Unit(4, "some info")));
+        return ingredients;
+    }
+
+    private List<String> createSteps() {
+        String[] ss = new String[]{"Crack the eggs open in a frying pan.",
+                "Stir while eggs cook.", "Season with some salt and pepper."};
+        return Arrays.asList(ss);
+    }
+
+    private final List<Integer> cuisine = Arrays.asList(1, 2, 3, 4, 5);
+    private final List<Integer> allergy = Arrays.asList(1, 2, 3, 4, 5);
+    private final List<Integer> diet = Arrays.asList(1, 2, 3, 4, 5);
+
 
     @Test
     public void getAfterSetReturnsImage() {
         Recipe recipe = new Recipe();
-        recipe.setImage(45);
-        assertEquals(recipe.getImage(), 45);
+        recipe.setImage("URL");
+        assertEquals(recipe.getImage(), "URL");
     }
 
     @Test
@@ -281,7 +228,7 @@ public class RecipeTest {
         List<Integer> array = Arrays.asList(1, 2, 3, 4, 5);
         Recipe recipe = new Recipe();
         recipe.setCuisineTypes(array);
-        assertTrue(array.equals(recipe.getCuisineTypes()));
+        assertEquals(array, recipe.getCuisineTypes());
     }
 
     @Test
@@ -289,7 +236,7 @@ public class RecipeTest {
         List<Integer> array = Arrays.asList(1, 2, 3, 4, 5);
         Recipe recipe = new Recipe();
         recipe.setAllergyTypes(array);
-        assertTrue(array.equals(recipe.getAllergyTypes()));
+        assertEquals(array, recipe.getAllergyTypes());
     }
 
     @Test
@@ -297,7 +244,7 @@ public class RecipeTest {
         List<Integer> array = Arrays.asList(1, 2, 3, 4, 5);
         Recipe recipe = new Recipe();
         recipe.setDietTypes(array);
-        assertTrue(array.equals(recipe.getDietTypes()));
+        assertEquals(array, recipe.getDietTypes());
     }
 
     @Test
@@ -321,9 +268,9 @@ public class RecipeTest {
     @Test
     public void getAfterSetReturnsCommentsList() {
         Recipe recipe = new Recipe();
-        List<String> ls = Arrays.asList("first comment", "second comment", "third comment");
-        recipe.setComments(ls);
-        assertEquals(recipe.getComments(), ls);
+        List<Comment> cls = createListComments();
+        recipe.setComments(cls);
+        assertEquals(recipe.getComments(), cls);
     }
 
     @Test
@@ -333,6 +280,19 @@ public class RecipeTest {
         assertEquals(recipe.getLikes(), 450);
     }
 
+    @Test
+    public void getAfterSetReturnsUniqueKey() {
+        Recipe recipe = new Recipe();
+        recipe.setUniqueKey("unique");
+        assertEquals(recipe.getUniqueKey(), "unique");
+    }
+
+    @Test
+    public void getAfterSetReturnsNumRatings() {
+        Recipe recipe = new Recipe();
+        recipe.setNumRatings(100);
+        assertEquals(recipe.getNumRatings(), 100);
+    }
 
 
 }

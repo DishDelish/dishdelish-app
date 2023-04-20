@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -28,6 +29,8 @@ public class HomePageFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private  String cuis= "";
+    private TextView homeTextView;
 
     public HomePageFragment() {
         // Required empty public constructor
@@ -64,7 +67,15 @@ public class HomePageFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home_page, container, false);
+        View view= inflater.inflate(R.layout.fragment_home_page, container, false);
+        homeTextView = view.findViewById(R.id.homeFragTextView);
+        Bundle data= getArguments();
+        if(data != null){
+            cuis+= data.getString("selected cuisine");
+        }
+        homeTextView.setText(cuis);
+        homeTextView.setTextSize(30);
+        return view;
     }
 
     @Override
