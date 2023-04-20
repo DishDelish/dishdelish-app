@@ -59,7 +59,7 @@ public class LocationDatabase {
             return Tasks.forException(new UserNotAuthenticatedException("User needs to be authenticated to store location"));
         }
 
-        return db.child(HELP + "/" + user.getUid() + "/offered").setValue(ing);
+        return db.child(user.getUid() + "/offered").setValue(ing, "ff");
     }
 
     public Task<Ingredient> getOffered(String userId) {

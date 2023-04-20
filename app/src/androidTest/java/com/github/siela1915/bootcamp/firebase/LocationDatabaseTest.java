@@ -47,7 +47,7 @@ public class LocationDatabaseTest {
     public void setThenGetInRadiusReturnsSingleObject() {
         FirebaseAuthActivityTest.loginSync("test@example.com");
 
-        Location loc = new Location("test");
+        Location loc = new Location("LocationDatabase");
         loc.setLongitude(15.0);
         loc.setLatitude(5.0);
         try {
@@ -67,7 +67,11 @@ public class LocationDatabaseTest {
         FirebaseAuthActivityTest.loginSync("test@example.com");
         Ingredient ing = ExampleRecipes.recipes.get(0).getIngredientList().get(0);
 
+        Location loc = new Location("LocationDatabase");
+        loc.setLongitude(15.0);
+        loc.setLatitude(5.0);
         try {
+            Tasks.await(locDb.updateLocation(loc));
             Tasks.await(locDb.updateOffered(ing));
             Ingredient res = Tasks.await(locDb.getOffered(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid()));
             assertThat(res, equalTo(ing));
@@ -79,7 +83,7 @@ public class LocationDatabaseTest {
 
     @Test
     public void updateLocationLoggedOutReturnsExceptionTask() {
-        Location loc = new Location("test");
+        Location loc = new Location("LocationDatabase");
         loc.setLongitude(15.0);
         loc.setLatitude(5.0);
 
@@ -88,7 +92,7 @@ public class LocationDatabaseTest {
 
     @Test
     public void getNearbyLoggedOutReturnsExceptionTask() {
-        Location loc = new Location("test");
+        Location loc = new Location("LocationDatabase");
         loc.setLongitude(15.0);
         loc.setLatitude(5.0);
 
