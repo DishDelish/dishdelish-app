@@ -10,16 +10,12 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentContainerView;
-import androidx.fragment.app.FragmentTransaction;
 
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.os.Bundle;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.github.siela1915.bootcamp.Labelling.AllergyType;
 import com.github.siela1915.bootcamp.Labelling.CuisineType;
@@ -29,7 +25,7 @@ import com.github.siela1915.bootcamp.Recipes.PreparationTime;
 
 import com.github.siela1915.bootcamp.Recipes.ExampleRecipes;
 import com.github.siela1915.bootcamp.Recipes.Recipe;
-import com.github.siela1915.bootcamp.firebase.Database;
+import com.github.siela1915.bootcamp.UploadRecipe.UploadingRecipeFragment;
 
 import com.google.android.material.navigation.NavigationView;
 

@@ -1,8 +1,7 @@
-package com.github.siela1915.bootcamp;
+package com.github.siela1915.bootcamp.UploadRecipe;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -14,6 +13,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.fragment.app.DialogFragment;
+
+import com.github.siela1915.bootcamp.R;
 
 import java.io.IOException;
 

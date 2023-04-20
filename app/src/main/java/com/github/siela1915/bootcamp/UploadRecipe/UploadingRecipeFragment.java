@@ -1,4 +1,4 @@
-package com.github.siela1915.bootcamp;
+package com.github.siela1915.bootcamp.UploadRecipe;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -23,9 +23,11 @@ import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
+import com.github.siela1915.bootcamp.HomePageFragment;
 import com.github.siela1915.bootcamp.Labelling.AllergyType;
 import com.github.siela1915.bootcamp.Labelling.CuisineType;
 import com.github.siela1915.bootcamp.Labelling.DietType;
+import com.github.siela1915.bootcamp.R;
 import com.github.siela1915.bootcamp.Recipes.Ingredient;
 import com.github.siela1915.bootcamp.Recipes.Recipe;
 import com.github.siela1915.bootcamp.Recipes.Unit;
@@ -210,35 +212,21 @@ public class UploadingRecipeFragment extends Fragment {
         addIngredientValidators(ingredientsAmount, ingredientsUnit, ingredientsName);
         addStepValidators(stepContent);
 
-        addCuisineType.setOnClickListener(v -> {
-            AutoCompleteTextView cuisineTypeTextView = (AutoCompleteTextView) view.findViewById(R.id.cuisineTypesAutoComplete);
-            String text = cuisineTypeTextView.getText().toString();
-            cuisineTypeTextView.getText().clear();
-            if (isTextValid(text)) {
-                LinearLayout cuisineTypeGroup = (LinearLayout) view.findViewById(R.id.cuisineTypeGroup);
-                addType(cuisineTypeGroup, text);
-            }
-        });
+        addCuisineType.setOnClickListener(v -> addTypeListener(view, R.id.cuisineTypesAutoComplete, R.id.cuisineTypeGroup));
 
-        addAllergyType.setOnClickListener(v -> {
-            AutoCompleteTextView allergyTypeTextView = (AutoCompleteTextView) view.findViewById(R.id.allergyTypesAutoComplete);
-            String text = allergyTypeTextView.getText().toString();
-            allergyTypeTextView.getText().clear();
-            if (isTextValid(text)) {
-                LinearLayout allergyTypeGroup = (LinearLayout) view.findViewById(R.id.allergyTypeGroup);
-                addType(allergyTypeGroup, text);
-            }
-        });
+        addAllergyType.setOnClickListener(v -> addTypeListener(view, R.id.allergyTypesAutoComplete, R.id.allergyTypeGroup));
 
-        addDietType.setOnClickListener(v -> {
-            AutoCompleteTextView dietTypeTextView = (AutoCompleteTextView) view.findViewById(R.id.dietTypesAutoComplete);
-            String text = dietTypeTextView.getText().toString();
-            dietTypeTextView.getText().clear();
-            if (isTextValid(text)) {
-                LinearLayout dietTypeGroup = (LinearLayout) view.findViewById(R.id.dietTypeGroup);
-                addType(dietTypeGroup, text);
-            }
-        });
+        addDietType.setOnClickListener(v -> addTypeListener(view, R.id.dietTypesAutoComplete, R.id.dietTypeGroup));
+    }
+
+    private void addTypeListener (View view, int autoCompleteTextViewId, int linearLayoutId) {
+        AutoCompleteTextView autoCompleteTextView = view.findViewById(autoCompleteTextViewId);
+        String text = autoCompleteTextView.getText().toString();
+        autoCompleteTextView.getText().clear();
+        if (isTextValid(text)) {
+            LinearLayout linearLayout = view.findViewById(linearLayoutId);
+            addType(linearLayout, text);
+        }
     }
 
     private boolean isTextValid(String text) {
