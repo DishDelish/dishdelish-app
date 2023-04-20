@@ -223,8 +223,24 @@ public class DatabaseTest {
             db.set(recipe2);
             List<Recipe> ls = db.getByUserName("randomUser1");
             assertTrue(ls.contains(recipe1));
-            assertTrue(ls.contains(recipe2));
-            assertEquals(2, ls.size());
+            assertEquals(1, ls.size());
+        } catch (ExecutionException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Test
+    public void searchByUserNameAsyncReturnsList() {
+        Database db = new Database(firebaseInstance);
+        Recipe recipe1 = createRecipeEggs();
+        Recipe recipe2 = createOtherEggsRecipe();
+        Task<String> set1 = db.setAsync(recipe1);
+        Task<String> set2 = set1.continueWithTask(t -> db.setAsync(recipe2));
+        Task<List<Recipe>> listTask = set2.continueWithTask(t -> db.getByUserNameAsync("randomUser1"));
+        try {
+            List<Recipe> ls = Tasks.await(listTask);
+            assertEquals(ls.size(), 1);
+            assertTrue(ls.contains(recipe1));
         } catch (ExecutionException | InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -261,7 +277,7 @@ public class DatabaseTest {
     @Test
     public void getByUpperLimitReturnsNoValuesAboveLimit() {
         Database db = new Database(firebaseInstance);
-        List<Recipe> recipes = createRecipesDifferentTimes();
+        List<Recipe> recipes = createRecipesDifferentIntegers();
         try {
             for (Recipe r : recipes) {
                 db.set(r);
@@ -291,13 +307,206 @@ public class DatabaseTest {
         }
     }
 
-    private List<Recipe> createRecipesDifferentTimes() {
+    @Test
+    public void getByUpperLimitAsyncReturnsNoValuesAboveLimit() {
+        Database db = new Database(firebaseInstance);
+        List<Recipe> recipes = createRecipesDifferentIntegers();
+        try {
+            for (Recipe r : recipes) {
+                db.setAsync(r);
+            }
+            List<Recipe> cook = Tasks.await(db.getByUpperLimitOnCookTimeAsync(25));
+            List<Recipe> prep = Tasks.await(db.getByUpperLimitOnPrepTimeAsync(45));
+            assertEquals(cook.size(), 4);
+            assertEquals(prep.size(), 7);
+            boolean check1 = true;
+            for (Recipe r : cook) {
+                if (r.getCookTime() > 25) {
+                    check1 = false;
+                    break;
+                }
+            }
+            assertTrue(check1);
+            boolean check2 = true;
+            for (Recipe r : prep) {
+                if (r.getPrepTime() > 45) {
+                    check2 = false;
+                    break;
+                }
+            }
+            assertTrue(check2);
+        } catch (ExecutionException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Test
+    public void getByLowerLimitReturnsNoValuesUnderLimit() {
+        Database db = new Database(firebaseInstance);
+        List<Recipe> recipes = createRecipesDifferentIntegers();
+        try {
+            for (Recipe r : recipes) {
+                db.set(r);
+            }
+            List<Recipe> cook = db.getByLowerLimitOnCookTime(25);
+            List<Recipe> prep = db.getByLowerLimitOnPrepTime(45);
+            assertEquals(cook.size(), 4);
+            assertEquals(prep.size(), 2);
+            boolean check1 = true;
+            for (Recipe r : cook) {
+                if (r.getCookTime() < 25) {
+                    check1 = false;
+                    break;
+                }
+            }
+            assertTrue(check1);
+            boolean check2 = true;
+            for (Recipe r : prep) {
+                if (r.getPrepTime() < 45) {
+                    check2 = false;
+                    break;
+                }
+            }
+            assertTrue(check2);
+        } catch (ExecutionException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Test
+    public void getByLowerLimitAsyncReturnsNoValuesUnderLimit() {
+        Database db = new Database(firebaseInstance);
+        List<Recipe> recipes = createRecipesDifferentIntegers();
+        try {
+            for (Recipe r : recipes) {
+                db.setAsync(r);
+            }
+            List<Recipe> cook = Tasks.await(db.getByLowerLimitOnCookTimeAsync(25));
+            List<Recipe> prep = Tasks.await(db.getByLowerLimitOnPrepTimeAsync(45));
+            assertEquals(cook.size(), 4);
+            assertEquals(prep.size(), 2);
+            boolean check1 = true;
+            for (Recipe r : cook) {
+                if (r.getCookTime() < 25) {
+                    check1 = false;
+                    break;
+                }
+            }
+            assertTrue(check1);
+            boolean check2 = true;
+            for (Recipe r : prep) {
+                if (r.getPrepTime() < 45) {
+                    check2 = false;
+                    break;
+                }
+            }
+            assertTrue(check2);
+        } catch (ExecutionException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Test
+    public void getByMaxLikesReturnsNoSmallerValue() {
+        Database db = new Database(firebaseInstance);
+        List<Recipe> recipes = createRecipesDifferentIntegers();
+        try {
+            for (Recipe r : recipes) {
+                db.set(r);
+            }
+            List<Recipe> ls = db.getByMaxLikes(4);
+            assertEquals(4, ls.size());
+            boolean check = true;
+            for (Recipe r : ls) {
+                if (r.getLikes() < 30) {
+                    check = false;
+                    break;
+                }
+            }
+            assertTrue(check);
+        } catch (ExecutionException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Test
+    public void getByMaxLikesAsyncReturnsNoSmallerValue() {
+        Database db = new Database(firebaseInstance);
+        List<Recipe> recipes = createRecipesDifferentIntegers();
+        try {
+            for (Recipe r : recipes) {
+                db.setAsync(r);
+            }
+            List<Recipe> ls = Tasks.await(db.getByMaxLikesAsync(4));
+            assertEquals(4, ls.size());
+            boolean check = true;
+            for (Recipe r : ls) {
+                if (r.getLikes() < 30) {
+                    check = false;
+                    break;
+                }
+            }
+            assertTrue(check);
+        } catch (ExecutionException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Test
+    public void getByNumRatingsReturnsNoSmallerValue() {
+        Database db = new Database(firebaseInstance);
+        List<Recipe> recipes = createRecipesDifferentIntegers();
+        try {
+            for (Recipe r : recipes) {
+                db.set(r);
+            }
+            List<Recipe> ls = db.getByNumRatings(4);
+            assertEquals(4, ls.size());
+            boolean check = true;
+            for (Recipe r : ls) {
+                if (r.getLikes() < 30) {
+                    check = false;
+                    break;
+                }
+            }
+            assertTrue(check);
+        } catch (ExecutionException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Test
+    public void getByNumRatingsAsyncReturnsNoSmallerValue() {
+        Database db = new Database(firebaseInstance);
+        List<Recipe> recipes = createRecipesDifferentIntegers();
+        try {
+            for (Recipe r : recipes) {
+                db.setAsync(r);
+            }
+            List<Recipe> ls = Tasks.await(db.getByNumRatingsAsync(4));
+            assertEquals(4, ls.size());
+            boolean check = true;
+            for (Recipe r : ls) {
+                if (r.getLikes() < 30) {
+                    check = false;
+                    break;
+                }
+            }
+            assertTrue(check);
+        } catch (ExecutionException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private List<Recipe> createRecipesDifferentIntegers() {
         List<Integer> ls = Arrays.asList(4, 8, 15, 20, 30, 36, 45, 90);
         List<Recipe> recipes = new ArrayList<>();
         for (Integer i : ls) {
             Recipe r = new Recipe();
             r.setCookTime(i);
             r.setPrepTime(i);
+            r.setNumRatings(i);
+            r.setLikes(i);
             recipes.add(r);
         }
         return recipes;
