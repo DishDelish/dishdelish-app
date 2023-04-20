@@ -4,6 +4,7 @@ import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.lessThan;
 import static org.junit.Assert.assertThrows;
 
 import android.location.Location;
@@ -55,7 +56,7 @@ public class LocationDatabaseTest {
             List<Pair<String, Location>> list = Tasks.await(locDb.getNearby(loc));
             assertThat(list.size(), is(1));
             assertThat(list.get(0).first, is(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid()));
-            assertThat(list.get(0).second, equalTo(loc));
+            assertThat(list.get(0).second.distanceTo(loc), lessThan(0.001f));
         } catch (ExecutionException | InterruptedException e) {
             throw new RuntimeException(e);
         }

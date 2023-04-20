@@ -2,6 +2,7 @@ package com.github.siela1915.bootcamp;
 
 import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.Visibility.VISIBLE;
 import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
@@ -58,7 +59,9 @@ public class NearbyHelpFragmentTest {
 
         scenario = FragmentScenario.launchInContainer(NearbyHelpFragment.class);
 
-        onView(withId(R.id.askHelpButton)).perform(ViewActions.click());
+        onView(withId(R.id.askHelpButton))
+                .perform(scrollTo())
+                .perform(ViewActions.click());
 
         onView(withId(R.id.chooseHelpGroup)).check(matches(not(withEffectiveVisibility(VISIBLE))));
         onView(withId(R.id.askHelpGroup)).check(matches(withEffectiveVisibility(VISIBLE)));
@@ -72,7 +75,9 @@ public class NearbyHelpFragmentTest {
 
         scenario = FragmentScenario.launchInContainer(NearbyHelpFragment.class);
 
-        onView(withId(R.id.offerHelpButton)).perform(ViewActions.click());
+        onView(withId(R.id.offerHelpButton))
+                .perform(scrollTo())
+                .perform(ViewActions.click());
 
         onView(withId(R.id.chooseHelpGroup)).check(matches(not(withEffectiveVisibility(VISIBLE))));
         onView(withId(R.id.askHelpGroup)).check(matches(not(withEffectiveVisibility(VISIBLE))));
@@ -91,7 +96,9 @@ public class NearbyHelpFragmentTest {
         onView(withId(R.id.askedIngredient)).perform(ViewActions.typeText("testIngredient"));
         onView(withId(R.id.askSharePosition)).perform(ViewActions.click());
 
-        onView(withId(R.id.submitAskHelpButton)).perform(ViewActions.click());
+        onView(withId(R.id.submitAskHelpButton))
+                .perform(scrollTo())
+                .perform(ViewActions.click());
 
         FirebaseAuthActivityTest.logoutSync();
     }
@@ -103,12 +110,16 @@ public class NearbyHelpFragmentTest {
 
         scenario = FragmentScenario.launchInContainer(NearbyHelpFragment.class);
 
-        onView(withId(R.id.offerHelpButton)).perform(ViewActions.click());
+        onView(withId(R.id.offerHelpButton))
+                .perform(scrollTo())
+                .perform(ViewActions.click());
 
         onView(withId(R.id.offeredIngredient)).perform(ViewActions.typeText("testIngredient"));
         onView(withId(R.id.offerSharePosition)).perform(ViewActions.click());
 
-        onView(withId(R.id.submitOfferHelpButton)).perform(ViewActions.click());
+        onView(withId(R.id.submitOfferHelpButton))
+                .perform(scrollTo())
+                .perform(ViewActions.click());
 
         FirebaseAuthActivityTest.logoutSync();
     }
