@@ -41,7 +41,8 @@
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
         android:textOn=""
-        android:textOff="" />
+        android:textOff=""
+        />
 
     <TextView
         android:id="@+id/likeCount"
@@ -53,5 +54,20 @@
         android:text="5"
         android:textColor="#333333"
         android:fontFamily="@font/poppins"/>
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_toEndOf="@id/likeCount"
+        android:layout_alignTop="@id/likeCount"
+        android:layout_alignBottom="@+id/likeCount"
+        android:layout_alignStart="@+id/likeCount"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="-4dp"
+        android:background="@drawable/ic_reply"
+        android:layout_centerVertical="true"
+        android:text="" />
 
 </RelativeLayout>
