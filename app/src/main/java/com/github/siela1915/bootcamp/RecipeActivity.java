@@ -26,11 +26,15 @@ import java.util.List;
 public class RecipeActivity extends AppCompatActivity {
 
     private Recipe recipe;
+    private ShoppingListManager shoppingListManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe);
+
+        shoppingListManager = new ShoppingListManager(this);
+
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -57,7 +61,6 @@ public class RecipeActivity extends AppCompatActivity {
                 heart.setTag("empty");
             }
         });
-
 
     }
 
@@ -134,7 +137,7 @@ public class RecipeActivity extends AppCompatActivity {
     private void setIngredientListContents(RecyclerView ingredientsList){
 
         ingredientsList.setLayoutManager(new LinearLayoutManager(this));
-        IngredientAdapter ingredientAdapter = new IngredientAdapter(getApplicationContext(), new ArrayList<>(recipe.getIngredientList()));
+        IngredientAdapter ingredientAdapter = new IngredientAdapter(getApplicationContext(), new ArrayList<>(recipe.getIngredientList()), shoppingListManager);
         ingredientsList.setAdapter(ingredientAdapter);
 
     }

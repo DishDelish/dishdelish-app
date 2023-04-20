@@ -7,6 +7,7 @@ import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+import static androidx.test.espresso.matcher.ViewMatchers.assertThat;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
@@ -24,6 +25,7 @@ import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RatingBar;
+import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import androidx.annotation.DrawableRes;
@@ -157,6 +159,64 @@ public class RecipeActivityTest {
         });
         scenario.close();
 
+    }
+
+    @Test
+    public void backgroundOfLikeButtonChangesWhenItIsClicked(){
+
+        ActivityScenario scenario = ActivityScenario.launch(i);
+
+        int commentIndex = 0;
+
+        scenario.onActivity(activity -> {
+            RecyclerView commentsList = activity.findViewById(R.id.commentsList);
+            CommentViewHolder viewHolder = (CommentViewHolder) commentsList.findViewHolderForAdapterPosition(commentIndex);
+
+            // Check that the tag value of the button changes when clicked
+            ToggleButton thumb = viewHolder.itemView.findViewById(R.id.thumbButton);
+            thumb.performClick();
+            String actual = (String) thumb.getTag();
+            String expected = "liked";
+            assertTrue(actual.equals(expected));
+
+            thumb.performClick();
+            actual = (String) thumb.getTag();
+            expected = "unliked";
+            assertTrue(actual.equals(expected));
+        });
+
+        scenario.close();
+
+    }
+
+    @Test
+    public void likeCounterIncreasesWhenCommentIsLiked(){
+        ActivityScenario scenario = ActivityScenario.launch(i);
+
+        int commentIndex = 0;
+
+        scenario.onActivity(activity -> {
+            RecyclerView commentsList = activity.findViewById(R.id.commentsList);
+            CommentViewHolder viewHolder = (CommentViewHolder) commentsList.findViewHolderForAdapterPosition(commentIndex);
+
+            // Check that the tag value of the button changes when clicked
+            ToggleButton thumb = viewHolder.itemView.findViewById(R.id.thumbButton);
+
+            TextView likeCount = viewHolder.itemView.findViewById(R.id.likeCount);
+            int likes = Integer.valueOf(likeCount.getText().toString());
+
+            thumb.performClick();
+            int actual = Integer.valueOf(likeCount.getText().toString());
+            int expected = likes+1;
+            assertThat(actual, is(expected));
+
+            thumb.performClick();
+            actual = Integer.valueOf(likeCount.getText().toString());;
+            expected = likes;
+            assertThat(actual, is(expected));
+        });
+
+        scenario.close();
     }
 
     @Test
@@ -362,6 +422,33 @@ public class RecipeActivityTest {
         });
         scenario.close();
     }
+
+    @Test
+    public void addToListButtonChangesStateOnClick() {
+        ActivityScenario scenario = ActivityScenario.launch(i);
+
+        int ingredientIndex = 0;
+
+        scenario.onActivity(activity -> {
+            RecyclerView ingredientsList = activity.findViewById(R.id.ingredientsList);
+            IngredientViewHolder viewHolder = (IngredientViewHolder) ingredientsList.findViewHolderForAdapterPosition(ingredientIndex);
+
+            // Check that the tag value of the button changes when clicked
+            ToggleButton addButton = viewHolder.itemView.findViewById(R.id.AddToListButton);
+            addButton.performClick();
+            String actual = (String) addButton.getTag();
+            String expected = "added";
+            assertTrue(actual.equals(expected));
+
+            addButton.performClick();
+            actual = (String) addButton.getTag();
+            expected = "removed";
+            assertTrue(actual.equals(expected));
+        });
+
+        scenario.close();
+    }
+
 
 
     public static Matcher<View> withRating(final float rating) {
