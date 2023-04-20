@@ -1,7 +1,7 @@
 {
   "rules": {
     "recipes": {
-      ".indexOn": ["recipeName", "userName", "cookTime", "prepTime", "likes"]
+      ".indexOn": ["recipeName", "userName", "cookTime", "prepTime", "likes", "numRatings"]
     },
     "favorites": {
       "$user_id": {
