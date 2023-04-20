@@ -41,11 +41,6 @@ public class Database {
      * Retrieves a recipe from the database given its unique id
      * @param uniqueKey the unique id associated to the recipe
      * @return the recipe fetched from the database
-<<<<<<< HEAD
-     * The exceptions are thrown when the retrieval fails.
-     * For instance if the method times-out due to a network connection error.
-=======
->>>>>>> master
      */
     public Recipe get(String uniqueKey) throws ExecutionException, InterruptedException {
         Task<DataSnapshot> task = db.child(RECIPES).child(uniqueKey).get();
@@ -115,11 +110,19 @@ public class Database {
      * Since the name is not unique, this method may return multiple recipes.
      * @param name the name of the recipe to search for
      * @return a map from the recipe's unique key id to the recipe itself
-     * The exceptions are thrown when the retrieval fails.
-     * For instance if the method times-out due to a network connection error.
      */
     public Map<String, Recipe> getByName(String name) throws ExecutionException, InterruptedException {
         return getByStringAttribute("recipeName", name);
+    }
+
+    /**
+     * Retrieves asynchronously recipes with a given name (not the unique id).
+     * Since the name is not unique, this method may return multiple recipes.
+     * @param name the name of the recipe to search for
+     * @return a list of recipes with a matching name embedded in a Task
+     */
+    public Task<List<Recipe>> getByNameAsync(String name) {
+        return getByStringAttributeAsync("recipeName", name);
     }
 
     /**
@@ -127,11 +130,19 @@ public class Database {
      * Since the name is not unique, this method may return multiple recipes.
      * @param userName the name of the user who uploaded the recipe
      * @return a map from the recipe's unique key id to the recipe itself
-     * The exceptions are thrown when the retrieval fails.
-     * For instance if the method times-out due to a network connection error.
      */
     public Map<String, Recipe> getByUserName(String userName) throws ExecutionException, InterruptedException {
         return getByStringAttribute("userName", userName);
+    }
+
+    /**
+     * Retrieve asynchronously a recipe with a given name (not the unique id).
+     * Since the name is not unique, this method may return multiple recipes.
+     * @param userName the name of the user who uploaded the recipe
+     * @return a list of recipes with a matching name embedded in a Task
+     */
+    public Task<List<Recipe>> getByUserNameAsync(String userName) {
+        return getByStringAttributeAsync("userName", userName);
     }
 
     /**
@@ -144,6 +155,15 @@ public class Database {
     }
 
     /**
+     * Retrieve asynchronously recipes with lower prep time.
+     * @param time the upper bound limit to the prep time.
+     * @return recipes with lower prep time than the time specified as parameter.
+     */
+    public Task<List<Recipe>> getByUpperLimitOnPrepTimeAsync(int time) {
+        return getByUpperLimitOnTimeAsync("prepTime", time);
+    }
+
+    /**
      * Retrieve recipes with lower cook time.
      * @param time the upper bound limit to the prep time.
      * @return recipes with lower prep time than the time specified as parameter.
@@ -153,12 +173,30 @@ public class Database {
     }
 
     /**
+     * Retrieve asynchronously recipes with lower cook time.
+     * @param time the upper bound limit to the cook time.
+     * @return recipes with lower cook time than the time specified as parameter.
+     */
+    public Task<List<Recipe>> getByUpperLimitOnCookTimeAsync(int time) {
+        return getByUpperLimitOnTimeAsync("cookTime", time);
+    }
+
+    /**
      * Retrieve recipes with higher prep time.
-     * @param time the upper bound limit to the prep time.
-     * @return recipes with lower prep time than the time specified as parameter.
+     * @param time the lower bound limit to the prep time.
+     * @return recipes with higher prep time than the time specified as parameter.
      */
     public Map<String, Recipe> getByLowerLimitOnPrepTime(int time) throws ExecutionException, InterruptedException {
         return getByLowerLimitOnTime("prepTime", time);
+    }
+
+    /**
+     * Retrieve asynchronously recipes with higher prep time.
+     * @param time the lower bound limit to the prep time.
+     * @return recipes with higher prep time than the time specified as parameter.
+     */
+    public Task<List<Recipe>> getByLowerLimitOnPrepTimeAsync(int time) {
+        return getByLowerLimitOnTimeAsync("prepTime", time);
     }
 
     /**
@@ -171,16 +209,57 @@ public class Database {
     }
 
     /**
+     * Retrieve asynchronously recipes with higher cook time.
+     * @param time the lower bound limit to the cook time.
+     * @return recipes with higher cook time than the time specified as parameter.
+     */
+    public Task<List<Recipe>> getByLowerLimitOnCookTimeAsync(int time) {
+        return getByLowerLimitOnTimeAsync("cookTime", time);
+    }
+
+    /**
      * Retrieve the top n recipes with the maximum number of likes in the database
      * i.e. the most popular recipes.
      * @param n number of top liked recipes to retrieve from the database.
      * @return the top n recipes.
      */
     public Map<String, Recipe> getByMaxLikes(int n) throws ExecutionException, InterruptedException {
+        return getByValueAttribute("likes", n);
+    }
+
+    /**
+     * Retrieve asynchronously the top n recipes with the maximum number of likes in the database
+     * i.e. the most popular recipes.
+     * @param n number of top liked recipes to retrieve from the database.
+     * @return the top n recipes.
+     */
+    public Task<List<Recipe>> getByMaxLikesAsync(int n) {
+        return getByValueAttributeAsync("likes", n);
+    }
+
+    /**
+     * Retrieve the top n recipes with the maximum number of ratings in the database
+     * @param n number of top liked recipes to retrieve from the database
+     * @return the top n recipes
+     */
+    public Map<String, Recipe> getByNumRatings(int n) throws ExecutionException, InterruptedException {
+        return getByValueAttribute("numRatings", n);
+    }
+
+    /**
+     * Retrieve the top n recipes with the maximum number of ratings in the database
+     * @param n number of top liked recipes to retrieve from the database
+     * @return the top n recipes
+     */
+    public Task<List<Recipe>> getByNumRatingsAsync(int n) {
+        return getByValueAttributeAsync("numRatings", n);
+    }
+
+    private Map<String, Recipe> getByValueAttribute(String attribute, int n) throws ExecutionException, InterruptedException {
         if (n < 1) {
             throw new IllegalArgumentException();
         }
-        Query query = db.child(RECIPES).orderByChild("likes").orderByValue().limitToLast(n);
+        Query query = db.child(RECIPES).orderByChild(attribute).orderByValue().limitToLast(n);
         Task<DataSnapshot> task = query.get();
         DataSnapshot snapshot = Tasks.await(task);
         Map<String, Recipe> recipes = new HashMap<>();
@@ -188,6 +267,21 @@ public class Database {
             recipes.put(val.getKey(), val.getValue(Recipe.class));
         }
         return recipes;
+    }
+
+    private Task<List<Recipe>> getByValueAttributeAsync(String attribute, int n) {
+        if (n < 1) {
+            throw new IllegalArgumentException();
+        }
+        Query query = db.child(RECIPES).orderByChild(attribute).orderByValue().limitToLast(n);
+        Task<DataSnapshot> task = query.get();
+        return task.continueWith(snapshot -> {
+            List<Recipe> recipes = new ArrayList<>();
+            for (DataSnapshot s : snapshot.getResult().getChildren()) {
+                recipes.add(s.getValue(Recipe.class));
+            }
+            return recipes;
+        });
     }
 
     private Map<String, Recipe> getByUpperLimitOnTime(String attribute, int time) throws ExecutionException, InterruptedException {
@@ -201,6 +295,18 @@ public class Database {
         return recipes;
     }
 
+    private Task<List<Recipe>> getByUpperLimitOnTimeAsync(String attribute, int time) {
+        Query query = db.child(RECIPES).orderByChild(attribute).endAt(time);
+        Task<DataSnapshot> task = query.get();
+        return task.continueWith(snapshot -> {
+            List<Recipe> recipes = new ArrayList<>();
+            for (DataSnapshot s : snapshot.getResult().getChildren()) {
+                recipes.add(s.getValue(Recipe.class));
+            }
+            return recipes;
+        });
+    }
+
     private Map<String, Recipe> getByLowerLimitOnTime(String attribute, int time) throws ExecutionException, InterruptedException {
         Query query = db.child(RECIPES).orderByChild(attribute).startAt(time);
         Task<DataSnapshot> task = query.get();
@@ -211,6 +317,19 @@ public class Database {
         }
         return recipes;
     }
+
+    private Task<List<Recipe>> getByLowerLimitOnTimeAsync(String attribute, int time) {
+        Query query = db.child(RECIPES).orderByChild(attribute).startAt(time);
+        Task<DataSnapshot> task = query.get();
+        return task.continueWith(snapshot -> {
+            List<Recipe> recipes = new ArrayList<>();
+            for (DataSnapshot s : snapshot.getResult().getChildren()) {
+                recipes.add(s.getValue(Recipe.class));
+            }
+            return recipes;
+        });
+    }
+
     private Map<String, Recipe> getByStringAttribute(String attribute, String name) throws ExecutionException, InterruptedException {
         Query query = db.child(RECIPES).orderByChild(attribute).equalTo(name);
         Task<DataSnapshot> task = query.get();
@@ -222,14 +341,8 @@ public class Database {
         return recipes;
     }
 
-    /**
-     * Retrieves asynchronously recipes with a given name (not the unique id).
-     * Since the name is not unique, this method may return multiple recipes.
-     * @param name the name of the recipe to search for
-     * @return a list of recipes with a matching name embedded in a Task
-     */
-    public Task<List<Recipe>> getByNameAsync(String name) {
-        Query query = db.child(RECIPES).orderByChild("recipeName").equalTo(name);
+    private Task<List<Recipe>> getByStringAttributeAsync(String attribute, String name) {
+        Query query = db.child(RECIPES).orderByChild(attribute).equalTo(name);
         Task<DataSnapshot> task = query.get();
         return task.continueWith(snapshot -> {
             List<Recipe> recipes = new ArrayList<>();
