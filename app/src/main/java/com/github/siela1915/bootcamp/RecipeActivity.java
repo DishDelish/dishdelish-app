@@ -15,6 +15,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import com.github.siela1915.bootcamp.Recipes.Comment;
 import com.github.siela1915.bootcamp.Recipes.Ingredient;
 import com.github.siela1915.bootcamp.Recipes.Recipe;
 import com.github.siela1915.bootcamp.Recipes.Unit;
@@ -86,7 +87,8 @@ public class RecipeActivity extends AppCompatActivity {
         RatingBar ratingBar = (RatingBar) findViewById(R.id.ratingBar);
         TextView servings = (TextView) findViewById(R.id.servings);
 
-        Bitmap recipeImage = BitmapFactory.decodeResource(this.getResources(), recipe.image);
+        // not sure about this
+        Bitmap recipeImage = BitmapFactory.decodeResource(this.getResources(), Integer.valueOf(recipe.image));
         recipePicture.setImageBitmap(recipeImage);
 
         Bitmap avatar = BitmapFactory.decodeResource(this.getResources(), recipe.profilePicture);
@@ -146,8 +148,6 @@ public class RecipeActivity extends AppCompatActivity {
         CommentAdapter commentAdapter = new CommentAdapter(getApplicationContext(), recipe.comments);
         commentsList.setAdapter(commentAdapter);
 
-
-
         EditText commentBox = (EditText) findViewById(R.id.enterComment);
         Button sendComment = (Button) findViewById(R.id.sendCommentButton);
 
@@ -156,7 +156,7 @@ public class RecipeActivity extends AppCompatActivity {
             if(!input.isEmpty()){
 
                 commentBox.setText("");
-                recipe.comments.add(input);
+                recipe.comments.add(new Comment(input));
                 commentAdapter.notifyItemInserted(recipe.comments.size()-1);
 
             }

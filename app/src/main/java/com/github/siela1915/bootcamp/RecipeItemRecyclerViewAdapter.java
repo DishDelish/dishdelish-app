@@ -39,7 +39,9 @@ public class RecipeItemRecyclerViewAdapter extends RecyclerView.Adapter<RecipeIt
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
 
-        Bitmap recipeImage = BitmapFactory.decodeResource(holder.itemView.getResources(), mValues.get(position).image);
+
+        Bitmap recipeImage = BitmapFactory.decodeResource(holder.itemView.getResources(), Integer.parseInt(mValues.get(position).image));
+
 
         holder.mRecipeItemImage.setImageBitmap(recipeImage);
         holder.mRecipeItemName.setText(mValues.get(position).recipeName);

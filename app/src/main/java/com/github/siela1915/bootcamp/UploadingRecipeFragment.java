@@ -226,10 +226,8 @@ public class UploadingRecipeFragment extends Fragment {
 
         Recipe recipe = new Recipe();
         recipe.setRecipeName(recipeName.getEditText().getText().toString());
-        // how to store the image need to be discussed
-        // url string or int for bitmap?
-        // recipe.setImage(downloadUri.toString());
-        recipe.setImage(1);
+        if (downloadUri != null) recipe.setImage(downloadUri.toString());
+        else recipe.setImage(null);
         recipe.setCookTime(Integer.parseInt(cookTime.getEditText().getText().toString()));
         recipe.setPrepTime(Integer.parseInt(prepTime.getEditText().getText().toString()));
         recipe.setServings(Integer.parseInt(servings.getEditText().getText().toString()));
