@@ -1,5 +1,7 @@
 package com.github.siela1915.bootcamp;
 
+import static android.content.ContentValues.TAG;
+
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -7,6 +9,9 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +25,8 @@ import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
+import com.github.siela1915.bootcamp.AutocompleteApi.ApiResponse;
+import com.github.siela1915.bootcamp.AutocompleteApi.IngredientAutocomplete;
 import com.github.siela1915.bootcamp.Labelling.AllergyType;
 import com.github.siela1915.bootcamp.Labelling.CuisineType;
 import com.github.siela1915.bootcamp.Labelling.DietType;
@@ -39,7 +46,11 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Stream;
 
@@ -118,6 +129,20 @@ public class UploadingRecipeFragment extends Fragment {
         allergyTypesAutoComplete.setThreshold(1); //will start working from first character
         allergyTypesAutoComplete.setAdapter(allergyTypesAdapter);
         AutoCompleteTextView dietTypesAutoComplete = (AutoCompleteTextView) view.findViewById(R.id.dietTypesAutoComplete);
+
+
+
+        //ingredient autocompletion
+        IngredientAutocomplete apiService = new IngredientAutocomplete();
+        AutoCompleteTextView ingredientAutoComplete = (AutoCompleteTextView) view.findViewById(R.id.ingredientAutoComplete);
+        //map of Ingredient IDs, will be used when uploading a recipe to get nutritional values
+        Map<String, Integer> idMap = new HashMap<>();
+        setupIngredientAutocomplete(ingredientAutoComplete, idMap, apiService);
+
+
+
+
+
         dietTypesAutoComplete.setThreshold(1); //will start working from first character
         dietTypesAutoComplete.setAdapter(dietTypesAdapter);
 
@@ -141,7 +166,7 @@ public class UploadingRecipeFragment extends Fragment {
         addIngredient.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addIngredient();
+                addIngredient(idMap, apiService);
             }
         });
 
@@ -153,6 +178,56 @@ public class UploadingRecipeFragment extends Fragment {
         });
 
         return view;
+    }
+
+
+    public void setupIngredientAutocomplete(AutoCompleteTextView ingredientAutoComplete, Map<String, Integer> idMap, IngredientAutocomplete apiService){
+        ingredientAutoComplete.setThreshold(1);
+        ingredientAutoComplete.addTextChangedListener(new TextWatcher() {
+            String prevString;
+            boolean isTyping = false;
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+            private Timer timer = new Timer();
+            private final long DELAY = 1000; // milliseconds
+            @Override
+            public void afterTextChanged(final Editable s) {
+                //TODO add handler for timer,
+                //couldn't figure out a way to test an api inside UI classes
+//                if(BuildConfig.DEBUG){
+//                    ArrayAdapter<String> ingredientAdapter = new ArrayAdapter<String>(ingredientAutoComplete.getContext(), android.R.layout.select_dialog_item, Arrays.asList("apple"));
+//                    ingredientAutoComplete.setAdapter(ingredientAdapter);
+//                    ingredientAutoComplete.showDropDown();
+//                    return;
+//                }
+                //doesn't consider defocusing and refocusing the text field as typing
+                if(!s.toString().equals(prevString)){
+                    if (!isTyping) {
+                        // Send notification for start typing event
+                        ingredientAutoComplete.dismissDropDown();
+                        isTyping = true;
+                    }
+                    timer.cancel();
+                    timer = new Timer();
+                    timer.schedule(
+                            new TimerTask() {
+                                @Override
+                                public void run() {
+                                    isTyping = false;
+                                    prevString = s.toString();
+                                    //send notification for stopped typing event
+                                    apiService.completeSearchNames(s.toString(), ingredientAutoComplete, idMap);
+                                }
+                            },
+                            DELAY
+                    );
+                }
+            }
+        });
     }
 
     @Override
@@ -248,7 +323,7 @@ public class UploadingRecipeFragment extends Fragment {
         startActivityForResult(Intent.createChooser(intent, "Select Image"), PICK_IMAGE_REQUEST);
     }
 
-    private void addIngredient() {
+    private void addIngredient(Map<String, Integer> idMap, IngredientAutocomplete apiService) {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             final View ingredient = getLayoutInflater().inflate(R.layout.recipe_ingredient_edittext, null, false);
             ImageView removeIngredient = (ImageView) ingredient.findViewById(R.id.removeIngredient);
@@ -261,6 +336,8 @@ public class UploadingRecipeFragment extends Fragment {
             });
 
             ingredientLinearLayout.addView(ingredient);
+            AutoCompleteTextView ingredientAutoComplete = (AutoCompleteTextView) ingredient.findViewById(R.id.ingredientAutoComplete);
+            setupIngredientAutocomplete(ingredientAutoComplete, idMap, apiService);
         }
     }
 

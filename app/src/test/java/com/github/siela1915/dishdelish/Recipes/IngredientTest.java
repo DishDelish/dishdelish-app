@@ -47,6 +47,26 @@ public class IngredientTest {
         assertFalse(ingredient1.equals(ingredient2));
     }
 
+    @Test
+    public void nutrientSettingAndGettingWorks(){
+        Ingredient ing = new Ingredient("apple", new Unit(1, "piece"));
+        assertEquals(ing.getCarbs(), 0, 1e-4);
+        assertEquals(ing.getCalories(), 0, 1e-4);
+        assertEquals(ing.getFat(), 0, 1e-4);
+        assertEquals(ing.getSugar(), 0, 1e-4);
+        assertEquals(ing.getProtein(), 0, 1e-4);
+        ing.setProtein(1);
+        ing.setSugar(1);
+        ing.setCarbs(1);
+        ing.setCalories(1);
+        ing.setFat(1);
+        assertEquals(ing.getCarbs(), 1, 1e-4);
+        assertEquals(ing.getCalories(), 1, 1e-4);
+        assertEquals(ing.getFat(), 1, 1e-4);
+        assertEquals(ing.getSugar(), 1, 1e-4);
+        assertEquals(ing.getProtein(), 1, 1e-4);
+    }
+
 
 
 }
