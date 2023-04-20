@@ -222,7 +222,7 @@ public class RecipeActivityTest {
     public void isCorrectRecipePictureDisplayed() {
         ActivityScenario scenario = ActivityScenario.launch(i);
         onView(withId(R.id.recipePicture))
-                .check(matches(withDrawable(omelette.image)));
+                .check(matches(withDrawable(Integer.parseInt(omelette.image))));
         scenario.close();
     }
 
