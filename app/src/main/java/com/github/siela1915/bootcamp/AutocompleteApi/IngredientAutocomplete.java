@@ -22,7 +22,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class IngredientAutocomplete {
     private final int numberOfIngredients = 5;
     private final int numberOfNutrition = 3;
-    private final String apiKey = BuildConfig.API_KEY;
+    private final String API_KEY = BuildConfig.API_KEY;
     public ApiService service;
 
 
