@@ -26,7 +26,6 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 public class DatabaseTest {
@@ -143,10 +142,10 @@ public class DatabaseTest {
         Database db = new Database(firebaseInstance);
         Recipe recipe = createRecipeEggs();
         try {
-            String key = db.set(recipe);
-            Map<String, Recipe> map = db.getByName("testRecipe");
-            assertTrue(map.containsKey(key));
-            assertEquals(recipe, map.get(key));
+            db.set(recipe);
+            List<Recipe> ls = db.getByName("testRecipe");
+            assertEquals(ls.size(), 1);
+            assertEquals(recipe, ls.get(0));
         } catch (ExecutionException | InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -176,14 +175,12 @@ public class DatabaseTest {
         Recipe recipe1 = createRecipeEggs();
         Recipe recipe2 = createOtherEggsRecipe();
         try {
-            String key1 = db.set(recipe1);
-            String key2 = db.set(recipe2);
-            Map<String, Recipe> map = db.getByName("testRecipe");
-            assertTrue(map.containsKey(key1));
-            assertTrue(map.containsKey(key2));
-            assertEquals(2, map.size());
-            assertEquals(recipe1, map.get(key1));
-            assertEquals(recipe2, map.get(key2));
+            db.set(recipe1);
+            db.set(recipe2);
+            List<Recipe> ls = db.getByName("testRecipe");
+            assertTrue(ls.contains(recipe1));
+            assertTrue(ls.contains(recipe2));
+            assertEquals(2, ls.size());
         } catch (ExecutionException | InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -196,7 +193,7 @@ public class DatabaseTest {
         Recipe recipe = createRecipeEggs();
         try {
             db.set(recipe);
-            Map<String, Recipe> bogus = db.getByName("bogusName");
+            List<Recipe> bogus = db.getByName("bogusName");
             assertEquals(bogus.size(), 0);
         } catch (ExecutionException | InterruptedException e) {
             throw new RuntimeException(e);
@@ -208,10 +205,9 @@ public class DatabaseTest {
         Database db = new Database(firebaseInstance);
         Recipe recipe = createRecipeEggs();
         try {
-            String key = db.set(recipe);
-            Map<String, Recipe> map = db.getByUserName("randomUser1");
-            assertTrue(map.containsKey(key));
-            assertEquals(recipe, map.get(key));
+            db.set(recipe);
+            List<Recipe> ls = db.getByUserName("randomUser1");
+            assertTrue(ls.contains(recipe));
         } catch (ExecutionException | InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -223,14 +219,12 @@ public class DatabaseTest {
         Recipe recipe1 = createRecipeEggs();
         Recipe recipe2 = createOtherEggsRecipe();
         try {
-            String key1 = db.set(recipe1);
-            String key2 = db.set(recipe2);
-            Map<String, Recipe> map = db.getByUserName("randomUser1");
-            assertTrue(map.containsKey(key1));
-            assertTrue(map.containsKey(key2));
-            assertEquals(2, map.size());
-            assertEquals(recipe1, map.get(key1));
-            assertEquals(recipe2, map.get(key2));
+            db.set(recipe1);
+            db.set(recipe2);
+            List<Recipe> ls = db.getByUserName("randomUser1");
+            assertTrue(ls.contains(recipe1));
+            assertTrue(ls.contains(recipe2));
+            assertEquals(2, ls.size());
         } catch (ExecutionException | InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -257,7 +251,7 @@ public class DatabaseTest {
         Recipe recipe = createRecipeEggs();
         try {
             db.set(recipe);
-            Map<String, Recipe> bogus = db.getByUserName("bogusName");
+            List<Recipe> bogus = db.getByUserName("bogusName");
             assertEquals(bogus.size(), 0);
         } catch (ExecutionException | InterruptedException e) {
             throw new RuntimeException(e);
@@ -272,12 +266,12 @@ public class DatabaseTest {
             for (Recipe r : recipes) {
                 db.set(r);
             }
-            Map<String, Recipe> cook = db.getByUpperLimitOnCookTime(25);
-            Map<String, Recipe> prep = db.getByUpperLimitOnPrepTime(45);
+            List<Recipe> cook = db.getByUpperLimitOnCookTime(25);
+            List<Recipe> prep = db.getByUpperLimitOnPrepTime(45);
             assertEquals(cook.size(), 4);
             assertEquals(prep.size(), 7);
             boolean check1 = true;
-            for (Recipe r : cook.values()) {
+            for (Recipe r : cook) {
                 if (r.getCookTime() > 25) {
                     check1 = false;
                     break;
@@ -285,7 +279,7 @@ public class DatabaseTest {
             }
             assertTrue(check1);
             boolean check2 = true;
-            for (Recipe r : prep.values()) {
+            for (Recipe r : prep) {
                 if (r.getPrepTime() > 45) {
                     check2 = false;
                     break;

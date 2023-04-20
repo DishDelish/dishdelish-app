@@ -111,7 +111,7 @@ public class Database {
      * @param name the name of the recipe to search for
      * @return a map from the recipe's unique key id to the recipe itself
      */
-    public Map<String, Recipe> getByName(String name) throws ExecutionException, InterruptedException {
+    public List<Recipe> getByName(String name) throws ExecutionException, InterruptedException {
         return getByStringAttribute("recipeName", name);
     }
 
@@ -131,7 +131,7 @@ public class Database {
      * @param userName the name of the user who uploaded the recipe
      * @return a map from the recipe's unique key id to the recipe itself
      */
-    public Map<String, Recipe> getByUserName(String userName) throws ExecutionException, InterruptedException {
+    public List<Recipe> getByUserName(String userName) throws ExecutionException, InterruptedException {
         return getByStringAttribute("userName", userName);
     }
 
@@ -150,7 +150,7 @@ public class Database {
      * @param time the upper bound limit to the prep time.
      * @return recipes with lower prep time than the time specified as parameter.
      */
-    public Map<String, Recipe> getByUpperLimitOnPrepTime(int time) throws ExecutionException, InterruptedException {
+    public List<Recipe> getByUpperLimitOnPrepTime(int time) throws ExecutionException, InterruptedException {
         return getByUpperLimitOnTime("prepTime", time);
     }
 
@@ -168,7 +168,7 @@ public class Database {
      * @param time the upper bound limit to the prep time.
      * @return recipes with lower prep time than the time specified as parameter.
      */
-    public Map<String, Recipe> getByUpperLimitOnCookTime(int time) throws ExecutionException, InterruptedException {
+    public List<Recipe> getByUpperLimitOnCookTime(int time) throws ExecutionException, InterruptedException {
         return getByUpperLimitOnTime("cookTime", time);
     }
 
@@ -186,7 +186,7 @@ public class Database {
      * @param time the lower bound limit to the prep time.
      * @return recipes with higher prep time than the time specified as parameter.
      */
-    public Map<String, Recipe> getByLowerLimitOnPrepTime(int time) throws ExecutionException, InterruptedException {
+    public List<Recipe> getByLowerLimitOnPrepTime(int time) throws ExecutionException, InterruptedException {
         return getByLowerLimitOnTime("prepTime", time);
     }
 
@@ -204,7 +204,7 @@ public class Database {
      * @param time the upper bound limit to the prep time.
      * @return recipes with lower prep time than the time specified as parameter.
      */
-    public Map<String, Recipe> getByLowerLimitOnCookTime(int time) throws ExecutionException, InterruptedException {
+    public List<Recipe> getByLowerLimitOnCookTime(int time) throws ExecutionException, InterruptedException {
         return getByLowerLimitOnTime("cookTime", time);
     }
 
@@ -223,7 +223,7 @@ public class Database {
      * @param n number of top liked recipes to retrieve from the database.
      * @return the top n recipes.
      */
-    public Map<String, Recipe> getByMaxLikes(int n) throws ExecutionException, InterruptedException {
+    public List<Recipe> getByMaxLikes(int n) throws ExecutionException, InterruptedException {
         return getByValueAttribute("likes", n);
     }
 
@@ -242,7 +242,7 @@ public class Database {
      * @param n number of top liked recipes to retrieve from the database
      * @return the top n recipes
      */
-    public Map<String, Recipe> getByNumRatings(int n) throws ExecutionException, InterruptedException {
+    public List<Recipe> getByNumRatings(int n) throws ExecutionException, InterruptedException {
         return getByValueAttribute("numRatings", n);
     }
 
@@ -255,16 +255,16 @@ public class Database {
         return getByValueAttributeAsync("numRatings", n);
     }
 
-    private Map<String, Recipe> getByValueAttribute(String attribute, int n) throws ExecutionException, InterruptedException {
+    private List<Recipe> getByValueAttribute(String attribute, int n) throws ExecutionException, InterruptedException {
         if (n < 1) {
             throw new IllegalArgumentException();
         }
         Query query = db.child(RECIPES).orderByChild(attribute).orderByValue().limitToLast(n);
         Task<DataSnapshot> task = query.get();
         DataSnapshot snapshot = Tasks.await(task);
-        Map<String, Recipe> recipes = new HashMap<>();
+        List<Recipe> recipes = new ArrayList<>();
         for (DataSnapshot val : snapshot.getChildren()) {
-            recipes.put(val.getKey(), val.getValue(Recipe.class));
+            recipes.add(val.getValue(Recipe.class));
         }
         return recipes;
     }
@@ -284,13 +284,13 @@ public class Database {
         });
     }
 
-    private Map<String, Recipe> getByUpperLimitOnTime(String attribute, int time) throws ExecutionException, InterruptedException {
+    private List<Recipe> getByUpperLimitOnTime(String attribute, int time) throws ExecutionException, InterruptedException {
         Query query = db.child(RECIPES).orderByChild(attribute).endAt(time);
         Task<DataSnapshot> task = query.get();
         DataSnapshot snapshot = Tasks.await(task);
-        Map<String, Recipe> recipes = new HashMap<>();
+        List<Recipe> recipes = new ArrayList<>();
         for (DataSnapshot val : snapshot.getChildren()) {
-            recipes.put(val.getKey(), val.getValue(Recipe.class));
+            recipes.add(val.getValue(Recipe.class));
         }
         return recipes;
     }
@@ -307,13 +307,13 @@ public class Database {
         });
     }
 
-    private Map<String, Recipe> getByLowerLimitOnTime(String attribute, int time) throws ExecutionException, InterruptedException {
+    private List<Recipe> getByLowerLimitOnTime(String attribute, int time) throws ExecutionException, InterruptedException {
         Query query = db.child(RECIPES).orderByChild(attribute).startAt(time);
         Task<DataSnapshot> task = query.get();
         DataSnapshot snapshot = Tasks.await(task);
-        Map<String, Recipe> recipes = new HashMap<>();
+        List<Recipe> recipes = new ArrayList<>();
         for (DataSnapshot val : snapshot.getChildren()) {
-            recipes.put(val.getKey(), val.getValue(Recipe.class));
+            recipes.add(val.getValue(Recipe.class));
         }
         return recipes;
     }
@@ -330,13 +330,13 @@ public class Database {
         });
     }
 
-    private Map<String, Recipe> getByStringAttribute(String attribute, String name) throws ExecutionException, InterruptedException {
+    private List<Recipe> getByStringAttribute(String attribute, String name) throws ExecutionException, InterruptedException {
         Query query = db.child(RECIPES).orderByChild(attribute).equalTo(name);
         Task<DataSnapshot> task = query.get();
         DataSnapshot snapshot = Tasks.await(task);
-        Map<String, Recipe> recipes = new HashMap<>();
+        List<Recipe> recipes = new ArrayList<>();
         for (DataSnapshot val : snapshot.getChildren()) {
-            recipes.put(val.getKey(), val.getValue(Recipe.class));
+            recipes.add(val.getValue(Recipe.class));
         }
         return recipes;
     }
