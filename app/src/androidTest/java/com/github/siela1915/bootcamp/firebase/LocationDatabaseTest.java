@@ -2,9 +2,9 @@ package com.github.siela1915.bootcamp.firebase;
 
 import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.lessThan;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThrows;
 
 import android.location.Location;
@@ -13,6 +13,7 @@ import android.util.Pair;
 import com.github.siela1915.bootcamp.FirebaseAuthActivityTest;
 import com.github.siela1915.bootcamp.Recipes.ExampleRecipes;
 import com.github.siela1915.bootcamp.Recipes.Ingredient;
+import com.github.siela1915.bootcamp.Recipes.Unit;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
@@ -66,7 +67,7 @@ public class LocationDatabaseTest {
     @Test
     public void setThenGetOfferedReturnsCorrectIngredient() {
         FirebaseAuthActivityTest.loginSync("test@example.com");
-        Ingredient ing = ExampleRecipes.recipes.get(0).getIngredientList().get(0);
+        Ingredient ing = new Ingredient("Test", new Unit(3, "pieces"));
 
         Location loc = new Location("LocationDatabase");
         loc.setLongitude(15.0);
@@ -75,6 +76,7 @@ public class LocationDatabaseTest {
             Tasks.await(locDb.updateLocation(loc));
             Tasks.await(locDb.updateOffered(ing));
             Ingredient res = Tasks.await(locDb.getOffered(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid()));
+            assertNotNull(res);
             assertThat(res.toString(), is(ing.toString()));
         } catch (ExecutionException | InterruptedException e) {
             throw new RuntimeException(e);

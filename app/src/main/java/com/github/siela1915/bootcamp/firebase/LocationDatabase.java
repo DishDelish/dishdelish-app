@@ -63,7 +63,7 @@ public class LocationDatabase {
     }
 
     public Task<Ingredient> getOffered(String userId) {
-        return db.child(HELP + "/" + userId + "/offered").get()
+        return db.child(userId + "/offered").get()
                 .continueWith(dataTask -> dataTask.getResult().getValue(Ingredient.class));
     }
 
