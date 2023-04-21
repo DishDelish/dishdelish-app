@@ -529,7 +529,7 @@
                 android:id="@+id/dietTypesTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/cuisineTypes"
+                android:text="@string/dietTypes"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
