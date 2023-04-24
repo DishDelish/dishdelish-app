@@ -90,7 +90,7 @@ public class Database {
         if (n < 1) {
             throw new IllegalArgumentException("Number of recipes to retrieve must be strictly positive.");
         }
-        Query query = db.child(RECIPES).orderByValue().limitToFirst(n);
+        Query query = db.child(RECIPES).limitToFirst(n);
         return getValueOfQuery(query);
     }
 
@@ -116,7 +116,12 @@ public class Database {
 
     /**
      * Updates an already existing recipe in the database.
+     * Note: update on a recipe that does not yet exist in the database will add that recipe to the
+     * database if its uniqueKey attribute is not null and not empty. If the uniqueKey attribute is
+     * null the recipe is not added. If the uniqueKey is empty, update will throw an
+     * Execution Exception
      * @param recipe to modify/update
+     * @throws ExecutionException when the recipe's uniqueKey attribute is an empty string.
      */
     public void update(Recipe recipe) throws ExecutionException, InterruptedException {
         Tasks.await(updateAsync(recipe));
@@ -124,7 +129,12 @@ public class Database {
 
     /**
      * Updates asynchronously an already existing recipe in the database.
+     * Note: update on a recipe that does not yet exist in the database will add that recipe to the
+     * database if its uniqueKey attribute is not null and not empty. If the uniqueKey attribute is
+     * null the recipe is not added. If the uniqueKey is empty, update will throw an
+     * Execution Exception
      * @param recipe to modify/update
+     * @throws ExecutionException when the recipe's uniqueKey attribute is an empty string.
      */
     public Task<Void> updateAsync(Recipe recipe) {
         Map<String, Object> value = new HashMap<>();

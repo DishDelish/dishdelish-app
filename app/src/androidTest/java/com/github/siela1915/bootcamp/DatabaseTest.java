@@ -568,10 +568,31 @@ public class DatabaseTest {
     public void updateOnNonExistingRecipeAddsRecipeToDatabase() {
         Database db = new Database(firebaseInstance);
         Recipe recipe = createRecipeEggs();
+        recipe.setUniqueKey("randomKey");
         try {
             db.update(recipe);
             Recipe r = db.get(recipe.getUniqueKey());
             assertEquals(recipe, r);
+        } catch (ExecutionException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Test
+    public void updateOnNonExistingRecipeWithEmptyStringKeyThrowsException() {
+        Database db = new Database(firebaseInstance);
+        Recipe recipe = createRecipeEggs();
+        assertThrows(ExecutionException.class, () -> db.update(recipe));
+    }
+
+    @Test
+    public void updateOnNonExistingRecipeWithNullStringKeyDoesNothing() {
+        Database db = new Database(firebaseInstance);
+        Recipe recipe = createRecipeEggs();
+        recipe.setUniqueKey(null);
+        try {
+            db.update(recipe);
+            assertNull(db.get(recipe.getUniqueKey()));
         } catch (ExecutionException | InterruptedException e) {
             throw new RuntimeException(e);
         }
