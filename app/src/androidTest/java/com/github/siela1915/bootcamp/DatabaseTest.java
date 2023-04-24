@@ -18,6 +18,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseException;
 import com.google.firebase.database.FirebaseDatabase;
 
 import org.junit.After;
@@ -586,16 +587,11 @@ public class DatabaseTest {
     }
 
     @Test
-    public void updateOnNonExistingRecipeWithNullStringKeyDoesNothing() {
+    public void updateOnNonExistingRecipeWithNullStringKeyThrowsException() {
         Database db = new Database(firebaseInstance);
         Recipe recipe = createRecipeEggs();
         recipe.setUniqueKey(null);
-        try {
-            db.update(recipe);
-            assertNull(db.get(recipe.getUniqueKey()));
-        } catch (ExecutionException | InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        assertThrows(DatabaseException.class, () -> db.update(recipe));
     }
 
     private List<Recipe> createRecipesDifferentIntegers() {

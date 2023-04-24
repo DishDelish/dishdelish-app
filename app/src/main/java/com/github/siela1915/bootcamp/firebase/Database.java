@@ -118,8 +118,8 @@ public class Database {
      * Updates an already existing recipe in the database.
      * Note: update on a recipe that does not yet exist in the database will add that recipe to the
      * database if its uniqueKey attribute is not null and not empty. If the uniqueKey attribute is
-     * null the recipe is not added. If the uniqueKey is empty, update will throw an
-     * Execution Exception
+     * null update will throw a DatabaseException. If the uniqueKey is empty, update will throw an
+     * ExecutionException
      * @param recipe to modify/update
      * @throws ExecutionException when the recipe's uniqueKey attribute is an empty string.
      */
@@ -131,10 +131,9 @@ public class Database {
      * Updates asynchronously an already existing recipe in the database.
      * Note: update on a recipe that does not yet exist in the database will add that recipe to the
      * database if its uniqueKey attribute is not null and not empty. If the uniqueKey attribute is
-     * null the recipe is not added. If the uniqueKey is empty, update will throw an
-     * Execution Exception
+     * null update will throw a DatabaseException. If the uniqueKey is empty, update will throw an
+     * ExecutionException
      * @param recipe to modify/update
-     * @throws ExecutionException when the recipe's uniqueKey attribute is an empty string.
      */
     public Task<Void> updateAsync(Recipe recipe) {
         Map<String, Object> value = new HashMap<>();
