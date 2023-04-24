@@ -24,8 +24,15 @@ import java.util.concurrent.ExecutionException;
 public class Database {
 
     private final DatabaseReference db;
-    private final static String RECIPES = "recipes";
-    private final static String FAVORITES = "favorites";
+    private final static String RECIPES = "recipes",
+                                FAVORITES = "favorites",
+                                NEW = "new",
+                                USERNAME = "userName",
+                                RECIPE_NAME = "recipeName",
+                                PREP_TIME = "prepTime",
+                                COOK_TIME = "cookTime",
+                                LIKES = "likes",
+                                NUM_RATINGS = "numRatings";
 
     /**
      * Constructor instantiates the connection to the database
@@ -43,9 +50,7 @@ public class Database {
      * @return the recipe fetched from the database
      */
     public Recipe get(String uniqueKey) throws ExecutionException, InterruptedException {
-        Task<DataSnapshot> task = db.child(RECIPES).child(uniqueKey).get();
-        DataSnapshot snapshot = Tasks.await(task);
-        return snapshot.getValue(Recipe.class);
+        return Tasks.await(getAsync(uniqueKey));
     }
 
     /**
@@ -62,17 +67,40 @@ public class Database {
     }
 
     /**
+     * Get n random recipes from the database.
+     * Note: calling this method once will give a pseudo-random list of recipes.
+     * However, calling it multiple times with the same argument will return more or less the same
+     * recipes.
+     * @param n Number of recipes to retrieve from the database.
+     * @return A list of those recipes.
+     */
+    public List<Recipe> getNRandom(int n) throws ExecutionException, InterruptedException {
+        return Tasks.await(getNRandomAsync(n));
+    }
+
+    /**
+     * Get n random recipes from the database asynchronously.
+     * Note: calling this method once will give a pseudo-random list of recipes.
+     * However, calling it multiple times with the same argument will return more or less the same
+     * recipes.
+     * @param n Number of recipes to retrieve from the database.
+     * @return A list of those recipes.
+     */
+    public Task<List<Recipe>> getNRandomAsync(int n) {
+        if (n < 1) {
+            throw new IllegalArgumentException("Number of recipes to retrieve must be strictly positive.");
+        }
+        Query query = db.child(RECIPES).orderByValue().limitToFirst(n);
+        return getValueOfQuery(query);
+    }
+
+    /**
      * Adds a recipe to the database.
      * @param recipe the recipe to add to the database
      * @return the unique key id associated to this specific recipe in the database
      */
     public String set(Recipe recipe) throws ExecutionException, InterruptedException {
-        String uniqueKey = db.child(RECIPES).child("new").push().getKey();
-        recipe.setUniqueKey(uniqueKey);
-        Map<String, Object> value = new HashMap<>();
-        value.put(uniqueKey, recipe);
-        Tasks.await(db.child(RECIPES).updateChildren(value));
-        return uniqueKey;
+        return Tasks.await(setAsync(recipe));
     }
 
     /**
@@ -81,19 +109,35 @@ public class Database {
      * @return the unique key id associated to this specific recipe in the database embedded in a Task
      */
     public Task<String> setAsync(Recipe recipe) {
-        String uniqueKey = db.child(RECIPES).child("new").push().getKey();
+        String uniqueKey = db.child(RECIPES).child(NEW).push().getKey();
         recipe.setUniqueKey(uniqueKey);
+        return updateAsync(recipe).continueWith(snapshot -> uniqueKey);
+    }
+
+    /**
+     * Updates an already existing recipe in the database.
+     * @param recipe to modify/update
+     */
+    public void update(Recipe recipe) throws ExecutionException, InterruptedException {
+        Tasks.await(updateAsync(recipe));
+    }
+
+    /**
+     * Updates asynchronously an already existing recipe in the database.
+     * @param recipe to modify/update
+     */
+    public Task<Void> updateAsync(Recipe recipe) {
         Map<String, Object> value = new HashMap<>();
-        value.put(uniqueKey, recipe);
-        return db.child(RECIPES).updateChildren(value).continueWith(snapshot -> uniqueKey);
+        value.put(recipe.getUniqueKey(), recipe);
+        return db.child(RECIPES).updateChildren(value);
     }
 
     /**
      * Removes a recipe from the database.
      * @param key the unique identifying key of the recipe
      */
-    public void remove(String key) {
-        db.child(RECIPES).child(key).removeValue();
+    public void remove(String key) throws ExecutionException, InterruptedException {
+        Tasks.await(removeAsync(key));
     }
 
     /**
@@ -112,7 +156,7 @@ public class Database {
      * @return a map from the recipe's unique key id to the recipe itself
      */
     public List<Recipe> getByName(String name) throws ExecutionException, InterruptedException {
-        return getByStringAttribute("recipeName", name);
+        return Tasks.await(getByNameAsync(name));
     }
 
     /**
@@ -122,27 +166,27 @@ public class Database {
      * @return a list of recipes with a matching name embedded in a Task
      */
     public Task<List<Recipe>> getByNameAsync(String name) {
-        return getByStringAttributeAsync("recipeName", name);
+        return getByStringAttributeAsync(RECIPE_NAME, name);
     }
 
     /**
-     * Retrieve a recipe with a given name (not the unique id).
+     * Retrieve a recipe with a given username.
      * Since the name is not unique, this method may return multiple recipes.
      * @param userName the name of the user who uploaded the recipe
      * @return a map from the recipe's unique key id to the recipe itself
      */
     public List<Recipe> getByUserName(String userName) throws ExecutionException, InterruptedException {
-        return getByStringAttribute("userName", userName);
+        return Tasks.await(getByUserNameAsync(userName));
     }
 
     /**
-     * Retrieve asynchronously a recipe with a given name (not the unique id).
+     * Retrieve asynchronously a recipe with a given username.
      * Since the name is not unique, this method may return multiple recipes.
      * @param userName the name of the user who uploaded the recipe
      * @return a list of recipes with a matching name embedded in a Task
      */
     public Task<List<Recipe>> getByUserNameAsync(String userName) {
-        return getByStringAttributeAsync("userName", userName);
+        return getByStringAttributeAsync(USERNAME, userName);
     }
 
     /**
@@ -151,7 +195,7 @@ public class Database {
      * @return recipes with lower prep time than the time specified as parameter.
      */
     public List<Recipe> getByUpperLimitOnPrepTime(int time) throws ExecutionException, InterruptedException {
-        return getByUpperLimitOnTime("prepTime", time);
+        return Tasks.await(getByUpperLimitOnPrepTimeAsync(time));
     }
 
     /**
@@ -160,7 +204,7 @@ public class Database {
      * @return recipes with lower prep time than the time specified as parameter.
      */
     public Task<List<Recipe>> getByUpperLimitOnPrepTimeAsync(int time) {
-        return getByUpperLimitOnTimeAsync("prepTime", time);
+        return getByUpperLimitOnTimeAsync(PREP_TIME, time);
     }
 
     /**
@@ -169,7 +213,7 @@ public class Database {
      * @return recipes with lower prep time than the time specified as parameter.
      */
     public List<Recipe> getByUpperLimitOnCookTime(int time) throws ExecutionException, InterruptedException {
-        return getByUpperLimitOnTime("cookTime", time);
+        return Tasks.await(getByUpperLimitOnCookTimeAsync(time));
     }
 
     /**
@@ -178,7 +222,7 @@ public class Database {
      * @return recipes with lower cook time than the time specified as parameter.
      */
     public Task<List<Recipe>> getByUpperLimitOnCookTimeAsync(int time) {
-        return getByUpperLimitOnTimeAsync("cookTime", time);
+        return getByUpperLimitOnTimeAsync(COOK_TIME, time);
     }
 
     /**
@@ -187,7 +231,7 @@ public class Database {
      * @return recipes with higher prep time than the time specified as parameter.
      */
     public List<Recipe> getByLowerLimitOnPrepTime(int time) throws ExecutionException, InterruptedException {
-        return getByLowerLimitOnTime("prepTime", time);
+        return Tasks.await(getByLowerLimitOnPrepTimeAsync(time));
     }
 
     /**
@@ -196,16 +240,16 @@ public class Database {
      * @return recipes with higher prep time than the time specified as parameter.
      */
     public Task<List<Recipe>> getByLowerLimitOnPrepTimeAsync(int time) {
-        return getByLowerLimitOnTimeAsync("prepTime", time);
+        return getByLowerLimitOnTimeAsync(PREP_TIME, time);
     }
 
     /**
      * Retrieve recipes with higher prep time.
-     * @param time the upper bound limit to the prep time.
+     * @param time the upper bound limit to the cook time.
      * @return recipes with lower prep time than the time specified as parameter.
      */
     public List<Recipe> getByLowerLimitOnCookTime(int time) throws ExecutionException, InterruptedException {
-        return getByLowerLimitOnTime("cookTime", time);
+        return Tasks.await(getByLowerLimitOnCookTimeAsync(time));
     }
 
     /**
@@ -214,7 +258,7 @@ public class Database {
      * @return recipes with higher cook time than the time specified as parameter.
      */
     public Task<List<Recipe>> getByLowerLimitOnCookTimeAsync(int time) {
-        return getByLowerLimitOnTimeAsync("cookTime", time);
+        return getByLowerLimitOnTimeAsync(COOK_TIME, time);
     }
 
     /**
@@ -224,7 +268,7 @@ public class Database {
      * @return the top n recipes.
      */
     public List<Recipe> getByMaxLikes(int n) throws ExecutionException, InterruptedException {
-        return getByValueAttribute("likes", n);
+        return Tasks.await(getByMaxLikesAsync(n));
     }
 
     /**
@@ -234,7 +278,7 @@ public class Database {
      * @return the top n recipes.
      */
     public Task<List<Recipe>> getByMaxLikesAsync(int n) {
-        return getByValueAttributeAsync("likes", n);
+        return getByValueAttributeAsync(LIKES, n);
     }
 
     /**
@@ -243,7 +287,7 @@ public class Database {
      * @return the top n recipes
      */
     public List<Recipe> getByNumRatings(int n) throws ExecutionException, InterruptedException {
-        return getByValueAttribute("numRatings", n);
+        return Tasks.await(getByNumRatingsAsync(n));
     }
 
     /**
@@ -252,21 +296,7 @@ public class Database {
      * @return the top n recipes
      */
     public Task<List<Recipe>> getByNumRatingsAsync(int n) {
-        return getByValueAttributeAsync("numRatings", n);
-    }
-
-    private List<Recipe> getByValueAttribute(String attribute, int n) throws ExecutionException, InterruptedException {
-        if (n < 1) {
-            throw new IllegalArgumentException();
-        }
-        Query query = db.child(RECIPES).orderByChild(attribute).limitToLast(n);
-        Task<DataSnapshot> task = query.get();
-        DataSnapshot snapshot = Tasks.await(task);
-        List<Recipe> recipes = new ArrayList<>();
-        for (DataSnapshot val : snapshot.getChildren()) {
-            recipes.add(val.getValue(Recipe.class));
-        }
-        return recipes;
+        return getByValueAttributeAsync(NUM_RATINGS, n);
     }
 
     private Task<List<Recipe>> getByValueAttributeAsync(String attribute, int n) {
@@ -274,75 +304,25 @@ public class Database {
             throw new IllegalArgumentException();
         }
         Query query = db.child(RECIPES).orderByChild(attribute).limitToLast(n);
-        Task<DataSnapshot> task = query.get();
-        return task.continueWith(snapshot -> {
-            List<Recipe> recipes = new ArrayList<>();
-            for (DataSnapshot s : snapshot.getResult().getChildren()) {
-                recipes.add(s.getValue(Recipe.class));
-            }
-            return recipes;
-        });
-    }
-
-    private List<Recipe> getByUpperLimitOnTime(String attribute, int time) throws ExecutionException, InterruptedException {
-        Query query = db.child(RECIPES).orderByChild(attribute).endAt(time);
-        Task<DataSnapshot> task = query.get();
-        DataSnapshot snapshot = Tasks.await(task);
-        List<Recipe> recipes = new ArrayList<>();
-        for (DataSnapshot val : snapshot.getChildren()) {
-            recipes.add(val.getValue(Recipe.class));
-        }
-        return recipes;
+        return getValueOfQuery(query);
     }
 
     private Task<List<Recipe>> getByUpperLimitOnTimeAsync(String attribute, int time) {
         Query query = db.child(RECIPES).orderByChild(attribute).endAt(time);
-        Task<DataSnapshot> task = query.get();
-        return task.continueWith(snapshot -> {
-            List<Recipe> recipes = new ArrayList<>();
-            for (DataSnapshot s : snapshot.getResult().getChildren()) {
-                recipes.add(s.getValue(Recipe.class));
-            }
-            return recipes;
-        });
-    }
-
-    private List<Recipe> getByLowerLimitOnTime(String attribute, int time) throws ExecutionException, InterruptedException {
-        Query query = db.child(RECIPES).orderByChild(attribute).startAt(time);
-        Task<DataSnapshot> task = query.get();
-        DataSnapshot snapshot = Tasks.await(task);
-        List<Recipe> recipes = new ArrayList<>();
-        for (DataSnapshot val : snapshot.getChildren()) {
-            recipes.add(val.getValue(Recipe.class));
-        }
-        return recipes;
+        return getValueOfQuery(query);
     }
 
     private Task<List<Recipe>> getByLowerLimitOnTimeAsync(String attribute, int time) {
         Query query = db.child(RECIPES).orderByChild(attribute).startAt(time);
-        Task<DataSnapshot> task = query.get();
-        return task.continueWith(snapshot -> {
-            List<Recipe> recipes = new ArrayList<>();
-            for (DataSnapshot s : snapshot.getResult().getChildren()) {
-                recipes.add(s.getValue(Recipe.class));
-            }
-            return recipes;
-        });
-    }
-
-    private List<Recipe> getByStringAttribute(String attribute, String name) throws ExecutionException, InterruptedException {
-        Query query = db.child(RECIPES).orderByChild(attribute).equalTo(name);
-        Task<DataSnapshot> task = query.get();
-        DataSnapshot snapshot = Tasks.await(task);
-        List<Recipe> recipes = new ArrayList<>();
-        for (DataSnapshot val : snapshot.getChildren()) {
-            recipes.add(val.getValue(Recipe.class));
-        }
-        return recipes;
+        return getValueOfQuery(query);
     }
 
     private Task<List<Recipe>> getByStringAttributeAsync(String attribute, String name) {
         Query query = db.child(RECIPES).orderByChild(attribute).equalTo(name);
+        return getValueOfQuery(query);
+    }
+
+    private Task<List<Recipe>> getValueOfQuery(Query query) {
         Task<DataSnapshot> task = query.get();
         return task.continueWith(snapshot -> {
             List<Recipe> recipes = new ArrayList<>();
