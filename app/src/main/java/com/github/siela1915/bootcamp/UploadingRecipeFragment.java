@@ -1,8 +1,10 @@
 package com.github.siela1915.bootcamp;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -21,8 +23,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.github.siela1915.bootcamp.AutocompleteApi.IngredientAutocomplete;
@@ -56,7 +62,9 @@ import java.util.stream.Stream;
 public class UploadingRecipeFragment extends Fragment {
     private final String storagePath = "gs://dish-delish-recipes.appspot.com";
     private final String[] timeUnits = new String[]{"mins", "hours", "days"};
-    private final int PICK_IMAGE_REQUEST = 111;
+    private static final int CHOOSE_IMAGE_FROM_GALLERY_REQUEST = 111;
+    private static final int TAKE_PHOTO_REQUEST = 222;
+    private static final int REQUEST_ID_MULTIPLE_PERMISSIONS = 333;
     private View view;
     private ImageView imgView;
     private LinearLayout stepListLinearLayout, ingredientLinearLayout;
@@ -81,6 +89,19 @@ public class UploadingRecipeFragment extends Fragment {
     private boolean isCookTimeValid = false;
     private boolean isPrepTimeValid = false;
     private boolean isServingsValid = false;
+
+    private ActivityResultLauncher<String> requireAccessToCamera = registerForActivityResult(
+            new ActivityResultContracts.RequestPermission(),
+            isGranted -> {
+                if (isGranted) {
+                    takeAPhoto();
+                } else {
+                    // if permission is not granted
+                    if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                        Toast.makeText(getActivity(), "Require Access to Camera", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
 
     public UploadingRecipeFragment() {
         // Required empty public constructor
@@ -179,7 +200,9 @@ public class UploadingRecipeFragment extends Fragment {
         Button addAllergyType = (Button) view.findViewById(R.id.addAllergyTypeButton);
         Button addDietType = (Button) view.findViewById(R.id.addDietTypeButton);
 
-        imgView.setOnClickListener(v -> chooseImg());
+        imgView.setOnClickListener(v -> {
+            chooseImage();
+        });
 
         uploadImg.setOnClickListener(v -> {
             if (isInputValid()) openRecipeReviewDialog();
@@ -344,30 +367,11 @@ public class UploadingRecipeFragment extends Fragment {
         });
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK && data != null && data.getData() != null) {
-            filePath = data.getData();
-
-            try {
-                //getting image from gallery
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), filePath);
-
-                //Setting image to ImageView
-                imgView.setImageBitmap(bitmap);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
     // Upload the recipe to Firebase
     private void uploadRecipe(final Uri recipeImageUri) {
         pd.show();
 
-        OnSuccessListener onUploadRecipeToDatabaseSuccessListener = new OnSuccessListener<String>() {
+        OnSuccessListener<String> onUploadRecipeToDatabaseSuccessListener = new OnSuccessListener<String>() {
             @Override
             public void onSuccess(String s) {
                 pd.dismiss();
@@ -420,14 +424,14 @@ public class UploadingRecipeFragment extends Fragment {
         }
     }
 
-    private void uploadImageToDatabase(Uri recipeImageUri, OnSuccessListener onSuccessListener, OnFailureListener onFailureListener) {
+    private void uploadImageToDatabase(Uri recipeImageUri, OnSuccessListener<UploadTask.TaskSnapshot> onSuccessListener, OnFailureListener onFailureListener) {
         // We are taking the filepath as storagePath + firebaseUser.getUid()+".png"
         String recipeImageStoragePath = "recipes_image/";
         String filePathName = recipeImageStoragePath + "_" + userId + ".png";
         storageRef.child(filePathName).putFile(recipeImageUri).addOnSuccessListener(onSuccessListener).addOnFailureListener(onFailureListener);
     }
 
-    private void uploadRecipeToDatabase(Uri downloadUri, OnSuccessListener onSuccessListener, OnFailureListener onFailureListener) {
+    private void uploadRecipeToDatabase(Uri downloadUri, OnSuccessListener<String> onSuccessListener, OnFailureListener onFailureListener) {
         database.setAsync(getRecipe(downloadUri))
                 .addOnSuccessListener(onSuccessListener)
                 .addOnFailureListener(onFailureListener);
@@ -470,7 +474,7 @@ public class UploadingRecipeFragment extends Fragment {
         return true;
     }
 
-    private Recipe getRecipe(Uri downloadUri) {
+    private Recipe getRecipe(Uri localLocation) {
         TextInputLayout recipeName = view.findViewById(R.id.recipeNameContent);
         TextInputLayout cookTime = view.findViewById(R.id.cookTimeContent);
         TextInputLayout prepTime = view.findViewById(R.id.prepTimeContent);
@@ -482,7 +486,7 @@ public class UploadingRecipeFragment extends Fragment {
 
         Recipe recipe = new Recipe();
         recipe.setRecipeName(recipeName.getEditText().getText().toString());
-        if (downloadUri != null) recipe.setImage(downloadUri.toString());
+        if (localLocation != null) recipe.setImage(localLocation.toString());
         else recipe.setImage(null);
         recipe.setCookTime(Integer.parseInt(cookTime.getEditText().getText().toString()));
         recipe.setPrepTime(Integer.parseInt(prepTime.getEditText().getText().toString()));
@@ -497,11 +501,71 @@ public class UploadingRecipeFragment extends Fragment {
         return recipe;
     }
 
-    private void chooseImg() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_PICK);
-        startActivityForResult(Intent.createChooser(intent, "Select Image"), PICK_IMAGE_REQUEST);
+    // function to let's the user to choose image from camera or gallery
+    private void chooseImage(){
+        final CharSequence[] optionsMenu = {"Take Photo", "Choose from Gallery", "Exit" }; // create a menuOption Array
+        // create a dialog for showing the optionsMenu
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        // set the items in builder
+        builder.setItems(optionsMenu, (dialogInterface, i) -> {
+            if(optionsMenu[i].equals("Take Photo")){
+                if (isCameraAccessible()) {
+                    takeAPhoto();
+                } else {
+                    requireAccessToCamera.launch(android.Manifest.permission.CAMERA);
+                }
+            }
+            else if(optionsMenu[i].equals("Choose from Gallery")){
+                Intent pickPhoto = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(pickPhoto , CHOOSE_IMAGE_FROM_GALLERY_REQUEST);
+            }
+            else if (optionsMenu[i].equals("Exit")) {
+                dialogInterface.dismiss();
+            }
+        });
+        builder.show();
+    }
+
+    // function to check permission
+    public boolean isCameraAccessible() {
+        int cameraPermission = ContextCompat.checkSelfPermission(getActivity(),
+                android.Manifest.permission.CAMERA);
+        return cameraPermission == PackageManager.PERMISSION_GRANTED;
+    }
+
+    private void takeAPhoto() {
+        Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(takePicture, TAKE_PHOTO_REQUEST);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == Activity.RESULT_OK && data != null) {
+            switch (requestCode) {
+                case CHOOSE_IMAGE_FROM_GALLERY_REQUEST:
+                    if (data.getData() != null) {
+                        filePath = data.getData();
+
+                        try {
+                            //getting image from gallery
+                            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), filePath);
+
+                            //Setting image to ImageView
+                            imgView.setImageBitmap(bitmap);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    break;
+                case TAKE_PHOTO_REQUEST:
+                    Bitmap selectedImage = (Bitmap) data.getExtras().get("data");
+                    imgView.setImageBitmap(selectedImage);
+                    filePath = Uri.parse(MediaStore.Images.Media.insertImage(getActivity().getContentResolver(), selectedImage, null, null));
+                    break;
+            }
+        }
     }
 
     private void addIngredient(Map<String, Integer> idMap, IngredientAutocomplete apiService) {
