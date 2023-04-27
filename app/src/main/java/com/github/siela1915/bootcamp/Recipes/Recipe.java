@@ -17,6 +17,13 @@ public class Recipe implements Parcelable {
     public String image, recipeName, userName, uniqueKey = "";
     public int profilePicture, prepTime, cookTime, servings, likes, numRatings = 0;
     public double rating;
+
+    public double calories = 0;
+    public double fat = 0;
+    public double carbohydrates = 0;
+    public double sugar = 0;
+    public double protein = 0;
+
     public Utensils utensils;
     public List<Integer> cuisineTypes, allergyTypes, dietTypes;
     public List<Ingredient> ingredientList;
@@ -262,6 +269,46 @@ public class Recipe implements Parcelable {
             return  temp0 && temp1 && temp2 && temp3 && temp4 && temp5;
         }
         return false;
+    }
+
+    public double getCalories() {
+        return calories;
+    }
+
+    public void setCalories(double calories) {
+        this.calories = calories;
+    }
+
+    public double getFat() {
+        return fat;
+    }
+
+    public void setFat(double fat) {
+        this.fat = fat;
+    }
+
+    public double getCarbohydrates() {
+        return carbohydrates;
+    }
+
+    public void setCarbohydrates(double carbohydrates) {
+        this.carbohydrates = carbohydrates;
+    }
+
+    public double getSugar() {
+        return sugar;
+    }
+
+    public void setSugar(double sugar) {
+        this.sugar = sugar;
+    }
+
+    public double getProtein() {
+        return protein;
+    }
+
+    public void setProtein(double protein) {
+        this.protein = protein;
     }
 
     @NonNull
