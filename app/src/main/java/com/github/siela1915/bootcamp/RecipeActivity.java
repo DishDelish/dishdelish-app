@@ -13,12 +13,16 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.github.siela1915.bootcamp.Recipes.Comment;
 import com.github.siela1915.bootcamp.Recipes.Ingredient;
 import com.github.siela1915.bootcamp.Recipes.Recipe;
 import com.github.siela1915.bootcamp.Recipes.Unit;
+import com.github.siela1915.bootcamp.firebase.Database;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +31,10 @@ public class RecipeActivity extends AppCompatActivity {
 
     private Recipe recipe;
     private ShoppingListManager shoppingListManager;
+
+    private final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+
+    private final Database database = new Database(firebaseDatabase);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,13 +60,46 @@ public class RecipeActivity extends AppCompatActivity {
         ToggleButton heart = (ToggleButton) findViewById(R.id.favoriteButton);
         heart.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
-                heart.setBackground(getDrawable(R.drawable.heart_full));
 
-                // for testing
-                heart.setTag("full");
+                // Add the recipe to favorites
+                database.addFavorite(recipe.uniqueKey).addOnSuccessListener(arg -> {
+                    // Show a success message to the user
+                    Toast.makeText(this, "Recipe added to favorites", Toast.LENGTH_SHORT).show();
+
+                    //change background
+                    heart.setBackground(getDrawable(R.drawable.heart_full));
+
+                    // for testing
+                    heart.setTag("full");
+
+                }).addOnFailureListener(e -> {
+
+                    // Show an error message to the user
+                    Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+
+                });
+
             } else {
-                heart.setBackground(getDrawable(R.drawable.heart_empty));
-                heart.setTag("empty");
+
+                // remove this recipe from favorites
+                database.removeFavorite(recipe.uniqueKey).addOnSuccessListener(s -> {
+
+                    // display success message
+                    Toast.makeText(this, "Recipe removed from favorites", Toast.LENGTH_SHORT).show();
+
+                    // change background
+                    heart.setBackground(getDrawable(R.drawable.heart_empty));
+
+                    // for testing
+                    heart.setTag("empty");
+
+                }).addOnFailureListener(e -> {
+
+                    // display error message
+                    Toast.makeText(this, "Error removing recipe from favorites: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+
+                });
+
             }
         });
 
