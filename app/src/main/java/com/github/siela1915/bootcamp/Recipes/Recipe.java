@@ -8,7 +8,6 @@ import androidx.annotation.NonNull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -21,7 +20,6 @@ public class Recipe implements Parcelable {
     public Utensils utensils;
     public List<Integer> cuisineTypes, allergyTypes, dietTypes;
     public List<Ingredient> ingredientList;
-    //Every step and comment will be a separate String in the list
     public List<String> steps;
     public List<Comment> comments;
 
