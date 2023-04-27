@@ -5,11 +5,16 @@ import android.widget.AutoCompleteTextView;
 
 import com.github.siela1915.bootcamp.BuildConfig;
 import com.github.siela1915.bootcamp.Recipes.Ingredient;
+import com.github.siela1915.bootcamp.Recipes.Recipe;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
+import kotlin.io.TextStreamsKt;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -95,37 +100,53 @@ public class IngredientAutocomplete {
     }
 
     public void getNutritionFromIngredient(int id, Ingredient ingredient){
-        service.getNutrition(id, ingredient.getUnit().getValue(), ingredient.getUnit().getInfo(), API_KEY).enqueue(new Callback<NutrientsResponse>() {
+        //System.out.println(service.getNutrition(id, ingredient.getUnit().getValue(), API_KEY).request().url().toString());
+
+        //To be able to get the nutrition correctly for a given unit, we need a naming convention for the units which I am not sure how to do
+        service.getNutrition(id, ingredient.getUnit().getValue(), API_KEY).enqueue(new Callback<NutrientsResponse>() {
             @Override
             public void onResponse(Call<NutrientsResponse> call, Response<NutrientsResponse> response) {
                 if(response.isSuccessful()) {
                     if (response.body() != null) {
-                        for (Nutrient nut : response.body().nutrients) {
-                            switch(nut.name){
+                        Map<String, Double> map = response.body().nutrition.mapFromNutrients();
+                        for(String s : Nutrition.NUTRIENT_NAMES){
+                            switch (s) {
+                                //map.get() won't return null due to how the map is constructed in the Nutrition class
                                 case "Calories":
-                                    ingredient.setCalories(nut.amount);
+                                    ingredient.setCalories(map.get(s));
                                     break;
                                 case "Fat":
-                                    ingredient.setFat(nut.amount);
-                                    break;
-                                case "Carbohydrates":
-                                    ingredient.setCarbs(nut.amount);
+                                    ingredient.setFat(map.get(s));
                                     break;
                                 case "Sugar":
-                                    ingredient.setSugar(nut.amount);
+                                    ingredient.setSugar(map.get(s));
                                     break;
                                 case "Protein":
-                                    ingredient.setProtein(nut.amount);
+                                    ingredient.setProtein(map.get(s));
+                                    break;
+                                case "Carbohydrates":
+                                    ingredient.setCarbs(map.get(s));
+                                    break;
+                                default:
                                     break;
                             }
                         }
                     }
+                    //if not successful
+                }else{
+                    String errorMessage = "Error code: " + response.code() + " With message: " + response.message();
+                    System.out.println(errorMessage);
                 }
             }
             @Override
             public void onFailure(Call<NutrientsResponse> call, Throwable t) {
             }
         });
+    }
+
+    public void uploadToDatabase(Recipe recipe){
+        //maybe some kind of callback, should be async and also handle nutrient fetching which is also async
+        //but uses retrofit Callback()
     }
 
 }
