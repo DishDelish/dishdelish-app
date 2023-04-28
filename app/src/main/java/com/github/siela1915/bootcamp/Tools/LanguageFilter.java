@@ -1,9 +1,12 @@
 package com.github.siela1915.bootcamp.Tools;
 
+import com.github.siela1915.bootcamp.Recipes.Comment;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -322,6 +325,7 @@ public class LanguageFilter {
             "strip club",
             "style doggy",
             "suck",
+            "suck my balls",
             "sucks",
             "suicide girls",
             "sultry women",
@@ -412,18 +416,69 @@ public class LanguageFilter {
         if (input == null || input.isEmpty()) {
             return input;
         }
-        String output = filterLeetSpeach(input).toLowerCase().replaceAll("[^a-z]", " ");
-        for(int i = 0; i < output.length(); ++i) {
+        String s = filterLeetSpeach(input).toLowerCase().replaceAll("[^a-z]", " ");
+        for(int i = 0; i < s.length(); ++i) {
             // from each letter, keep going to find bad words until either the end of the sentence
             // is reached, or the max word length is reached.
-            for (int j = 1; j < (output.length() + 1 - i) && j < maxBadWordLength; ++j) {
-                String substring = output.substring(i, i + j);
+            for (int j = 1; j < (s.length() + 1 - i) && j < maxBadWordLength; ++j) {
+                String substring = s.substring(i, i + j);
                 if (badWords.contains(substring)) {
-                    output = output.replaceAll(substring, stars(substring.length()));
+                    for (String option : leetOptions(substring)) {
+                        input = input.replaceAll("(?i)" + option, stars(option.length()));
+                    }
                 }
             }
         }
-        return output;
+        return input;
+    }
+
+    /**
+     * Applies a profanity filter on the given comment and its replies.
+     * @param comment the comment to filter.
+     * @param filterLanguage filters certain expressions and phrases in addition to words when true,
+     *                       only filters words when false.
+     * @return the filtered comment and filtered replies.
+     */
+    public static Comment filterComment(Comment comment, boolean filterLanguage) {
+        if (filterLanguage) {
+            String filtered = filterLanguage(comment.getContent());
+            if (comment.getReplies().size() == 0) {
+                return new Comment(comment.getLikes(), filtered, new LinkedList<>());
+            }
+            LinkedList<Comment> replies = new LinkedList<>();
+            for (Comment c : comment.getReplies()) {
+                replies.add(filterComment(c, true));
+            }
+            return new Comment(comment.getLikes(), filtered, replies);
+        } else {
+            String filtered = filterSingleWords(comment.getContent());
+            if (comment.getReplies().size() == 0) {
+                return new Comment(comment.getLikes(), filtered, new LinkedList<>());
+            }
+            LinkedList<Comment> replies = new LinkedList<>();
+            for (Comment c : comment.getReplies()) {
+                replies.add(filterComment(c, false));
+            }
+            return new Comment(comment.getLikes(), filtered, replies);
+        }
+    }
+
+    /**
+     * Applies a profanity filter on a list of comments and their replies.
+     * @param comments the list of comments to filter
+     * @param filterLanguage filters certain expressions and phrases in addition to words when true,
+     *                       only filters words when false.
+     * @return a list of the fitlered comments and their replies.
+     */
+    public static List<Comment> filterComments(List<Comment> comments, boolean filterLanguage) {
+        if (comments == null) {
+            throw new IllegalArgumentException("Cannot filter a null list.");
+        }
+        List<Comment> ls = new ArrayList<>();
+        for (Comment c : comments) {
+            ls.add(filterComment(c, filterLanguage));
+        }
+        return ls;
     }
 
     private static String stars(int length) {
