@@ -76,9 +76,6 @@ public class UploadingRecipeFragment extends Fragment {
     AllergyType[] allergyTypeValues;
     DietType[] dietTypeValues;
     private boolean isRecipeNameValid = false;
-    private boolean isCookTimeValid = false;
-    private boolean isPrepTimeValid = false;
-    private boolean isServingsValid = false;
     private final ActivityResultLauncher<String> requireAccessToCamera = registerForActivityResult(
             new ActivityResultContracts.RequestPermission(),
             isGranted -> {
@@ -216,35 +213,10 @@ public class UploadingRecipeFragment extends Fragment {
             }
         });
 
-        cookTime.addTextChangedListener(new TextValidator(cookTime) {
-            @Override
-            public void validate(TextView textView, String text) {
-                if (!isTextValid(text)) textView.setError(getString(R.string.cookTimeEmptyErrorMessage));
-                else if (!isNumberPositive(text))
-                    textView.setError(getString(R.string.cookTimeInvalidErrorMessage));
-                isCookTimeValid = isTextValid(text) && isNumberPositive(text);
-            }
-        });
+        setValidator(cookTime, getString(R.string.cookTimeEmptyErrorMessage), getString(R.string.cookTimeInvalidErrorMessage));
+        setValidator(prepTime, getString(R.string.prepTimeEmptyErrorMessage), getString(R.string.cookTimeInvalidErrorMessage));
+        setValidator(servings, getString(R.string.servingsEmptyErrorMessage), getString(R.string.cookTimeInvalidErrorMessage));
 
-        prepTime.addTextChangedListener(new TextValidator(prepTime) {
-            @Override
-            public void validate(TextView textView, String text) {
-                if (!isTextValid(text)) textView.setError(getString(R.string.prepTimeEmptyErrorMessage));
-                else if (!isNumberPositive(text))
-                    textView.setError(getString(R.string.prepTimeInvalidErrorMessage));
-                isPrepTimeValid = isTextValid(text) && isNumberPositive(text);
-            }
-        });
-
-        servings.addTextChangedListener(new TextValidator(servings) {
-            @Override
-            public void validate(TextView textView, String text) {
-                if (!isTextValid(text)) textView.setError(getString(R.string.servingsEmptyErrorMessage));
-                else if (!isNumberPositive(text))
-                    textView.setError(getString(R.string.servingsInvalidErrorMessage));
-                isServingsValid = isTextValid(text) && isNumberPositive(text);
-            }
-        });
 
         addIngredientValidators(ingredientsAmount, ingredientsUnit, ingredientsName);
         addStepValidators(stepContent);
@@ -255,6 +227,17 @@ public class UploadingRecipeFragment extends Fragment {
 
         addDietType.setOnClickListener(v -> addTypeListener(view, R.id.dietTypesAutoComplete, R.id.dietTypeGroup));
     }
+
+    private void setValidator(TextView textView, String emptyErrorMessage, String invalidErrorMessage) {
+        textView.addTextChangedListener(new TextValidator(textView) {
+            @Override
+            public void validate(TextView textView, String text) {
+                if (!isTextValid(text)) textView.setError(emptyErrorMessage);
+                else if (!isNumberPositive(text)) textView.setError(invalidErrorMessage);
+            }
+        });
+    }
+
 
     private void addTypeListener (View view, int autoCompleteTextViewId, int linearLayoutId) {
         AutoCompleteTextView autoCompleteTextView = view.findViewById(autoCompleteTextViewId);
@@ -412,7 +395,20 @@ public class UploadingRecipeFragment extends Fragment {
     }
 
     private boolean isInputValid() {
-        return isRecipeNameValid && isCookTimeValid && isPrepTimeValid && isServingsValid && isIngredientValid() && isStepValid();
+        TextInputLayout cookTimeLayout = view.findViewById(R.id.cookTimeContent);
+        EditText cookTime = cookTimeLayout.getEditText();
+        TextInputLayout prepTimeLayout = view.findViewById(R.id.prepTimeContent);
+        EditText prepTime = prepTimeLayout.getEditText();
+        TextInputLayout servingsLayout = view.findViewById(R.id.servingsContent);
+        EditText servings = servingsLayout.getEditText();
+
+        if (!isTextValid(cookTime.getText().toString()) || !isNumberPositive(cookTime.getText().toString())
+        || !isTextValid(prepTime.getText().toString()) || !isNumberPositive(prepTime.getText().toString())
+        || !isTextValid(servings.getText().toString()) || !isNumberPositive(servings.getText().toString())) {
+            return false;
+        }
+
+        return isRecipeNameValid && isIngredientValid() && isStepValid();
     }
 
     private boolean isStepValid() {

@@ -1,5 +1,6 @@
 package com.github.siela1915.bootcamp;
 
+import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.clearText;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -34,6 +35,9 @@ import androidx.test.platform.app.InstrumentationRegistry;
 import com.github.siela1915.bootcamp.Labelling.AllergyType;
 import com.github.siela1915.bootcamp.Labelling.CuisineType;
 import com.github.siela1915.bootcamp.Labelling.DietType;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
