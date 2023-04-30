@@ -3,6 +3,7 @@ package com.github.siela1915.bootcamp;
 import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -30,6 +31,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.github.siela1915.bootcamp.AutocompleteApi.IngredientAutocomplete;
 import com.github.siela1915.bootcamp.Labelling.AllergyType;
@@ -64,7 +67,6 @@ public class UploadingRecipeFragment extends Fragment {
     private final String[] timeUnits = new String[]{"mins", "hours", "days"};
     private static final int CHOOSE_IMAGE_FROM_GALLERY_REQUEST = 111;
     private static final int TAKE_PHOTO_REQUEST = 222;
-    private static final int REQUEST_ID_MULTIPLE_PERMISSIONS = 333;
     private View view;
     private ImageView imgView;
     private LinearLayout stepListLinearLayout, ingredientLinearLayout;
@@ -77,10 +79,7 @@ public class UploadingRecipeFragment extends Fragment {
     private final FirebaseStorage storage = FirebaseStorage.getInstance();
     private final StorageReference storageRef = storage.getReferenceFromUrl(storagePath);
     private final Database database = new Database(firebaseDatabase);
-    // the below line will keep commented until some form of auth guard is implemented
-    // i.e. user is logged in before accessing this page
-    // String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-    String userId = "1234";
+    private String userId;
 
     CuisineType[] cuisineTypeValues;
     AllergyType[] allergyTypeValues;
@@ -90,7 +89,7 @@ public class UploadingRecipeFragment extends Fragment {
     private boolean isPrepTimeValid = false;
     private boolean isServingsValid = false;
 
-    private ActivityResultLauncher<String> requireAccessToCamera = registerForActivityResult(
+    private final ActivityResultLauncher<String> requireAccessToCamera = registerForActivityResult(
             new ActivityResultContracts.RequestPermission(),
             isGranted -> {
                 if (isGranted) {
@@ -115,6 +114,13 @@ public class UploadingRecipeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_upload_recipes, container, false);
+
+        if (!isUserLoggedIn()) {
+            showLoginAlert();
+            return view;
+        }
+
+        userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         // get view elements
         Button uploadImg = (Button) view.findViewById(R.id.recipeUploadButton);
@@ -371,53 +377,31 @@ public class UploadingRecipeFragment extends Fragment {
     private void uploadRecipe(final Uri recipeImageUri) {
         pd.show();
 
-        OnSuccessListener<String> onUploadRecipeToDatabaseSuccessListener = new OnSuccessListener<String>() {
-            @Override
-            public void onSuccess(String s) {
-                pd.dismiss();
-                Toast.makeText(getActivity(), "Upload Successful", Toast.LENGTH_LONG).show();
+        OnSuccessListener<String> onUploadRecipeToDatabaseSuccessListener = s -> {
+            pd.dismiss();
+            Toast.makeText(getActivity(), "Upload Successful", Toast.LENGTH_LONG).show();
 
-                // close this fragment and return to the previous page
-                requireActivity().getSupportFragmentManager().beginTransaction().replace(((ViewGroup)getView().getParent()).getId(), new HomePageFragment()).commit();
-            }
+            // close this fragment and return to the previous page
+            requireActivity().getSupportFragmentManager().beginTransaction().replace(((ViewGroup)getView().getParent()).getId(), new HomePageFragment()).commit();
         };
 
-        OnFailureListener onUploadRecipeToDatabaseFailureListener = new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                pd.dismiss();
-                // if uploading failed
-                Toast.makeText(getActivity(), "Error Uploading ", Toast.LENGTH_LONG).show();
-            }
+        OnFailureListener onUploadRecipeToDatabaseFailureListener = e -> {
+            pd.dismiss();
+            // if uploading failed
+            Toast.makeText(getActivity(), "Error Uploading ", Toast.LENGTH_LONG).show();
         };
 
         // If user has chosen a picture to upload
         if (recipeImageUri != null) {
-            uploadImageToDatabase(recipeImageUri, new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    taskSnapshot.getStorage().getDownloadUrl()
-                            .addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                @Override
-                                public void onSuccess(Uri uri) {
-                                    uploadRecipeToDatabase(uri, onUploadRecipeToDatabaseSuccessListener, onUploadRecipeToDatabaseFailureListener);
-                                }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    pd.dismiss();
-                                    Toast.makeText(getActivity(), "Error Fetching Image", Toast.LENGTH_LONG).show();
-                                }
-                            });
-                }
-            }, new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    pd.dismiss();
-                    Toast.makeText(getActivity(), "Error Uploading Image", Toast.LENGTH_LONG).show();
-                }
-            });
+            uploadImageToDatabase(recipeImageUri, taskSnapshot -> taskSnapshot.getStorage().getDownloadUrl()
+                    .addOnSuccessListener(uri -> uploadRecipeToDatabase(uri, onUploadRecipeToDatabaseSuccessListener, onUploadRecipeToDatabaseFailureListener))
+                    .addOnFailureListener(e -> {
+                        pd.dismiss();
+                        Toast.makeText(getActivity(), "Error Fetching Image", Toast.LENGTH_LONG).show();
+                    }), e -> {
+                        pd.dismiss();
+                        Toast.makeText(getActivity(), "Error Uploading Image", Toast.LENGTH_LONG).show();
+                    });
         } else {
             // When no picture is uploaded by the user
             uploadRecipeToDatabase(null, onUploadRecipeToDatabaseSuccessListener, onUploadRecipeToDatabaseFailureListener);
@@ -581,12 +565,7 @@ public class UploadingRecipeFragment extends Fragment {
 
             addIngredientValidators(ingredientsAmount, ingredientsUnit, ingredientsName);
 
-            removeIngredient.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    removeIngredient(ingredient);
-                }
-            });
+            removeIngredient.setOnClickListener(v -> removeIngredient(ingredient));
 
             ingredientLinearLayout.addView(ingredient);
             AutoCompleteTextView ingredientAutoComplete = (AutoCompleteTextView) ingredient.findViewById(R.id.ingredientAutoComplete);
@@ -624,12 +603,7 @@ public class UploadingRecipeFragment extends Fragment {
             stepContent.setHint("Step " + String.valueOf(stepListLinearLayout.getChildCount()));
             addStepValidators(stepContentEditText);
 
-            removeStep.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    removeStep(step);
-                }
-            });
+            removeStep.setOnClickListener(v -> removeStep(step));
 
             stepListLinearLayout.addView(step);
         }
@@ -731,5 +705,29 @@ public class UploadingRecipeFragment extends Fragment {
 
     private void removeType(LinearLayout typeLayout, View type) {
         typeLayout.removeView(type);
+    }
+
+    private boolean isUserLoggedIn() {
+        return FirebaseAuth.getInstance().getCurrentUser() != null;
+    }
+
+    private void showLoginAlert() {
+        AlertDialog dialog = new AlertDialog.Builder(getActivity())
+                .setTitle("Login Required")
+                .setMessage("Please login before uploading a recipe :)")
+                .setPositiveButton(android.R.string.ok, null)
+                .create();
+        dialog.setOnShowListener(dialogInterface -> {
+            Button button = ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE);
+            button.setOnClickListener(view -> {
+                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.setReorderingAllowed(true);
+                fragmentTransaction.replace(R.id.fragContainer, ProfileFragment.class, null);
+                fragmentTransaction.commit();
+                dialog.dismiss();
+            });
+        });
+        dialog.show();
     }
 }
