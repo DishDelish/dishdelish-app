@@ -1,21 +1,24 @@
 package com.github.siela1915.bootcamp;
 
-import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.typeText;
+import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.RootMatchers.isDialog;
+import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
 import static androidx.test.espresso.matcher.ViewMatchers.Visibility.VISIBLE;
 import static androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
 import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.endsWith;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
 
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,34 +26,27 @@ import android.view.ViewGroup;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.testing.FragmentScenario;
+import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.matcher.BoundedMatcher;
-import androidx.test.espresso.matcher.RootMatchers;
-import androidx.test.espresso.matcher.ViewMatchers;
+import androidx.test.rule.ActivityTestRule;
 
-import com.github.siela1915.bootcamp.AutocompleteApi.ApiResponse;
-import com.github.siela1915.bootcamp.AutocompleteApi.ApiService;
-import com.github.siela1915.bootcamp.AutocompleteApi.NutrientsResponse;
 import com.github.siela1915.bootcamp.Labelling.AllergyType;
 import com.github.siela1915.bootcamp.Labelling.CuisineType;
 import com.github.siela1915.bootcamp.Labelling.DietType;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
+import org.hamcrest.Matchers;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
 
-import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.MockResponse;
-import okhttp3.mockwebserver.internal.duplex.DuplexResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import okhttp3.mockwebserver.MockWebServer;
 
 public class UploadingRecipeFragmentTest {
     private MockWebServer mockWebServer = new MockWebServer();
@@ -130,7 +126,7 @@ public class UploadingRecipeFragmentTest {
         onView(allOf(
                 isDescendantOfA(withId(R.id.recipeNameContent)),
                 withClassName(endsWith("EditText"))
-        )).check(matches(ViewMatchers.withText("recipe-test")));
+        )).check(matches(withText("recipe-test")));
     }
 
     @Test
@@ -145,7 +141,7 @@ public class UploadingRecipeFragmentTest {
         onView(allOf(
                 isDescendantOfA(withId(R.id.prepTimeContent)),
                 withClassName(endsWith("EditText"))
-        )).check(matches(ViewMatchers.withText("10")));
+        )).check(matches(withText("10")));
     }
 
     @Test
@@ -160,7 +156,7 @@ public class UploadingRecipeFragmentTest {
         onView(allOf(
                 isDescendantOfA(withId(R.id.cookTimeContent)),
                 withClassName(endsWith("EditText"))
-        )).check(matches(ViewMatchers.withText("10")));
+        )).check(matches(withText("10")));
     }
 
     @Test
@@ -175,7 +171,7 @@ public class UploadingRecipeFragmentTest {
         onView(allOf(
                 isDescendantOfA(withId(R.id.servingsContent)),
                 withClassName(endsWith("EditText"))
-        )).check(matches(ViewMatchers.withText("10")));
+        )).check(matches(withText("10")));
     }
 
 //    @Test
@@ -222,7 +218,7 @@ public class UploadingRecipeFragmentTest {
         onView(allOf(
                 isDescendantOfA(withId(R.id.ingredientsAmount)),
                 withClassName(endsWith("EditText"))
-        )).check(matches(ViewMatchers.withText("10")));
+        )).check(matches(withText("10")));
 //        onView(allOf(
 //                isDescendantOfA(withId(R.id.ingredientsName)),
 //                withClassName(endsWith("AutoCompleteTextView"))
@@ -230,7 +226,7 @@ public class UploadingRecipeFragmentTest {
         onView(allOf(
                 isDescendantOfA(withId(R.id.ingredientsUnit)),
                 withClassName(endsWith("EditText"))
-        )).check(matches(ViewMatchers.withText("ingredient-unit-test")));
+        )).check(matches(withText("ingredient-unit-test")));
     }
 
     @Test
@@ -264,7 +260,7 @@ public class UploadingRecipeFragmentTest {
         onView(allOf(
                 isDescendantOfA(withId(R.id.cuisineTypesContent)),
                 withClassName(endsWith("AutoCompleteTextView"))
-        )).check(matches(ViewMatchers.withText(CuisineType.AMERICAN.toString())));
+        )).check(matches(withText(CuisineType.AMERICAN.toString())));
     }
 
     @Test
@@ -279,7 +275,7 @@ public class UploadingRecipeFragmentTest {
         onView(allOf(
                 isDescendantOfA(withId(R.id.allergyTypesContent)),
                 withClassName(endsWith("AutoCompleteTextView"))
-        )).check(matches(ViewMatchers.withText(AllergyType.EGGS.toString())));
+        )).check(matches(withText(AllergyType.EGGS.toString())));
     }
 
     @Test
@@ -294,7 +290,7 @@ public class UploadingRecipeFragmentTest {
         onView(allOf(
                 isDescendantOfA(withId(R.id.dietTypesContent)),
                 withClassName(endsWith("AutoCompleteTextView"))
-        )).check(matches(ViewMatchers.withText(DietType.DAIRY.toString())));
+        )).check(matches(withText(DietType.DAIRY.toString())));
     }
 
     @Test
@@ -309,7 +305,7 @@ public class UploadingRecipeFragmentTest {
         onView(allOf(
                 isDescendantOfA(withId(R.id.utensilsContent)),
                 withClassName(endsWith("EditText"))
-        )).check(matches(ViewMatchers.withText("utensils-test")));
+        )).check(matches(withText("utensils-test")));
     }
 
     @Test
@@ -324,7 +320,7 @@ public class UploadingRecipeFragmentTest {
         onView(allOf(
                 isDescendantOfA(withId(R.id.stepContent)),
                 withClassName(endsWith("EditText"))
-        )).check(matches(ViewMatchers.withText("step-test")));
+        )).check(matches(withText("step-test")));
     }
 
     @Test
@@ -358,7 +354,7 @@ public class UploadingRecipeFragmentTest {
         onView(allOf(
                 isDescendantOfA(withId(R.id.cuisineTypesContent)),
                 withId(R.id.cuisineTypesAutoComplete)
-        )).check(matches(ViewMatchers.withText(CuisineType.getAll()[0])));
+        )).check(matches(withText(CuisineType.getAll()[0])));
     }
 
     @Test
@@ -400,7 +396,7 @@ public class UploadingRecipeFragmentTest {
         onView(allOf(
                 isDescendantOfA(withId(R.id.allergyTypesContent)),
                 withId(R.id.allergyTypesAutoComplete))
-        ).check(matches(ViewMatchers.withText(AllergyType.getAll()[0])));
+        ).check(matches(withText(AllergyType.getAll()[0])));
     }
 
     @Test
@@ -442,7 +438,7 @@ public class UploadingRecipeFragmentTest {
         onView(allOf(
                 isDescendantOfA(withId(R.id.dietTypesContent)),
                 withId(R.id.dietTypesAutoComplete))
-        ).check(matches(ViewMatchers.withText(DietType.getAll()[0])));
+        ).check(matches(withText(DietType.getAll()[0])));
     }
 
     @Test
@@ -537,5 +533,41 @@ public class UploadingRecipeFragmentTest {
             assertTrue(dialog instanceof DialogFragment);
             assertTrue(((DialogFragment) dialog).getShowsDialog());
         });
+    }
+
+    @Test
+    public void cannotUploadBeforeFillingTheRequired() {
+        scenario = FragmentScenario.launchInContainer(UploadingRecipeFragment.class);
+
+        onView(withId(R.id.recipeUploadButton)).perform(ViewActions.scrollTo(), click());
+
+        getInstrumentation().waitForIdleSync();
+        scenario.onFragment(fragment -> {
+            Fragment dialog = fragment.getActivity().getSupportFragmentManager().findFragmentByTag("review_recipe_dialog");
+            assertNull(dialog);
+        });
+    }
+
+    @Test
+    public void openImageChoosingDialog() {
+        scenario = FragmentScenario.launchInContainer(UploadingRecipeFragment.class);
+
+        onView(withId(R.id.recipeImageContent)).perform(ViewActions.scrollTo(), click());
+
+        onView(withText("Take Photo")).inRoot(isDialog()).check(matches(withEffectiveVisibility(VISIBLE)));
+        onView(withText("Choose from Gallery")).inRoot(isDialog()).check(matches(withEffectiveVisibility(VISIBLE)));
+        onView(withText("Exit")).inRoot(isDialog()).check(matches(withEffectiveVisibility(VISIBLE)));
+    }
+
+    @Test
+    public void closeImageChoosingDialog() {
+        scenario = FragmentScenario.launchInContainer(UploadingRecipeFragment.class);
+
+        onView(withId(R.id.recipeImageContent)).perform(ViewActions.scrollTo(), click());
+        onView(withText("Exit")).perform(ViewActions.scrollTo(), click());
+
+        onView(withText("Take Photo")).check(doesNotExist());
+        onView(withText("Choose from Gallery")).check(doesNotExist());
+        onView(withText("Exit")).check(doesNotExist());
     }
 }

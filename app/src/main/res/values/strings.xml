@@ -44,6 +44,8 @@
     <string name="reviewRecipePageTitle">Review Recipe</string>
     <string name="confirm_uploading">Confirm</string>
     <string name="cancel_uploading">Cancel</string>
+    <string name="login_required_popup_title">Login Required</string>
+    <string name="login_required_popup_message">Please login before uploading a recipe :)</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="home">Home</string>

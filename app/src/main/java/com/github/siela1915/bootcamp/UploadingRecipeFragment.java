@@ -479,7 +479,7 @@ public class UploadingRecipeFragment extends Fragment {
     private void chooseImage(){
         final CharSequence[] optionsMenu = {"Take Photo", "Choose from Gallery", "Exit" }; // create a menuOption Array
         // create a dialog for showing the optionsMenu
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity(), R.style.AlertDialogTheme);
         // set the items in builder
         builder.setItems(optionsMenu, (dialogInterface, i) -> {
             if(optionsMenu[i].equals("Take Photo")){
@@ -711,8 +711,8 @@ public class UploadingRecipeFragment extends Fragment {
 
     private void showLoginAlert() {
         AlertDialog dialog = new AlertDialog.Builder(getActivity())
-                .setTitle("Login Required")
-                .setMessage("Please login before uploading a recipe :)")
+                .setTitle(R.string.login_required_popup_title)
+                .setMessage(R.string.login_required_popup_message)
                 .setPositiveButton(android.R.string.ok, null)
                 .create();
         dialog.setOnShowListener(dialogInterface -> {
