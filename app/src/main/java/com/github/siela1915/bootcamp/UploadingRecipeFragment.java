@@ -402,10 +402,11 @@ public class UploadingRecipeFragment extends Fragment {
         TextInputLayout servingsLayout = view.findViewById(R.id.servingsContent);
         EditText servings = servingsLayout.getEditText();
 
-        if (!isTextValid(cookTime.getText().toString()) || !isNumberPositive(cookTime.getText().toString())
-        || !isTextValid(prepTime.getText().toString()) || !isNumberPositive(prepTime.getText().toString())
-        || !isTextValid(servings.getText().toString()) || !isNumberPositive(servings.getText().toString())) {
-            return false;
+        for (TextView textView : new TextView[] {cookTime, prepTime, servings}) {
+            String text = textView.getText().toString();
+            if (!isTextValid(text) || !isNumberPositive(text)) {
+                return false;
+            }
         }
 
         return isRecipeNameValid && isIngredientValid() && isStepValid();
