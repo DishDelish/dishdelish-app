@@ -155,4 +155,11 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="default_notification_channel_id">DefaultNotif</string>
     <string name="default_notification_channel_description">Default notification channel for DishDelish notifications</string>
+
+    <string name="recipe_nutritional_value_title">Nutritional Facts</string>
+    <string name="recipe_nutritional_value_calories_title">Calories (g): </string>
+    <string name="recipe_nutritional_value_fat_title">Fat (g): </string>
+    <string name="recipe_nutritional_value_carbohydrates_title">Carbohydrates (g): </string>
+    <string name="recipe_nutritional_value_sugar_title">Sugar (g): </string>
+    <string name="recipe_nutritional_value_protein_title">Protein (g): </string>
 </resources>

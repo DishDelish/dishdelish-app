@@ -127,113 +127,6 @@
             app:layout_constraintStart_toStartOf="@+id/infoBoxes"
             app:layout_constraintTop_toBottomOf="@+id/cookTimeNbMins" />
 
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/nutritionalValueCard"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="16dp"
-            app:cardCornerRadius="5dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:strokeColor="@color/teal_200"
-            app:strokeWidth="2dp">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <androidx.constraintlayout.widget.Guideline
-                    android:id="@+id/guideline1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    app:layout_constraintGuide_begin="16dp" />
-
-                <androidx.constraintlayout.widget.Guideline
-                    android:id="@+id/guideline2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    app:layout_constraintGuide_end="16dp" />
-
-                <androidx.constraintlayout.widget.Guideline
-                    android:id="@+id/guideline3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    app:layout_constraintGuide_begin="16dp" />
-
-                <androidx.constraintlayout.widget.Guideline
-                    android:id="@+id/guideline4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    app:layout_constraintGuide_end="16dp" />
-
-                <ImageView
-                    android:id="@+id/imageView2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintBottom_toTopOf="@+id/guideline4"
-                    app:layout_constraintStart_toStartOf="@+id/guideline1"
-                    app:layout_constraintTop_toTopOf="@+id/guideline3"
-                    app:layout_constraintVertical_bias="0.0"
-                    app:srcCompat="@android:drawable/ic_menu_info_details"
-                    app:tint="@color/teal_200" />
-
-                <TextView
-                    android:id="@+id/textView14"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:text="@string/recipe_nutritional_value_title"
-                    android:textColor="#00255E"
-                    android:textSize="14sp"
-                    app:layout_constraintBottom_toBottomOf="@+id/imageView2"
-                    app:layout_constraintStart_toEndOf="@+id/imageView2"
-                    app:layout_constraintTop_toTopOf="@+id/imageView2"
-                    app:layout_constraintVertical_bias="0.5" />
-
-                <ImageView
-                    android:id="@+id/show"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="4dp"
-                    android:padding="4dp"
-                    app:layout_constraintBottom_toBottomOf="@+id/textView14"
-                    app:layout_constraintEnd_toStartOf="@+id/guideline2"
-                    app:layout_constraintHorizontal_bias="1.0"
-                    app:layout_constraintStart_toEndOf="@+id/textView14"
-                    app:layout_constraintTop_toTopOf="@+id/textView14"
-                    app:srcCompat="@android:drawable/arrow_down_float"
-                    app:tint="@color/teal_200" />
-
-                <TextView
-                    android:id="@+id/nutritionalValueContent"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="16dp"
-                    app:layout_constraintEnd_toStartOf="@+id/imageView2"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:text="nutritional-values-test">
-
-                </TextView>
-
-                <androidx.constraintlayout.widget.Group
-                    android:id="@+id/card_group"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    app:constraint_referenced_ids="nutritionalValueContent"
-                    tools:visibility="gone" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-        </com.google.android.material.card.MaterialCardView>
-
         <ImageView
             android:id="@+id/ingredientsIcon"
             android:layout_width="47dp"
@@ -294,13 +187,209 @@
             app:layout_constraintStart_toEndOf="@+id/nbServings"
             app:layout_constraintTop_toBottomOf="@+id/ingredientsIcon" />
 
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/nutritionalValueCard"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginStart="1dp"
+            app:cardCornerRadius="5dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/recipePicture"
+            app:layout_constraintTop_toBottomOf="@+id/ingredientsList"
+            app:strokeColor="@color/stroke_color"
+            app:strokeWidth="1dp">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="16dp">
+
+                <ImageView
+                    android:id="@+id/nutritional_info_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@android:drawable/ic_menu_info_details"
+                    app:tint="@color/purple_700" />
+
+                <TextView
+                    android:id="@+id/nutritional_values_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:text="@string/recipe_nutritional_value_title"
+                    android:textColor="#00255E"
+                    android:textSize="16sp"
+                    app:layout_constraintStart_toEndOf="@+id/nutritional_info_icon"
+                    app:layout_constraintTop_toTopOf="@+id/nutritional_info_icon"
+                    app:layout_constraintVertical_bias="0.5" />
+
+                <ImageView
+                    android:id="@+id/nutritionalCollapseToggle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/nutritional_values_title"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/nutritional_values_title"
+                    app:srcCompat="@android:drawable/arrow_down_float"
+                    app:tint="@color/purple_700" />
+
+                <View
+                    android:id="@+id/nutritional_horizontal_line"
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="16dp"
+                    android:background="#CECECE"
+                    app:layout_constraintEnd_toEndOf="@+id/nutritionalCollapseToggle"
+                    app:layout_constraintStart_toStartOf="@+id/nutritional_info_icon"
+                    app:layout_constraintTop_toBottomOf="@+id/nutritional_values_title" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/nutritionalValueContent"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/nutritional_horizontal_line">
+
+                    <LinearLayout
+                        android:id="@+id/nutritionalValuesCalories"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:orientation="horizontal"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/recipe_nutritional_value_calories_title" />
+
+                        <TextView
+                            android:id="@+id/nutritionalValuesCaloriesValue"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/nutritionalValuesFat"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:orientation="horizontal"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/nutritionalValuesCalories">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/recipe_nutritional_value_fat_title" />
+
+                        <TextView
+                            android:id="@+id/nutritionalValuesFatValue"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/nutritionalValuesCarbohydrates"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:orientation="horizontal"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/nutritionalValuesFat">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/recipe_nutritional_value_carbohydrates_title" />
+
+                        <TextView
+                            android:id="@+id/nutritionalValuesCarbohydratesValue"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/nutritionalValuesSugar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:orientation="horizontal"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/nutritionalValuesCarbohydrates">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/recipe_nutritional_value_sugar_title" />
+
+                        <TextView
+                            android:id="@+id/nutritionalValuesSugarValue"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/nutritionalValuesProtein"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/nutritionalValuesSugar">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/recipe_nutritional_value_protein_title" />
+
+                        <TextView
+                            android:id="@+id/nutritionalValuesProteinValue"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp" />
+
+                    </LinearLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.Group
+                    android:id="@+id/card_group"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    app:constraint_referenced_ids="nutritionalValueContent, nutritional_horizontal_line"
+                    tools:visibility="gone" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
         <ImageView
             android:id="@+id/utensilsIcon"
             android:layout_width="45dp"
             android:layout_height="40dp"
             android:layout_marginTop="16dp"
             app:layout_constraintStart_toStartOf="@+id/recipePicture"
-            app:layout_constraintTop_toBottomOf="@+id/ingredientsList"
+            app:layout_constraintTop_toBottomOf="@+id/nutritionalValueCard"
             app:srcCompat="@drawable/appliances_sauce_pan" />
 
         <TextView
@@ -314,7 +403,7 @@
             android:textColor="#0E0E0E"
             android:textSize="22sp"
             app:layout_constraintStart_toEndOf="@+id/utensilsIcon"
-            app:layout_constraintTop_toBottomOf="@+id/ingredientsList" />
+            app:layout_constraintTop_toBottomOf="@+id/nutritionalValueCard" />
 
         <TextView
             android:id="@+id/utensilsList"

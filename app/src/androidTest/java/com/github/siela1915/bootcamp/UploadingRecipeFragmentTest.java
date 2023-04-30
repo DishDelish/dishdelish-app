@@ -1,6 +1,5 @@
 package com.github.siela1915.bootcamp;
 
-import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.typeText;
@@ -12,10 +11,8 @@ import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibilit
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.endsWith;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
 
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,12 +22,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.testing.FragmentScenario;
 import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.matcher.BoundedMatcher;
-import androidx.test.espresso.matcher.RootMatchers;
 import androidx.test.espresso.matcher.ViewMatchers;
 
-import com.github.siela1915.bootcamp.AutocompleteApi.ApiResponse;
-import com.github.siela1915.bootcamp.AutocompleteApi.ApiService;
-import com.github.siela1915.bootcamp.AutocompleteApi.NutrientsResponse;
 import com.github.siela1915.bootcamp.Labelling.AllergyType;
 import com.github.siela1915.bootcamp.Labelling.CuisineType;
 import com.github.siela1915.bootcamp.Labelling.DietType;
@@ -42,15 +35,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
 
-import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.MockResponse;
-import okhttp3.mockwebserver.internal.duplex.DuplexResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import okhttp3.mockwebserver.MockWebServer;
 
 public class UploadingRecipeFragmentTest {
     private MockWebServer mockWebServer = new MockWebServer();

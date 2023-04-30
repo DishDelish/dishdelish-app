@@ -69,7 +69,7 @@ public class RecipeActivity extends AppCompatActivity {
 
         // collapsible card for nutritional values
         CardView nutritionalValuesCard = findViewById(R.id.nutritionalValueCard);
-        ImageView expandNutritionalValues = findViewById(R.id.show);
+        ImageView expandNutritionalValues = findViewById(R.id.nutritionalCollapseToggle);
         Group nutritionalValuesContent = findViewById(R.id.card_group);
 
         expandNutritionalValues.setOnClickListener(view -> {
@@ -108,6 +108,11 @@ public class RecipeActivity extends AppCompatActivity {
         RecyclerView commentsList=(RecyclerView) findViewById(R.id.commentsList);
         RatingBar ratingBar = (RatingBar) findViewById(R.id.ratingBar);
         TextView servings = (TextView) findViewById(R.id.servings);
+        TextView calories = (TextView) findViewById(R.id.nutritionalValuesCaloriesValue);
+        TextView fat = (TextView) findViewById(R.id.nutritionalValuesFatValue);
+        TextView carbohydrates = (TextView) findViewById(R.id.nutritionalValuesCarbohydratesValue);
+        TextView sugar = (TextView) findViewById(R.id.nutritionalValuesSugarValue);
+        TextView protein = (TextView) findViewById(R.id.nutritionalValuesProteinValue);
 
         // not sure about this
         Bitmap recipeImage = BitmapFactory.decodeResource(this.getResources(), Integer.valueOf(recipe.image));
@@ -130,6 +135,13 @@ public class RecipeActivity extends AppCompatActivity {
 
         // Set Ingredient List content
         setIngredientListContents(ingredientsList);
+
+        // Set Nutritional Values
+        calories.setText(Double.toString(recipe.calories));
+        fat.setText(Double.toString(recipe.fat));
+        carbohydrates.setText(Double.toString(recipe.carbohydrates));
+        sugar.setText(Double.toString(recipe.sugar));
+        protein.setText(Double.toString(recipe.protein));
 
         // Set servings info
         setServingInfo(nbServings, servings, ingredientsList);
