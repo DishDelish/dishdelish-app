@@ -10,6 +10,7 @@ import com.github.siela1915.bootcamp.AutocompleteApi.EmptyUploadCallback;
 import com.github.siela1915.bootcamp.AutocompleteApi.IngredientAutocomplete;
 import com.github.siela1915.bootcamp.AutocompleteApi.Nutrient;
 import com.github.siela1915.bootcamp.AutocompleteApi.NutrientsResponse;
+import com.github.siela1915.bootcamp.AutocompleteApi.Nutrition;
 import com.github.siela1915.bootcamp.AutocompleteApi.UploadCallback;
 import com.github.siela1915.bootcamp.BuildConfig;
 import com.github.siela1915.bootcamp.Recipes.ExampleRecipes;
@@ -23,6 +24,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -143,37 +146,76 @@ public class AutocompleteTest {
     }
     @Test
     public void nutrientFetcherReturnsCorrectNutrients() throws InterruptedException {
+        //9266 = id for pineapple
+        Mockito.when(mockedApi.getNutrition(9266, 1, "piece", BuildConfig.API_KEY)).thenReturn(mockedNutCall);
+
+        Mockito.doAnswer(invocation -> {
+            Callback callback = invocation.getArgument(0, Callback.class);
+            callback.onResponse(mockedNutCall, Response.success(new NutrientsResponse(new Nutrition(Arrays.asList(
+                    new Nutrient("Calories", 452.5, "cal", 22.63),
+                    new Nutrient("Fat", 1.09, "g", 1.67),
+                    new Nutrient("Carbohydrates", 118.74, "g", 39.58),
+                    new Nutrient("Sugar", 89.14, "g", 99.05))))));
+            return null;
+        }).when(mockedNutCall).enqueue(any(Callback.class));
+
         IngredientAutocomplete fetcher = new IngredientAutocomplete();
+        fetcher.service = mockedApi;
         Ingredient ing = new Ingredient("pineapple", new Unit(1, "piece"));
         Map<Integer, Boolean> finishedMap = new HashMap<>();
         finishedMap.put(9266, false);
         fetcher.getNutritionFromIngredient(9266, ing, finishedMap, new EmptyUploadCallback());
 
-        //I know this is bad, just here till I find another solution
-        Thread.sleep(1000);
 
-        assertEquals(452.5, ing.getCalories(), 1.);
-        assertEquals(1.09, ing.getFat(), 0.05);
-        assertEquals(118.74, ing.getCarbs(), 1.);
-        assertEquals(89.14, ing.getSugar(), 1.);
+        assertEquals(452.5, ing.getCalories(), 0.01);
+        assertEquals(1.09, ing.getFat(), 0.01);
+        assertEquals(118.74, ing.getCarbs(), 0.01);
+        assertEquals(89.14, ing.getSugar(), 0.01);
     }
 
     @Test
     public void test() throws InterruptedException {
-        IngredientAutocomplete fetcher = new IngredientAutocomplete();
-        //cauliflower rice recipe
-        Recipe recipe = ExampleRecipes.recipes.get(1);
         int cilantroId = 11165;
         int cauliflowerId = 11135;
+
+        Call<NutrientsResponse> mockedCilCall = Mockito.mock(Call.class);
+        Call<NutrientsResponse> mockedCauCall = Mockito.mock(Call.class);
+        Mockito.when(mockedApi.getNutrition(cilantroId, 3, "g", BuildConfig.API_KEY)).thenReturn(mockedCilCall);
+        Mockito.when(mockedApi.getNutrition(cauliflowerId, 1, "piece", BuildConfig.API_KEY)).thenReturn(mockedCauCall);
+
+
+        Mockito.doAnswer(invocation -> {
+            Callback callback = invocation.getArgument(0, Callback.class);
+            callback.onResponse(mockedNutCall, Response.success(new NutrientsResponse(new Nutrition(Arrays.asList(
+                    new Nutrient("Calories", 0.69, "kcal", 0.03),
+                    new Nutrient("Fat", 0.02, "g", 0.02),
+                    new Nutrient("Carbohydrates", 0.03, "g", 0.01),
+                    new Nutrient("Sugar", 0.03, "g", 0.03),
+                    new Nutrient("Protein", 0.06, "g", 0.13))))));
+            return null;
+        }).when(mockedCilCall).enqueue(any(Callback.class));
+
+        Mockito.doAnswer(invocation -> {
+            Callback callback = invocation.getArgument(0, Callback.class);
+            callback.onResponse(mockedNutCall, Response.success(new NutrientsResponse(new Nutrition(Arrays.asList(
+                    new Nutrient("Calories", 143.75, "kcal", 7.19),
+                    new Nutrient("Fat", 1.61, "g", 2.48),
+                    new Nutrient("Carbohydrates", 17.08, "g", 6.21),
+                    new Nutrient("Sugar", 10.98, "g", 12.2),
+                    new Nutrient("Protein", 11.04, "g", 22.08))))));
+            return null;
+        }).when(mockedCauCall).enqueue(any(Callback.class));
+
+        IngredientAutocomplete fetcher = new IngredientAutocomplete();
+        fetcher.service = mockedApi;
+        //cauliflower rice recipe
+        Recipe recipe = ExampleRecipes.recipes.get(1);
         Map<String, Integer> idMap = new HashMap<>();
         idMap.put(recipe.ingredientList.get(0).getIngredient(), cauliflowerId);
         idMap.put(recipe.ingredientList.get(1).getIngredient(), cilantroId);
         fetcher.getNutritionFromRecipe(recipe, idMap, new EmptyUploadCallback());
         Thread.sleep(1000);
 
-        recipe.ingredientList.forEach(i -> {
-            System.out.println(i.getProtein());
-        });
         assertEquals(11.04, recipe.ingredientList.get(0).getProtein(), 0.01);
         assertEquals(0.06, recipe.ingredientList.get(1).getProtein(), 0.01);
     }
