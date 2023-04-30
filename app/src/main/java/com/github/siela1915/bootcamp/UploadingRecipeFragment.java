@@ -3,7 +3,6 @@ package com.github.siela1915.bootcamp;
 import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -23,17 +22,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-
 import com.github.siela1915.bootcamp.AutocompleteApi.IngredientAutocomplete;
 import com.github.siela1915.bootcamp.Labelling.AllergyType;
 import com.github.siela1915.bootcamp.Labelling.CuisineType;
@@ -51,7 +47,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -72,15 +67,11 @@ public class UploadingRecipeFragment extends Fragment {
     private LinearLayout stepListLinearLayout, ingredientLinearLayout;
     private Uri filePath;
     private ProgressDialog pd;
-
-    //creating reference to firebase storage
-    private final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     private final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     private final FirebaseStorage storage = FirebaseStorage.getInstance();
     private final StorageReference storageRef = storage.getReferenceFromUrl(storagePath);
     private final Database database = new Database(firebaseDatabase);
     private String userId;
-
     CuisineType[] cuisineTypeValues;
     AllergyType[] allergyTypeValues;
     DietType[] dietTypeValues;
@@ -88,7 +79,6 @@ public class UploadingRecipeFragment extends Fragment {
     private boolean isCookTimeValid = false;
     private boolean isPrepTimeValid = false;
     private boolean isServingsValid = false;
-
     private final ActivityResultLauncher<String> requireAccessToCamera = registerForActivityResult(
             new ActivityResultContracts.RequestPermission(),
             isGranted -> {
@@ -529,27 +519,35 @@ public class UploadingRecipeFragment extends Fragment {
         if (resultCode == Activity.RESULT_OK && data != null) {
             switch (requestCode) {
                 case CHOOSE_IMAGE_FROM_GALLERY_REQUEST:
-                    if (data.getData() != null) {
-                        filePath = data.getData();
-
-                        try {
-                            //getting image from gallery
-                            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), filePath);
-
-                            //Setting image to ImageView
-                            imgView.setImageBitmap(bitmap);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
+                    getAndSetImageFromGallery(data);
                     break;
                 case TAKE_PHOTO_REQUEST:
-                    Bitmap selectedImage = (Bitmap) data.getExtras().get("data");
-                    imgView.setImageBitmap(selectedImage);
-                    filePath = Uri.parse(MediaStore.Images.Media.insertImage(getActivity().getContentResolver(), selectedImage, null, null));
+                    getAndSetImageFromTakingPhoto(data);
                     break;
             }
         }
+    }
+
+    private void getAndSetImageFromGallery(Intent data) {
+        if (data.getData() != null) {
+            filePath = data.getData();
+
+            try {
+                //getting image from gallery
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), filePath);
+
+                //Setting image to ImageView
+                imgView.setImageBitmap(bitmap);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void getAndSetImageFromTakingPhoto(Intent data) {
+        Bitmap selectedImage = (Bitmap) data.getExtras().get("data");
+        imgView.setImageBitmap(selectedImage);
+        filePath = Uri.parse(MediaStore.Images.Media.insertImage(getActivity().getContentResolver(), selectedImage, null, null));
     }
 
     private void addIngredient(Map<String, Integer> idMap, IngredientAutocomplete apiService) {
