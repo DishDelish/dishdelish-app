@@ -18,6 +18,6 @@ public interface ApiService {
     @GET("{id}/information")
     Call<NutrientsResponse> getNutrition(@Path("id") int id,
                                              @Query("amount") int amount,
-                                             //@Query("unit") String unit,
+                                             @Query("unit") String unit,
                                              @Query("apiKey") String apiKey);
 }

@@ -27,6 +27,7 @@ import androidx.fragment.app.Fragment;
 
 import com.github.siela1915.bootcamp.AutocompleteApi.ApiResponse;
 import com.github.siela1915.bootcamp.AutocompleteApi.IngredientAutocomplete;
+import com.github.siela1915.bootcamp.AutocompleteApi.UploadCallback;
 import com.github.siela1915.bootcamp.Labelling.AllergyType;
 import com.github.siela1915.bootcamp.Labelling.CuisineType;
 import com.github.siela1915.bootcamp.Labelling.DietType;
@@ -63,6 +64,7 @@ public class UploadingRecipeFragment extends Fragment {
     private LinearLayout stepListLinearLayout, ingredientLinearLayout;
     private Uri filePath;
     private ProgressDialog pd;
+    private IngredientAutocomplete apiService = new IngredientAutocomplete();
 
     //creating reference to firebase storage
     private final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
@@ -133,7 +135,7 @@ public class UploadingRecipeFragment extends Fragment {
 
 
         //ingredient autocompletion
-        IngredientAutocomplete apiService = new IngredientAutocomplete();
+        //IngredientAutocomplete apiService = new IngredientAutocomplete();
         AutoCompleteTextView ingredientAutoComplete = (AutoCompleteTextView) view.findViewById(R.id.ingredientAutoComplete);
         //map of Ingredient IDs, will be used when uploading a recipe to get nutritional values
         Map<String, Integer> idMap = new HashMap<>();
@@ -197,13 +199,6 @@ public class UploadingRecipeFragment extends Fragment {
             @Override
             public void afterTextChanged(final Editable s) {
                 //TODO add handler for timer,
-                //couldn't figure out a way to test an api inside UI classes
-//                if(BuildConfig.DEBUG){
-//                    ArrayAdapter<String> ingredientAdapter = new ArrayAdapter<String>(ingredientAutoComplete.getContext(), android.R.layout.select_dialog_item, Arrays.asList("apple"));
-//                    ingredientAutoComplete.setAdapter(ingredientAdapter);
-//                    ingredientAutoComplete.showDropDown();
-//                    return;
-//                }
                 //doesn't consider defocusing and refocusing the text field as typing
                 if(!s.toString().equals(prevString)){
                     if (!isTyping) {
@@ -403,6 +398,18 @@ public class UploadingRecipeFragment extends Fragment {
         reviewRecipeDialog.setArguments(getBundleForReview(recipe));
         reviewRecipeDialog.setDialogResult(() -> {
             pd.show();
+            UploadCallback onSuccess = new UploadCallback() {
+                @Override
+                public void onSuccess() {
+                    uploadRecipe(filePath);
+                }
+                @Override
+                public void onError(String err) {
+                    //show a error to the user? use toast?
+                }
+            };
+            // TODO apiService
+
             uploadRecipe(filePath);
         });
         String reviewPageTag = "review_recipe_dialog";

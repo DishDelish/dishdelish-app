@@ -107,4 +107,21 @@ public class RecipeFetcher{
                 .map(r -> r.recipeName)
                 .collect(Collectors.toList());
     }
+
+    /**
+     *
+     * @param recipes
+     * @param ingredients
+     * @return
+     */
+    public List<String> sortByProtein(List<Recipe> recipes, List<Ingredient> ingredients){
+        Objects.requireNonNull(recipes);
+        List<Recipe> ret = new ArrayList<>(recipes);
+        return ret.stream()
+                .filter(r ->
+                        new HashSet<>(r.ingredientList.stream().map(Ingredient::getIngredient).collect(Collectors.toList()))
+                                .containsAll(ingredients.stream().map(Ingredient::getIngredient).collect(Collectors.toList())))
+                .map(r -> r.recipeName)
+                .collect(Collectors.toList());
+    }
 }

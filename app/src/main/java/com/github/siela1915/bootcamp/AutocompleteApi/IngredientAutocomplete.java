@@ -10,6 +10,8 @@ import com.github.siela1915.bootcamp.Recipes.Recipe;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -99,11 +101,12 @@ public class IngredientAutocomplete {
         return ingredients;
     }
 
-    public void getNutritionFromIngredient(int id, Ingredient ingredient){
+    public void getNutritionFromIngredient(int id, Ingredient ingredient, Map<Integer, Boolean> finishedMap, UploadCallback callback){
         //System.out.println(service.getNutrition(id, ingredient.getUnit().getValue(), API_KEY).request().url().toString());
 
         //To be able to get the nutrition correctly for a given unit, we need a naming convention for the units which I am not sure how to do
-        service.getNutrition(id, ingredient.getUnit().getValue(), API_KEY).enqueue(new Callback<NutrientsResponse>() {
+        //TODO give the users possible options of units once he chooses an ingredient?
+        service.getNutrition(id, ingredient.getUnit().getValue(), ingredient.getUnit().getInfo(), API_KEY).enqueue(new Callback<NutrientsResponse>() {
             @Override
             public void onResponse(Call<NutrientsResponse> call, Response<NutrientsResponse> response) {
                 if(response.isSuccessful()) {
@@ -137,16 +140,33 @@ public class IngredientAutocomplete {
                     String errorMessage = "Error code: " + response.code() + " With message: " + response.message();
                     System.out.println(errorMessage);
                 }
+                finishedMap.put(id, true);
+                //For every finished call, we check if all the calls are done
+                //If they are, we call the callback to upload the recipe
+                if(!finishedMap.containsValue(false))
+                    callback.onSuccess();
             }
             @Override
             public void onFailure(Call<NutrientsResponse> call, Throwable t) {
+                //even if the call fails, it is finished so we indicate it in the map
+                finishedMap.put(id, true);
             }
         });
     }
 
-    public void uploadToDatabase(Recipe recipe){
-        //maybe some kind of callback, should be async and also handle nutrient fetching which is also async
-        //but uses retrofit Callback()
+    /**
+     * Sets the nutrients of the recipe
+     * @param recipe
+     */
+    public void getNutritionFromRecipe(Recipe recipe, Map<String, Integer> idMap, UploadCallback callback){
+        //we could use execute() to make the calls synchronously?
+        Map<Integer, Boolean> finishedCallsMap = new HashMap<>();
+        recipe.ingredientList.forEach(i -> {
+            int ingID = idMap.get(i.getIngredient());
+            finishedCallsMap.put(ingID, false);
+            getNutritionFromIngredient(ingID, i, finishedCallsMap, callback);
+        });
     }
+
 
 }
