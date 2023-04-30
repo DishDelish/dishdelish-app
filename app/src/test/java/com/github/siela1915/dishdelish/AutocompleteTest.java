@@ -33,6 +33,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import okhttp3.Request;
 import okio.Timeout;
@@ -61,6 +62,32 @@ public class AutocompleteTest {
         assertEquals(200, response.code());
         assertTrue(response.body().nutrition.mapFromNutrients().containsKey("Protein"));
         assertEquals(response.body().nutrition.mapFromNutrients().get("Protein").doubleValue(), 0.06, 0.01);
+    }
+
+    @Test
+    public void pleaseWork() throws InterruptedException {
+        IngredientAutocomplete fetcher = new IngredientAutocomplete();
+        Recipe recipe = ExampleRecipes.recipes.get(1);
+        UploadCallback uploadRecipeCallback = new UploadCallback() {
+            @Override
+            public void onSuccess() {
+                System.out.println("hello");
+            }
+            @Override
+            public void onError(String err) {
+                //show a error to the user? use toast?
+            }
+        };
+
+        Map<String, Integer> idMap = new HashMap<>();
+        idMap.put(recipe.ingredientList.get(0).getIngredient(), 11135);
+        idMap.put(recipe.ingredientList.get(1).getIngredient(), 11165);
+
+        System.out.println(recipe.ingredientList.stream().map(i -> i.getProtein()).collect(Collectors.toList()));
+        fetcher.getNutritionFromRecipe(recipe, idMap, uploadRecipeCallback);
+        Thread.sleep(10000);
+        System.out.println(recipe.ingredientList.stream().map(i -> i.getProtein()).collect(Collectors.toList()));
+        assertTrue(false);
     }
 
 
@@ -214,10 +241,13 @@ public class AutocompleteTest {
         idMap.put(recipe.ingredientList.get(0).getIngredient(), cauliflowerId);
         idMap.put(recipe.ingredientList.get(1).getIngredient(), cilantroId);
         fetcher.getNutritionFromRecipe(recipe, idMap, new EmptyUploadCallback());
-        Thread.sleep(1000);
 
         assertEquals(11.04, recipe.ingredientList.get(0).getProtein(), 0.01);
         assertEquals(0.06, recipe.ingredientList.get(1).getProtein(), 0.01);
+
+        System.out.println(recipe.ingredientList.stream().map(i -> i.getProtein()).collect(Collectors.toList()) + " ayo");
+        assertEquals(11.04, recipe.ingredientList.get(0).getCarbs(), 0.01);
+        assertEquals(0.06, recipe.ingredientList.get(1).getCarbs(), 0.01);
     }
 
 }

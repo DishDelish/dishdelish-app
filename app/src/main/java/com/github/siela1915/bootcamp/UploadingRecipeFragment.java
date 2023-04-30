@@ -361,7 +361,6 @@ public class UploadingRecipeFragment extends Fragment {
     // Upload the recipe to Firebase
     private void uploadRecipe(final Uri recipeImageUri) {
         pd.show();
-
         OnSuccessListener onUploadRecipeToDatabaseSuccessListener = new OnSuccessListener<String>() {
             @Override
             public void onSuccess(String s) {
@@ -584,6 +583,8 @@ public class UploadingRecipeFragment extends Fragment {
     }
 
     private void openRecipeReviewDialog() {
+        //TODO
+        System.out.println(idMap.size());
         Recipe recipe = getRecipe(filePath);
         ReviewRecipeBeforeUploadingDialog reviewRecipeDialog = new ReviewRecipeBeforeUploadingDialog();
         reviewRecipeDialog.setArguments(getBundleForReview(recipe));

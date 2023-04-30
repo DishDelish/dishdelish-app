@@ -18,17 +18,13 @@ public class Recipe implements Parcelable {
     public int profilePicture, prepTime, cookTime, servings, likes, numRatings = 0;
     public double rating;
 
-    public double calories = 0;
-    public double fat = 0;
-    public double carbohydrates = 0;
-    public double sugar = 0;
-    public double protein = 0;
-
     public Utensils utensils;
     public List<Integer> cuisineTypes, allergyTypes, dietTypes;
     public List<Ingredient> ingredientList;
     public List<String> steps;
     public List<Comment> comments;
+
+    public double calories, fat, carbohydrates, sugar, protein = 0;
 
     public String getImage() {
         return image;
@@ -207,6 +203,11 @@ public class Recipe implements Parcelable {
         ingredientList = in.createTypedArrayList(Ingredient.CREATOR);
         steps = in.createStringArrayList();
         comments = in.createTypedArrayList(Comment.CREATOR);
+        calories = in.readDouble();
+        fat = in.readDouble();
+        carbohydrates = in.readDouble();
+        sugar = in.readDouble();
+        protein = in.readDouble();
     }
 
     public static final Creator<Recipe> CREATOR = new Creator<Recipe>() {
@@ -243,6 +244,11 @@ public class Recipe implements Parcelable {
         dest.writeTypedList(ingredientList);
         dest.writeStringList(steps);
         dest.writeTypedList(comments);
+        dest.writeDouble(calories);
+        dest.writeDouble(fat);
+        dest.writeDouble(carbohydrates);
+        dest.writeDouble(sugar);
+        dest.writeDouble(protein);
     }
 
     @Override

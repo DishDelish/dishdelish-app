@@ -8,11 +8,11 @@ import androidx.annotation.NonNull;
 public class Ingredient implements Parcelable {
     String ingredient;
     Unit unit;
-    private double calories = 0;
-    private double fat = 0;
-    private double carbs = 0;
-    private double protein = 0;
-    private double sugar = 0;
+    double calories = 0;
+    double fat = 0;
+    double carbs = 0;
+    double sugar = 0;
+    double protein = 0;
 
     public Ingredient(){}
 
@@ -30,17 +30,6 @@ public class Ingredient implements Parcelable {
         this.unit = unit;
     }
 
-    //constructor for parcels
-    public Ingredient(String ingredient, Unit unit, double calories, double fat, double carbs, double protein, double sugar) {
-        this.ingredient = ingredient.toLowerCase();
-        this.unit = unit;
-        this.calories = calories;
-        this.fat = fat;
-        this.carbs = carbs;
-        this.protein = protein;
-        this.sugar = sugar;
-    }
-
     protected Ingredient(Parcel in) {
         ingredient = in.readString();
         unit = in.readParcelable(Unit.class.getClassLoader());
@@ -48,8 +37,8 @@ public class Ingredient implements Parcelable {
         calories = in.readDouble();
         fat = in.readDouble();
         carbs = in.readDouble();
-        protein = in.readDouble();
         sugar = in.readDouble();
+        protein = in.readDouble();
     }
 
     public static final Creator<Ingredient> CREATOR = new Creator<Ingredient>() {
@@ -84,8 +73,8 @@ public class Ingredient implements Parcelable {
         dest.writeDouble(calories);
         dest.writeDouble(fat);
         dest.writeDouble(carbs);
-        dest.writeDouble(protein);
         dest.writeDouble(sugar);
+        dest.writeDouble(protein);
     }
 
     @NonNull

@@ -15,6 +15,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import kotlin.io.TextStreamsKt;
 import retrofit2.Call;
@@ -28,6 +30,10 @@ public class IngredientAutocomplete {
     private final int numberOfNutrition = 3;
     private final String API_KEY = BuildConfig.API_KEY;
     public ApiService service;
+
+    //atomic map, we want it to be shared across threads for asynchronous api calls
+    volatile Map<Integer, Boolean> finishedCallsMap = new ConcurrentHashMap<>();
+    AtomicBoolean wasRun = new AtomicBoolean(false);
 
 
 
@@ -82,6 +88,7 @@ public class IngredientAutocomplete {
                             //Adds the ingredients to the passed list
                             ingredients.add(ing.name);
                             idMap.put(ing.name, ing.id);
+                            System.out.println(ing.name + ing.id);
                         }
                     }
                     //add a case for not successful?
@@ -143,8 +150,11 @@ public class IngredientAutocomplete {
                 finishedMap.put(id, true);
                 //For every finished call, we check if all the calls are done
                 //If they are, we call the callback to upload the recipe
-                if(!finishedMap.containsValue(false))
+                if(!(finishedMap.containsValue(false)) && wasRun.compareAndSet(false, true)) {
+
                     callback.onSuccess();
+                    System.out.println("this should happen once");
+                }
             }
             @Override
             public void onFailure(Call<NutrientsResponse> call, Throwable t) {
@@ -160,10 +170,15 @@ public class IngredientAutocomplete {
      */
     public void getNutritionFromRecipe(Recipe recipe, Map<String, Integer> idMap, UploadCallback callback){
         //we could use execute() to make the calls synchronously?
-        Map<Integer, Boolean> finishedCallsMap = new HashMap<>();
+        //volatile Map<Integer, Boolean> finishedCallsMap = new ConcurrentHashMap<>();
+
         recipe.ingredientList.forEach(i -> {
-            int ingID = idMap.get(i.getIngredient());
+            Integer ingID = idMap.get(i.getIngredient());
             finishedCallsMap.put(ingID, false);
+        });
+
+        recipe.ingredientList.forEach(i -> {
+            Integer ingID = idMap.get(i.getIngredient());
             getNutritionFromIngredient(ingID, i, finishedCallsMap, callback);
         });
     }
