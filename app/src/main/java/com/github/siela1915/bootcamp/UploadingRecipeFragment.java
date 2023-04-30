@@ -211,7 +211,7 @@ public class UploadingRecipeFragment extends Fragment {
         recipeName.addTextChangedListener(new TextValidator(recipeName) {
             @Override
             public void validate(TextView textView, String text) {
-                if (!isTextValid(text)) textView.setError("Recipe name is required!");
+                if (!isTextValid(text)) textView.setError(getString(R.string.recipeNameEmptyErrorMessage));
                 isRecipeNameValid = isTextValid(text);
             }
         });
@@ -219,9 +219,9 @@ public class UploadingRecipeFragment extends Fragment {
         cookTime.addTextChangedListener(new TextValidator(cookTime) {
             @Override
             public void validate(TextView textView, String text) {
-                if (!isTextValid(text)) textView.setError("Cooking time is required!");
+                if (!isTextValid(text)) textView.setError(getString(R.string.cookTimeEmptyErrorMessage));
                 else if (!isNumberPositive(text))
-                    textView.setError("Cooking time must be positive!");
+                    textView.setError(getString(R.string.cookTimeInvalidErrorMessage));
                 isCookTimeValid = isTextValid(text) && isNumberPositive(text);
             }
         });
@@ -229,9 +229,9 @@ public class UploadingRecipeFragment extends Fragment {
         prepTime.addTextChangedListener(new TextValidator(prepTime) {
             @Override
             public void validate(TextView textView, String text) {
-                if (!isTextValid(text)) textView.setError("Preparation time is required!");
+                if (!isTextValid(text)) textView.setError(getString(R.string.prepTimeEmptyErrorMessage));
                 else if (!isNumberPositive(text))
-                    textView.setError("Preparation time must be positive!");
+                    textView.setError(getString(R.string.prepTimeInvalidErrorMessage));
                 isPrepTimeValid = isTextValid(text) && isNumberPositive(text);
             }
         });
@@ -239,9 +239,9 @@ public class UploadingRecipeFragment extends Fragment {
         servings.addTextChangedListener(new TextValidator(servings) {
             @Override
             public void validate(TextView textView, String text) {
-                if (!isTextValid(text)) textView.setError("Number of serving is required!");
+                if (!isTextValid(text)) textView.setError(getString(R.string.servingsEmptyErrorMessage));
                 else if (!isNumberPositive(text))
-                    textView.setError("Number of serving must be positive!");
+                    textView.setError(getString(R.string.servingsInvalidErrorMessage));
                 isServingsValid = isTextValid(text) && isNumberPositive(text);
             }
         });
@@ -267,7 +267,7 @@ public class UploadingRecipeFragment extends Fragment {
     }
 
     private boolean isTextValid(String text) {
-        return text != null && !text.isEmpty();
+        return text != null && !text.trim().isEmpty();
     }
 
     private boolean isNumberPositive(String text) {
@@ -284,7 +284,7 @@ public class UploadingRecipeFragment extends Fragment {
         stepContent.addTextChangedListener(new TextValidator(stepContent) {
             @Override
             public void validate(TextView textView, String text) {
-                if (!isTextValid(text)) textView.setError("Step is required!");
+                if (!isTextValid(text)) textView.setError(getString(R.string.stepsEmptyErrorMessage));
             }
         });
     }
@@ -292,23 +292,23 @@ public class UploadingRecipeFragment extends Fragment {
     private void addIngredientValidators(EditText ingredientsAmount, EditText ingredientsUnit, EditText ingredientsName) {
         ingredientsAmount.addTextChangedListener(new TextValidator(ingredientsAmount) {
             public void validate(TextView textView, String text) {
-                if (!isTextValid(text)) textView.setError("Ingredient amount is required!");
+                if (!isTextValid(text)) textView.setError(getString(R.string.ingredientsAmountEmptyErrorMessage));
                 else if (!isNumberPositive(text))
-                    textView.setError("Ingredient amount must be positive!");
+                    textView.setError(getString(R.string.ingredientsAmountInvalidErrorMessage));
             }
         });
 
         ingredientsUnit.addTextChangedListener(new TextValidator(ingredientsUnit) {
             @Override
             public void validate(TextView textView, String text) {
-                if (!isTextValid(text)) textView.setError("Ingredient unit is required!");
+                if (!isTextValid(text)) textView.setError(getString(R.string.ingredientsUnitEmptyErrorMessage));
             }
         });
 
         ingredientsName.addTextChangedListener(new TextValidator(ingredientsName) {
             @Override
             public void validate(TextView textView, String text) {
-                if (!isTextValid(text)) textView.setError("Ingredient name is required!");
+                if (!isTextValid(text)) textView.setError(getString(R.string.ingredientsNameEmptyErrorMessage));
             }
         });
     }
