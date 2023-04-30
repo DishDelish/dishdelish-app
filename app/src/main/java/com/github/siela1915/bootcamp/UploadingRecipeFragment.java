@@ -65,6 +65,8 @@ public class UploadingRecipeFragment extends Fragment {
     private Uri filePath;
     private ProgressDialog pd;
     private IngredientAutocomplete apiService = new IngredientAutocomplete();
+    //map of Ingredient IDs, will be used when uploading a recipe to get nutritional values
+    Map<String, Integer> idMap = new HashMap<>();
 
     //creating reference to firebase storage
     private final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
@@ -137,8 +139,6 @@ public class UploadingRecipeFragment extends Fragment {
         //ingredient autocompletion
         //IngredientAutocomplete apiService = new IngredientAutocomplete();
         AutoCompleteTextView ingredientAutoComplete = (AutoCompleteTextView) view.findViewById(R.id.ingredientAutoComplete);
-        //map of Ingredient IDs, will be used when uploading a recipe to get nutritional values
-        Map<String, Integer> idMap = new HashMap<>();
         setupIngredientAutocomplete(ingredientAutoComplete, idMap, apiService);
 
 
@@ -398,7 +398,7 @@ public class UploadingRecipeFragment extends Fragment {
         reviewRecipeDialog.setArguments(getBundleForReview(recipe));
         reviewRecipeDialog.setDialogResult(() -> {
             pd.show();
-            UploadCallback onSuccess = new UploadCallback() {
+            UploadCallback uploadRecipeCallback = new UploadCallback() {
                 @Override
                 public void onSuccess() {
                     uploadRecipe(filePath);
@@ -409,8 +409,9 @@ public class UploadingRecipeFragment extends Fragment {
                 }
             };
             // TODO apiService
+            apiService.getNutritionFromRecipe(recipe, idMap, uploadRecipeCallback);
 
-            uploadRecipe(filePath);
+            //uploadRecipe(filePath);
         });
         String reviewPageTag = "review_recipe_dialog";
         reviewRecipeDialog.show(getActivity().getSupportFragmentManager(), reviewPageTag);
