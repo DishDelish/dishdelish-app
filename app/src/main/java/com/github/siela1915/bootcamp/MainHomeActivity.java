@@ -154,6 +154,9 @@ public class MainHomeActivity extends AppCompatActivity {
                                         ExampleRecipes.recipes
                                 ), false);
                     break;
+                case R.id.menuItem_help:
+                    setContainerContent(R.id.fragContainer, NearbyHelpFragment.class, false);
+                    break;
                 case R.id.menuItem_soppingCart:
                     constraintLayout.setVisibility(View.GONE);
                     setContainerContent(R.id.fragContainer,ShoppingCartFragment.class,false);
