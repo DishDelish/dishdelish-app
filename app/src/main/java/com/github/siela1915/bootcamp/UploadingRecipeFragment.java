@@ -214,8 +214,8 @@ public class UploadingRecipeFragment extends Fragment {
         });
 
         setValidator(cookTime, getString(R.string.cookTimeEmptyErrorMessage), getString(R.string.cookTimeInvalidErrorMessage));
-        setValidator(prepTime, getString(R.string.prepTimeEmptyErrorMessage), getString(R.string.cookTimeInvalidErrorMessage));
-        setValidator(servings, getString(R.string.servingsEmptyErrorMessage), getString(R.string.cookTimeInvalidErrorMessage));
+        setValidator(prepTime, getString(R.string.prepTimeEmptyErrorMessage), getString(R.string.prepTimeInvalidErrorMessage));
+        setValidator(servings, getString(R.string.servingsEmptyErrorMessage), getString(R.string.servingsInvalidErrorMessage));
 
 
         addIngredientValidators(ingredientsAmount, ingredientsUnit, ingredientsName);
