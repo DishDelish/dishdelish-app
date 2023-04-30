@@ -67,6 +67,10 @@ public class RecipeActivity extends AppCompatActivity {
             }
         });
 
+        setNutritionalValueOnClickListener();
+    }
+
+    private void setNutritionalValueOnClickListener() {
         // collapsible card for nutritional values
         CardView nutritionalValuesCard = findViewById(R.id.nutritionalValueCard);
         ImageView expandNutritionalValues = findViewById(R.id.nutritionalCollapseToggle);
@@ -83,7 +87,6 @@ public class RecipeActivity extends AppCompatActivity {
                 expandNutritionalValues.setImageResource(android.R.drawable.arrow_up_float);
             }
         });
-
     }
 
     @Override
