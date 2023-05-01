@@ -68,13 +68,13 @@ public class HomePageFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view= inflater.inflate(R.layout.fragment_home_page, container, false);
-        homeTextView = view.findViewById(R.id.homeFragTextView);
+        //homeTextView = view.findViewById(R.id.homeFragTextView);
         Bundle data= getArguments();
         if(data != null){
             cuis+= data.getString("selected cuisine");
         }
-        homeTextView.setText(cuis);
-        homeTextView.setTextSize(30);
+        //homeTextView.setText(cuis);
+        //homeTextView.setTextSize(30);
         return view;
     }
 
