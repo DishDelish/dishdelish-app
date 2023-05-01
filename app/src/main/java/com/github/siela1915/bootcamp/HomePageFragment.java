@@ -10,9 +10,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.siela1915.bootcamp.Recipes.ExampleRecipes;
 import com.github.siela1915.bootcamp.Recipes.Recipe;
+import com.github.siela1915.bootcamp.Recipes.RecipeItemAdapter;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -83,6 +86,13 @@ public class HomePageFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         Button button = view.findViewById(R.id.homeFragButton);
+        RecyclerView recipeListRecyclerView= view.findViewById(R.id.rand_recipe_recyclerView);
+        RecyclerView recipeCatRecyclerView= view.findViewById(R.id.category_recyclerView);
+        recipeListRecyclerView.setLayoutManager(new GridLayoutManager(getContext(),2));
+        recipeCatRecyclerView.setLayoutManager(new GridLayoutManager(getContext(),3));
+        RecipeItemAdapter adapter= new RecipeItemAdapter(ExampleRecipes.recipes,getContext());
+        recipeListRecyclerView.setAdapter(adapter);
+        recipeCatRecyclerView.setAdapter(adapter);
 
         button.setOnClickListener(v -> {
             Recipe recipe = ExampleRecipes.recipes.get((int)(Math.random()*2.999));
