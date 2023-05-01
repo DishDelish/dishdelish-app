@@ -20,12 +20,20 @@
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/fragContainer"
             android:layout_width="match_parent"
-            android:layout_height="530dp"
-            app:layout_constraintTop_toBottomOf="@+id/scrollview"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toBottomOf="@id/filterBarrier"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             tools:ignore="VisualLintBounds" />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/filterBarrier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="top"
+            app:constraint_referenced_ids="scrollview"
+            tools:layout_editor_absoluteY="731dp" />
 
         <ScrollView
             android:id="@+id/scrollview"
