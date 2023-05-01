@@ -27,6 +27,7 @@ check_android_task:
     -no-window
     -camera-back none
   assemble_instrumented_tests_script: |
+    echo MAPS_API_KEY=ENCRYPTED[!5c8a6c7336882072f610cf41c34611635ef523df0ec9b1fb02061838be400d2475b28700881e8d38f852b3e6f6d491bc!] >> local.properties
     chmod +x gradlew
     ./gradlew assembleDebugAndroidTest
   wait_for_avd_script:

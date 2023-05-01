@@ -3,7 +3,9 @@ plugins {
     id 'jacoco'
     // Add the Google services Gradle plugin
     id 'com.google.gms.google-services'
+    id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
 }
+
 
 android {
     namespace 'com.github.siela1915.bootcamp'
@@ -68,6 +70,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-messaging:23.1.2'
     implementation 'com.google.firebase:firebase-analytics:21.2.1'
     implementation 'com.firebase:geofire-android:3.2.0'
+
+    implementation 'com.google.android.gms:play-services-maps:18.1.0'
 
     implementation 'com.google.android.material:material:<version>'
     implementation 'androidx.viewpager:viewpager:1.1.0-alpha01'
