@@ -296,7 +296,8 @@ public class AutocompleteTest {
         Ingredient ing = new Ingredient("pineapple", new Unit(1, "piece"));
         Map<Integer, Boolean> finishedMap = new HashMap<>();
         finishedMap.put(9266, false);
-        fetcher.getNutritionFromIngredient(9266, ing, finishedMap, new EmptyUploadCallback());
+        EmptyUploadCallback callback = new EmptyUploadCallback();
+        fetcher.getNutritionFromIngredient(9266, ing, finishedMap, callback);
 
         //Ingredient nutrients shouldn't change from the default value.
         assertEquals(ing.getProtein(), 0.0, 0.01);
@@ -306,8 +307,8 @@ public class AutocompleteTest {
         assertEquals(ing.getSugar(), 0.0, 0.01);
 
         //correct error message sent
-        String expectedMessage = "Couldn't fetch nutritional values of pineapple\r\n";
-        assertEquals(expectedMessage, outContent.toString());
+        String expectedMessage = "Couldn't fetch nutritional values of pineapple";
+        assertEquals(expectedMessage, callback.errorMessage);
     }
 
 
@@ -332,7 +333,8 @@ public class AutocompleteTest {
         Ingredient ing = new Ingredient("pineapple", new Unit(1, "piece"));
         Map<Integer, Boolean> finishedMap = new HashMap<>();
         finishedMap.put(9266, false);
-        fetcher.getNutritionFromIngredient(9266, ing, finishedMap, new EmptyUploadCallback());
+        EmptyUploadCallback callback = new EmptyUploadCallback();
+        fetcher.getNutritionFromIngredient(9266, ing, finishedMap, callback);
 
         //Ingredient nutrients shouldn't change from the default value.
         assertEquals(ing.getProtein(), 0.0, 0.01);
@@ -342,8 +344,8 @@ public class AutocompleteTest {
         assertEquals(ing.getSugar(), 0.0, 0.01);
 
         //correct error message sent
-        String expectedMessage = "Error while uploading: " + "HTTP 404 Response.error()\r\n";
-        assertEquals(expectedMessage, outContent.toString());
+        String expectedMessage = "Error while uploading: " + "HTTP 404 Response.error()";
+        assertEquals(expectedMessage, callback.errorMessage);
     }
 
 }
