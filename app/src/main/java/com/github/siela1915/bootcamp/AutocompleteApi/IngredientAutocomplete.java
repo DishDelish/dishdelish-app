@@ -14,9 +14,11 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 
 import kotlin.io.TextStreamsKt;
 import retrofit2.Call;
@@ -144,22 +146,22 @@ public class IngredientAutocomplete {
                     }
                     //if not successful
                 }else{
-                    String errorMessage = "Error code: " + response.code() + " With message: " + response.message();
-                    System.out.println(errorMessage);
+                    //String errorMessage = "Error code: " + response.code() + " With message: " + response.message();
+                    //System.out.println(errorMessage);
+                    callback.onError("Couldn't fetch nutritional values of " + ingredient.getIngredient());
                 }
                 finishedMap.put(id, true);
                 //For every finished call, we check if all the calls are done
                 //If they are, we call the callback to upload the recipe
                 if(!(finishedMap.containsValue(false)) && wasRun.compareAndSet(false, true)) {
-
                     callback.onSuccess();
-                    System.out.println("this should happen once");
                 }
             }
             @Override
             public void onFailure(Call<NutrientsResponse> call, Throwable t) {
                 //even if the call fails, it is finished so we indicate it in the map
                 finishedMap.put(id, true);
+                callback.onError("Error while uploading: " + t.getLocalizedMessage());
             }
         });
     }
@@ -169,18 +171,22 @@ public class IngredientAutocomplete {
      * @param recipe
      */
     public void getNutritionFromRecipe(Recipe recipe, Map<String, Integer> idMap, UploadCallback callback){
-        //we could use execute() to make the calls synchronously?
-        //volatile Map<Integer, Boolean> finishedCallsMap = new ConcurrentHashMap<>();
+        //If no valid ingredients chosen
+        if(recipe.ingredientList.stream()
+                .map(i -> idMap.get(i.getIngredient())).noneMatch(Objects::nonNull)){
+            callback.onError("Invalid ingredients chosen, nutritional values will not be updated");
+        }
 
+        List<Ingredient> validIngredients = new ArrayList<>();
         recipe.ingredientList.forEach(i -> {
-            Integer ingID = idMap.get(i.getIngredient());
-            finishedCallsMap.put(ingID, false);
+            if(idMap.containsKey(i.getIngredient())){
+                validIngredients.add(i);
+            }
         });
 
-        recipe.ingredientList.forEach(i -> {
-            Integer ingID = idMap.get(i.getIngredient());
-            getNutritionFromIngredient(ingID, i, finishedCallsMap, callback);
-        });
+        //has to be done in 2 separate iterations so we can detect when the final call is finished with finishedCallsMap
+        validIngredients.forEach(i -> finishedCallsMap.put(idMap.get(i.getIngredient()), false));
+        validIngredients.forEach(i -> getNutritionFromIngredient(idMap.get(i.getIngredient()), i, finishedCallsMap, callback));
     }
 
 

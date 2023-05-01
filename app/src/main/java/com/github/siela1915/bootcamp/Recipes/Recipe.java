@@ -12,8 +12,6 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class Recipe implements Parcelable {
-    //Images should be usable in activity classes like this:
-    //Bitmap image = BitmapFactory.decodeResource(this.getResources(), image);
     public String image, recipeName, userName, uniqueKey = "";
     public int profilePicture, prepTime, cookTime, servings, likes, numRatings = 0;
     public double rating;
@@ -24,6 +22,7 @@ public class Recipe implements Parcelable {
     public List<String> steps;
     public List<Comment> comments;
 
+    //Nutritional values are all in grams, except calories which are in kCal
     public double calories, fat, carbohydrates, sugar, protein = 0;
 
     public String getImage() {
