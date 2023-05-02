@@ -146,7 +146,6 @@ public class UploadingRecipeFragment extends Fragment {
 
 
         //ingredient autocompletion
-        //IngredientAutocomplete apiService = new IngredientAutocomplete();
         AutoCompleteTextView ingredientAutoComplete = (AutoCompleteTextView) view.findViewById(R.id.ingredientAutoComplete);
         setupIngredientAutocomplete(ingredientAutoComplete, idMap, apiService);
 
@@ -602,7 +601,6 @@ public class UploadingRecipeFragment extends Fragment {
     }
 
     private void openRecipeReviewDialog() {
-        //TODO
         recipe = getRecipe(filePath);
         ReviewRecipeBeforeUploadingDialog reviewRecipeDialog = new ReviewRecipeBeforeUploadingDialog();
         reviewRecipeDialog.setArguments(getBundleForReview(recipe));

@@ -108,6 +108,10 @@ public class RecipeFetcher{
                 .collect(Collectors.toList());
     }
 
+    public List<String> sortByNutrient(List<Recipe> recipes, Recipe Double function){
+
+    }
+
     /**
      * Sort a list of recipes by their ascending protein value
      * @param recipes to sort

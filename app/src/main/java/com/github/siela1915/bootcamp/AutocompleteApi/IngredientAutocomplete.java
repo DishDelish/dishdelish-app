@@ -90,7 +90,6 @@ public class IngredientAutocomplete {
                             //Adds the ingredients to the passed list
                             ingredients.add(ing.name);
                             idMap.put(ing.name, ing.id);
-                            System.out.println(ing.name + ing.id);
                         }
                     }
                     //add a case for not successful?
@@ -140,14 +139,14 @@ public class IngredientAutocomplete {
                                     ingredient.setCarbs(map.get(s));
                                     break;
                                 default:
-                                    break;
+                                    //since we're iterating over a static list that defines which nutrients we will use,
+                                    //this shouldn't ever be reached
+                                    throw new IllegalArgumentException("Not a valid nutritional value");
                             }
                         }
                     }
                     //if not successful
                 }else{
-                    //String errorMessage = "Error code: " + response.code() + " With message: " + response.message();
-                    //System.out.println(errorMessage);
                     callback.onError("Couldn't fetch nutritional values of " + ingredient.getIngredient());
                 }
                 finishedMap.put(id, true);
