@@ -24,7 +24,7 @@
             android:marqueeRepeatLimit="marquee_forever"
             android:scrollHorizontally="true"
             android:text="Dish Name"
-            android:textSize="22sp"
+            android:textSize="18sp"
             android:padding="8dp"/>
         <ImageView
             android:id="@+id/recipeImageView"

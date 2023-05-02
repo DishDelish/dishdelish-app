@@ -97,25 +97,16 @@ public class HomePageFragment extends Fragment {
 
         Button button = view.findViewById(R.id.homeFragButton);
         RecyclerView recipeListRecyclerView= view.findViewById(R.id.rand_recipe_recyclerView);
+        recipeListRecyclerView.setHasFixedSize(true);
         recipeListRecyclerView.setLayoutManager(new GridLayoutManager(getContext(),2));
-        RecipeItemAdapter adapter;
-        /*try {
-            //FirebaseApp.initializeApp(view.getContext());
-            adapter=new RecipeItemAdapter(database.getNRandomAsync(10), view.getContext());
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("couldn't fetch recipes from database");
-            adapter= new RecipeItemAdapter(ExampleRecipes.recipes, view.getContext());
-        }*/
-        database.getNRandomAsync(1).addOnSuccessListener(list->
+
+
+        database.getNRandomAsync(20).addOnSuccessListener(list->
                 recipeListRecyclerView.setAdapter(new RecipeItemAdapter(list, view.getContext())))
                 .addOnFailureListener(e->{
                     e.printStackTrace();
                     recipeListRecyclerView.setAdapter(new RecipeItemAdapter(ExampleRecipes.recipes, view.getContext()));
                 });
-
-
-        //recipeListRecyclerView.setAdapter(adapter);
         button.setOnClickListener(v -> {
             Recipe recipe = ExampleRecipes.recipes.get((int)(Math.random()*2.999));
             startActivity(RecipeConverter.convertToIntent(recipe, getContext()));

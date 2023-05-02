@@ -28,7 +28,7 @@ public class Recipe implements Parcelable {
     public List<Integer> cuisineTypes, allergyTypes, dietTypes;
     public List<Ingredient> ingredientList;
     public List<String> steps;
-    public List<Comment> comments;
+    public List<Comment> comments= new ArrayList<>();
 
     public String getImage() {
         return image;
