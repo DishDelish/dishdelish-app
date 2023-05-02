@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
+import android.security.keystore.UserNotAuthenticatedException;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -16,7 +17,13 @@ import androidx.core.app.NotificationCompat;
 
 import com.github.siela1915.bootcamp.MainHomeActivity;
 import com.github.siela1915.bootcamp.R;
+import com.github.siela1915.bootcamp.Recipes.Ingredient;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -88,8 +95,9 @@ public class PushNotificationService extends FirebaseMessagingService {
                         .setSound(defaultSoundUri)
                         .setContentIntent(pendingIntent);
 
-        if (notification.containsKey("color")) {
-            notificationBuilder.setColor(Color.parseColor(notification.get("color").toUpperCase()));
+        String color = notification.get("color");
+        if (color != null) {
+            notificationBuilder.setColor(Color.parseColor(color.toUpperCase()));
         }
 
         NotificationManager notificationManager =
@@ -116,5 +124,26 @@ public class PushNotificationService extends FirebaseMessagingService {
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
         }
+    }
+
+    static public Task<Void> sendRemoteNotification(String userId, Ingredient ingredient) {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            Map<String, Object> notif = new HashMap<>();
+            notif.put("ingredient", ingredient);
+            notif.put("sender", user.getUid());
+            notif.put("receiver", userId);
+            notif.put("sent", false);
+
+            DatabaseReference db = FirebaseDatabase.getInstance().getReference("notifications");
+            String uniqueKey = db.push().getKey();
+            if (uniqueKey != null) {
+                return db.child(uniqueKey).updateChildren(notif);
+            }
+
+            return Tasks.forException(new RuntimeException("Couldn't generate a unique id for the notification"));
+        }
+
+        return Tasks.forException(new UserNotAuthenticatedException("User need to be authenticated to send notifications"));
     }
 }
