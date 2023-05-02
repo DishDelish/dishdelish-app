@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RatingBar;
@@ -21,6 +22,7 @@ import com.github.siela1915.bootcamp.Recipes.Ingredient;
 import com.github.siela1915.bootcamp.Recipes.Recipe;
 import com.github.siela1915.bootcamp.Recipes.Unit;
 import com.github.siela1915.bootcamp.firebase.Database;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
@@ -28,7 +30,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RecipeActivity extends AppCompatActivity {
+public class RecipeActivity extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener {
 
     private Recipe recipe;
     private ShoppingListManager shoppingListManager;
@@ -36,6 +38,8 @@ public class RecipeActivity extends AppCompatActivity {
     private final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
 
     private final Database database = new Database(firebaseDatabase);
+
+    private final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,58 +57,16 @@ public class RecipeActivity extends AppCompatActivity {
 
         Button rateButton = (Button) findViewById(R.id.rateButton);
         rateButton.setOnClickListener(v -> {
-            Intent ratingIntent = new Intent(v.getContext(), RatingActivity.class);
-            ratingIntent.putExtra("Recipe", recipe);
 
-            v.getContext().startActivity(ratingIntent);
-        });
-
-        ToggleButton heart = (ToggleButton) findViewById(R.id.favoriteButton);
-        heart.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) {
-
-                // Add the recipe to favorites
-                database.addFavorite(recipe.uniqueKey).addOnSuccessListener(arg -> {
-                    // Show a success message to the user
-                    Toast.makeText(this, "Recipe added to favorites", Toast.LENGTH_SHORT).show();
-
-                    //change background
-                    heart.setBackground(getDrawable(R.drawable.heart_full));
-
-                    // for testing
-                    heart.setTag("full");
-
-                }).addOnFailureListener(e -> {
-
-                    // Show an error message to the user
-                    Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
-
-                });
-
+            if(firebaseAuth.getCurrentUser()==null){
+                Toast.makeText(this, "Sign in to rate this recipe", Toast.LENGTH_SHORT).show();
             } else {
+                Intent ratingIntent = new Intent(v.getContext(), RatingActivity.class);
+                ratingIntent.putExtra("Recipe", recipe);
 
-                // remove this recipe from favorites
-                database.removeFavorite(recipe.uniqueKey).addOnSuccessListener(s -> {
-
-                    // display success message
-                    Toast.makeText(this, "Recipe removed from favorites", Toast.LENGTH_SHORT).show();
-
-                    // change background
-                    heart.setBackground(getDrawable(R.drawable.heart_empty));
-
-                    // for testing
-                    heart.setTag("empty");
-
-                }).addOnFailureListener(e -> {
-
-                    // display error message
-                    Toast.makeText(this, "Error removing recipe from favorites: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-
-                });
-
+                v.getContext().startActivity(ratingIntent);
             }
         });
-
     }
 
     @Override
@@ -129,6 +91,24 @@ public class RecipeActivity extends AppCompatActivity {
         RecyclerView commentsList=(RecyclerView) findViewById(R.id.commentsList);
         RatingBar ratingBar = (RatingBar) findViewById(R.id.ratingBar);
         TextView servings = (TextView) findViewById(R.id.servings);
+
+        ToggleButton heart = (ToggleButton) findViewById(R.id.favoriteButton);
+
+        if(firebaseAuth.getCurrentUser() != null){
+            database.getFavorites().addOnSuccessListener(favs -> {
+                if(favs.contains(recipe.uniqueKey)){
+                    heart.setBackground(getDrawable(R.drawable.heart_full));
+
+                    heart.setOnCheckedChangeListener(null);
+                    heart.setChecked(true);
+                    heart.setOnCheckedChangeListener(this);
+
+                    heart.setTag("full");
+                }
+            });
+        }
+
+        heart.setOnCheckedChangeListener(this);
 
         // not sure about this
         //Bitmap recipeImage = BitmapFactory.decodeResource(this.getResources(), Integer.valueOf(recipe.image));
@@ -190,7 +170,7 @@ public class RecipeActivity extends AppCompatActivity {
     private void setCommentContents(RecyclerView commentsList){
 
         commentsList.setLayoutManager(new LinearLayoutManager(this));
-        CommentAdapter commentAdapter = new CommentAdapter(getApplicationContext(), recipe.comments);
+        CommentAdapter commentAdapter = new CommentAdapter(getApplicationContext(), recipe.comments, recipe);
         commentsList.setAdapter(commentAdapter);
 
         EditText commentBox = (EditText) findViewById(R.id.enterComment);
@@ -200,15 +180,20 @@ public class RecipeActivity extends AppCompatActivity {
             String input = commentBox.getText().toString();
             if(!input.isEmpty()){
                 commentBox.setText("");
-                recipe.comments.add(new Comment(input));
-                // Update the database with the new comment
-                database.updateAsync(recipe).addOnCompleteListener(task -> {
-                    if(task.isSuccessful()){
-                        commentAdapter.notifyItemInserted(recipe.comments.size()-1);
-                    } else {
-                        Toast.makeText(this, "Error adding new comment", Toast.LENGTH_SHORT).show();
-                    }
-                });
+
+                if(firebaseAuth.getCurrentUser()==null){
+                    Toast.makeText(this, "Sign in to add a comment", Toast.LENGTH_SHORT).show();
+                } else {
+                    recipe.comments.add(new Comment(input));
+                    // Update the database with the new comment
+                    database.updateAsync(recipe).addOnCompleteListener(task -> {
+                        if(task.isSuccessful()){
+                            commentAdapter.notifyItemInserted(recipe.comments.size()-1);
+                        } else {
+                            Toast.makeText(this, "Error adding new comment", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
             }
         });
 
@@ -246,5 +231,66 @@ public class RecipeActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    /**
+     * @param buttonView The compound button view whose state has changed.
+     * @param isChecked  The new checked state of buttonView.
+     */
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            if (isChecked) {
+
+                // Add the recipe to favorites
+                database.addFavorite(recipe.uniqueKey).addOnSuccessListener(arg -> {
+                    // Show a success message to the user
+                    Toast.makeText(this, "Recipe added to favorites", Toast.LENGTH_SHORT).show();
+
+                    //change background
+                    buttonView.setBackground(getDrawable(R.drawable.heart_full));
+                    recipe.setLikes(recipe.likes + 1);
+
+                    // for testing
+                    buttonView.setTag("full");
+
+                }).addOnFailureListener(e -> {
+
+                    // Show an error message to the user
+                    Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+
+                    // remove onCheckedChangeListener before changing the state manually so that it is not triggered
+                    buttonView.setOnCheckedChangeListener(null);
+                    buttonView.setChecked(false);
+                    buttonView.setOnCheckedChangeListener(this);
+
+                });
+
+            } else {
+
+                // remove this recipe from favorites
+                database.removeFavorite(recipe.uniqueKey).addOnSuccessListener(s -> {
+
+                    // display success message
+                    Toast.makeText(this, "Recipe removed from favorites", Toast.LENGTH_SHORT).show();
+
+                    // change background
+                    buttonView.setBackground(getDrawable(R.drawable.heart_empty));
+
+                    recipe.setLikes(recipe.likes - 1);
+
+                    // for testing
+                    buttonView.setTag("empty");
+
+                }).addOnFailureListener(e -> {
+
+                    // display error message
+                    Toast.makeText(this, "Error removing recipe from favorites: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+
+                    buttonView.setOnCheckedChangeListener(null);
+                    buttonView.setChecked(true);
+                    buttonView.setOnCheckedChangeListener(this);
+
+                });
+        }
     }
 }

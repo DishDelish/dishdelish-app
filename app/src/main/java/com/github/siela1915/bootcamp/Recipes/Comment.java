@@ -12,6 +12,8 @@ public class Comment implements Parcelable {
     private int likes;
     private String content;
 
+    private String userId = "";
+
     private LinkedList<Comment> replies;
 
     /**
