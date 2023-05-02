@@ -739,7 +739,7 @@ public class UploadingRecipeFragment extends Fragment {
     }
 
     private void showLoginAlert() {
-        AlertDialog dialog = new AlertDialog.Builder(getActivity())
+        AlertDialog dialog = new AlertDialog.Builder(requireActivity(), R.style.AlertDialogTheme)
                 .setTitle(R.string.login_required_popup_title)
                 .setMessage(R.string.login_required_popup_message)
                 .setPositiveButton(android.R.string.ok, null)

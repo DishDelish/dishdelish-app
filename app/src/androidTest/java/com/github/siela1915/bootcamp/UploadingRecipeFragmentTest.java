@@ -58,6 +58,19 @@ public class UploadingRecipeFragmentTest {
     public void setup() throws IOException {
         mockWebServer.enqueue(new MockResponse().setBody("apple"));
         mockWebServer.start(8080);
+
+        // login by default
+        FirebaseApp.clearInstancesForTest();
+        FirebaseApp.initializeApp(getApplicationContext());
+        FirebaseAuth.getInstance().useEmulator("10.0.2.2", 9099);
+        FirebaseDatabase.getInstance().useEmulator("10.0.2.2", 9000);
+
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            FirebaseAuthActivityTest.logoutSync();
+        }
+
+        String email = "email-test@example.com";
+        FirebaseAuthActivityTest.loginSync(email);
     }
     FragmentScenario<UploadingRecipeFragment> scenario;
 
@@ -718,5 +731,28 @@ public class UploadingRecipeFragmentTest {
         onView(withText("Take Photo")).check(doesNotExist());
         onView(withText("Choose from Gallery")).check(doesNotExist());
         onView(withText("Exit")).check(doesNotExist());
+    }
+
+    @Test
+    public void authGuardTestWhenLoggedIn() {
+        final Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        scenario = FragmentScenario.launchInContainer(UploadingRecipeFragment.class);
+
+        onView(withText(context.getResources().getString(R.string.login_required_popup_title))).check(doesNotExist());
+        onView(withText(context.getResources().getString(R.string.login_required_popup_message))).check(doesNotExist());
+    }
+
+    @Test
+    public void authGuardTestWhenNotLoggedIn() {
+        // log out user if logged in
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            FirebaseAuthActivityTest.logoutSync();
+        }
+
+        final Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        scenario = FragmentScenario.launchInContainer(UploadingRecipeFragment.class);
+
+        onView(withText(context.getResources().getString(R.string.login_required_popup_title))).check(matches(withEffectiveVisibility(VISIBLE)));
+        onView(withText(context.getResources().getString(R.string.login_required_popup_message))).check(matches(withEffectiveVisibility(VISIBLE)));
     }
 }
