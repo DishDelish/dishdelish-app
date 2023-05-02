@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public enum CuisineType {
-    AMERICAN("American"), CHINESE("Chinese"), INDIAN("Indian"), LIBYAN("Libyan"),
+    NONE("None"), AMERICAN("American"), CHINESE("Chinese"), INDIAN("Indian"), LIBYAN("Libyan"),
     MEXICAN("Mexican"), ITALIAN("Italian"), GREEK("Greek"), FRENCH("French"),
     CARIBBEAN("Caribbean"), ASIAN("Asian"), EUROPEAN("European"), NORDIC("Nordic"),
     TURKISH("Turkish");

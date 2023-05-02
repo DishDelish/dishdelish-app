@@ -10,12 +10,14 @@ import com.github.siela1915.bootcamp.Labelling.CuisineType;
 import com.github.siela1915.bootcamp.Labelling.RecipeFetcher;
 import com.github.siela1915.bootcamp.Recipes.ExampleRecipes;
 import com.github.siela1915.bootcamp.Recipes.Ingredient;
+import com.github.siela1915.bootcamp.Recipes.Recipe;
 import com.github.siela1915.bootcamp.Recipes.Unit;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class RecipeFetcherTest {
 
@@ -129,6 +131,32 @@ public class RecipeFetcherTest {
         List<String> actualList = fetcher.filterByIngredients(ExampleRecipes.recipes, Arrays.asList(new Ingredient("LeMON", new Unit(1, ""))));
 
         assertEquals(expectedList, actualList);
+    }
+
+    @Test
+    public void sortingByNutritionalValuesSortsCorrectly(){
+        RecipeFetcher fetcher = new RecipeFetcher(null, null, null);
+        List<Recipe> recipes = new ArrayList<>();
+        for (int i = 1; i < 11; i++) {
+            Recipe r = new Recipe();
+            r.setUniqueKey(String.valueOf(i));
+            r.setFat(11-i);
+            r.setSugar(i);
+            r.setProtein(11-i);
+            r.setCalories(i);
+            r.setCarbohydrates(11-i);
+            recipes.add(r);
+        }
+
+        List<String> rangeAsc = IntStream.rangeClosed(1, 10)
+                .boxed().map(i -> Integer.toString(i)).collect(Collectors.toList());
+        List<String> rangeDesc = rangeAsc.stream().sorted((i1, i2) ->Integer.compare(Integer.parseInt(i2), Integer.parseInt(i1))).collect(Collectors.toList());
+
+        assertEquals(rangeDesc, fetcher.sortByFat(recipes));
+        assertEquals(rangeAsc, fetcher.sortBySugar(recipes));
+        assertEquals(rangeDesc, fetcher.sortByProtein(recipes));
+        assertEquals(rangeAsc, fetcher.sortByCalories(recipes));
+        assertEquals(rangeDesc, fetcher.sortByCarbohydrates(recipes));
     }
 
 
