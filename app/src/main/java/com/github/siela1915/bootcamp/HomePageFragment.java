@@ -11,8 +11,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.github.siela1915.bootcamp.Recipes.ExampleRecipes;
 import com.github.siela1915.bootcamp.Recipes.Recipe;
+import com.github.siela1915.bootcamp.firebase.Database;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -31,6 +38,10 @@ public class HomePageFragment extends Fragment {
     private String mParam2;
     private  String cuis= "";
     private TextView homeTextView;
+
+    private final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+
+    private final Database database = new Database(firebaseDatabase);
 
     public HomePageFragment() {
         // Required empty public constructor
@@ -85,8 +96,13 @@ public class HomePageFragment extends Fragment {
         Button button = view.findViewById(R.id.homeFragButton);
 
         button.setOnClickListener(v -> {
-            Recipe recipe = ExampleRecipes.recipes.get((int)(Math.random()*2.999));
-            startActivity(RecipeConverter.convertToIntent(recipe, getContext()));
+            //Recipe recipe = ExampleRecipes.recipes.get((int)(Math.random()*2.999));
+            database.getByNameAsync("omelettte1")
+                    .addOnSuccessListener(recipes -> startActivity(RecipeConverter.convertToIntent(recipes.get(0), getContext())))
+                    .addOnFailureListener(e -> {
+                        e.printStackTrace();
+                        throw new RuntimeException(e);
+                    });
         });
     }
 }

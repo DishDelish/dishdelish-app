@@ -23,6 +23,7 @@ import com.github.siela1915.bootcamp.Recipes.Unit;
 import com.github.siela1915.bootcamp.firebase.Database;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,6 +54,7 @@ public class RecipeActivity extends AppCompatActivity {
         Button rateButton = (Button) findViewById(R.id.rateButton);
         rateButton.setOnClickListener(v -> {
             Intent ratingIntent = new Intent(v.getContext(), RatingActivity.class);
+            ratingIntent.putExtra("Recipe", recipe);
 
             v.getContext().startActivity(ratingIntent);
         });
@@ -129,8 +131,10 @@ public class RecipeActivity extends AppCompatActivity {
         TextView servings = (TextView) findViewById(R.id.servings);
 
         // not sure about this
-        Bitmap recipeImage = BitmapFactory.decodeResource(this.getResources(), Integer.valueOf(recipe.image));
-        recipePicture.setImageBitmap(recipeImage);
+        //Bitmap recipeImage = BitmapFactory.decodeResource(this.getResources(), Integer.valueOf(recipe.image));
+        //recipePicture.setImageBitmap(recipeImage);
+
+        Picasso.get().load(recipe.image).into(recipePicture);
 
         Bitmap avatar = BitmapFactory.decodeResource(this.getResources(), recipe.profilePicture);
         userAvatar.setImageBitmap(avatar);
@@ -195,11 +199,16 @@ public class RecipeActivity extends AppCompatActivity {
         sendComment.setOnClickListener(view -> {
             String input = commentBox.getText().toString();
             if(!input.isEmpty()){
-
                 commentBox.setText("");
                 recipe.comments.add(new Comment(input));
-                commentAdapter.notifyItemInserted(recipe.comments.size()-1);
-
+                // Update the database with the new comment
+                database.updateAsync(recipe).addOnCompleteListener(task -> {
+                    if(task.isSuccessful()){
+                        commentAdapter.notifyItemInserted(recipe.comments.size()-1);
+                    } else {
+                        Toast.makeText(this, "Error adding new comment", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         });
 
