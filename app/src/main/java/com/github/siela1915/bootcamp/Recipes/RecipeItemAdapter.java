@@ -18,6 +18,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.siela1915.bootcamp.R;
 import com.github.siela1915.bootcamp.RecipeConverter;
+import com.github.siela1915.bootcamp.databinding.FragmentRecipeItemBinding;
+import com.github.siela1915.bootcamp.databinding.RecipeItemBinding;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,10 +46,8 @@ public class RecipeItemAdapter extends RecyclerView.Adapter<RecipeItemViewHolder
         holder.textView_time.setText(recipes.get(position).cookTime+"h");
         holder.textView_serving.setText(recipes.get(position).servings+"");
         holder.textView_likes.setText(recipes.get(position).likes+"");
-        Bitmap img = BitmapFactory.decodeResource(holder
-                .itemView
-                .getResources(), Integer.parseInt(recipes.get(position).image));
-        holder.recipe_Image.setImageBitmap(img);
+        holder.recipe= recipes.get(position);
+        Picasso.get().load(recipes.get(position).image).into(holder.recipe_Image);
     }
     @Override
     public int getItemCount() {
@@ -57,7 +58,7 @@ class RecipeItemViewHolder extends RecyclerView.ViewHolder{
     CardView recipeCardView;
     TextView textView_title,textView_time, textView_serving,  textView_likes;
     ImageView recipe_Image;
-    Recipe recipe;
+    public Recipe recipe;
 
     public RecipeItemViewHolder(@NonNull View itemView) {
         super(itemView);
@@ -68,7 +69,7 @@ class RecipeItemViewHolder extends RecyclerView.ViewHolder{
         textView_time= itemView.findViewById(R.id.textView_time);
         recipe_Image= itemView.findViewById(R.id.recipeImageView);
         itemView.findViewById(R.id.recipeCardView).setOnClickListener(v->{
-
+            itemView.getContext().startActivity(RecipeConverter.convertToIntent(recipe, itemView.getContext()));
         });
     }
 }

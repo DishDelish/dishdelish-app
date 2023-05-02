@@ -19,6 +19,7 @@ import com.github.siela1915.bootcamp.Recipes.Comment;
 import com.github.siela1915.bootcamp.Recipes.Ingredient;
 import com.github.siela1915.bootcamp.Recipes.Recipe;
 import com.github.siela1915.bootcamp.Recipes.Unit;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -88,8 +89,10 @@ public class RecipeActivity extends AppCompatActivity {
         TextView servings = (TextView) findViewById(R.id.servings);
 
         // not sure about this
-        Bitmap recipeImage = BitmapFactory.decodeResource(this.getResources(), Integer.valueOf(recipe.image));
-        recipePicture.setImageBitmap(recipeImage);
+        //Bitmap recipeImage = BitmapFactory.decodeResource(this.getResources(), Integer.valueOf(recipe.image));
+        //recipePicture.setImageBitmap(recipeImage);
+
+        Picasso.get().load(recipe.image).into(recipePicture);
 
         Bitmap avatar = BitmapFactory.decodeResource(this.getResources(), recipe.profilePicture);
         userAvatar.setImageBitmap(avatar);

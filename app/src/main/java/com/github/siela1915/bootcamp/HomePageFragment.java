@@ -16,6 +16,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.github.siela1915.bootcamp.Recipes.ExampleRecipes;
 import com.github.siela1915.bootcamp.Recipes.Recipe;
 import com.github.siela1915.bootcamp.Recipes.RecipeItemAdapter;
+import com.github.siela1915.bootcamp.firebase.Database;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -34,6 +40,10 @@ public class HomePageFragment extends Fragment {
     private String mParam2;
     private  String cuis= "";
     private TextView homeTextView;
+
+    private final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+
+    private final Database database = new Database(firebaseDatabase);
 
     public HomePageFragment() {
         // Required empty public constructor
@@ -87,13 +97,25 @@ public class HomePageFragment extends Fragment {
 
         Button button = view.findViewById(R.id.homeFragButton);
         RecyclerView recipeListRecyclerView= view.findViewById(R.id.rand_recipe_recyclerView);
-        RecyclerView recipeCatRecyclerView= view.findViewById(R.id.category_recyclerView);
         recipeListRecyclerView.setLayoutManager(new GridLayoutManager(getContext(),2));
-        recipeCatRecyclerView.setLayoutManager(new GridLayoutManager(getContext(),3));
-        RecipeItemAdapter adapter= new RecipeItemAdapter(ExampleRecipes.recipes,getContext());
-        recipeListRecyclerView.setAdapter(adapter);
-        recipeCatRecyclerView.setAdapter(adapter);
+        RecipeItemAdapter adapter;
+        /*try {
+            //FirebaseApp.initializeApp(view.getContext());
+            adapter=new RecipeItemAdapter(database.getNRandomAsync(10), view.getContext());
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("couldn't fetch recipes from database");
+            adapter= new RecipeItemAdapter(ExampleRecipes.recipes, view.getContext());
+        }*/
+        database.getNRandomAsync(1).addOnSuccessListener(list->
+                recipeListRecyclerView.setAdapter(new RecipeItemAdapter(list, view.getContext())))
+                .addOnFailureListener(e->{
+                    e.printStackTrace();
+                    recipeListRecyclerView.setAdapter(new RecipeItemAdapter(ExampleRecipes.recipes, view.getContext()));
+                });
 
+
+        //recipeListRecyclerView.setAdapter(adapter);
         button.setOnClickListener(v -> {
             Recipe recipe = ExampleRecipes.recipes.get((int)(Math.random()*2.999));
             startActivity(RecipeConverter.convertToIntent(recipe, getContext()));
