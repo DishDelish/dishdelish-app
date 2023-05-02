@@ -5,7 +5,7 @@ import java.util.List;
 
 //Diet types, also includes food intolerances
 public enum DietType {
-    KETO("Keto"), VEGAN("Vegan"), VEGETARIAN("Vegetarian"), PALEO("Paleo"),
+    NONE("None"), KETO("Keto"), VEGAN("Vegan"), VEGETARIAN("Vegetarian"), PALEO("Paleo"),
     GLUTEN("Gluten-free"), HISTAMINE("Histamine-free"), DAIRY("Dairy-free"), SULFITE("Sulfite-free");
 
     private final String display_string;

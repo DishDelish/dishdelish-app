@@ -8,22 +8,22 @@ import androidx.annotation.NonNull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class Recipe implements Parcelable {
-    //Images should be usable in activity classes like this:
-    //Bitmap image = BitmapFactory.decodeResource(this.getResources(), image);
     public String image, recipeName, userName, uniqueKey = "";
     public int profilePicture, prepTime, cookTime, servings, likes, numRatings = 0;
     public double rating;
+
     public Utensils utensils;
     public List<Integer> cuisineTypes, allergyTypes, dietTypes;
     public List<Ingredient> ingredientList;
-    //Every step and comment will be a separate String in the list
     public List<String> steps;
     public List<Comment> comments;
+
+    //Nutritional values are all in grams, except calories which are in kCal
+    public double calories, fat, carbohydrates, sugar, protein = 0;
 
     public String getImage() {
         return image;
@@ -202,6 +202,11 @@ public class Recipe implements Parcelable {
         ingredientList = in.createTypedArrayList(Ingredient.CREATOR);
         steps = in.createStringArrayList();
         comments = in.createTypedArrayList(Comment.CREATOR);
+        calories = in.readDouble();
+        fat = in.readDouble();
+        carbohydrates = in.readDouble();
+        sugar = in.readDouble();
+        protein = in.readDouble();
     }
 
     public static final Creator<Recipe> CREATOR = new Creator<Recipe>() {
@@ -238,6 +243,11 @@ public class Recipe implements Parcelable {
         dest.writeTypedList(ingredientList);
         dest.writeStringList(steps);
         dest.writeTypedList(comments);
+        dest.writeDouble(calories);
+        dest.writeDouble(fat);
+        dest.writeDouble(carbohydrates);
+        dest.writeDouble(sugar);
+        dest.writeDouble(protein);
     }
 
     @Override
@@ -264,6 +274,46 @@ public class Recipe implements Parcelable {
             return  temp0 && temp1 && temp2 && temp3 && temp4 && temp5;
         }
         return false;
+    }
+
+    public double getCalories() {
+        return calories;
+    }
+
+    public void setCalories(double calories) {
+        this.calories = calories;
+    }
+
+    public double getFat() {
+        return fat;
+    }
+
+    public void setFat(double fat) {
+        this.fat = fat;
+    }
+
+    public double getCarbohydrates() {
+        return carbohydrates;
+    }
+
+    public void setCarbohydrates(double carbohydrates) {
+        this.carbohydrates = carbohydrates;
+    }
+
+    public double getSugar() {
+        return sugar;
+    }
+
+    public void setSugar(double sugar) {
+        this.sugar = sugar;
+    }
+
+    public double getProtein() {
+        return protein;
+    }
+
+    public void setProtein(double protein) {
+        this.protein = protein;
     }
 
     @NonNull

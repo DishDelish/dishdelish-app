@@ -8,12 +8,14 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -28,9 +30,12 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+
+import com.github.siela1915.bootcamp.AutocompleteApi.BooleanWrapper;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import com.github.siela1915.bootcamp.AutocompleteApi.IngredientAutocomplete;
+import com.github.siela1915.bootcamp.AutocompleteApi.UploadCallback;
 import com.github.siela1915.bootcamp.Labelling.AllergyType;
 import com.github.siela1915.bootcamp.Labelling.CuisineType;
 import com.github.siela1915.bootcamp.Labelling.DietType;
@@ -47,6 +52,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+
+import java.sql.Wrapper;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -54,6 +61,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -67,6 +75,14 @@ public class UploadingRecipeFragment extends Fragment {
     private LinearLayout stepListLinearLayout, ingredientLinearLayout;
     private Uri filePath;
     private ProgressDialog pd;
+    private IngredientAutocomplete apiService = new IngredientAutocomplete();
+    //map of Ingredient IDs, will be used when uploading a recipe to get nutritional values
+    private Map<String, Integer> idMap = new HashMap<>();
+    //global recipe variable so we only use one instance of a recipe
+    private Recipe recipe;
+
+    //creating reference to firebase storage
+    private final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     private final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     private final FirebaseStorage storage = FirebaseStorage.getInstance();
     private final StorageReference storageRef = storage.getReferenceFromUrl(storagePath);
@@ -149,10 +165,7 @@ public class UploadingRecipeFragment extends Fragment {
 
 
         //ingredient autocompletion
-        IngredientAutocomplete apiService = new IngredientAutocomplete();
         AutoCompleteTextView ingredientAutoComplete = (AutoCompleteTextView) view.findViewById(R.id.ingredientAutoComplete);
-        //map of Ingredient IDs, will be used when uploading a recipe to get nutritional values
-        Map<String, Integer> idMap = new HashMap<>();
         setupIngredientAutocomplete(ingredientAutoComplete, idMap, apiService);
 
 
@@ -299,49 +312,54 @@ public class UploadingRecipeFragment extends Fragment {
 
     public void setupIngredientAutocomplete(AutoCompleteTextView ingredientAutoComplete, Map<String, Integer> idMap, IngredientAutocomplete apiService){
         ingredientAutoComplete.setThreshold(1);
+
+        final BooleanWrapper optionSelected = new BooleanWrapper(false);
+        ingredientAutoComplete.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // Clear the focus of the AutoCompleteTextView
+                ingredientAutoComplete.clearFocus();
+                optionSelected.setBool(true);
+            }
+        });
         ingredientAutoComplete.addTextChangedListener(new TextWatcher() {
             String prevString;
             boolean isTyping = false;
+            private final Handler handler = new Handler();
+            private final long DELAY = 500; // milliseconds
+
+
+            //function to be called if the user stops typing
+            Runnable runnable = new Runnable() {
+                @Override
+                public void run() {
+                    if(!optionSelected.getBool()) {
+                        isTyping = false;
+                        //send notification for stopped typing event
+                        apiService.completeSearchNames(prevString, ingredientAutoComplete, idMap);
+                    }
+                }
+            };
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-            private Timer timer = new Timer();
-            private final long DELAY = 1000; // milliseconds
-            @Override
-            public void afterTextChanged(final Editable s) {
-                //TODO add handler for timer,
-                //couldn't figure out a way to test an api inside UI classes
-//                if(BuildConfig.DEBUG){
-//                    ArrayAdapter<String> ingredientAdapter = new ArrayAdapter<String>(ingredientAutoComplete.getContext(), android.R.layout.select_dialog_item, Arrays.asList("apple"));
-//                    ingredientAutoComplete.setAdapter(ingredientAdapter);
-//                    ingredientAutoComplete.showDropDown();
-//                    return;
-//                }
                 //doesn't consider defocusing and refocusing the text field as typing
-                if(!s.toString().equals(prevString)){
+                if(!s.toString().equals(prevString)) {
                     if (!isTyping) {
                         // Send notification for start typing event
                         ingredientAutoComplete.dismissDropDown();
                         isTyping = true;
+                        optionSelected.setBool(false);
                     }
-                    timer.cancel();
-                    timer = new Timer();
-                    timer.schedule(
-                            new TimerTask() {
-                                @Override
-                                public void run() {
-                                    isTyping = false;
-                                    prevString = s.toString();
-                                    //send notification for stopped typing event
-                                    apiService.completeSearchNames(s.toString(), ingredientAutoComplete, idMap);
-                                }
-                            },
-                            DELAY
-                    );
+                    handler.removeCallbacks(runnable);
+                    prevString = s.toString();
+                    handler.postDelayed(runnable, DELAY); // set delay to 2 seconds
                 }
+            }
+            @Override
+            public void afterTextChanged(final Editable s) {
             }
         });
     }
@@ -389,7 +407,7 @@ public class UploadingRecipeFragment extends Fragment {
     }
 
     private void uploadRecipeToDatabase(Uri downloadUri, OnSuccessListener<String> onSuccessListener, OnFailureListener onFailureListener) {
-        database.setAsync(getRecipe(downloadUri))
+        database.setAsync(recipe)
                 .addOnSuccessListener(onSuccessListener)
                 .addOnFailureListener(onFailureListener);
     }
@@ -622,12 +640,29 @@ public class UploadingRecipeFragment extends Fragment {
     }
 
     private void openRecipeReviewDialog() {
-        Recipe recipe = getRecipe(filePath);
+        recipe = getRecipe(filePath);
         ReviewRecipeBeforeUploadingDialog reviewRecipeDialog = new ReviewRecipeBeforeUploadingDialog();
         reviewRecipeDialog.setArguments(getBundleForReview(recipe));
         reviewRecipeDialog.setDialogResult(() -> {
             pd.show();
-            uploadRecipe(filePath);
+            UploadCallback uploadRecipeCallback = new UploadCallback() {
+                @Override
+                public void onSuccess() {
+                    //sums up all the nutritional values from the ingredients once all the api calls are done
+                    recipe.setProtein(recipe.ingredientList.stream().mapToDouble(Ingredient::getProtein).sum());
+                    recipe.setCalories(recipe.ingredientList.stream().mapToDouble(Ingredient::getCalories).sum());
+                    recipe.setCarbohydrates(recipe.ingredientList.stream().mapToDouble(Ingredient::getCarbs).sum());
+                    recipe.setSugar(recipe.ingredientList.stream().mapToDouble(Ingredient::getSugar).sum());
+                    recipe.setFat(recipe.ingredientList.stream().mapToDouble(Ingredient::getFat).sum());
+                    uploadRecipe(filePath);
+                }
+                @Override
+                public void onError(String err) {
+                    Toast.makeText(getActivity(), err, Toast.LENGTH_LONG).show();
+                }
+            };
+
+            apiService.getNutritionFromRecipe(recipe, idMap, uploadRecipeCallback);
         });
         String reviewPageTag = "review_recipe_dialog";
         reviewRecipeDialog.show(getActivity().getSupportFragmentManager(), reviewPageTag);
