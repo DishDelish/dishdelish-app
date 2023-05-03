@@ -535,7 +535,6 @@ public class RecipeActivityTest {
 
         });
         scenario.close();
-        //FirebaseAuthActivityTest.logoutSync();
     }
 
 
