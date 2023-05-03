@@ -54,8 +54,10 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -397,9 +399,9 @@ public class UploadingRecipeFragment extends Fragment {
     }
 
     private void uploadImageToDatabase(Uri recipeImageUri, OnSuccessListener<UploadTask.TaskSnapshot> onSuccessListener, OnFailureListener onFailureListener) {
-        // We are taking the filepath as storagePath + firebaseUser.getUid()+".png"
-        String recipeImageStoragePath = "recipes_image/";
-        String filePathName = recipeImageStoragePath + "_" + userId + ".png";
+        // We are taking the filepath as storagePath + firebaseUser.getUid() + "/" + currentTime + ".png"
+        final String recipeImageStoragePath = "recipes_image/";
+        String filePathName = recipeImageStoragePath + userId + "/" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + ".png";
         storageRef.child(filePathName).putFile(recipeImageUri).addOnSuccessListener(onSuccessListener).addOnFailureListener(onFailureListener);
     }
 
