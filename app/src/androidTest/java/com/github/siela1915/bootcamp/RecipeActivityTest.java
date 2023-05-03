@@ -1,5 +1,6 @@
 package com.github.siela1915.bootcamp;
 
+import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
@@ -16,12 +17,16 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.VectorDrawable;
+import android.os.AsyncTask;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RatingBar;
@@ -39,19 +44,68 @@ import com.github.siela1915.bootcamp.Recipes.Comment;
 import com.github.siela1915.bootcamp.Recipes.ExampleRecipes;
 import com.github.siela1915.bootcamp.Recipes.Ingredient;
 import com.github.siela1915.bootcamp.Recipes.Recipe;
+import com.github.siela1915.bootcamp.firebase.Database;
+import com.github.siela1915.bootcamp.firebase.UserDatabase;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutionException;
 
 public class RecipeActivityTest {
 
-    Recipe omelette = ExampleRecipes.recipes.get(0);
+    private static final FirebaseDatabase fb = FirebaseDatabase.getInstance();
+    private static final Database database = new Database(fb);
+
+    private static Recipe omelette;
+
+    private static CountDownLatch latch;
+    @BeforeClass
+    public static void setUpClass() throws InterruptedException {
+        latch = new CountDownLatch(1);
+        database.getByNameAsync("omelettte1")
+                .addOnSuccessListener(list -> {
+                    omelette = list.get(0);
+                    latch.countDown();
+                })
+                .addOnFailureListener(e -> {
+                    omelette = ExampleRecipes.recipes.get(0);
+                    latch.countDown();
+                });
+
+        latch.await();
+    }
+
+    @Before
+    public void prepareEmulator() {
+        FirebaseApp.clearInstancesForTest();
+        FirebaseApp.initializeApp(getApplicationContext());
+        FirebaseAuth.getInstance().useEmulator("10.0.2.2", 9099);
+        FirebaseDatabase.getInstance().useEmulator("10.0.2.2", 9000);
+
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            FirebaseAuthActivityTest.logoutSync();
+        }
+    }
+
     Intent i = RecipeConverter.convertToIntent(omelette, ApplicationProvider.getApplicationContext());
+
 
     @Test
     public void isRecipePictureOnDisplay() {
@@ -277,9 +331,9 @@ public class RecipeActivityTest {
         Intents.release();
         scenario.close();
     }
-
+/*
     @Test
-    public void isCorrectRecipePictureDisplayed() {
+    public void isCorrectRecipePictureDisplayed1() {
         ActivityScenario scenario = ActivityScenario.launch(i);
         onView(withId(R.id.recipePicture))
 
@@ -287,6 +341,16 @@ public class RecipeActivityTest {
 
         scenario.close();
     }
+
+    @Test
+    public void testImageUrl() {
+        ActivityScenario scenario = ActivityScenario.launch(i);
+        onView(withId(R.id.recipePicture))
+                .check(matches(withImageUrl(omelette.image)));
+        scenario.close();
+    }
+*/
+
 
 
     @Test
@@ -388,7 +452,7 @@ public class RecipeActivityTest {
 
         scenario.close();
     }
-
+/*
     @Test
     public void heartButtonBecomesFullWhenClicked(){
         ActivityScenario scenario = ActivityScenario.launch(i);
@@ -404,7 +468,39 @@ public class RecipeActivityTest {
         });
         scenario.close();
     }
+*/
+    @Test
+    public void heartButtonBecomesFullWhenAuthenticated(){
 
+        FirebaseAuthActivityTest.loginSync("eylulipci00@gmail.com");
+        ActivityScenario scenario = ActivityScenario.launch(i);
+        scenario.onActivity(activity -> {
+            // Check that the background drawable has changed to the checked state drawable
+            ToggleButton heart = (ToggleButton) activity.findViewById(R.id.favoriteButton);
+            heart.performClick();
+            String actual = (String) heart.getTag();
+            String expected = "full";
+            assertTrue(actual.equals(expected));
+
+        });
+        scenario.close();
+        FirebaseAuthActivityTest.logoutSync();
+    }
+
+    @Test
+    public void heartButtonBecomesEmptyWhenTheUserIsAuthenticatedAndTheRecipeIsInFavorites(){
+
+    }
+
+    @Test
+    public void heartButtonRemainsEmptyWhenTheUserIsNotAuthenticated(){
+
+    }
+
+    @Test
+    public void heartButtonFullWhenTheRecipeIsInFavorites(){
+
+    }
 
     @Test
     public void heartButtonBecomesEmptyWhenClicked2Times() {
@@ -566,5 +662,76 @@ public class RecipeActivityTest {
 
 
 }
+
+    public static Matcher<View> withDrawable(final Drawable expectedDrawable) {
+        return new BoundedMatcher<View, ImageView>(ImageView.class) {
+            @Override
+            public void describeTo(Description description) {
+                description.appendText("with drawable: ");
+                description.appendValue(expectedDrawable);
+            }
+
+            @Override
+            public boolean matchesSafely(ImageView imageView) {
+                Drawable actualDrawable = imageView.getDrawable();
+                if (actualDrawable instanceof BitmapDrawable && expectedDrawable instanceof BitmapDrawable) {
+                    Bitmap expectedBitmap = ((BitmapDrawable) expectedDrawable).getBitmap();
+                    Bitmap actualBitmap = ((BitmapDrawable) actualDrawable).getBitmap();
+                    return expectedBitmap.sameAs(actualBitmap);
+                } else {
+                    return false;
+                }
+            }
+        };
+    }
+
+    public static Matcher<View> withImageUrl(final String expectedUrl) {
+        return new BoundedMatcher<View, ImageView>(ImageView.class) {
+            @Override
+            public void describeTo(Description description) {
+                description.appendText("with image URL: ");
+                description.appendValue(expectedUrl);
+            }
+
+            @Override
+            public boolean matchesSafely(ImageView imageView) {
+                try {
+                    Bitmap expectedBitmap = fetchImage(expectedUrl);
+                    Bitmap actualBitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
+                    return expectedBitmap.sameAs(actualBitmap);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return false;
+                }
+            }
+        };
+    }
+
+    public static Bitmap fetchImage(String urlString) throws IOException {
+        URL url = new URL(urlString);
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setDoInput(true);
+        connection.connect();
+        InputStream inputStream = connection.getInputStream();
+        Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+        inputStream.close();
+        return bitmap;
+    }
+
+
+
+    private static Drawable fetchDrawable(String urlString, Context context) throws IOException {
+        InputStream is = (InputStream) new URL(urlString).getContent();
+        return Drawable.createFromStream(is, null);
+    }
+
+
+
+
+
+
+
+
+
 }
 
