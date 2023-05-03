@@ -23,6 +23,7 @@ import com.github.siela1915.bootcamp.Labelling.RecipeFetcher;
 import com.github.siela1915.bootcamp.Recipes.ExampleRecipes;
 import com.github.siela1915.bootcamp.Recipes.PreparationTime;
 import com.github.siela1915.bootcamp.Recipes.Recipe;
+import com.github.siela1915.bootcamp.Recipes.RecipeItemAdapter;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
@@ -36,7 +37,6 @@ public class MainHomeActivity extends AppCompatActivity {
     ConstraintLayout constraintLayout;
     FragmentContainerView fragmentContainerView;
     Button cuisineBtn,timeBtn,allergyBtn, dietBtn,filterBtn;
-    BottomNavigationView bottomAppBar;
 
     @SuppressLint({"MissingInflatedId", "NonConstantResourceId"})
     @Override
@@ -55,7 +55,6 @@ public class MainHomeActivity extends AppCompatActivity {
         allergyBtn=findViewById(R.id.allergyBtn);
         dietBtn=findViewById(R.id.dietBtn);
         filterBtn=findViewById(R.id.filterBtn);
-
 
         List<String> selectedCuisine = new ArrayList<>();
         List<String> selectedDiet = new ArrayList<>();

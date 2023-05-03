@@ -30,7 +30,7 @@ public class RecipeFetcher{
     private List<Integer> allergies;
     private List<Integer> cuisines;
     private List<Integer> diets;
- 
+
     public RecipeFetcher(List<Integer> allergies, List<Integer> cuisines, List<Integer> diets) {
         this.allergies = allergies;
         this.cuisines = cuisines;

@@ -40,10 +40,14 @@ public class HomePageFragment extends Fragment {
     private String mParam2;
     private  String cuis= "";
     private TextView homeTextView;
-
+    private RecyclerView recipeListRecyclerView;
     private final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
 
     private final Database database = new Database(firebaseDatabase);
+
+    public RecipeItemAdapter getRecyclerViewAdapter() {
+        return (RecipeItemAdapter) recipeListRecyclerView.getAdapter();
+    }
 
     public HomePageFragment() {
         // Required empty public constructor
@@ -96,13 +100,12 @@ public class HomePageFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         Button button = view.findViewById(R.id.homeFragButton);
-        RecyclerView recipeListRecyclerView= view.findViewById(R.id.rand_recipe_recyclerView);
+        recipeListRecyclerView= view.findViewById(R.id.rand_recipe_recyclerView);
         recipeListRecyclerView.setHasFixedSize(true);
         recipeListRecyclerView.setLayoutManager(new GridLayoutManager(getContext(),2));
 
-
         database.getNRandomAsync(20).addOnSuccessListener(list->
-                recipeListRecyclerView.setAdapter(new RecipeItemAdapter(list, view.getContext())))
+                    recipeListRecyclerView.setAdapter(new RecipeItemAdapter(list, view.getContext())))
                 .addOnFailureListener(e->{
                     e.printStackTrace();
                     recipeListRecyclerView.setAdapter(new RecipeItemAdapter(ExampleRecipes.recipes, view.getContext()));
