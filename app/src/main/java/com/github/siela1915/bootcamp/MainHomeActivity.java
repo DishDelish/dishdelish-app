@@ -67,7 +67,7 @@ public class MainHomeActivity extends AppCompatActivity {
             String title = "Choose your preferred cuisine";
             popUpDialogBuilder(cuisineTypes,checksum,title,selectedCuisine);
         });
-        
+
         dietBtn.setOnClickListener(v -> {
             String [] diets= DietType.getAll();
             boolean[] checksum= new boolean[diets.length];

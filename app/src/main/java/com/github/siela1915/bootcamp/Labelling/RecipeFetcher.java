@@ -2,6 +2,7 @@ package com.github.siela1915.bootcamp.Labelling;
 
 import static java.util.Collections.reverseOrder;
 
+import android.content.SyncStatusObserver;
 import android.util.Pair;
 
 import com.github.siela1915.bootcamp.Recipes.ExampleRecipes;
@@ -30,11 +31,15 @@ public class RecipeFetcher{
     private List<Integer> allergies;
     private List<Integer> cuisines;
     private List<Integer> diets;
+    private FirebaseDatabase firebaseDatabase;
 
+    private Database database;
     public RecipeFetcher(List<Integer> allergies, List<Integer> cuisines, List<Integer> diets) {
         this.allergies = allergies;
         this.cuisines = cuisines;
         this.diets = diets;
+        firebaseDatabase =  FirebaseDatabase.getInstance();
+        database = new Database(firebaseDatabase);
     }
 
     //returns list of IDs of recipes?
@@ -43,7 +48,8 @@ public class RecipeFetcher{
         //String will represent the ID of the recipe, for now it's just the name
         Map<String, Float> mapOfRecipes = new HashMap<>();
 
-        for(Recipe r : ExampleRecipes.recipes){
+
+        for(Recipe r :ExampleRecipes.recipes){
             //Base weight, will be lower only if diets or allergies are violated
             float weight = 5;
             weight += (cuisines).stream()
