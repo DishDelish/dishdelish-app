@@ -406,6 +406,8 @@ public class UploadingRecipeFragment extends Fragment {
     }
 
     private void uploadRecipeToDatabase(Uri downloadUri, OnSuccessListener<String> onSuccessListener, OnFailureListener onFailureListener) {
+        // set image uri to its location in database
+        recipe.setImage(downloadUri.toString());
         database.setAsync(recipe)
                 .addOnSuccessListener(onSuccessListener)
                 .addOnFailureListener(onFailureListener);
