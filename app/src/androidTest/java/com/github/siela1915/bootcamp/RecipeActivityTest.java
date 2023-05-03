@@ -91,7 +91,7 @@ public class RecipeActivityTest {
 
         latch.await();
     }
-/*
+
     @Before
     public void prepareEmulator() {
         FirebaseApp.clearInstancesForTest();
@@ -103,7 +103,7 @@ public class RecipeActivityTest {
             FirebaseAuthActivityTest.logoutSync();
         }
     }
-*/
+
     Intent i = RecipeConverter.convertToIntent(omelette, ApplicationProvider.getApplicationContext());
 
 
@@ -468,7 +468,7 @@ public class RecipeActivityTest {
         });
         scenario.close();
     }
-
+*/
     @Test
     public void heartButtonBecomesFullWhenAuthenticated(){
 
@@ -487,7 +487,7 @@ public class RecipeActivityTest {
         scenario.close();
         FirebaseAuthActivityTest.logoutSync();
     }
-*/
+
     @Test
     public void heartButtonBecomesEmptyWhenTheUserIsAuthenticatedAndTheRecipeIsInFavorites(){
 

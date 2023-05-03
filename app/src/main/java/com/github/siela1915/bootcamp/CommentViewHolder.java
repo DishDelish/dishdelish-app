@@ -39,6 +39,7 @@ public class CommentViewHolder extends RecyclerView.ViewHolder implements Compou
         this.adapter = adapter;
 
         ToggleButton thumb = itemView.findViewById(R.id.thumbButton);
+        thumb.setTag("empty");
         thumb.setOnCheckedChangeListener(this);
 
     }

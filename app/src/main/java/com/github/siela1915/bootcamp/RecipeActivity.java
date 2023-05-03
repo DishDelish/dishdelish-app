@@ -93,6 +93,7 @@ public class RecipeActivity extends AppCompatActivity implements CompoundButton.
         TextView servings = (TextView) findViewById(R.id.servings);
 
         ToggleButton heart = (ToggleButton) findViewById(R.id.favoriteButton);
+        heart.setTag("empty");
 
         if(firebaseAuth.getCurrentUser() != null){
             database.getFavorites().addOnSuccessListener(favs -> {
