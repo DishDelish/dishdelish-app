@@ -8,14 +8,10 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.MediaStore;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -34,7 +30,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.github.siela1915.bootcamp.AutocompleteApi.BooleanWrapper;
 import com.github.siela1915.bootcamp.AutocompleteApi.IngredientAutocomplete;
 import com.github.siela1915.bootcamp.AutocompleteApi.UploadCallback;
 import com.github.siela1915.bootcamp.HomePageFragment;
@@ -45,7 +40,6 @@ import com.github.siela1915.bootcamp.ProfileFragment;
 import com.github.siela1915.bootcamp.R;
 import com.github.siela1915.bootcamp.Recipes.Ingredient;
 import com.github.siela1915.bootcamp.Recipes.Recipe;
-import com.github.siela1915.bootcamp.Recipes.Unit;
 import com.github.siela1915.bootcamp.Recipes.Utensils;
 import com.github.siela1915.bootcamp.firebase.Database;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -74,7 +68,7 @@ public class UploadingRecipeFragment extends Fragment {
     private static final int TAKE_PHOTO_REQUEST = 222;
     private View view;
     private ImageView imgView;
-    private LinearLayout stepListLinearLayout, ingredientLinearLayout;
+    private RecipeStepAndIngredientManager recipeStepAndIngredientManager;
     private Uri filePath;
     private ProgressDialog pd;
     private IngredientAutocomplete apiService = new IngredientAutocomplete();
@@ -82,9 +76,6 @@ public class UploadingRecipeFragment extends Fragment {
     private Map<String, Integer> idMap = new HashMap<>();
     //global recipe variable so we only use one instance of a recipe
     private Recipe recipe;
-
-    //creating reference to firebase storage
-    private final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     private final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     private final FirebaseStorage storage = FirebaseStorage.getInstance();
     private final StorageReference storageRef = storage.getReferenceFromUrl(storagePath);
@@ -128,12 +119,9 @@ public class UploadingRecipeFragment extends Fragment {
         userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         // get view elements
-        Button uploadImg = (Button) view.findViewById(R.id.recipeUploadButton);
         imgView = (ImageView) view.findViewById(R.id.recipeImageContent);
         Button addIngredient = (Button) view.findViewById(R.id.addIngredientButton);
-        Button addStep = (Button) view.findViewById(R.id.addStepButton);
-        stepListLinearLayout = (LinearLayout) view.findViewById(R.id.stepGroup);
-        ingredientLinearLayout = (LinearLayout) view.findViewById(R.id.ingredientsGroup);
+        recipeStepAndIngredientManager = new RecipeStepAndIngredientManager(getActivity(), (LinearLayout) view.findViewById(R.id.stepGroup), (LinearLayout) view.findViewById(R.id.ingredientsGroup));
         AutoCompleteTextView prepTimeUnitAutoComplete = (AutoCompleteTextView) view.findViewById(R.id.prepTimeUnitAutoComplete);
         AutoCompleteTextView cookTimeUnitAutoComplete = (AutoCompleteTextView) view.findViewById(R.id.cookTimeUnitAutoComplete);
 
@@ -168,17 +156,17 @@ public class UploadingRecipeFragment extends Fragment {
 
         //ingredient autocompletion
         AutoCompleteTextView ingredientAutoComplete = (AutoCompleteTextView) view.findViewById(R.id.ingredientAutoComplete);
-        setupIngredientAutocomplete(ingredientAutoComplete, idMap, apiService);
+        recipeStepAndIngredientManager.setupIngredientAutocomplete(ingredientAutoComplete, idMap, apiService);
 
 
         dietTypesAutoComplete.setThreshold(1); //will start working from first character
         dietTypesAutoComplete.setAdapter(dietTypesAdapter);
 
         pd = new ProgressDialog(getActivity());
-        pd.setMessage("Uploading....");
+        pd.setMessage(getString(R.string.uploading_hint));
 
         addListeners(view);
-        addIngredient.setOnClickListener(v -> addIngredient(idMap, apiService));
+        addIngredient.setOnClickListener(v -> recipeStepAndIngredientManager.addIngredient(idMap, apiService));
 
         return view;
     }
@@ -186,7 +174,6 @@ public class UploadingRecipeFragment extends Fragment {
     private void addListeners(View view) {
         Button uploadImg = (Button) view.findViewById(R.id.recipeUploadButton);
         imgView = (ImageView) view.findViewById(R.id.recipeImageContent);
-        Button addIngredient = (Button) view.findViewById(R.id.addIngredientButton);
         Button addStep = (Button) view.findViewById(R.id.addStepButton);
         TextInputLayout recipeNameLayout = view.findViewById(R.id.recipeNameContent);
         EditText recipeName = recipeNameLayout.getEditText();
@@ -215,10 +202,10 @@ public class UploadingRecipeFragment extends Fragment {
         uploadImg.setOnClickListener(v -> {
             if (isInputValid()) openRecipeReviewDialog();
             else
-                Toast.makeText(getActivity(), "Please fill required fields before uploading", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), R.string.fill_required_fields_popup_message, Toast.LENGTH_LONG).show();
         });
 
-        addStep.setOnClickListener(v -> addStep());
+        addStep.setOnClickListener(v -> recipeStepAndIngredientManager.addStep());
 
         recipeName.addTextChangedListener(new TextValidator(recipeName) {
             @Override
@@ -233,8 +220,8 @@ public class UploadingRecipeFragment extends Fragment {
         setValidator(servings, getString(R.string.servingsEmptyErrorMessage), getString(R.string.servingsInvalidErrorMessage));
 
 
-        addIngredientValidators(ingredientsAmount, ingredientsUnit, ingredientsName);
-        addStepValidators(stepContent);
+        recipeStepAndIngredientManager.addIngredientValidators(ingredientsAmount, ingredientsUnit, ingredientsName);
+        recipeStepAndIngredientManager.addStepValidators(stepContent);
 
         addCuisineType.setOnClickListener(v -> addTypeListener(view, R.id.cuisineTypesAutoComplete, R.id.cuisineTypeGroup));
 
@@ -278,101 +265,13 @@ public class UploadingRecipeFragment extends Fragment {
         return isValid;
     }
 
-    private void addStepValidators(EditText stepContent) {
-        stepContent.addTextChangedListener(new TextValidator(stepContent) {
-            @Override
-            public void validate(TextView textView, String text) {
-                if (!isTextValid(text)) textView.setError(getString(R.string.stepsEmptyErrorMessage));
-            }
-        });
-    }
-
-    private void addIngredientValidators(EditText ingredientsAmount, EditText ingredientsUnit, EditText ingredientsName) {
-        ingredientsAmount.addTextChangedListener(new TextValidator(ingredientsAmount) {
-            public void validate(TextView textView, String text) {
-                if (!isTextValid(text)) textView.setError(getString(R.string.ingredientsAmountEmptyErrorMessage));
-                else if (!isNumberPositive(text))
-                    textView.setError(getString(R.string.ingredientsAmountInvalidErrorMessage));
-            }
-        });
-
-        ingredientsUnit.addTextChangedListener(new TextValidator(ingredientsUnit) {
-            @Override
-            public void validate(TextView textView, String text) {
-                if (!isTextValid(text)) textView.setError(getString(R.string.ingredientsUnitEmptyErrorMessage));
-            }
-        });
-
-        ingredientsName.addTextChangedListener(new TextValidator(ingredientsName) {
-            @Override
-            public void validate(TextView textView, String text) {
-                if (!isTextValid(text)) textView.setError(getString(R.string.ingredientsNameEmptyErrorMessage));
-            }
-        });
-    }
-
-
-    public void setupIngredientAutocomplete(AutoCompleteTextView ingredientAutoComplete, Map<String, Integer> idMap, IngredientAutocomplete apiService){
-        ingredientAutoComplete.setThreshold(1);
-
-        final BooleanWrapper optionSelected = new BooleanWrapper(false);
-        ingredientAutoComplete.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // Clear the focus of the AutoCompleteTextView
-                ingredientAutoComplete.clearFocus();
-                optionSelected.setBool(true);
-            }
-        });
-        ingredientAutoComplete.addTextChangedListener(new TextWatcher() {
-            String prevString;
-            boolean isTyping = false;
-            private final Handler handler = new Handler();
-            private final long DELAY = 500; // milliseconds
-
-
-            //function to be called if the user stops typing
-            Runnable runnable = new Runnable() {
-                @Override
-                public void run() {
-                    if(!optionSelected.getBool()) {
-                        isTyping = false;
-                        //send notification for stopped typing event
-                        apiService.completeSearchNames(prevString, ingredientAutoComplete, idMap);
-                    }
-                }
-            };
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                //doesn't consider defocusing and refocusing the text field as typing
-                if(!s.toString().equals(prevString)) {
-                    if (!isTyping) {
-                        // Send notification for start typing event
-                        ingredientAutoComplete.dismissDropDown();
-                        isTyping = true;
-                        optionSelected.setBool(false);
-                    }
-                    handler.removeCallbacks(runnable);
-                    prevString = s.toString();
-                    handler.postDelayed(runnable, DELAY); // set delay to 2 seconds
-                }
-            }
-            @Override
-            public void afterTextChanged(final Editable s) {
-            }
-        });
-    }
-
     // Upload the recipe to Firebase
     private void uploadRecipe(final Uri recipeImageUri) {
         pd.show();
 
         OnSuccessListener<String> onUploadRecipeToDatabaseSuccessListener = s -> {
             pd.dismiss();
-            Toast.makeText(getActivity(), "Upload Successful", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), R.string.upload_recipe_success_message, Toast.LENGTH_LONG).show();
 
             // close this fragment and return to the previous page
             requireActivity().getSupportFragmentManager().beginTransaction().replace(((ViewGroup)getView().getParent()).getId(), new HomePageFragment()).commit();
@@ -381,7 +280,7 @@ public class UploadingRecipeFragment extends Fragment {
         OnFailureListener onUploadRecipeToDatabaseFailureListener = e -> {
             pd.dismiss();
             // if uploading failed
-            Toast.makeText(getActivity(), "Error Uploading ", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), R.string.upload_recipe_error_message, Toast.LENGTH_LONG).show();
         };
 
         // If user has chosen a picture to upload
@@ -390,10 +289,10 @@ public class UploadingRecipeFragment extends Fragment {
                     .addOnSuccessListener(uri -> uploadRecipeToDatabase(uri, onUploadRecipeToDatabaseSuccessListener, onUploadRecipeToDatabaseFailureListener))
                     .addOnFailureListener(e -> {
                         pd.dismiss();
-                        Toast.makeText(getActivity(), "Error Fetching Image", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), R.string.fetch_recipe_image_error_message, Toast.LENGTH_LONG).show();
                     }), e -> {
                         pd.dismiss();
-                        Toast.makeText(getActivity(), "Error Uploading Image", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), R.string.upload_recipe_image_error_message, Toast.LENGTH_LONG).show();
                     });
         } else {
             // When no picture is uploaded by the user
@@ -431,40 +330,7 @@ public class UploadingRecipeFragment extends Fragment {
             }
         }
 
-        return isRecipeNameValid && isIngredientValid() && isStepValid();
-    }
-
-    private boolean isStepValid() {
-        for (int i = 0; i < stepListLinearLayout.getChildCount(); i++) {
-            if (stepListLinearLayout.getChildAt(i) instanceof ConstraintLayout) {
-                ConstraintLayout step = (ConstraintLayout) stepListLinearLayout.getChildAt(i);
-                if (step.getChildAt(0) instanceof TextInputLayout) {
-                    if (((TextInputLayout) step.getChildAt(0)).getEditText() == null || !isTextValid((((TextInputLayout) step.getChildAt(0)).getEditText().getText().toString())))
-                        return false;
-                }
-            }
-        }
-        return true;
-    }
-
-    private boolean isIngredientValid() {
-        for (int i = 0; i < ingredientLinearLayout.getChildCount(); i++) {
-            if (ingredientLinearLayout.getChildAt(i) instanceof ConstraintLayout) {
-                ConstraintLayout step = (ConstraintLayout) ingredientLinearLayout.getChildAt(i);
-                if (step.getChildAt(0) instanceof TextInputLayout && step.getChildAt(1) instanceof TextInputLayout && step.getChildAt(2) instanceof TextInputLayout) {
-                    if (((TextInputLayout) step.getChildAt(2)).getEditText() == null
-                            || ((TextInputLayout) step.getChildAt(1)).getEditText() == null
-                            || ((TextInputLayout) step.getChildAt(1)).getEditText() == null)
-                        return false;
-                    String ingredientName = ((TextInputLayout) step.getChildAt(2)).getEditText().getText().toString();
-                    String ingredientUnit = ((TextInputLayout) step.getChildAt(1)).getEditText().getText().toString();
-                    String ingredientAmount = ((TextInputLayout) step.getChildAt(0)).getEditText().getText().toString();
-                    if (!isTextValid(ingredientAmount) || !isTextValid(ingredientName) || !isTextValid(ingredientUnit) || !isNumberPositive(ingredientAmount))
-                        return false;
-                }
-            }
-        }
-        return true;
+        return isRecipeNameValid && recipeStepAndIngredientManager.isIngredientValid() && recipeStepAndIngredientManager.isStepValid();
     }
 
     private Recipe getRecipe(Uri localLocation) {
@@ -485,11 +351,11 @@ public class UploadingRecipeFragment extends Fragment {
         recipe.setPrepTime(Integer.parseInt(prepTime.getEditText().getText().toString()));
         recipe.setServings(Integer.parseInt(servings.getEditText().getText().toString()));
         recipe.setUtensils(new Utensils(Arrays.asList(utensils.getEditText().getText().toString())));
-        recipe.setIngredientList(getIngredients());
+        recipe.setIngredientList(recipeStepAndIngredientManager.getIngredients());
         recipe.setCuisineTypes(getTypes(cuisineTypeGroup, cuisineTypeValues));
         recipe.setAllergyTypes(getTypes(allergyTypeGroup, allergyTypeValues));
         recipe.setDietTypes(getTypes(dietTypeGroup, dietTypeValues));
-        recipe.setSteps(getSteps());
+        recipe.setSteps(recipeStepAndIngredientManager.getSteps());
 
         return recipe;
     }
@@ -569,80 +435,6 @@ public class UploadingRecipeFragment extends Fragment {
         filePath = Uri.parse(MediaStore.Images.Media.insertImage(getActivity().getContentResolver(), selectedImage, null, null));
     }
 
-    private void addIngredient(Map<String, Integer> idMap, IngredientAutocomplete apiService) {
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            final View ingredient = getLayoutInflater().inflate(R.layout.recipe_ingredient_edittext, null, false);
-            ImageView removeIngredient = (ImageView) ingredient.findViewById(R.id.removeIngredient);
-            TextInputLayout ingredientsAmountLayout = ingredient.findViewById(R.id.ingredientsAmount);
-            EditText ingredientsAmount = ingredientsAmountLayout.getEditText();
-            TextInputLayout ingredientsUnitLayout = ingredient.findViewById(R.id.ingredientsUnit);
-            EditText ingredientsUnit = ingredientsUnitLayout.getEditText();
-            TextInputLayout ingredientsNameLayout = ingredient.findViewById(R.id.ingredientsName);
-            EditText ingredientsName = ingredientsNameLayout.getEditText();
-
-            addIngredientValidators(ingredientsAmount, ingredientsUnit, ingredientsName);
-
-            removeIngredient.setOnClickListener(v -> removeIngredient(ingredient));
-
-            ingredientLinearLayout.addView(ingredient);
-            AutoCompleteTextView ingredientAutoComplete = (AutoCompleteTextView) ingredient.findViewById(R.id.ingredientAutoComplete);
-            setupIngredientAutocomplete(ingredientAutoComplete, idMap, apiService);
-        }
-    }
-
-    private void removeIngredient(View ingredient) {
-        ingredientLinearLayout.removeView(ingredient);
-    }
-
-    private List<Ingredient> getIngredients() {
-        ArrayList<Ingredient> ingredients = new ArrayList<Ingredient>();
-        for (int i = 0; i < ingredientLinearLayout.getChildCount(); i++) {
-            if (ingredientLinearLayout.getChildAt(i) instanceof ConstraintLayout) {
-                ConstraintLayout step = (ConstraintLayout) ingredientLinearLayout.getChildAt(i);
-                if (step.getChildAt(0) instanceof TextInputLayout && step.getChildAt(1) instanceof TextInputLayout && step.getChildAt(2) instanceof TextInputLayout) {
-                    String ingredientName = ((TextInputLayout) step.getChildAt(2)).getEditText().getText().toString();
-                    String ingredientUnit = ((TextInputLayout) step.getChildAt(1)).getEditText().getText().toString();
-                    int ingredientAmount = Integer.parseInt(((TextInputLayout) step.getChildAt(0)).getEditText().getText().toString());
-                    ingredients.add(new Ingredient(ingredientName, new Unit(ingredientAmount, ingredientUnit)));
-                }
-            }
-        }
-        return ingredients;
-    }
-
-    private void addStep() {
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            final View step = getLayoutInflater().inflate(R.layout.recipe_step_edittext, null, false);
-            ImageView removeStep = (ImageView) step.findViewById(R.id.removeStep);
-            TextInputLayout stepContent = (TextInputLayout) step.findViewById(R.id.stepContent);
-            EditText stepContentEditText = stepContent.getEditText();
-
-            stepContent.setHint("Step " + String.valueOf(stepListLinearLayout.getChildCount()));
-            addStepValidators(stepContentEditText);
-
-            removeStep.setOnClickListener(v -> removeStep(step));
-
-            stepListLinearLayout.addView(step);
-        }
-    }
-
-    private void removeStep(View step) {
-        stepListLinearLayout.removeView(step);
-    }
-
-    private List<String> getSteps() {
-        ArrayList<String> steps = new ArrayList<String>();
-        for (int i = 0; i < stepListLinearLayout.getChildCount(); i++) {
-            if (stepListLinearLayout.getChildAt(i) instanceof ConstraintLayout) {
-                ConstraintLayout step = (ConstraintLayout) stepListLinearLayout.getChildAt(i);
-                if (step.getChildAt(0) instanceof TextInputLayout) {
-                    steps.add(((TextInputLayout) step.getChildAt(0)).getEditText().getText().toString());
-                }
-            }
-        }
-        return steps;
-    }
-
     private void openRecipeReviewDialog() {
         recipe = getRecipe(filePath);
         ReviewRecipeBeforeUploadingDialog reviewRecipeDialog = new ReviewRecipeBeforeUploadingDialog();
@@ -688,6 +480,9 @@ public class UploadingRecipeFragment extends Fragment {
         bundle.putString("cuisineTypes", truncateString(Arrays.toString(recipe.getCuisineTypes().stream().map(cuisineType -> cuisineTypeValues[cuisineType].toString()).toArray(String[]::new))));
         bundle.putString("allergyTypes", truncateString(Arrays.toString(recipe.getAllergyTypes().stream().map(allergyType -> allergyTypeValues[allergyType].toString()).toArray(String[]::new))));
         bundle.putString("dietTypes", truncateString(Arrays.toString(recipe.getDietTypes().stream().map(dietType -> dietTypeValues[dietType].toString()).toArray(String[]::new))));
+        bundle.putString("cuisineTypes", truncateAndConvertEnumArray(recipe.getCuisineTypes(), cuisineTypeValues));
+        bundle.putString("allergyTypes", truncateAndConvertEnumArray(recipe.getAllergyTypes(), allergyTypeValues));
+        bundle.putString("dietTypes", truncateAndConvertEnumArray(recipe.getDietTypes(), dietTypeValues));
         bundle.putString("steps", truncateString(recipe.getSteps().toString()));
 
         return bundle;
@@ -701,6 +496,10 @@ public class UploadingRecipeFragment extends Fragment {
     // Truncate a string by deleting its first and last char
     private String truncateString(String str) {
         return str.substring(1, str.length() - 1);
+    }
+
+    private <T extends Enum<T>> String truncateAndConvertEnumArray(List<Integer> typeArray, T[] enumValues) {
+        return truncateString(Arrays.toString(typeArray.stream().map(type -> enumValues[type].toString()).toArray(String[]::new)));
     }
 
     private void addType(LinearLayout typeLayout, String type) {
