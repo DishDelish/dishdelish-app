@@ -270,7 +270,7 @@ public class RecipeActivityTest {
     @Test
     public void isRatingActivityStarted() {
         ActivityScenario scenario = ActivityScenario.launch(i);
-        Intents.release();
+        //Intents.release();
         Intents.init();
         onView(withId(R.id.rateButton))
                 .perform(scrollTo(), click());

@@ -45,6 +45,7 @@ public class MainHomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main_home2);
         constraintLayout = findViewById(R.id.filterLayout);
         constraintLayout.setVisibility(View.GONE);
+        HomePageFragment hpf = null;
         if(savedInstanceState== null){
             setContainerContent(R.id.fragContainer,HomePageFragment.class,true);
         }
@@ -121,6 +122,7 @@ public class MainHomeActivity extends AppCompatActivity {
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
 
         navigationView.setNavigationItemSelectedListener(item ->{
             constraintLayout.setVisibility(View.GONE);

@@ -44,9 +44,10 @@ public class HomePageFragment extends Fragment {
     private final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
 
     private final Database database = new Database(firebaseDatabase);
+    private RecipeItemAdapter recipeAdapter;
 
-    public RecipeItemAdapter getRecyclerViewAdapter() {
-        return (RecipeItemAdapter) recipeListRecyclerView.getAdapter();
+    public RecipeItemAdapter getRecipeAdapter() {
+        return recipeAdapter;
     }
 
     public HomePageFragment() {
@@ -104,8 +105,10 @@ public class HomePageFragment extends Fragment {
         recipeListRecyclerView.setHasFixedSize(true);
         recipeListRecyclerView.setLayoutManager(new GridLayoutManager(getContext(),2));
 
-        database.getNRandomAsync(20).addOnSuccessListener(list->
-                    recipeListRecyclerView.setAdapter(new RecipeItemAdapter(list, view.getContext())))
+        database.getNRandomAsync(20).addOnSuccessListener(list->{
+                    recipeAdapter =new RecipeItemAdapter(list, view.getContext());
+                    recipeListRecyclerView.setAdapter(this.recipeAdapter/*new RecipeItemAdapter(list, view.getContext())*/);
+        })
                 .addOnFailureListener(e->{
                     e.printStackTrace();
                     recipeListRecyclerView.setAdapter(new RecipeItemAdapter(ExampleRecipes.recipes, view.getContext()));
