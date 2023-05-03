@@ -53,7 +53,7 @@ public class RecipeActivityTest {
     Recipe omelette = ExampleRecipes.recipes.get(0);
     Intent i = RecipeConverter.convertToIntent(omelette, ApplicationProvider.getApplicationContext());
 
-    /*
+
     @Test
     public void isRecipePictureOnDisplay() {
         ActivityScenario scenario = ActivityScenario.launch(i);
@@ -61,7 +61,7 @@ public class RecipeActivityTest {
         scenario.close();
     }
 
-     */
+
 
     @Test
     public void isCorrectRecipeNameOnDisplay() {
@@ -281,6 +281,7 @@ public class RecipeActivityTest {
         scenario.close();
     }
 
+    /*
     @Test
     public void isCorrectRecipePictureDisplayed() {
         ActivityScenario scenario = ActivityScenario.launch(i);
@@ -291,7 +292,7 @@ public class RecipeActivityTest {
         scenario.close();
     }
 
-
+     */
     @Test
     public void plusButtonIncreasesNumberOfServings() {
         ActivityScenario scenario = ActivityScenario.launch(i);
