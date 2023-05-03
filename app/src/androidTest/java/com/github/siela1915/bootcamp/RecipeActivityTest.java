@@ -281,6 +281,7 @@ public class RecipeActivityTest {
         scenario.close();
     }
 
+    
     /*
     @Test
     public void isCorrectRecipePictureDisplayed() {
