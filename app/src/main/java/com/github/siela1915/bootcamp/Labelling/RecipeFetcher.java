@@ -30,11 +30,7 @@ public class RecipeFetcher{
     private List<Integer> allergies;
     private List<Integer> cuisines;
     private List<Integer> diets;
-    //the following is newly added
-    private final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-
-    private final Database database = new Database(firebaseDatabase);
-    //end
+ 
     public RecipeFetcher(List<Integer> allergies, List<Integer> cuisines, List<Integer> diets) {
         this.allergies = allergies;
         this.cuisines = cuisines;
@@ -46,14 +42,7 @@ public class RecipeFetcher{
     public List<String> fetchRecipeList(){
         //String will represent the ID of the recipe, for now it's just the name
         Map<String, Float> mapOfRecipes = new HashMap<>();
-        List<Recipe> recipes= new ArrayList<>();
-        try {
-            recipes = database.getNRandom(20);
-        }catch (Exception e){
-            System.out.println("\n\n\n\nCOULD NOT FETCH RECIPES FROM DATABASE\n\n\n\n");
-            e.printStackTrace();
-            //throw new RuntimeException();
-        }
+
         for(Recipe r : ExampleRecipes.recipes){
             //Base weight, will be lower only if diets or allergies are violated
             float weight = 5;
