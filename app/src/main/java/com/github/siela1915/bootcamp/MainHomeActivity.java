@@ -102,7 +102,7 @@ public class MainHomeActivity extends AppCompatActivity {
                 CuisineType ct= CuisineType.fromString(elem);
                 cuisineType.add(ct.ordinal());
             }
-            
+
             RecipeFetcher recipeFetcher = new RecipeFetcher(allergy,cuisineType,dietType);
             List<String> filteredRecipes= recipeFetcher.fetchRecipeList();
             List<Recipe> recipeList = new ArrayList<>();
