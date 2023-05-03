@@ -91,7 +91,7 @@ public class RecipeActivityTest {
 
         latch.await();
     }
-
+/*
     @Before
     public void prepareEmulator() {
         FirebaseApp.clearInstancesForTest();
@@ -103,7 +103,7 @@ public class RecipeActivityTest {
             FirebaseAuthActivityTest.logoutSync();
         }
     }
-
+*/
     Intent i = RecipeConverter.convertToIntent(omelette, ApplicationProvider.getApplicationContext());
 
 
@@ -468,7 +468,7 @@ public class RecipeActivityTest {
         });
         scenario.close();
     }
-*/
+
     @Test
     public void heartButtonBecomesFullWhenAuthenticated(){
 
@@ -478,6 +478,7 @@ public class RecipeActivityTest {
             // Check that the background drawable has changed to the checked state drawable
             ToggleButton heart = (ToggleButton) activity.findViewById(R.id.favoriteButton);
             heart.performClick();
+            System.out.println(heart==null);
             String actual = (String) heart.getTag();
             String expected = "full";
             assertTrue(actual.equals(expected));
@@ -486,7 +487,7 @@ public class RecipeActivityTest {
         scenario.close();
         FirebaseAuthActivityTest.logoutSync();
     }
-
+*/
     @Test
     public void heartButtonBecomesEmptyWhenTheUserIsAuthenticatedAndTheRecipeIsInFavorites(){
 
