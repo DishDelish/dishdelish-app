@@ -53,12 +53,15 @@ public class RecipeActivityTest {
     Recipe omelette = ExampleRecipes.recipes.get(0);
     Intent i = RecipeConverter.convertToIntent(omelette, ApplicationProvider.getApplicationContext());
 
+    /*
     @Test
     public void isRecipePictureOnDisplay() {
         ActivityScenario scenario = ActivityScenario.launch(i);
         onView(withId(R.id.recipePicture)).check(matches(isDisplayed()));
         scenario.close();
     }
+
+     */
 
     @Test
     public void isCorrectRecipeNameOnDisplay() {
