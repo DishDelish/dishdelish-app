@@ -5,6 +5,9 @@ import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.contrib.NavigationViewActions.navigateTo;
+import static androidx.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition;
+import static androidx.test.espresso.intent.Intents.intended;
+import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.isClickable;
 import static androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA;
@@ -29,6 +32,7 @@ import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.contrib.DrawerActions;
 import androidx.test.espresso.contrib.RecyclerViewActions;
+import androidx.test.espresso.intent.Intents;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -180,7 +184,7 @@ public class MainHomeActivityTest {
             //onView(withId(R.id.shoppingList)).check(matches(hasDescendant(withText("item1"))));
             onView(withText("item1")).check(matches(isDisplayed()));
             ViewInteraction recyclerView= onView(withId(R.id.shoppingList));
-            recyclerView.perform(RecyclerViewActions.actionOnItemAtPosition(1,click()));
+            recyclerView.perform(actionOnItemAtPosition(1,click()));
             onView(withText("Yes")).check(matches(isDisplayed()));
             onView(withText("Yes")).perform(click());
             onView(withId(R.id.shoppingCartFragment)).check(matches(isDisplayed()));
@@ -192,6 +196,7 @@ public class MainHomeActivityTest {
     }
     @Test
     public void test2(){
+        Intents.init();
         ActivityScenario scenario1= ActivityScenario.launch(MainHomeActivity.class);
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
         onView(withId(R.id.navView)).perform(navigateTo(R.id.menuItem_home));
@@ -200,6 +205,9 @@ public class MainHomeActivityTest {
         onView(withId(R.id.rand_recipe_recyclerView)).check(matches(isDisplayed()));
 
         onView(withId(R.id.rand_recipe_recyclerView)).check(new RecyclerViewItemCountAssertion(13));
+        onView(withId(R.id.rand_recipe_recyclerView)).perform(actionOnItemAtPosition(0, click()));
+        Intents.intended(hasComponent(RecipeActivity.class.getName()));
+
     }
 
 }
