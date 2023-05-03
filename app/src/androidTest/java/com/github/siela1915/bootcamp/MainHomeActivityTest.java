@@ -12,13 +12,19 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.endsWithIgnoringCase;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 
+import android.view.View;
+
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.test.core.app.ActivityScenario;
+import androidx.test.espresso.NoMatchingViewException;
+import androidx.test.espresso.ViewAssertion;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.contrib.DrawerActions;
@@ -41,8 +47,9 @@ public class MainHomeActivityTest {
 
     @Test
     public void startingApplicationWithHomePageViewTest(){
-        onView(withId(R.id.homeFragment)).check(matches(isDisplayed()));
-    }
+        ActivityScenario scenario1= ActivityScenario.launch(MainHomeActivity.class);
+        onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
+        onView(withId(R.id.navView)).perform(navigateTo(R.id.menuItem_soppingCart));    }
 
     @Test
     public void clickingOnToggleButtonOpensNavigationMenuTest(){
@@ -161,7 +168,7 @@ public class MainHomeActivityTest {
         onView(withId(R.id.shoppingCartFragment)).check(matches(isDisplayed()));
     }
     @Test
-    public void test(){
+    public void test1(){
         ActivityScenario scenario1= ActivityScenario.launch(MainHomeActivity.class);
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
         onView(withId(R.id.navView)).perform(navigateTo(R.id.menuItem_soppingCart));
@@ -183,5 +190,34 @@ public class MainHomeActivityTest {
         scenario1.close();
 
     }
+    @Test
+    public void test2(){
+        ActivityScenario scenario1= ActivityScenario.launch(MainHomeActivity.class);
+        onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
+        onView(withId(R.id.navView)).perform(navigateTo(R.id.menuItem_home));
+        onView(withId(R.id.homeFragment)).check(matches(isDisplayed()));
 
+        onView(withId(R.id.rand_recipe_recyclerView)).check(matches(isDisplayed()));
+
+        onView(withId(R.id.rand_recipe_recyclerView)).check(new RecyclerViewItemCountAssertion(13));
+    }
+
+}
+ class RecyclerViewItemCountAssertion implements ViewAssertion {
+    private final int expectedCount;
+
+    public RecyclerViewItemCountAssertion(int expectedCount) {
+        this.expectedCount = expectedCount;
+    }
+
+    @Override
+    public void check(View view, NoMatchingViewException noViewFoundException) {
+        if (noViewFoundException != null) {
+            throw noViewFoundException;
+        }
+
+        RecyclerView recyclerView = (RecyclerView) view;
+        RecyclerView.Adapter adapter = recyclerView.getAdapter();
+        assertThat(adapter.getItemCount(), is(expectedCount));
+    }
 }
