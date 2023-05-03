@@ -15,7 +15,7 @@ public interface ApiService {
                                              @Query("metaInformation") Boolean metaInformation);
 
     //maybe just do "/" as get, and id as query
-    @GET("{id}")
+    @GET("{id}/information")
     Call<NutrientsResponse> getNutrition(@Path("id") int id,
                                              @Query("amount") int amount,
                                              @Query("unit") String unit,
