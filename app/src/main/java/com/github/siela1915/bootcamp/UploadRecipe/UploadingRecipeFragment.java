@@ -207,11 +207,12 @@ public class UploadingRecipeFragment extends Fragment {
 
         addStep.setOnClickListener(v -> recipeStepAndIngredientManager.addStep());
 
-        recipeName.addTextChangedListener(new TextValidator(recipeName) {
+        recipeName.addTextChangedListener(new AbstractTextValidator(recipeName) {
             @Override
             public void validate(TextView textView, String text) {
-                if (!isTextValid(text)) textView.setError(getString(R.string.recipeNameEmptyErrorMessage));
-                isRecipeNameValid = isTextValid(text);
+                if (!TextValidator.isTextValid(text))
+                    textView.setError(getString(R.string.recipeNameEmptyErrorMessage));
+                isRecipeNameValid = TextValidator.isTextValid(text);
             }
         });
 
@@ -231,38 +232,25 @@ public class UploadingRecipeFragment extends Fragment {
     }
 
     private void setValidator(TextView textView, String emptyErrorMessage, String invalidErrorMessage) {
-        textView.addTextChangedListener(new TextValidator(textView) {
+        textView.addTextChangedListener(new AbstractTextValidator(textView) {
             @Override
             public void validate(TextView textView, String text) {
-                if (!isTextValid(text)) textView.setError(emptyErrorMessage);
-                else if (!isNumberPositive(text)) textView.setError(invalidErrorMessage);
+                if (!TextValidator.isTextValid(text)) textView.setError(emptyErrorMessage);
+                else if (!TextValidator.isNumberPositive(text))
+                    textView.setError(invalidErrorMessage);
             }
         });
     }
 
 
-    private void addTypeListener (View view, int autoCompleteTextViewId, int linearLayoutId) {
+    private void addTypeListener(View view, int autoCompleteTextViewId, int linearLayoutId) {
         AutoCompleteTextView autoCompleteTextView = view.findViewById(autoCompleteTextViewId);
         String text = autoCompleteTextView.getText().toString();
         autoCompleteTextView.getText().clear();
-        if (isTextValid(text)) {
+        if (TextValidator.isTextValid(text)) {
             LinearLayout linearLayout = view.findViewById(linearLayoutId);
             addType(linearLayout, text);
         }
-    }
-
-    private boolean isTextValid(String text) {
-        return text != null && !text.trim().isEmpty();
-    }
-
-    private boolean isNumberPositive(String text) {
-        boolean isValid = false;
-        try {
-            isValid = Integer.parseInt(text) > 0;
-        } catch (NumberFormatException e) {
-            return false;
-        }
-        return isValid;
     }
 
     // Upload the recipe to Firebase
@@ -274,7 +262,7 @@ public class UploadingRecipeFragment extends Fragment {
             Toast.makeText(getActivity(), R.string.upload_recipe_success_message, Toast.LENGTH_LONG).show();
 
             // close this fragment and return to the previous page
-            requireActivity().getSupportFragmentManager().beginTransaction().replace(((ViewGroup)getView().getParent()).getId(), new HomePageFragment()).commit();
+            requireActivity().getSupportFragmentManager().beginTransaction().replace(((ViewGroup) getView().getParent()).getId(), new HomePageFragment()).commit();
         };
 
         OnFailureListener onUploadRecipeToDatabaseFailureListener = e -> {
@@ -291,9 +279,9 @@ public class UploadingRecipeFragment extends Fragment {
                         pd.dismiss();
                         Toast.makeText(getActivity(), R.string.fetch_recipe_image_error_message, Toast.LENGTH_LONG).show();
                     }), e -> {
-                        pd.dismiss();
-                        Toast.makeText(getActivity(), R.string.upload_recipe_image_error_message, Toast.LENGTH_LONG).show();
-                    });
+                pd.dismiss();
+                Toast.makeText(getActivity(), R.string.upload_recipe_image_error_message, Toast.LENGTH_LONG).show();
+            });
         } else {
             // When no picture is uploaded by the user
             uploadRecipeToDatabase(null, onUploadRecipeToDatabaseSuccessListener, onUploadRecipeToDatabaseFailureListener);
@@ -323,9 +311,9 @@ public class UploadingRecipeFragment extends Fragment {
         TextInputLayout servingsLayout = view.findViewById(R.id.servingsContent);
         EditText servings = servingsLayout.getEditText();
 
-        for (TextView textView : new TextView[] {cookTime, prepTime, servings}) {
+        for (TextView textView : new TextView[]{cookTime, prepTime, servings}) {
             String text = textView.getText().toString();
-            if (!isTextValid(text) || !isNumberPositive(text)) {
+            if (!TextValidator.isTextValid(text) || !TextValidator.isNumberPositive(text)) {
                 return false;
             }
         }
@@ -361,24 +349,22 @@ public class UploadingRecipeFragment extends Fragment {
     }
 
     // function to let's the user to choose image from camera or gallery
-    private void chooseImage(){
-        final CharSequence[] optionsMenu = {"Take Photo", "Choose from Gallery", "Exit" }; // create a menuOption Array
+    private void chooseImage() {
+        final CharSequence[] optionsMenu = {"Take Photo", "Choose from Gallery", "Exit"}; // create a menuOption Array
         // create a dialog for showing the optionsMenu
         AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity(), R.style.AlertDialogTheme);
         // set the items in builder
         builder.setItems(optionsMenu, (dialogInterface, i) -> {
-            if(optionsMenu[i].equals("Take Photo")){
+            if (optionsMenu[i].equals("Take Photo")) {
                 if (isCameraAccessible()) {
                     takeAPhoto();
                 } else {
                     requireAccessToCamera.launch(android.Manifest.permission.CAMERA);
                 }
-            }
-            else if(optionsMenu[i].equals("Choose from Gallery")){
+            } else if (optionsMenu[i].equals("Choose from Gallery")) {
                 Intent pickPhoto = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(pickPhoto , CHOOSE_IMAGE_FROM_GALLERY_REQUEST);
-            }
-            else if (optionsMenu[i].equals("Exit")) {
+                startActivityForResult(pickPhoto, CHOOSE_IMAGE_FROM_GALLERY_REQUEST);
+            } else if (optionsMenu[i].equals("Exit")) {
                 dialogInterface.dismiss();
             }
         });
@@ -452,6 +438,7 @@ public class UploadingRecipeFragment extends Fragment {
                     recipe.setFat(recipe.ingredientList.stream().mapToDouble(Ingredient::getFat).sum());
                     uploadRecipe(filePath);
                 }
+
                 @Override
                 public void onError(String err) {
                     Toast.makeText(getActivity(), err, Toast.LENGTH_LONG).show();
@@ -477,9 +464,6 @@ public class UploadingRecipeFragment extends Fragment {
         if (utensils != null) utensilsString = truncateString(utensils.toString());
         bundle.putString("utensils", utensilsString);
         bundle.putString("ingredientList", truncateString(recipe.getIngredientList().toString()));
-        bundle.putString("cuisineTypes", truncateString(Arrays.toString(recipe.getCuisineTypes().stream().map(cuisineType -> cuisineTypeValues[cuisineType].toString()).toArray(String[]::new))));
-        bundle.putString("allergyTypes", truncateString(Arrays.toString(recipe.getAllergyTypes().stream().map(allergyType -> allergyTypeValues[allergyType].toString()).toArray(String[]::new))));
-        bundle.putString("dietTypes", truncateString(Arrays.toString(recipe.getDietTypes().stream().map(dietType -> dietTypeValues[dietType].toString()).toArray(String[]::new))));
         bundle.putString("cuisineTypes", truncateAndConvertEnumArray(recipe.getCuisineTypes(), cuisineTypeValues));
         bundle.putString("allergyTypes", truncateAndConvertEnumArray(recipe.getAllergyTypes(), allergyTypeValues));
         bundle.putString("dietTypes", truncateAndConvertEnumArray(recipe.getDietTypes(), dietTypeValues));

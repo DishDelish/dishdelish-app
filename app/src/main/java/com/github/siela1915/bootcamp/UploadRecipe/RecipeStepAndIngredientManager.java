@@ -22,6 +22,8 @@ import com.google.android.material.textfield.TextInputLayout;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 public class RecipeStepAndIngredientManager {
     private final Context context;
@@ -48,7 +50,7 @@ public class RecipeStepAndIngredientManager {
                     String ingredientName = ((TextInputLayout) step.getChildAt(2)).getEditText().getText().toString();
                     String ingredientUnit = ((TextInputLayout) step.getChildAt(1)).getEditText().getText().toString();
                     String ingredientAmount = ((TextInputLayout) step.getChildAt(0)).getEditText().getText().toString();
-                    if (!isTextValid(ingredientAmount) || !isTextValid(ingredientName) || !isTextValid(ingredientUnit) || !isNumberPositive(ingredientAmount))
+                    if (!TextValidator.isTextValid(ingredientAmount) || !TextValidator.isTextValid(ingredientName) || !TextValidator.isTextValid(ingredientUnit) || !TextValidator.isNumberPositive(ingredientAmount))
                         return false;
                 }
             }
@@ -98,27 +100,27 @@ public class RecipeStepAndIngredientManager {
     }
 
     public void addIngredientValidators(EditText ingredientsAmount, EditText ingredientsUnit, EditText ingredientsName) {
-        ingredientsAmount.addTextChangedListener(new TextValidator(ingredientsAmount) {
-            public void validate(TextView textView, String text) {
-                if (!isTextValid(text)) textView.setError(context.getResources().getString(R.string.ingredientsAmountEmptyErrorMessage));
-                else if (!isNumberPositive(text))
-                    textView.setError(context.getResources().getString(R.string.ingredientsAmountInvalidErrorMessage));
-            }
-        });
+        validateEditText(ingredientsAmount,
+                (textView, text) -> {
+                    if (!TextValidator.isTextValid(text))
+                        textView.setError(context.getResources().getString(R.string.ingredientsAmountEmptyErrorMessage));
+                    else if (!TextValidator.isNumberPositive(text))
+                        textView.setError(context.getResources().getString(R.string.ingredientsAmountInvalidErrorMessage));
+                }
+        );
 
-        ingredientsUnit.addTextChangedListener(new TextValidator(ingredientsUnit) {
-            @Override
-            public void validate(TextView textView, String text) {
-                if (!isTextValid(text)) textView.setError(context.getResources().getString(R.string.ingredientsUnitEmptyErrorMessage));
-            }
-        });
+        validateEditText(ingredientsUnit,
+                (textView, text) -> {
+                    if (!TextValidator.isTextValid(text))
+                        textView.setError(context.getResources().getString(R.string.ingredientsUnitEmptyErrorMessage));
+                }
+        );
 
-        ingredientsName.addTextChangedListener(new TextValidator(ingredientsName) {
-            @Override
-            public void validate(TextView textView, String text) {
-                if (!isTextValid(text)) textView.setError(context.getResources().getString(R.string.ingredientsNameEmptyErrorMessage));
-            }
-        });
+        validateEditText(ingredientsName,
+                (textView, text) -> {
+                    if (!TextValidator.isTextValid(text))
+                        textView.setError(context.getResources().getString(R.string.ingredientsNameEmptyErrorMessage));
+                });
     }
 
     public void setupIngredientAutocomplete(AutoCompleteTextView ingredientAutoComplete, Map<String, Integer> idMap, IngredientAutocomplete apiService){
@@ -180,7 +182,7 @@ public class RecipeStepAndIngredientManager {
             if (stepListLinearLayout.getChildAt(i) instanceof ConstraintLayout) {
                 ConstraintLayout step = (ConstraintLayout) stepListLinearLayout.getChildAt(i);
                 if (step.getChildAt(0) instanceof TextInputLayout) {
-                    if (((TextInputLayout) step.getChildAt(0)).getEditText() == null || !isTextValid((((TextInputLayout) step.getChildAt(0)).getEditText().getText().toString())))
+                    if (((TextInputLayout) step.getChildAt(0)).getEditText() == null || !TextValidator.isTextValid((((TextInputLayout) step.getChildAt(0)).getEditText().getText().toString())))
                         return false;
                 }
             }
@@ -222,25 +224,20 @@ public class RecipeStepAndIngredientManager {
     }
 
     public void addStepValidators(EditText stepContent) {
-        stepContent.addTextChangedListener(new TextValidator(stepContent) {
+        stepContent.addTextChangedListener(new AbstractTextValidator(stepContent) {
             @Override
             public void validate(TextView textView, String text) {
-                if (!isTextValid(text)) textView.setError(context.getResources().getString(R.string.stepsEmptyErrorMessage));
+                if (!TextValidator.isTextValid(text)) textView.setError(context.getResources().getString(R.string.stepsEmptyErrorMessage));
             }
         });
     }
 
-    private boolean isTextValid(String text) {
-        return text != null && !text.trim().isEmpty();
-    }
-
-    private boolean isNumberPositive(String text) {
-        boolean isValid = false;
-        try {
-            isValid = Integer.parseInt(text) > 0;
-        } catch (NumberFormatException e) {
-            return false;
-        }
-        return isValid;
+    private void validateEditText(TextView textView, BiConsumer<TextView, String> validator) {
+        textView.addTextChangedListener(new AbstractTextValidator(textView) {
+            @Override
+            public void validate(TextView textView, String text) {
+                validator.accept(textView, text);
+            }
+        });
     }
 }
