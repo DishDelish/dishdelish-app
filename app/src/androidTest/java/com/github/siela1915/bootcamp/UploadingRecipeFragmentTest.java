@@ -35,6 +35,7 @@ import androidx.test.platform.app.InstrumentationRegistry;
 import com.github.siela1915.bootcamp.Labelling.AllergyType;
 import com.github.siela1915.bootcamp.Labelling.CuisineType;
 import com.github.siela1915.bootcamp.Labelling.DietType;
+import com.github.siela1915.bootcamp.UploadRecipe.UploadingRecipeFragment;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;

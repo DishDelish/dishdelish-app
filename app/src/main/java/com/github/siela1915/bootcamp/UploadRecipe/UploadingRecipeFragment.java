@@ -1,4 +1,4 @@
-package com.github.siela1915.bootcamp;
+package com.github.siela1915.bootcamp.UploadRecipe;
 
 import android.Manifest;
 import android.app.Activity;
@@ -37,9 +37,12 @@ import androidx.fragment.app.FragmentTransaction;
 import com.github.siela1915.bootcamp.AutocompleteApi.BooleanWrapper;
 import com.github.siela1915.bootcamp.AutocompleteApi.IngredientAutocomplete;
 import com.github.siela1915.bootcamp.AutocompleteApi.UploadCallback;
+import com.github.siela1915.bootcamp.HomePageFragment;
 import com.github.siela1915.bootcamp.Labelling.AllergyType;
 import com.github.siela1915.bootcamp.Labelling.CuisineType;
 import com.github.siela1915.bootcamp.Labelling.DietType;
+import com.github.siela1915.bootcamp.ProfileFragment;
+import com.github.siela1915.bootcamp.R;
 import com.github.siela1915.bootcamp.Recipes.Ingredient;
 import com.github.siela1915.bootcamp.Recipes.Recipe;
 import com.github.siela1915.bootcamp.Recipes.Unit;
