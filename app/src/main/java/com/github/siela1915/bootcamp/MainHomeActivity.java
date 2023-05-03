@@ -57,6 +57,7 @@ public class MainHomeActivity extends AppCompatActivity {
         dietBtn=findViewById(R.id.dietBtn);
         filterBtn=findViewById(R.id.filterBtn);
 
+        
         List<String> selectedCuisine = new ArrayList<>();
         List<String> selectedDiet = new ArrayList<>();
         List<String> selectedAllery= new ArrayList<>();
