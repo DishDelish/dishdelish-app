@@ -91,7 +91,11 @@ public class Ingredient implements Parcelable {
     @NonNull
     @Override
     public String toString() {
-        return ingredient + " " + unit.toString();
+        String res = "";
+        if (unit != null) {
+            res += unit + " ";
+        }
+        return res + ingredient;
     }
 
 
