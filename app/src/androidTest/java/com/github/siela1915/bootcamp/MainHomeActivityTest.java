@@ -197,7 +197,6 @@ public class MainHomeActivityTest {
     @Test
     public void isCorrectListOfRecipesDisplayed(){
         Intents.init();
-        ActivityScenario scenario1= ActivityScenario.launch(MainHomeActivity.class);
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
         onView(withId(R.id.navView)).perform(navigateTo(R.id.menuItem_home));
         onView(withId(R.id.homeFragment)).check(matches(isDisplayed()));
@@ -206,8 +205,8 @@ public class MainHomeActivityTest {
 
         onView(withId(R.id.rand_recipe_recyclerView)).check(new RecyclerViewItemCountAssertion(13));
         onView(withId(R.id.rand_recipe_recyclerView)).perform(actionOnItemAtPosition(0, click()));
-        //Intents.intended(hasComponent(RecipeActivity.class.getName()));
-        //Intents.release();
+        Intents.intended(hasComponent(RecipeActivity.class.getName()));
+        Intents.release();
     }
 
 }

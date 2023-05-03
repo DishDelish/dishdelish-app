@@ -53,6 +53,14 @@ public class RecipeItemAdapter extends RecyclerView.Adapter<RecipeItemViewHolder
     public int getItemCount() {
         return recipes.size();
     }
+
+    public List<Recipe> getRecipes() {
+        return recipes;
+    }
+
+    public Context getContext() {
+        return context;
+    }
 }
 class RecipeItemViewHolder extends RecyclerView.ViewHolder{
     CardView recipeCardView;
@@ -72,4 +80,5 @@ class RecipeItemViewHolder extends RecyclerView.ViewHolder{
             itemView.getContext().startActivity(RecipeConverter.convertToIntent(recipe, itemView.getContext()));
         });
     }
+
 }
