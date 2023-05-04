@@ -95,6 +95,7 @@ public class RecipeActivity extends AppCompatActivity {
         //recipePicture.setImageBitmap(recipeImage);
 
         //Picasso.get().load(recipe.image).into(recipePicture);
+        new DownloadImageTask(recipePicture).execute(recipe.image);
 
         Bitmap avatar = BitmapFactory.decodeResource(this.getResources(), recipe.profilePicture);
         userAvatar.setImageBitmap(avatar);
