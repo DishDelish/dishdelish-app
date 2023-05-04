@@ -12,11 +12,11 @@ check_android_task:
   install_firebase_emulator_script:
     curl -sL https://firebase.tools | bash
   install_emulator_script:
-    sdkmanager --install "system-images;android-30;google_apis;x86"
+    sdkmanager --install "system-images;android-30;google_apis_playstore;x86"
   create_avd_script:
     echo no | avdmanager create avd --force
     --name emulator
-    --package "system-images;android-30;google_apis;x86"
+    --package "system-images;android-30;google_apis_playstore;x86"
   start_avd_background_script:
     $ANDROID_HOME/emulator/emulator
     -avd emulator
@@ -27,6 +27,7 @@ check_android_task:
     -no-window
     -camera-back none
   assemble_instrumented_tests_script: |
+    echo MAPS_API_KEY=ENCRYPTED[!5c8a6c7336882072f610cf41c34611635ef523df0ec9b1fb02061838be400d2475b28700881e8d38f852b3e6f6d491bc!] >> local.properties
     chmod +x gradlew
     ./gradlew assembleDebugAndroidTest
   wait_for_avd_script:

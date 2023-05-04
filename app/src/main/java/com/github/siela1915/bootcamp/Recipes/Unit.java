@@ -55,7 +55,11 @@ public class Unit implements Parcelable {
     @NonNull
     @Override
     public String toString(){
-        return value + " " + info;
+        String res = String.valueOf(value);
+        if (info != null) {
+            res += " " + info;
+        }
+        return res;
     }
 
     @Override

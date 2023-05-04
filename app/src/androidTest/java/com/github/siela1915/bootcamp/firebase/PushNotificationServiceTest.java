@@ -10,6 +10,9 @@ import static org.hamcrest.Matchers.notNullValue;
 
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.content.Intent;
+
+import com.github.siela1915.bootcamp.MainHomeActivity;
 
 import org.junit.After;
 import org.junit.Test;
@@ -32,7 +35,8 @@ public class PushNotificationServiceTest {
         notifMap.put("title", "TestNotification");
         notifMap.put("body", "Body text of the test notification");
 
-        sendNotification(getApplicationContext(), notifMap);
+        Intent intent = new Intent(getApplicationContext(), MainHomeActivity.class);
+        sendNotification(getApplicationContext(), notifMap, intent);
         NotificationManager manager = getSystemService(getApplicationContext(), NotificationManager.class);
 
         assertThat(manager, is(notNullValue()));

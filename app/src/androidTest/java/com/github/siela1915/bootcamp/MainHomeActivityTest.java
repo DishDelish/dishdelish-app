@@ -2,13 +2,10 @@ package com.github.siela1915.bootcamp;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.contrib.NavigationViewActions.navigateTo;
 import static androidx.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition;
-import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
-import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.isClickable;
 import static androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -17,25 +14,26 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.endsWithIgnoringCase;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
 
+import android.Manifest;
+import android.content.Intent;
 import android.view.View;
 
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.test.core.app.ActivityScenario;
+import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.NoMatchingViewException;
 import androidx.test.espresso.ViewAssertion;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.contrib.DrawerActions;
-import androidx.test.espresso.contrib.RecyclerViewActions;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.rule.GrantPermissionRule;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -48,6 +46,10 @@ public class MainHomeActivityTest {
 
 
     ActivityScenario<MainHomeActivity> scenario = ActivityScenario.launch(MainHomeActivity.class);
+
+    @Rule
+    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(
+            Manifest.permission.ACCESS_FINE_LOCATION);
 
     @Test
     public void startingApplicationWithHomePageViewTest(){
@@ -89,6 +91,27 @@ public class MainHomeActivityTest {
         onView(withId(R.id.navView))
                 .perform(navigateTo(R.id.menuItem_favorites));
         onView(withId(R.id.recipeList)).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void intentWithNavToProfileNavigatesToProfileTest() {
+        Intent intent = new Intent(ApplicationProvider.getApplicationContext(), MainHomeActivity.class);
+        intent.putExtra("com.github.siela1915.bootcamp.navToProfile", "true");
+
+        try (ActivityScenario<MainHomeActivity> activityScenario = ActivityScenario.launch(intent)) {
+            onView(ViewMatchers.withId(R.id.profileFragment)).check(matches(isDisplayed()));
+        }
+    }
+
+    @Test
+    public void intentWithNavToHelpNavigatesToNearbyHelpTest() {
+        Intent intent = new Intent(ApplicationProvider.getApplicationContext(), MainHomeActivity.class);
+        intent.putExtra("navToHelp", "true");
+
+        try (ActivityScenario<MainHomeActivity> activityScenario = ActivityScenario.launch(intent)) {
+            onView(ViewMatchers.withId(R.id.chooseHelpGroup))
+                    .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+        }
     }
 
     @Test
