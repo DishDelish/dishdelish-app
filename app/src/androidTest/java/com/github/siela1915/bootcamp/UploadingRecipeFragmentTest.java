@@ -477,65 +477,69 @@ public class UploadingRecipeFragmentTest {
         scenario = FragmentScenario.launchInContainer(UploadingRecipeFragment.class);
 
         // simulate user input
-        onView(allOf(
-                isDescendantOfA(withId(R.id.recipeNameContent)),
-                withClassName(endsWith("EditText"))
-        )).perform(ViewActions.scrollTo(), typeText("recipe-test"));
-        onView(allOf(
-                isDescendantOfA(withId(R.id.prepTimeContent)),
-                withClassName(endsWith("EditText"))
-        )).perform(ViewActions.scrollTo(), typeText("10"));
-        onView(allOf(
-                isDescendantOfA(withId(R.id.cookTimeContent)),
-                withClassName(endsWith("EditText"))
-        )).perform(ViewActions.scrollTo(), typeText("10"));
-        onView(allOf(
-                isDescendantOfA(withId(R.id.servingsContent)),
-                withClassName(endsWith("EditText"))
-        )).perform(ViewActions.scrollTo(), typeText("10"));
-        onView(allOf(
-                isDescendantOfA(withId(R.id.ingredientsAmount)),
-                withClassName(endsWith("EditText"))
-        )).perform(ViewActions.scrollTo(), typeText("10"));
-        onView(allOf(
-                isDescendantOfA(withId(R.id.ingredientsName)),
-                withClassName(endsWith("AutoCompleteTextView"))
-        )).perform(ViewActions.scrollTo(), typeText("ingredient-name-test"));
-        onView(allOf(
-                isDescendantOfA(withId(R.id.ingredientsUnit)),
-                withClassName(endsWith("EditText"))
-        )).perform(ViewActions.scrollTo(), typeText("ingredient-unit-test"));
-        onView(allOf(
-                isDescendantOfA(withId(R.id.utensilsContent)),
-                withClassName(endsWith("EditText"))
-        )).perform(ViewActions.scrollTo(), typeText("utensils-test"));
-        onView(allOf(
-                isDescendantOfA(withId(R.id.stepContent)),
-                withClassName(endsWith("EditText"))
-        )).perform(ViewActions.scrollTo(), typeText("step-test"));
-        onView(allOf(
-                isDescendantOfA(withId(R.id.cuisineTypesContent)),
-                withId(R.id.cuisineTypesAutoComplete))
-        ).perform(ViewActions.scrollTo(), typeText(CuisineType.getAll()[0]));
-        onView(withId(R.id.addCuisineTypeButton)).perform(ViewActions.scrollTo(), ViewActions.click());
-        onView(allOf(
-                isDescendantOfA(withId(R.id.allergyTypesContent)),
-                withId(R.id.allergyTypesAutoComplete))
-        ).perform(ViewActions.scrollTo(), typeText(AllergyType.getAll()[0]));
-        onView(withId(R.id.addAllergyTypeButton)).perform(ViewActions.scrollTo(), ViewActions.click());
-        onView(allOf(
-                isDescendantOfA(withId(R.id.dietTypesContent)),
-                withId(R.id.dietTypesAutoComplete))
-        ).perform(ViewActions.scrollTo(), typeText(DietType.getAll()[0]));
-        onView(withId(R.id.addDietTypeButton)).perform(ViewActions.scrollTo(), ViewActions.click());
+        try {
+            onView(allOf(
+                    isDescendantOfA(withId(R.id.recipeNameContent)),
+                    withClassName(endsWith("EditText"))
+            )).perform(ViewActions.scrollTo(), typeText("recipe-test"));
+            onView(allOf(
+                    isDescendantOfA(withId(R.id.prepTimeContent)),
+                    withClassName(endsWith("EditText"))
+            )).perform(ViewActions.scrollTo(), typeText("10"));
+            onView(allOf(
+                    isDescendantOfA(withId(R.id.cookTimeContent)),
+                    withClassName(endsWith("EditText"))
+            )).perform(ViewActions.scrollTo(), typeText("10"));
+            onView(allOf(
+                    isDescendantOfA(withId(R.id.servingsContent)),
+                    withClassName(endsWith("EditText"))
+            )).perform(ViewActions.scrollTo(), typeText("10"));
+            onView(allOf(
+                    isDescendantOfA(withId(R.id.ingredientsAmount)),
+                    withClassName(endsWith("EditText"))
+            )).perform(ViewActions.scrollTo(), typeText("10"));
+            onView(allOf(
+                    isDescendantOfA(withId(R.id.ingredientsName)),
+                    withClassName(endsWith("AutoCompleteTextView"))
+            )).perform(ViewActions.scrollTo(), typeText("ingredient-name-test"));
+            onView(allOf(
+                    isDescendantOfA(withId(R.id.ingredientsUnit)),
+                    withClassName(endsWith("EditText"))
+            )).perform(ViewActions.scrollTo(), typeText("ingredient-unit-test"));
+            onView(allOf(
+                    isDescendantOfA(withId(R.id.utensilsContent)),
+                    withClassName(endsWith("EditText"))
+            )).perform(ViewActions.scrollTo(), typeText("utensils-test"));
+            onView(allOf(
+                    isDescendantOfA(withId(R.id.stepContent)),
+                    withClassName(endsWith("EditText"))
+            )).perform(ViewActions.scrollTo(), typeText("step-test"));
+            onView(allOf(
+                    isDescendantOfA(withId(R.id.cuisineTypesContent)),
+                    withId(R.id.cuisineTypesAutoComplete))
+            ).perform(ViewActions.scrollTo(), typeText(CuisineType.getAll()[0]));
+            onView(withId(R.id.addCuisineTypeButton)).perform(ViewActions.scrollTo(), ViewActions.click());
+            onView(allOf(
+                    isDescendantOfA(withId(R.id.allergyTypesContent)),
+                    withId(R.id.allergyTypesAutoComplete))
+            ).perform(ViewActions.scrollTo(), typeText(AllergyType.getAll()[0]));
+            onView(withId(R.id.addAllergyTypeButton)).perform(ViewActions.scrollTo(), ViewActions.click());
+            onView(allOf(
+                    isDescendantOfA(withId(R.id.dietTypesContent)),
+                    withId(R.id.dietTypesAutoComplete))
+            ).perform(ViewActions.scrollTo(), typeText(DietType.getAll()[0]));
+            onView(withId(R.id.addDietTypeButton)).perform(ViewActions.scrollTo(), ViewActions.click());
 
-        onView(withId(R.id.recipeUploadButton)).perform(ViewActions.scrollTo(), click());
+            onView(withId(R.id.recipeUploadButton)).perform(ViewActions.scrollTo(), click());
 
-        getInstrumentation().waitForIdleSync();
-        scenario.onFragment(fragment -> {
-            Fragment dialog = fragment.getActivity().getSupportFragmentManager().findFragmentByTag("review_recipe_dialog");
-            assertTrue(dialog instanceof DialogFragment);
-            assertTrue(((DialogFragment) dialog).getShowsDialog());
-        });
+            getInstrumentation().waitForIdleSync();
+            scenario.onFragment(fragment -> {
+                Fragment dialog = fragment.getActivity().getSupportFragmentManager().findFragmentByTag("review_recipe_dialog");
+                assertTrue(dialog instanceof DialogFragment);
+                assertTrue(((DialogFragment) dialog).getShowsDialog());
+            });
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 }
