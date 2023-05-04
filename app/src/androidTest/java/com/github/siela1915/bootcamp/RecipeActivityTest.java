@@ -9,8 +9,13 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
+import static androidx.test.espresso.matcher.ViewMatchers.Visibility.GONE;
+import static androidx.test.espresso.matcher.ViewMatchers.Visibility.INVISIBLE;
+import static androidx.test.espresso.matcher.ViewMatchers.Visibility.VISIBLE;
+
 import static androidx.test.espresso.matcher.ViewMatchers.assertThat;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.CoreMatchers.not;
@@ -39,6 +44,7 @@ import androidx.annotation.DrawableRes;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.core.app.ApplicationProvider;
+import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.espresso.matcher.BoundedMatcher;
 
@@ -577,6 +583,29 @@ public class RecipeActivityTest {
             expected = "removed";
             assertTrue(actual.equals(expected));
         });
+
+        scenario.close();
+    }
+
+    @Test
+    public void openNutritionalValuesCollapse() {
+        ActivityScenario scenario = ActivityScenario.launch(i);
+
+        onView(withId(R.id.nutritionalCollapseToggle)).perform(ViewActions.scrollTo(), click());
+
+        onView(withId(R.id.card_group)).check(matches(withEffectiveVisibility(VISIBLE)));
+
+        scenario.close();
+    }
+
+    @Test
+    public void closeNutritionalValuesCollapse() {
+        ActivityScenario scenario = ActivityScenario.launch(i);
+
+        onView(withId(R.id.nutritionalCollapseToggle)).perform(ViewActions.scrollTo(), click());
+        onView(withId(R.id.nutritionalCollapseToggle)).perform(ViewActions.scrollTo(), click());
+
+        onView(withId(R.id.card_group)).check(matches(withEffectiveVisibility(GONE)));
 
         scenario.close();
     }
