@@ -13,7 +13,7 @@ public class AllergyTypeTest{
 
     @Test
     public void getAllReturnsAllAllergyEnums(){
-        String[] at= {"Eggs","Fish","Crustaceans","Tree nuts","Peanuts","Wheat","Soybeans","Sesame","Milk"};
+        String[] at= {"None", "Eggs","Fish","Crustaceans","Tree nuts","Peanuts","Wheat","Soybeans","Sesame","Milk"};
         assertThat(at, is(AllergyType.getAll()));
     }
 

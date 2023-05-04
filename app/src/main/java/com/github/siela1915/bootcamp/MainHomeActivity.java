@@ -14,6 +14,8 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentContainerView;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.siela1915.bootcamp.Labelling.AllergyType;
 import com.github.siela1915.bootcamp.Labelling.CuisineType;
@@ -22,6 +24,11 @@ import com.github.siela1915.bootcamp.Labelling.RecipeFetcher;
 import com.github.siela1915.bootcamp.Recipes.ExampleRecipes;
 import com.github.siela1915.bootcamp.Recipes.PreparationTime;
 import com.github.siela1915.bootcamp.Recipes.Recipe;
+
+import com.github.siela1915.bootcamp.Recipes.RecipeItemAdapter;
+
+import com.github.siela1915.bootcamp.UploadRecipe.UploadingRecipeFragment;
+
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
@@ -35,18 +42,20 @@ public class MainHomeActivity extends AppCompatActivity {
     ConstraintLayout constraintLayout;
     FragmentContainerView fragmentContainerView;
     Button cuisineBtn,timeBtn,allergyBtn, dietBtn,filterBtn;
-    BottomNavigationView bottomAppBar;
+    FragmentManager fragmentManager;
 
     @SuppressLint({"MissingInflatedId", "NonConstantResourceId"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_home2);
+        fragmentManager= getSupportFragmentManager();
         constraintLayout = findViewById(R.id.filterLayout);
         constraintLayout.setVisibility(View.GONE);
         if(savedInstanceState== null){
             setContainerContent(R.id.fragContainer,HomePageFragment.class,true);
         }
+
         drawerLayout= findViewById(R.id.drawer_layout);
         navigationView= findViewById(R.id.navView);
         cuisineBtn =findViewById(R.id.cuisineBtn);
@@ -54,6 +63,7 @@ public class MainHomeActivity extends AppCompatActivity {
         allergyBtn=findViewById(R.id.allergyBtn);
         dietBtn=findViewById(R.id.dietBtn);
         filterBtn=findViewById(R.id.filterBtn);
+
 
         List<String> selectedCuisine = new ArrayList<>();
         List<String> selectedDiet = new ArrayList<>();
@@ -66,6 +76,7 @@ public class MainHomeActivity extends AppCompatActivity {
             String title = "Choose your preferred cuisine";
             popUpDialogBuilder(cuisineTypes,checksum,title,selectedCuisine);
         });
+
         dietBtn.setOnClickListener(v -> {
             String [] diets= DietType.getAll();
             boolean[] checksum= new boolean[diets.length];
@@ -100,6 +111,7 @@ public class MainHomeActivity extends AppCompatActivity {
                 CuisineType ct= CuisineType.fromString(elem);
                 cuisineType.add(ct.ordinal());
             }
+
             RecipeFetcher recipeFetcher = new RecipeFetcher(allergy,cuisineType,dietType);
             List<String> filteredRecipes= recipeFetcher.fetchRecipeList();
             List<Recipe> recipeList = new ArrayList<>();
@@ -119,11 +131,13 @@ public class MainHomeActivity extends AppCompatActivity {
         toggle.syncState();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+
         navigationView.setNavigationItemSelectedListener(item ->{
             constraintLayout.setVisibility(View.GONE);
             switch (item.getItemId()){
                 case R.id.menuItem_home:
                     setContainerContent(R.id.fragContainer,HomePageFragment.class,false);
+                    System.out.println("\n\n\n\n inside the switch "+fragmentManager.getBackStackEntryCount()+"\n\n\n\n\n");
                     break;
 
                 case R.id.menuItem_about:
@@ -194,14 +208,16 @@ public class MainHomeActivity extends AppCompatActivity {
 
     private void setContainerContent(int containerId, @NonNull Class<? extends Fragment> fragmentClass, boolean setOrReplace){
         if(setOrReplace){
-            getSupportFragmentManager().beginTransaction()
+            fragmentManager.beginTransaction()
                     .setReorderingAllowed(true)
                     .add(containerId,fragmentClass,null)
+                    .addToBackStack("fragment")
                     .commit();
         }else{
-            getSupportFragmentManager().beginTransaction()
+            fragmentManager.beginTransaction()
                     .setReorderingAllowed(true)
                     .replace(containerId,fragmentClass,null)
+                    .addToBackStack("fragment")
                     .commit();
         }
     }

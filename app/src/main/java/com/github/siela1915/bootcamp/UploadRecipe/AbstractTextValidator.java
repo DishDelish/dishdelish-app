@@ -1,13 +1,13 @@
-package com.github.siela1915.bootcamp;
+package com.github.siela1915.bootcamp.UploadRecipe;
 
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.TextView;
 
-public abstract class TextValidator implements TextWatcher {
+public abstract class AbstractTextValidator implements TextWatcher {
     private final TextView textView;
 
-    public TextValidator(TextView textView) {
+    public AbstractTextValidator(TextView textView) {
         this.textView = textView;
     }
 

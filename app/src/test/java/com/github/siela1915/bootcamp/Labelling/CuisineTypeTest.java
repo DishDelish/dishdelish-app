@@ -10,7 +10,7 @@ public class CuisineTypeTest {
 
     @Test
     public void getAllReturnsAllCuisineTypeEnums(){
-        String[] ct= {"American","Chinese","Indian","Libyan","Mexican","Italian","Greek","French","Caribbean",
+        String[] ct= {"None", "American","Chinese","Indian","Libyan","Mexican","Italian","Greek","French","Caribbean",
                 "Asian","European","Nordic","Turkish"};
         assertThat(ct,is(CuisineType.getAll()));
     }

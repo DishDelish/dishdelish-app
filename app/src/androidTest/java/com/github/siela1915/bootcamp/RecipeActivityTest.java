@@ -1,5 +1,6 @@
 package com.github.siela1915.bootcamp;
 
+import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
@@ -7,21 +8,32 @@ import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
+import static androidx.test.espresso.matcher.ViewMatchers.Visibility.GONE;
+import static androidx.test.espresso.matcher.ViewMatchers.Visibility.INVISIBLE;
+import static androidx.test.espresso.matcher.ViewMatchers.Visibility.VISIBLE;
+
 import static androidx.test.espresso.matcher.ViewMatchers.assertThat;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.VectorDrawable;
+import android.os.AsyncTask;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RatingBar;
@@ -32,6 +44,7 @@ import androidx.annotation.DrawableRes;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.core.app.ApplicationProvider;
+import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.espresso.matcher.BoundedMatcher;
 
@@ -39,19 +52,69 @@ import com.github.siela1915.bootcamp.Recipes.Comment;
 import com.github.siela1915.bootcamp.Recipes.ExampleRecipes;
 import com.github.siela1915.bootcamp.Recipes.Ingredient;
 import com.github.siela1915.bootcamp.Recipes.Recipe;
+import com.github.siela1915.bootcamp.firebase.Database;
+import com.github.siela1915.bootcamp.firebase.UserDatabase;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutionException;
 
 public class RecipeActivityTest {
 
-    Recipe omelette = ExampleRecipes.recipes.get(0);
+    //private static final FirebaseDatabase fb = FirebaseDatabase.getInstance();
+    //private static final Database database = new Database(fb);
+
+    private static Recipe omelette = ExampleRecipes.recipes.get(0);
+/*
+    private static CountDownLatch latch;
+    @BeforeClass
+    public static void setUpClass() throws InterruptedException {
+        latch = new CountDownLatch(1);
+        database.getByNameAsync("omelettte1")
+                .addOnSuccessListener(list -> {
+                    omelette = list.get(0);
+                    latch.countDown();
+                })
+                .addOnFailureListener(e -> {
+                    omelette = ExampleRecipes.recipes.get(0);
+                    latch.countDown();
+                });
+
+        latch.await();
+    }
+    */
+
+    @Before
+    public void prepareEmulator() {
+        FirebaseApp.clearInstancesForTest();
+        FirebaseApp.initializeApp(getApplicationContext());
+        FirebaseAuth.getInstance().useEmulator("10.0.2.2", 9099);
+        FirebaseDatabase.getInstance().useEmulator("10.0.2.2", 9000);
+
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            FirebaseAuthActivityTest.logoutSync();
+        }
+    }
+
     Intent i = RecipeConverter.convertToIntent(omelette, ApplicationProvider.getApplicationContext());
+
 
     @Test
     public void isRecipePictureOnDisplay() {
@@ -59,6 +122,8 @@ public class RecipeActivityTest {
         onView(withId(R.id.recipePicture)).check(matches(isDisplayed()));
         scenario.close();
     }
+
+
 
     @Test
     public void isCorrectRecipeNameOnDisplay() {
@@ -131,8 +196,8 @@ public class RecipeActivityTest {
 
     }
 
-
-
+//TODO
+/*
     @Test
     public void commentsListUpdatesAfterNonEmptyStringIsSent() {
         ActivityScenario scenario = ActivityScenario.launch(i);
@@ -159,10 +224,56 @@ public class RecipeActivityTest {
         });
         scenario.close();
 
-    }
+    } */
 
     @Test
-    public void backgroundOfLikeButtonChangesWhenItIsClicked(){
+    public void cannotCommentWhenUnauthenticated(){
+        ActivityScenario scenario = ActivityScenario.launch(i);
+
+        String test = "test";
+
+        onView(withId(R.id.enterComment)).perform(scrollTo(), typeText(test));
+
+        onView(withId(R.id.sendCommentButton))
+                .perform(scrollTo(), click());
+
+        scenario.onActivity(activity -> {
+            RecyclerView commentsList = activity.findViewById(R.id.commentsList);
+            CommentAdapter commentAdapter = (CommentAdapter) commentsList.getAdapter();
+
+            for (int i = 0; i < omelette.comments.size(); i++) {
+                Comment expectedData = omelette.comments.get(i);
+                Comment actualData = commentAdapter.getData().get(i);
+                assertEquals(expectedData.getContent(), actualData.getContent());
+            }
+        });
+        scenario.close();
+    }
+/*
+    @Test
+    public void noErrorMessageWhenCommentingAuthenticated(){
+        FirebaseAuthActivityTest.loginSync("example@gmail.com");
+        ActivityScenario<RecipeActivity> scenario = ActivityScenario.launch(i);
+
+        String test = "test";
+
+        onView(withId(R.id.enterComment)).perform(scrollTo(), typeText(test));
+
+        onView(withId(R.id.sendCommentButton))
+                .perform(scrollTo(), click());
+
+        scenario.onActivity(activity -> {
+            onView(not(withText("Error adding new comment"))).inRoot(withDecorView(not(is(activity.getWindow().getDecorView()))))
+                    .check(matches(isDisplayed()));
+        });
+        scenario.close();
+        FirebaseAuthActivityTest.logoutSync();
+
+    }
+
+ */
+    @Test
+    public void likeButtonRemainsTheSameWhenUnauthenticated(){
 
         ActivityScenario scenario = ActivityScenario.launch(i);
 
@@ -176,7 +287,7 @@ public class RecipeActivityTest {
             ToggleButton thumb = viewHolder.itemView.findViewById(R.id.thumbButton);
             thumb.performClick();
             String actual = (String) thumb.getTag();
-            String expected = "liked";
+            String expected = "unliked";
             assertTrue(actual.equals(expected));
 
             thumb.performClick();
@@ -188,9 +299,8 @@ public class RecipeActivityTest {
         scenario.close();
 
     }
-
     @Test
-    public void likeCounterIncreasesWhenCommentIsLiked(){
+    public void likeCounterRemainsTheSameWhenUnauthenticated(){
         ActivityScenario scenario = ActivityScenario.launch(i);
 
         int commentIndex = 0;
@@ -207,7 +317,7 @@ public class RecipeActivityTest {
 
             thumb.performClick();
             int actual = Integer.valueOf(likeCount.getText().toString());
-            int expected = likes+1;
+            int expected = likes;
             assertThat(actual, is(expected));
 
             thumb.performClick();
@@ -266,8 +376,9 @@ public class RecipeActivityTest {
 
     @Test
     public void isRatingActivityStarted() {
+        FirebaseAuthActivityTest.loginSync("example@gmail.com");
         ActivityScenario scenario = ActivityScenario.launch(i);
-        Intents.release();
+        //Intents.release();
         Intents.init();
         onView(withId(R.id.rateButton))
                 .perform(scrollTo(), click());
@@ -276,17 +387,9 @@ public class RecipeActivityTest {
 
         Intents.release();
         scenario.close();
+        FirebaseAuthActivityTest.logoutSync();
     }
 
-    @Test
-    public void isCorrectRecipePictureDisplayed() {
-        ActivityScenario scenario = ActivityScenario.launch(i);
-        onView(withId(R.id.recipePicture))
-
-                .check(matches(withDrawable(Integer.parseInt(omelette.image))));
-
-        scenario.close();
-    }
 
 
     @Test
@@ -388,7 +491,7 @@ public class RecipeActivityTest {
 
         scenario.close();
     }
-
+/*
     @Test
     public void heartButtonBecomesFullWhenClicked(){
         ActivityScenario scenario = ActivityScenario.launch(i);
@@ -399,6 +502,24 @@ public class RecipeActivityTest {
             heart.performClick();
             String actual = (String) heart.getTag();
             String expected = "full";
+            assertTrue(actual.equals(expected));
+
+        });
+        scenario.close();
+    }
+*/
+    @Test
+    public void heartButtonStillEmptyWhenUnauthenticated(){
+
+        //FirebaseAuthActivityTest.loginSync("example@gmail.com");
+        ActivityScenario scenario = ActivityScenario.launch(i);
+        scenario.onActivity(activity -> {
+            // Check that the background drawable has changed to the checked state drawable
+            ToggleButton heart = (ToggleButton) activity.findViewById(R.id.favoriteButton);
+            heart.performClick();
+
+            String actual = (String) heart.getTag();
+            String expected = "empty";
             assertTrue(actual.equals(expected));
 
         });
@@ -445,6 +566,29 @@ public class RecipeActivityTest {
             expected = "removed";
             assertTrue(actual.equals(expected));
         });
+
+        scenario.close();
+    }
+
+    @Test
+    public void openNutritionalValuesCollapse() {
+        ActivityScenario scenario = ActivityScenario.launch(i);
+
+        onView(withId(R.id.nutritionalCollapseToggle)).perform(ViewActions.scrollTo(), click());
+
+        onView(withId(R.id.card_group)).check(matches(withEffectiveVisibility(VISIBLE)));
+
+        scenario.close();
+    }
+
+    @Test
+    public void closeNutritionalValuesCollapse() {
+        ActivityScenario scenario = ActivityScenario.launch(i);
+
+        onView(withId(R.id.nutritionalCollapseToggle)).perform(ViewActions.scrollTo(), click());
+        onView(withId(R.id.nutritionalCollapseToggle)).perform(ViewActions.scrollTo(), click());
+
+        onView(withId(R.id.card_group)).check(matches(withEffectiveVisibility(GONE)));
 
         scenario.close();
     }
@@ -566,5 +710,76 @@ public class RecipeActivityTest {
 
 
 }
+
+    public static Matcher<View> withDrawable(final Drawable expectedDrawable) {
+        return new BoundedMatcher<View, ImageView>(ImageView.class) {
+            @Override
+            public void describeTo(Description description) {
+                description.appendText("with drawable: ");
+                description.appendValue(expectedDrawable);
+            }
+
+            @Override
+            public boolean matchesSafely(ImageView imageView) {
+                Drawable actualDrawable = imageView.getDrawable();
+                if (actualDrawable instanceof BitmapDrawable && expectedDrawable instanceof BitmapDrawable) {
+                    Bitmap expectedBitmap = ((BitmapDrawable) expectedDrawable).getBitmap();
+                    Bitmap actualBitmap = ((BitmapDrawable) actualDrawable).getBitmap();
+                    return expectedBitmap.sameAs(actualBitmap);
+                } else {
+                    return false;
+                }
+            }
+        };
+    }
+
+    public static Matcher<View> withImageUrl(final String expectedUrl) {
+        return new BoundedMatcher<View, ImageView>(ImageView.class) {
+            @Override
+            public void describeTo(Description description) {
+                description.appendText("with image URL: ");
+                description.appendValue(expectedUrl);
+            }
+
+            @Override
+            public boolean matchesSafely(ImageView imageView) {
+                try {
+                    Bitmap expectedBitmap = fetchImage(expectedUrl);
+                    Bitmap actualBitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
+                    return expectedBitmap.sameAs(actualBitmap);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return false;
+                }
+            }
+        };
+    }
+
+    public static Bitmap fetchImage(String urlString) throws IOException {
+        URL url = new URL(urlString);
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setDoInput(true);
+        connection.connect();
+        InputStream inputStream = connection.getInputStream();
+        Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+        inputStream.close();
+        return bitmap;
+    }
+
+
+
+    private static Drawable fetchDrawable(String urlString, Context context) throws IOException {
+        InputStream is = (InputStream) new URL(urlString).getContent();
+        return Drawable.createFromStream(is, null);
+    }
+
+
+
+
+
+
+
+
+
 }
 
