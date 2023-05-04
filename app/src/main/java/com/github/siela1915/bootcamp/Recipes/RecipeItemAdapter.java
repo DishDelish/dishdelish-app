@@ -16,11 +16,12 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.github.siela1915.bootcamp.DownloadImageTask;
 import com.github.siela1915.bootcamp.R;
+import com.github.siela1915.bootcamp.RecipeActivity;
 import com.github.siela1915.bootcamp.RecipeConverter;
 import com.github.siela1915.bootcamp.databinding.FragmentRecipeItemBinding;
 import com.github.siela1915.bootcamp.databinding.RecipeItemBinding;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,11 +44,17 @@ public class RecipeItemAdapter extends RecyclerView.Adapter<RecipeItemViewHolder
     @Override
     public void onBindViewHolder(@NonNull RecipeItemViewHolder holder, int position) {
         holder.textView_title.setText(recipes.get(position).recipeName);
-        holder.textView_time.setText(recipes.get(position).cookTime+"h");
+        holder.textView_time.setText(recipes.get(position).cookTime+"min");
         holder.textView_serving.setText(recipes.get(position).servings+"");
         holder.textView_likes.setText(recipes.get(position).likes+"");
         holder.recipe= recipes.get(position);
-        Picasso.get().load(recipes.get(position).image).into(holder.recipe_Image);
+
+        //Picasso.get().load(recipes.get(position).image).into(holder.recipe_Image);
+        new DownloadImageTask(holder.recipe_Image).execute(recipes.get(position).image);
+
+
+        //Bitmap avatar = BitmapFactory.decodeResource(this.getResources(), recipe.profilePicture);
+        //userAvatar.setImageBitmap(avatar);
     }
     @Override
     public int getItemCount() {

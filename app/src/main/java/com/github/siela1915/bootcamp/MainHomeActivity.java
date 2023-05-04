@@ -14,6 +14,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentContainerView;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.siela1915.bootcamp.Labelling.AllergyType;
@@ -37,18 +38,20 @@ public class MainHomeActivity extends AppCompatActivity {
     ConstraintLayout constraintLayout;
     FragmentContainerView fragmentContainerView;
     Button cuisineBtn,timeBtn,allergyBtn, dietBtn,filterBtn;
+    FragmentManager fragmentManager;
 
     @SuppressLint({"MissingInflatedId", "NonConstantResourceId"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_home2);
+        fragmentManager= getSupportFragmentManager();
         constraintLayout = findViewById(R.id.filterLayout);
         constraintLayout.setVisibility(View.GONE);
-        HomePageFragment hpf = null;
         if(savedInstanceState== null){
             setContainerContent(R.id.fragContainer,HomePageFragment.class,true);
         }
+
         drawerLayout= findViewById(R.id.drawer_layout);
         navigationView= findViewById(R.id.navView);
         cuisineBtn =findViewById(R.id.cuisineBtn);
@@ -130,6 +133,7 @@ public class MainHomeActivity extends AppCompatActivity {
             switch (item.getItemId()){
                 case R.id.menuItem_home:
                     setContainerContent(R.id.fragContainer,HomePageFragment.class,false);
+                    System.out.println("\n\n\n\n inside the switch "+fragmentManager.getBackStackEntryCount()+"\n\n\n\n\n");
                     break;
 
                 case R.id.menuItem_about:
@@ -188,14 +192,16 @@ public class MainHomeActivity extends AppCompatActivity {
 
     private void setContainerContent(int containerId, @NonNull Class<? extends Fragment> fragmentClass, boolean setOrReplace){
         if(setOrReplace){
-            getSupportFragmentManager().beginTransaction()
+            fragmentManager.beginTransaction()
                     .setReorderingAllowed(true)
                     .add(containerId,fragmentClass,null)
+                    .addToBackStack("fragment")
                     .commit();
         }else{
-            getSupportFragmentManager().beginTransaction()
+            fragmentManager.beginTransaction()
                     .setReorderingAllowed(true)
                     .replace(containerId,fragmentClass,null)
+                    .addToBackStack("fragment")
                     .commit();
         }
     }

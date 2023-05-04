@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,8 +20,9 @@ import com.github.siela1915.bootcamp.Recipes.Comment;
 import com.github.siela1915.bootcamp.Recipes.Ingredient;
 import com.github.siela1915.bootcamp.Recipes.Recipe;
 import com.github.siela1915.bootcamp.Recipes.Unit;
-import com.squareup.picasso.Picasso;
 
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -92,7 +94,7 @@ public class RecipeActivity extends AppCompatActivity {
         //Bitmap recipeImage = BitmapFactory.decodeResource(this.getResources(), Integer.valueOf(recipe.image));
         //recipePicture.setImageBitmap(recipeImage);
 
-        Picasso.get().load(recipe.image).into(recipePicture);
+        //Picasso.get().load(recipe.image).into(recipePicture);
 
         Bitmap avatar = BitmapFactory.decodeResource(this.getResources(), recipe.profilePicture);
         userAvatar.setImageBitmap(avatar);
@@ -201,3 +203,4 @@ public class RecipeActivity extends AppCompatActivity {
 
     }
 }
+
