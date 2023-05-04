@@ -1,13 +1,18 @@
 package com.github.siela1915.bootcamp;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.Group;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.transition.AutoTransition;
+import androidx.transition.TransitionManager;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -62,6 +67,26 @@ public class RecipeActivity extends AppCompatActivity {
             }
         });
 
+        setNutritionalValueOnClickListener();
+    }
+
+    private void setNutritionalValueOnClickListener() {
+        // collapsible card for nutritional values
+        CardView nutritionalValuesCard = findViewById(R.id.nutritionalValueCard);
+        ImageView expandNutritionalValues = findViewById(R.id.nutritionalCollapseToggle);
+        Group nutritionalValuesContent = findViewById(R.id.card_group);
+
+        expandNutritionalValues.setOnClickListener(view -> {
+            TransitionManager.beginDelayedTransition(nutritionalValuesCard, new AutoTransition());
+
+            if (nutritionalValuesContent.getVisibility() == View.VISIBLE) {
+                nutritionalValuesContent.setVisibility(View.GONE);
+                expandNutritionalValues.setImageResource(android.R.drawable.arrow_down_float);
+            } else {
+                nutritionalValuesContent.setVisibility(View.VISIBLE);
+                expandNutritionalValues.setImageResource(android.R.drawable.arrow_up_float);
+            }
+        });
     }
 
     @Override
@@ -86,6 +111,11 @@ public class RecipeActivity extends AppCompatActivity {
         RecyclerView commentsList=(RecyclerView) findViewById(R.id.commentsList);
         RatingBar ratingBar = (RatingBar) findViewById(R.id.ratingBar);
         TextView servings = (TextView) findViewById(R.id.servings);
+        TextView calories = (TextView) findViewById(R.id.nutritionalValuesCaloriesValue);
+        TextView fat = (TextView) findViewById(R.id.nutritionalValuesFatValue);
+        TextView carbohydrates = (TextView) findViewById(R.id.nutritionalValuesCarbohydratesValue);
+        TextView sugar = (TextView) findViewById(R.id.nutritionalValuesSugarValue);
+        TextView protein = (TextView) findViewById(R.id.nutritionalValuesProteinValue);
 
         // not sure about this
         Bitmap recipeImage = BitmapFactory.decodeResource(this.getResources(), Integer.valueOf(recipe.image));
@@ -108,6 +138,13 @@ public class RecipeActivity extends AppCompatActivity {
 
         // Set Ingredient List content
         setIngredientListContents(ingredientsList);
+
+        // Set Nutritional Values
+        calories.setText(Double.toString(recipe.calories));
+        fat.setText(Double.toString(recipe.fat));
+        carbohydrates.setText(Double.toString(recipe.carbohydrates));
+        sugar.setText(Double.toString(recipe.sugar));
+        protein.setText(Double.toString(recipe.protein));
 
         // Set servings info
         setServingInfo(nbServings, servings, ingredientsList);
