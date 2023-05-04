@@ -166,12 +166,24 @@ public class MainHomeActivity extends AppCompatActivity {
             drawerLayout.close();
             return true;
         });
-        
-        if (getIntent().hasExtra("com.github.siela1915.bootcamp.navToProfile")) {
-            navigationView.setCheckedItem(R.id.menuItem_login);
-            setContainerContent(R.id.fragContainer,ProfileFragment.class,false);
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            if (extras.containsKey("com.github.siela1915.bootcamp.navToProfile")) {
+                navigationView.setCheckedItem(R.id.menuItem_login);
+                setContainerContent(R.id.fragContainer, ProfileFragment.class, false);
+            }
+
+            if (extras.containsKey("navToHelp")) {
+                navigationView.setCheckedItem(R.id.menuItem_help);
+                setContainerContent(R.id.fragContainer, NearbyHelpFragment.newInstance(
+                                extras.getString("sender"),
+                                extras.getString("ingredient")),
+                        false);
+            }
         }
     }
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if(toggle.onOptionsItemSelected(item)){
