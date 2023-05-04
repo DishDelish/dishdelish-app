@@ -1,35 +1,48 @@
 package com.github.siela1915.bootcamp;
 
+import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.clearText;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.typeText;
+import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.RootMatchers.isDialog;
 import static androidx.test.espresso.matcher.ViewMatchers.Visibility.VISIBLE;
 import static androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
 import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.endsWith;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.testing.FragmentScenario;
 import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.matcher.BoundedMatcher;
-import androidx.test.espresso.matcher.ViewMatchers;
+import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.github.siela1915.bootcamp.Labelling.AllergyType;
 import com.github.siela1915.bootcamp.Labelling.CuisineType;
 import com.github.siela1915.bootcamp.Labelling.DietType;
+import com.github.siela1915.bootcamp.UploadRecipe.UploadingRecipeFragment;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
+import org.hamcrest.TypeSafeMatcher;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -41,15 +54,29 @@ import okhttp3.mockwebserver.MockWebServer;
 
 public class UploadingRecipeFragmentTest {
     private MockWebServer mockWebServer = new MockWebServer();
+
     @Before
     public void setup() throws IOException {
         mockWebServer.enqueue(new MockResponse().setBody("apple"));
         mockWebServer.start(8080);
+
+        // login by default
+        FirebaseApp.clearInstancesForTest();
+        FirebaseApp.initializeApp(getApplicationContext());
+        FirebaseAuth.getInstance().useEmulator("10.0.2.2", 9099);
+        FirebaseDatabase.getInstance().useEmulator("10.0.2.2", 9000);
+
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            FirebaseAuthActivityTest.logoutSync();
+        }
+
+        String email = "email-test@example.com";
+        FirebaseAuthActivityTest.loginSync(email);
     }
     FragmentScenario<UploadingRecipeFragment> scenario;
 
     // create a matcher to check the number of children elements which have the same id
-    public static Matcher<View> withChildViewCount(final int count, final Matcher<View> childMatcher) {
+    private static Matcher<View> withChildViewCount(final int count, final Matcher<View> childMatcher) {
         return new BoundedMatcher<View, ViewGroup>(ViewGroup.class) {
             @Override
             protected boolean matchesSafely(ViewGroup viewGroup) {
@@ -67,6 +94,23 @@ public class UploadingRecipeFragmentTest {
             public void describeTo(Description description) {
                 description.appendText("ViewGroup with child-count=" + count + " and");
                 childMatcher.describeTo(description);
+            }
+        };
+    }
+
+    private static Matcher<View> withError(String expected) {
+        return new TypeSafeMatcher<View>() {
+            @Override
+            public boolean matchesSafely(View view) {
+                if (!(view instanceof EditText)) {
+                    return false;
+                }
+                EditText editText = (EditText) view;
+                return editText.getError().toString().equals(expected);
+            }
+
+            @Override
+            public void describeTo(Description description) {
             }
         };
     }
@@ -117,7 +161,23 @@ public class UploadingRecipeFragmentTest {
         onView(allOf(
                 isDescendantOfA(withId(R.id.recipeNameContent)),
                 withClassName(endsWith("EditText"))
-        )).check(matches(ViewMatchers.withText("recipe-test")));
+        )).check(matches(withText("recipe-test")));
+    }
+
+    @Test
+    public void emptyRecipeNameTest() {
+        final Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        scenario = FragmentScenario.launchInContainer(UploadingRecipeFragment.class);
+
+        onView(allOf(
+                isDescendantOfA(withId(R.id.recipeNameContent)),
+                withClassName(endsWith("EditText"))
+        )).perform(typeText(" "));
+
+        onView(allOf(
+                isDescendantOfA(withId(R.id.recipeNameContent)),
+                withClassName(endsWith("EditText"))
+        )).check(matches(withError(context.getResources().getString(R.string.recipeNameEmptyErrorMessage))));
     }
 
     @Test
@@ -132,7 +192,39 @@ public class UploadingRecipeFragmentTest {
         onView(allOf(
                 isDescendantOfA(withId(R.id.prepTimeContent)),
                 withClassName(endsWith("EditText"))
-        )).check(matches(ViewMatchers.withText("10")));
+        )).check(matches(withText("10")));
+    }
+
+    @Test
+    public void invalidRecipePrepTimeTest() {
+        final Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        scenario = FragmentScenario.launchInContainer(UploadingRecipeFragment.class);
+
+        onView(allOf(
+                isDescendantOfA(withId(R.id.prepTimeContent)),
+                withClassName(endsWith("EditText"))
+        )).perform(typeText("0"));
+
+        onView(allOf(
+                isDescendantOfA(withId(R.id.prepTimeContent)),
+                withClassName(endsWith("EditText"))
+        )).check(matches(withError(context.getResources().getString(R.string.prepTimeInvalidErrorMessage))));
+    }
+
+    @Test
+    public void emptyRecipePrepTimeTest() {
+        final Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        scenario = FragmentScenario.launchInContainer(UploadingRecipeFragment.class);
+
+        onView(allOf(
+                isDescendantOfA(withId(R.id.prepTimeContent)),
+                withClassName(endsWith("EditText"))
+        )).perform(typeText("1"), clearText());
+
+        onView(allOf(
+                isDescendantOfA(withId(R.id.prepTimeContent)),
+                withClassName(endsWith("EditText"))
+        )).check(matches(withError(context.getResources().getString(R.string.prepTimeEmptyErrorMessage))));
     }
 
     @Test
@@ -147,7 +239,39 @@ public class UploadingRecipeFragmentTest {
         onView(allOf(
                 isDescendantOfA(withId(R.id.cookTimeContent)),
                 withClassName(endsWith("EditText"))
-        )).check(matches(ViewMatchers.withText("10")));
+        )).check(matches(withText("10")));
+    }
+
+    @Test
+    public void invalidRecipeCookTimeTest() {
+        final Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        scenario = FragmentScenario.launchInContainer(UploadingRecipeFragment.class);
+
+        onView(allOf(
+                isDescendantOfA(withId(R.id.cookTimeContent)),
+                withClassName(endsWith("EditText"))
+        )).perform(typeText("0"));
+
+        onView(allOf(
+                isDescendantOfA(withId(R.id.cookTimeContent)),
+                withClassName(endsWith("EditText"))
+        )).check(matches(withError(context.getResources().getString(R.string.cookTimeInvalidErrorMessage))));
+    }
+
+    @Test
+    public void emptyRecipeCookTimeTest() {
+        final Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        scenario = FragmentScenario.launchInContainer(UploadingRecipeFragment.class);
+
+        onView(allOf(
+                isDescendantOfA(withId(R.id.cookTimeContent)),
+                withClassName(endsWith("EditText"))
+        )).perform(typeText("1"), clearText());
+
+        onView(allOf(
+                isDescendantOfA(withId(R.id.cookTimeContent)),
+                withClassName(endsWith("EditText"))
+        )).check(matches(withError(context.getResources().getString(R.string.cookTimeEmptyErrorMessage))));
     }
 
     @Test
@@ -162,7 +286,39 @@ public class UploadingRecipeFragmentTest {
         onView(allOf(
                 isDescendantOfA(withId(R.id.servingsContent)),
                 withClassName(endsWith("EditText"))
-        )).check(matches(ViewMatchers.withText("10")));
+        )).check(matches(withText("10")));
+    }
+
+    @Test
+    public void invalidRecipeServingsTest() {
+        final Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        scenario = FragmentScenario.launchInContainer(UploadingRecipeFragment.class);
+
+        onView(allOf(
+                isDescendantOfA(withId(R.id.servingsContent)),
+                withClassName(endsWith("EditText"))
+        )).perform(typeText("0"));
+
+        onView(allOf(
+                isDescendantOfA(withId(R.id.servingsContent)),
+                withClassName(endsWith("EditText"))
+        )).check(matches(withError(context.getResources().getString(R.string.servingsInvalidErrorMessage))));
+    }
+
+    @Test
+    public void emptyRecipeServingsTest() {
+        final Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        scenario = FragmentScenario.launchInContainer(UploadingRecipeFragment.class);
+
+        onView(allOf(
+                isDescendantOfA(withId(R.id.servingsContent)),
+                withClassName(endsWith("EditText"))
+        )).perform(typeText("1"), clearText());
+
+        onView(allOf(
+                isDescendantOfA(withId(R.id.servingsContent)),
+                withClassName(endsWith("EditText"))
+        )).check(matches(withError(context.getResources().getString(R.string.servingsEmptyErrorMessage))));
     }
 
 //    @Test
@@ -209,7 +365,7 @@ public class UploadingRecipeFragmentTest {
         onView(allOf(
                 isDescendantOfA(withId(R.id.ingredientsAmount)),
                 withClassName(endsWith("EditText"))
-        )).check(matches(ViewMatchers.withText("10")));
+        )).check(matches(withText("10")));
 //        onView(allOf(
 //                isDescendantOfA(withId(R.id.ingredientsName)),
 //                withClassName(endsWith("AutoCompleteTextView"))
@@ -217,7 +373,7 @@ public class UploadingRecipeFragmentTest {
         onView(allOf(
                 isDescendantOfA(withId(R.id.ingredientsUnit)),
                 withClassName(endsWith("EditText"))
-        )).check(matches(ViewMatchers.withText("ingredient-unit-test")));
+        )).check(matches(withText("ingredient-unit-test")));
     }
 
     @Test
@@ -251,7 +407,7 @@ public class UploadingRecipeFragmentTest {
         onView(allOf(
                 isDescendantOfA(withId(R.id.cuisineTypesContent)),
                 withClassName(endsWith("AutoCompleteTextView"))
-        )).check(matches(ViewMatchers.withText(CuisineType.AMERICAN.toString())));
+        )).check(matches(withText(CuisineType.AMERICAN.toString())));
     }
 
     @Test
@@ -266,7 +422,7 @@ public class UploadingRecipeFragmentTest {
         onView(allOf(
                 isDescendantOfA(withId(R.id.allergyTypesContent)),
                 withClassName(endsWith("AutoCompleteTextView"))
-        )).check(matches(ViewMatchers.withText(AllergyType.EGGS.toString())));
+        )).check(matches(withText(AllergyType.EGGS.toString())));
     }
 
     @Test
@@ -281,7 +437,7 @@ public class UploadingRecipeFragmentTest {
         onView(allOf(
                 isDescendantOfA(withId(R.id.dietTypesContent)),
                 withClassName(endsWith("AutoCompleteTextView"))
-        )).check(matches(ViewMatchers.withText(DietType.DAIRY.toString())));
+        )).check(matches(withText(DietType.DAIRY.toString())));
     }
 
     @Test
@@ -296,7 +452,7 @@ public class UploadingRecipeFragmentTest {
         onView(allOf(
                 isDescendantOfA(withId(R.id.utensilsContent)),
                 withClassName(endsWith("EditText"))
-        )).check(matches(ViewMatchers.withText("utensils-test")));
+        )).check(matches(withText("utensils-test")));
     }
 
     @Test
@@ -311,7 +467,23 @@ public class UploadingRecipeFragmentTest {
         onView(allOf(
                 isDescendantOfA(withId(R.id.stepContent)),
                 withClassName(endsWith("EditText"))
-        )).check(matches(ViewMatchers.withText("step-test")));
+        )).check(matches(withText("step-test")));
+    }
+
+    @Test
+    public void emptyRecipeStepTest() {
+        final Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        scenario = FragmentScenario.launchInContainer(UploadingRecipeFragment.class);
+
+        onView(allOf(
+                isDescendantOfA(withId(R.id.stepContent)),
+                withClassName(endsWith("EditText"))
+        )).perform(ViewActions.scrollTo(), typeText(" "));
+
+        onView(allOf(
+                isDescendantOfA(withId(R.id.stepContent)),
+                withClassName(endsWith("EditText"))
+        )).check(matches(withError(context.getResources().getString(R.string.stepsEmptyErrorMessage))));
     }
 
     @Test
@@ -345,7 +517,7 @@ public class UploadingRecipeFragmentTest {
         onView(allOf(
                 isDescendantOfA(withId(R.id.cuisineTypesContent)),
                 withId(R.id.cuisineTypesAutoComplete)
-        )).check(matches(ViewMatchers.withText(CuisineType.getAll()[0])));
+        )).check(matches(withText(CuisineType.getAll()[0])));
     }
 
     @Test
@@ -387,7 +559,7 @@ public class UploadingRecipeFragmentTest {
         onView(allOf(
                 isDescendantOfA(withId(R.id.allergyTypesContent)),
                 withId(R.id.allergyTypesAutoComplete))
-        ).check(matches(ViewMatchers.withText(AllergyType.getAll()[0])));
+        ).check(matches(withText(AllergyType.getAll()[0])));
     }
 
     @Test
@@ -429,7 +601,7 @@ public class UploadingRecipeFragmentTest {
         onView(allOf(
                 isDescendantOfA(withId(R.id.dietTypesContent)),
                 withId(R.id.dietTypesAutoComplete))
-        ).check(matches(ViewMatchers.withText(DietType.getAll()[0])));
+        ).check(matches(withText(DietType.getAll()[0])));
     }
 
     @Test
@@ -524,5 +696,64 @@ public class UploadingRecipeFragmentTest {
             assertTrue(dialog instanceof DialogFragment);
             assertTrue(((DialogFragment) dialog).getShowsDialog());
         });
+    }
+
+    @Test
+    public void cannotUploadBeforeFillingTheRequired() {
+        scenario = FragmentScenario.launchInContainer(UploadingRecipeFragment.class);
+
+        onView(withId(R.id.recipeUploadButton)).perform(ViewActions.scrollTo(), click());
+
+        getInstrumentation().waitForIdleSync();
+        scenario.onFragment(fragment -> {
+            Fragment dialog = fragment.getActivity().getSupportFragmentManager().findFragmentByTag("review_recipe_dialog");
+            assertNull(dialog);
+        });
+    }
+
+    @Test
+    public void openImageChoosingDialog() {
+        scenario = FragmentScenario.launchInContainer(UploadingRecipeFragment.class);
+
+        onView(withId(R.id.recipeImageContent)).perform(ViewActions.scrollTo(), click());
+
+        onView(withText("Take Photo")).inRoot(isDialog()).check(matches(withEffectiveVisibility(VISIBLE)));
+        onView(withText("Choose from Gallery")).inRoot(isDialog()).check(matches(withEffectiveVisibility(VISIBLE)));
+        onView(withText("Exit")).inRoot(isDialog()).check(matches(withEffectiveVisibility(VISIBLE)));
+    }
+
+    @Test
+    public void closeImageChoosingDialog() {
+        scenario = FragmentScenario.launchInContainer(UploadingRecipeFragment.class);
+
+        onView(withId(R.id.recipeImageContent)).perform(ViewActions.scrollTo(), click());
+        onView(withText("Exit")).perform(ViewActions.scrollTo(), click());
+
+        onView(withText("Take Photo")).check(doesNotExist());
+        onView(withText("Choose from Gallery")).check(doesNotExist());
+        onView(withText("Exit")).check(doesNotExist());
+    }
+
+    @Test
+    public void authGuardTestWhenLoggedIn() {
+        final Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        scenario = FragmentScenario.launchInContainer(UploadingRecipeFragment.class);
+
+        onView(withText(context.getResources().getString(R.string.login_required_popup_title))).check(doesNotExist());
+        onView(withText(context.getResources().getString(R.string.login_required_popup_message))).check(doesNotExist());
+    }
+
+    @Test
+    public void authGuardTestWhenNotLoggedIn() {
+        // log out user if logged in
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            FirebaseAuthActivityTest.logoutSync();
+        }
+
+        final Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        scenario = FragmentScenario.launchInContainer(UploadingRecipeFragment.class);
+
+        onView(withText(context.getResources().getString(R.string.login_required_popup_title))).check(matches(withEffectiveVisibility(VISIBLE)));
+        onView(withText(context.getResources().getString(R.string.login_required_popup_message))).check(matches(withEffectiveVisibility(VISIBLE)));
     }
 }

@@ -9,6 +9,7 @@ import com.github.siela1915.bootcamp.AutocompleteApi.ApiResponse;
 import com.github.siela1915.bootcamp.AutocompleteApi.IngredientAutocomplete;
 import com.github.siela1915.bootcamp.AutocompleteApi.Nutrient;
 import com.github.siela1915.bootcamp.AutocompleteApi.NutrientsResponse;
+import com.github.siela1915.bootcamp.AutocompleteApi.Nutrition;
 import com.github.siela1915.bootcamp.Recipes.Ingredient;
 
 import org.checkerframework.checker.units.qual.A;
@@ -41,9 +42,9 @@ public class NutritionTest {
 
     @Test
     public void nutritionResponseEqualsWorks(){
-        NutrientsResponse r1 = new NutrientsResponse(Arrays.asList(new Nutrient("apple", 1, "g", 1)));
-        NutrientsResponse r2 = new NutrientsResponse(Arrays.asList(new Nutrient("apple", 1, "g", 1)));
-        NutrientsResponse r3 = new NutrientsResponse(Arrays.asList(new Nutrient("pear", 1, "g", 1)));
+        NutrientsResponse r1 = new NutrientsResponse(new Nutrition(Arrays.asList(new Nutrient("apple", 1, "g", 1))));
+        NutrientsResponse r2 = new NutrientsResponse(new Nutrition(Arrays.asList(new Nutrient("apple", 1, "g", 1))));
+        NutrientsResponse r3 = new NutrientsResponse(new Nutrition(Arrays.asList(new Nutrient("pear", 1, "g", 1))));
         assertTrue(r1.equals(r2));
         assertFalse(r1.equals(r3));
     }

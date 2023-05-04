@@ -1,17 +1,19 @@
 package com.github.siela1915.bootcamp.AutocompleteApi;
 
 import java.util.List;
+import java.util.Map;
 
 public class NutrientsResponse {
-    public NutrientsResponse(List<Nutrient> nutrients) {
-        this.nutrients = nutrients;
+    public NutrientsResponse(Nutrition nutrition) {
+        this.nutrition = nutrition;
     }
 
-    public List<Nutrient> nutrients;
+    public Nutrition nutrition;
+
 
     public boolean equals(NutrientsResponse other){
-        for (int i = 0; i < nutrients.size(); i++) {
-            if(!nutrients.get(i).equals(other.nutrients.get(i))){
+        for (int i = 0; i < nutrition.nutrients.size(); i++) {
+            if(!nutrition.nutrients.get(i).equals(other.nutrition.nutrients.get(i))){
                 return false;
             }
         }
