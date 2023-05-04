@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.github.siela1915.bootcamp.Recipes.ExampleRecipes;
 import com.github.siela1915.bootcamp.Recipes.Recipe;
 
 import com.github.siela1915.bootcamp.Recipes.RecipeItemAdapter;
@@ -50,11 +51,7 @@ public class HomePageFragment extends Fragment {
     public RecipeItemAdapter getRecipeAdapter() {
         return recipeAdapter;
     }
-
-    private final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-
-    private final Database database = new Database(firebaseDatabase);
-
+    
     public HomePageFragment() {
         // Required empty public constructor
     }
