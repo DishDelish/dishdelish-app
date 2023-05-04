@@ -92,7 +92,6 @@ public class NearbyHelpFragmentTest {
         onView(withId(R.id.askHelpButton)).perform(ViewActions.click());
 
         onView(withId(R.id.askedIngredient)).perform(ViewActions.typeText("testIngredient"), ViewActions.closeSoftKeyboard());
-        onView(withId(R.id.askSharePosition)).perform(ViewActions.click());
 
         onView(withId(R.id.submitAskHelpButton))
                 .perform(ViewActions.click());
@@ -111,7 +110,6 @@ public class NearbyHelpFragmentTest {
                 .perform(ViewActions.click());
 
         onView(withId(R.id.offeredIngredient)).perform(ViewActions.typeText("testIngredient"), ViewActions.closeSoftKeyboard());
-        onView(withId(R.id.offerSharePosition)).perform(ViewActions.click());
 
         onView(withId(R.id.submitOfferHelpButton))
                 .perform(ViewActions.click());

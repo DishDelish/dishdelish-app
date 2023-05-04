@@ -1,6 +1,7 @@
 package com.github.siela1915.bootcamp;
 
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
+import static com.google.android.gms.location.Priority.PRIORITY_BALANCED_POWER_ACCURACY;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -28,7 +29,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentContainerView;
 
 import com.github.siela1915.bootcamp.Recipes.Ingredient;
-import com.github.siela1915.bootcamp.Recipes.Unit;
 import com.github.siela1915.bootcamp.firebase.LocationDatabase;
 import com.github.siela1915.bootcamp.firebase.PushNotificationService;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -41,6 +41,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.HashMap;
 import java.util.List;
@@ -57,6 +59,10 @@ public class NearbyHelpFragment extends Fragment implements OnMapReadyCallback, 
     private FusedLocationProviderClient fusedLocationClient;
     private String asked = "";
     private final Map<Marker, Pair<String, Ingredient>> offers = new HashMap<>();
+    public static final String ARG_REPLY_OFFER_UID = "reply-offer-uid";
+    public static final String ARG_REPLY_INGREDIENT = "reply-ingredient";
+    private String mReplyOfferUid = null;
+    private String mReplyIngredient = null;
 
     private final ActivityResultLauncher<String> requestPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
@@ -75,9 +81,11 @@ public class NearbyHelpFragment extends Fragment implements OnMapReadyCallback, 
      *
      * @return A new instance of fragment NearbyHelpFragment.
      */
-    public static NearbyHelpFragment newInstance() {
+    public static NearbyHelpFragment newInstance(String replyOfferUid, String replyIngredient) {
         NearbyHelpFragment fragment = new NearbyHelpFragment();
         Bundle args = new Bundle();
+        args.putString(ARG_REPLY_OFFER_UID, replyOfferUid);
+        args.putString(ARG_REPLY_INGREDIENT, replyIngredient);
         fragment.setArguments(args);
         return fragment;
     }
@@ -85,7 +93,14 @@ public class NearbyHelpFragment extends Fragment implements OnMapReadyCallback, 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        askLocationPermission();
+
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext());
+
+        if (getArguments() != null && getArguments().getString(ARG_REPLY_OFFER_UID) != null) {
+            mReplyOfferUid = getArguments().getString(ARG_REPLY_OFFER_UID);
+            mReplyIngredient = getArguments().getString(ARG_REPLY_INGREDIENT);
+        }
     }
 
     @Override
@@ -100,16 +115,36 @@ public class NearbyHelpFragment extends Fragment implements OnMapReadyCallback, 
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        askLocationPermission();
-
         Group selectionGroup = view.findViewById(R.id.chooseHelpGroup);
         Group askGroup = view.findViewById(R.id.askHelpGroup);
         Group offerGroup = view.findViewById(R.id.offerHelpGroup);
+        Group replyGroup = view.findViewById(R.id.replyHelpGroup);
         FragmentContainerView map = view.findViewById(R.id.map);
         selectionGroup.setVisibility(View.VISIBLE);
         askGroup.setVisibility(View.INVISIBLE);
         offerGroup.setVisibility(View.INVISIBLE);
         map.setVisibility(View.INVISIBLE);
+        replyGroup.setVisibility(View.INVISIBLE);
+
+        if (mReplyOfferUid != null) {
+            selectionGroup.setVisibility(View.INVISIBLE);
+            replyGroup.setVisibility(View.VISIBLE);
+
+            Button sendReplyButton = view.findViewById(R.id.sendReplyHelpButton);
+
+            sendReplyButton.setOnClickListener(v -> {
+                EditText replyInput = view.findViewById(R.id.replyInputHelp);
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                if (user == null) {
+                    replyInput.setText("Can't reply without being authenticated");
+                    return;
+                }
+                PushNotificationService.sendRemoteNotification(mReplyOfferUid,
+                        String.format(Locale.ENGLISH, "Reply from %s for %s",
+                                user.getDisplayName(), mReplyIngredient),
+                        replyInput.getText().toString(), null);
+            });
+        }
 
         Button askSelectionButton = view.findViewById(R.id.askHelpButton);
         Button offerSelectionButton = view.findViewById(R.id.offerHelpButton);
@@ -146,7 +181,7 @@ public class NearbyHelpFragment extends Fragment implements OnMapReadyCallback, 
 
         submitOfferHelp.setOnClickListener(v -> {
             EditText offeredInput = view.findViewById(R.id.offeredIngredient);
-            Ingredient offered = new Ingredient(offeredInput.getText().toString(), new Unit());
+            Ingredient offered = new Ingredient(offeredInput.getText().toString(), null);
             fusedLocationClient.getLastLocation()
                     .continueWithTask(locTask -> locDb.updateLocation(locTask.getResult()))
                     .continueWithTask(task -> locDb.updateOffered(offered));
@@ -158,7 +193,7 @@ public class NearbyHelpFragment extends Fragment implements OnMapReadyCallback, 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         googleMap.setOnInfoWindowClickListener(this);
-        fusedLocationClient.getLastLocation()
+        fusedLocationClient.getCurrentLocation(PRIORITY_BALANCED_POWER_ACCURACY, null)
                 .continueWithTask(locTask -> {
                     googleMap.moveCamera(CameraUpdateFactory.newLatLng(
                             new LatLng(locTask.getResult().getLatitude(),
@@ -172,10 +207,9 @@ public class NearbyHelpFragment extends Fragment implements OnMapReadyCallback, 
                         if (offeredTask.getResult().toString().contains(asked.toLowerCase())) {
                             Marker marker = googleMap.addMarker(new MarkerOptions()
                                     .position(new LatLng(pair.second.getLatitude(), pair.second.getLongitude()))
-                                    .title(String.format(Locale.ENGLISH,"%s: (Lat: %f Lon: %f)",
-                                            offeredTask.getResult().getIngredient(),
+                                    .title(offeredTask.getResult().toString())
+                                    .snippet(String.format(Locale.ENGLISH, "(Lat: %f Lon: %f)",
                                             pair.second.getLatitude(), pair.second.getLongitude()))
-                                    .snippet(pair.first)
                             );
                             offers.put(marker, new Pair<>(pair.first, offeredTask.getResult()));
                         }
@@ -189,8 +223,17 @@ public class NearbyHelpFragment extends Fragment implements OnMapReadyCallback, 
     @Override
     public void onInfoWindowClick(@NonNull Marker marker) {
         Pair<String, Ingredient> offer = offers.get(marker);
-        if (offer != null) {
-            PushNotificationService.sendRemoteNotification(offer.first, offer.second)
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (offer != null && user != null) {
+            Map<String, String> data = new HashMap<>();
+            data.put("ingredient", offer.second.toString());
+            PushNotificationService.sendRemoteNotification(offer.first,
+                            String.format(Locale.ENGLISH, "%s is interested in %s",
+                                    user.getDisplayName(), offer.second.getIngredient()),
+                            String.format(Locale.ENGLISH, "%s is interested in %s. Answer him now!",
+                                    user.getDisplayName(), offer.second),
+                            data)
                     .addOnSuccessListener(result -> {
                         // inflate the layout of the popup window
                         LayoutInflater inflater = (LayoutInflater) requireContext().getSystemService(LAYOUT_INFLATER_SERVICE);
