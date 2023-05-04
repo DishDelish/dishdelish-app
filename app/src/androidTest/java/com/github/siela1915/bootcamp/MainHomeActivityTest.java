@@ -14,6 +14,7 @@ import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.endsWithIgnoringCase;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 
 import androidx.test.core.app.ActivityScenario;
@@ -89,7 +90,7 @@ public class MainHomeActivityTest {
         Intent intent = new Intent(ApplicationProvider.getApplicationContext(), MainHomeActivity.class);
         intent.putExtra("com.github.siela1915.bootcamp.navToProfile", "true");
 
-        try (ActivityScenario activityScenario = ActivityScenario.launch(intent)) {
+        try (ActivityScenario<MainHomeActivity> activityScenario = ActivityScenario.launch(intent)) {
             onView(ViewMatchers.withId(R.id.profileFragment)).check(matches(isDisplayed()));
         }
     }
@@ -99,8 +100,8 @@ public class MainHomeActivityTest {
         Intent intent = new Intent(ApplicationProvider.getApplicationContext(), MainHomeActivity.class);
         intent.putExtra("navToHelp", "true");
 
-        try (ActivityScenario activityScenario = ActivityScenario.launch(intent)) {
-            onView(ViewMatchers.withId(R.id.profileFragment)).check(matches(isDisplayed()));
+        try (ActivityScenario<MainHomeActivity> activityScenario = ActivityScenario.launch(intent)) {
+            onView(ViewMatchers.withId(R.id.chooseHelpGroup)).check(matches(isDisplayed()));
         }
     }
 
@@ -186,7 +187,7 @@ public class MainHomeActivityTest {
     }
     @Test
     public void test(){
-        ActivityScenario scenario1= ActivityScenario.launch(MainHomeActivity.class);
+        ActivityScenario<MainHomeActivity> scenario1= ActivityScenario.launch(MainHomeActivity.class);
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
         onView(withId(R.id.navView)).perform(navigateTo(R.id.menuItem_soppingCart));
         scenario.onActivity(activity -> {
