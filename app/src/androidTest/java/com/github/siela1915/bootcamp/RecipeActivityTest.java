@@ -123,6 +123,8 @@ public class RecipeActivityTest {
         scenario.close();
     }
 
+
+
     @Test
     public void isCorrectRecipeNameOnDisplay() {
         ActivityScenario scenario = ActivityScenario.launch(i);
@@ -376,7 +378,7 @@ public class RecipeActivityTest {
     public void isRatingActivityStarted() {
         FirebaseAuthActivityTest.loginSync("example@gmail.com");
         ActivityScenario scenario = ActivityScenario.launch(i);
-        Intents.release();
+        //Intents.release();
         Intents.init();
         onView(withId(R.id.rateButton))
                 .perform(scrollTo(), click());
@@ -387,25 +389,6 @@ public class RecipeActivityTest {
         scenario.close();
         FirebaseAuthActivityTest.logoutSync();
     }
-/*
-    @Test
-    public void isCorrectRecipePictureDisplayed1() {
-        ActivityScenario scenario = ActivityScenario.launch(i);
-        onView(withId(R.id.recipePicture))
-
-                .check(matches(withDrawable(Integer.parseInt(omelette.image))));
-
-        scenario.close();
-    }
-
-    @Test
-    public void testImageUrl() {
-        ActivityScenario scenario = ActivityScenario.launch(i);
-        onView(withId(R.id.recipePicture))
-                .check(matches(withImageUrl(omelette.image)));
-        scenario.close();
-    }
-*/
 
 
 

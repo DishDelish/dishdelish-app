@@ -153,7 +153,6 @@ public class RecipeActivity extends AppCompatActivity implements CompoundButton.
         //Picasso.get().load(recipe.image).into(recipePicture);
         new DownloadImageTask(recipePicture).execute(recipe.image);
 
-
         Bitmap avatar = BitmapFactory.decodeResource(this.getResources(), recipe.profilePicture);
         userAvatar.setImageBitmap(avatar);
 
@@ -278,92 +277,3 @@ public class RecipeActivity extends AppCompatActivity implements CompoundButton.
 
     }
 
-    /**
-     * @param buttonView The compound button view whose state has changed.
-     * @param isChecked  The new checked state of buttonView.
-     */
-    @Override
-    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            if (isChecked) {
-
-                // Add the recipe to favorites
-                database.addFavorite(recipe.uniqueKey).addOnSuccessListener(arg -> {
-                    // Show a success message to the user
-                    Toast.makeText(this, "Recipe added to favorites", Toast.LENGTH_SHORT).show();
-
-                    //change background
-                    buttonView.setBackground(getDrawable(R.drawable.heart_full));
-                    recipe.setLikes(recipe.likes + 1);
-
-                    // for testing
-                    buttonView.setTag("full");
-
-                }).addOnFailureListener(e -> {
-
-                    // Show an error message to the user
-                    Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
-
-                    // remove onCheckedChangeListener before changing the state manually so that it is not triggered
-                    buttonView.setOnCheckedChangeListener(null);
-                    buttonView.setChecked(false);
-                    buttonView.setOnCheckedChangeListener(this);
-
-                });
-
-            } else {
-
-                // remove this recipe from favorites
-                database.removeFavorite(recipe.uniqueKey).addOnSuccessListener(s -> {
-
-                    // display success message
-                    Toast.makeText(this, "Recipe removed from favorites", Toast.LENGTH_SHORT).show();
-
-                    // change background
-                    buttonView.setBackground(getDrawable(R.drawable.heart_empty));
-
-                    recipe.setLikes(recipe.likes - 1);
-
-                    // for testing
-                    buttonView.setTag("empty");
-
-                }).addOnFailureListener(e -> {
-
-                    // display error message
-                    Toast.makeText(this, "Error removing recipe from favorites: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-
-                    buttonView.setOnCheckedChangeListener(null);
-                    buttonView.setChecked(true);
-                    buttonView.setOnCheckedChangeListener(this);
-
-                });
-        }
-    }
-}
-
-class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
-    private ImageView imageView;
-
-    public DownloadImageTask(ImageView imageView) {
-        this.imageView = imageView;
-    }
-
-    @Override
-    protected Bitmap doInBackground(String... urls) {
-        String url = urls[0];
-        Bitmap bitmap = null;
-        try {
-            InputStream in = new URL(url).openStream();
-            bitmap = BitmapFactory.decodeStream(in);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return bitmap;
-    }
-
-    @Override
-    protected void onPostExecute(Bitmap result) {
-        if (result != null) {
-            imageView.setImageBitmap(result);
-        }
-    }
-}

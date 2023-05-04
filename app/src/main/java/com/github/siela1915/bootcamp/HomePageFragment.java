@@ -10,16 +10,19 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.siela1915.bootcamp.Recipes.Recipe;
+
+import com.github.siela1915.bootcamp.Recipes.RecipeItemAdapter;
 import com.github.siela1915.bootcamp.firebase.Database;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.atomic.AtomicReference;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -38,6 +41,15 @@ public class HomePageFragment extends Fragment {
     private String mParam2;
     private  String cuis= "";
     private TextView homeTextView;
+    private RecyclerView recipeListRecyclerView;
+    private final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+
+    private final Database database = new Database(firebaseDatabase);
+    private RecipeItemAdapter recipeAdapter;
+
+    public RecipeItemAdapter getRecipeAdapter() {
+        return recipeAdapter;
+    }
 
     private final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
 
@@ -79,13 +91,13 @@ public class HomePageFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view= inflater.inflate(R.layout.fragment_home_page, container, false);
-        homeTextView = view.findViewById(R.id.homeFragTextView);
+        //homeTextView = view.findViewById(R.id.homeFragTextView);
         Bundle data= getArguments();
         if(data != null){
             cuis+= data.getString("selected cuisine");
         }
-        homeTextView.setText(cuis);
-        homeTextView.setTextSize(30);
+        //homeTextView.setText(cuis);
+        //homeTextView.setTextSize(30);
         return view;
     }
 
@@ -94,7 +106,18 @@ public class HomePageFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         Button button = view.findViewById(R.id.homeFragButton);
+        recipeListRecyclerView= view.findViewById(R.id.rand_recipe_recyclerView);
+        recipeListRecyclerView.setHasFixedSize(true);
+        recipeListRecyclerView.setLayoutManager(new GridLayoutManager(getContext(),2));
 
+        database.getNRandomAsync(20).addOnSuccessListener(list->{
+                    recipeAdapter =new RecipeItemAdapter(list, view.getContext());
+                    recipeListRecyclerView.setAdapter(this.recipeAdapter/*new RecipeItemAdapter(list, view.getContext())*/);
+        })
+                .addOnFailureListener(e->{
+                    e.printStackTrace();
+                    recipeListRecyclerView.setAdapter(new RecipeItemAdapter(ExampleRecipes.recipes, view.getContext()));
+                });
         button.setOnClickListener(v -> {
             //Recipe recipe = ExampleRecipes.recipes.get((int)(Math.random()*2.999));
             database.getByNameAsync("omelettte1")
