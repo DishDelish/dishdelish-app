@@ -1,17 +1,8 @@
 package com.github.siela1915.bootcamp;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
-import androidx.constraintlayout.widget.Group;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.transition.AutoTransition;
-import androidx.transition.TransitionManager;
-
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -23,17 +14,22 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.Group;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.transition.AutoTransition;
+import androidx.transition.TransitionManager;
+
 import com.github.siela1915.bootcamp.Recipes.Comment;
 import com.github.siela1915.bootcamp.Recipes.Ingredient;
 import com.github.siela1915.bootcamp.Recipes.Recipe;
 import com.github.siela1915.bootcamp.Recipes.Unit;
 import com.github.siela1915.bootcamp.firebase.Database;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.io.InputStream;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,7 +61,7 @@ public class RecipeActivity extends AppCompatActivity implements CompoundButton.
         Button rateButton = (Button) findViewById(R.id.rateButton);
         rateButton.setOnClickListener(v -> {
 
-            if(firebaseAuth.getCurrentUser()==null){
+            if (firebaseAuth.getCurrentUser() == null) {
                 Toast.makeText(this, "Sign in to rate this recipe", Toast.LENGTH_SHORT).show();
             } else {
                 Intent ratingIntent = new Intent(v.getContext(), RatingActivity.class);
@@ -105,20 +101,20 @@ public class RecipeActivity extends AppCompatActivity implements CompoundButton.
         return true;
     }
 
-    private void setPageContents(){
+    private void setPageContents() {
 
-        ImageView recipePicture =(ImageView) findViewById(R.id.recipePicture);
-        TextView recipeNameText =(TextView) findViewById(R.id.recipeNameText);
-        ImageView userAvatar=(ImageView) findViewById(R.id.userAvatar);
-        TextView userNameText=(TextView) findViewById(R.id.userNameText);
-        TextView prepTime=(TextView) findViewById(R.id.prepTimeNbMins);
-        TextView kcalCount=(TextView) findViewById(R.id.kcalCount);
-        TextView cookTime=(TextView) findViewById(R.id.cookTimeNbMins);
-        TextView nbServings=(TextView) findViewById(R.id.nbServings);
-        RecyclerView ingredientsList=(RecyclerView) findViewById(R.id.ingredientsList);
-        TextView utensilsList=(TextView) findViewById(R.id.utensilsList);
-        TextView stepsText=(TextView) findViewById(R.id.stepsText);
-        RecyclerView commentsList=(RecyclerView) findViewById(R.id.commentsList);
+        ImageView recipePicture = (ImageView) findViewById(R.id.recipePicture);
+        TextView recipeNameText = (TextView) findViewById(R.id.recipeNameText);
+        ImageView userAvatar = (ImageView) findViewById(R.id.userAvatar);
+        TextView userNameText = (TextView) findViewById(R.id.userNameText);
+        TextView prepTime = (TextView) findViewById(R.id.prepTimeNbMins);
+        TextView kcalCount = (TextView) findViewById(R.id.kcalCount);
+        TextView cookTime = (TextView) findViewById(R.id.cookTimeNbMins);
+        TextView nbServings = (TextView) findViewById(R.id.nbServings);
+        RecyclerView ingredientsList = (RecyclerView) findViewById(R.id.ingredientsList);
+        TextView utensilsList = (TextView) findViewById(R.id.utensilsList);
+        TextView stepsText = (TextView) findViewById(R.id.stepsText);
+        RecyclerView commentsList = (RecyclerView) findViewById(R.id.commentsList);
         RatingBar ratingBar = (RatingBar) findViewById(R.id.ratingBar);
         TextView servings = (TextView) findViewById(R.id.servings);
         TextView calories = (TextView) findViewById(R.id.nutritionalValuesCaloriesValue);
@@ -130,9 +126,9 @@ public class RecipeActivity extends AppCompatActivity implements CompoundButton.
         ToggleButton heart = (ToggleButton) findViewById(R.id.favoriteButton);
         heart.setTag("empty");
 
-        if(firebaseAuth.getCurrentUser() != null){
+        if (firebaseAuth.getCurrentUser() != null) {
             database.getFavorites().addOnSuccessListener(favs -> {
-                if(favs.contains(recipe.uniqueKey)){
+                if (favs.contains(recipe.uniqueKey)) {
                     heart.setBackground(getDrawable(R.drawable.heart_full));
 
                     heart.setOnCheckedChangeListener(null);
@@ -190,20 +186,20 @@ public class RecipeActivity extends AppCompatActivity implements CompoundButton.
         IngredientAdapter adapter = (IngredientAdapter) ingredientsList.getAdapter();
         List<Ingredient> data = adapter.getData();
 
-        for(int i = 0; i < data.size(); i++){
+        for (int i = 0; i < data.size(); i++) {
             Ingredient original = recipe.getIngredientList().get(i);
             String ingredient = original.getIngredient();
             String info = original.getUnit().getInfo();
             int oldValue = original.getUnit().getValue();
-            double temp = ((double)n/recipe.servings);
-            int newValue = (int)(Math.ceil(temp * oldValue));
+            double temp = ((double) n / recipe.servings);
+            int newValue = (int) (Math.ceil(temp * oldValue));
 
-            data.set(i, new Ingredient(ingredient, new Unit(newValue , info)));
+            data.set(i, new Ingredient(ingredient, new Unit(newValue, info)));
             adapter.notifyItemChanged(i);
         }
     }
 
-    private void setIngredientListContents(RecyclerView ingredientsList){
+    private void setIngredientListContents(RecyclerView ingredientsList) {
 
         ingredientsList.setLayoutManager(new LinearLayoutManager(this));
         IngredientAdapter ingredientAdapter = new IngredientAdapter(getApplicationContext(), new ArrayList<>(recipe.getIngredientList()), shoppingListManager);
@@ -211,7 +207,7 @@ public class RecipeActivity extends AppCompatActivity implements CompoundButton.
 
     }
 
-    private void setCommentContents(RecyclerView commentsList){
+    private void setCommentContents(RecyclerView commentsList) {
 
         commentsList.setLayoutManager(new LinearLayoutManager(this));
         CommentAdapter commentAdapter = new CommentAdapter(getApplicationContext(), recipe.comments, recipe);
@@ -222,17 +218,17 @@ public class RecipeActivity extends AppCompatActivity implements CompoundButton.
 
         sendComment.setOnClickListener(view -> {
             String input = commentBox.getText().toString();
-            if(!input.isEmpty()){
+            if (!input.isEmpty()) {
                 commentBox.setText("");
 
-                if(firebaseAuth.getCurrentUser()==null){
+                if (firebaseAuth.getCurrentUser() == null) {
                     Toast.makeText(this, "Sign in to add a comment", Toast.LENGTH_SHORT).show();
                 } else {
                     recipe.comments.add(new Comment(input));
                     // Update the database with the new comment
                     database.updateAsync(recipe).addOnCompleteListener(task -> {
-                        if(task.isSuccessful()){
-                            commentAdapter.notifyItemInserted(recipe.comments.size()-1);
+                        if (task.isSuccessful()) {
+                            commentAdapter.notifyItemInserted(recipe.comments.size() - 1);
                         } else {
                             Toast.makeText(this, "Error adding new comment", Toast.LENGTH_SHORT).show();
                         }
@@ -244,7 +240,7 @@ public class RecipeActivity extends AppCompatActivity implements CompoundButton.
 
     }
 
-    private void setServingInfo(TextView nbServings, TextView servings, RecyclerView ingredientsList){
+    private void setServingInfo(TextView nbServings, TextView servings, RecyclerView ingredientsList) {
 
         nbServings.setText(String.valueOf(recipe.servings));
         servings.setText(String.valueOf(recipe.servings));
@@ -255,7 +251,7 @@ public class RecipeActivity extends AppCompatActivity implements CompoundButton.
         plusButton.setOnClickListener(v -> {
 
             int old = Integer.valueOf(nbServings.getText().toString());
-            int newVal = old+1;
+            int newVal = old + 1;
 
             nbServings.setText(String.valueOf(newVal));
             servings.setText(String.valueOf(newVal));
@@ -266,8 +262,8 @@ public class RecipeActivity extends AppCompatActivity implements CompoundButton.
 
         minusButton.setOnClickListener(v -> {
             int old = Integer.valueOf(nbServings.getText().toString());
-            if(old > 1){
-                int newVal = old-1;
+            if (old > 1) {
+                int newVal = old - 1;
                 nbServings.setText(String.valueOf(newVal));
                 servings.setText(String.valueOf(newVal));
 
@@ -276,4 +272,66 @@ public class RecipeActivity extends AppCompatActivity implements CompoundButton.
         });
 
     }
+
+    /**
+     * @param buttonView The compound button view whose state has changed.
+     * @param isChecked  The new checked state of buttonView.
+     */
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        if (isChecked) {
+
+            // Add the recipe to favorites
+            database.addFavorite(recipe.uniqueKey).addOnSuccessListener(arg -> {
+                // Show a success message to the user
+                Toast.makeText(this, "Recipe added to favorites", Toast.LENGTH_SHORT).show();
+
+                //change background
+                buttonView.setBackground(getDrawable(R.drawable.heart_full));
+                recipe.setLikes(recipe.likes + 1);
+
+                // for testing
+                buttonView.setTag("full");
+
+            }).addOnFailureListener(e -> {
+
+                // Show an error message to the user
+                Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+
+                // remove onCheckedChangeListener before changing the state manually so that it is not triggered
+                buttonView.setOnCheckedChangeListener(null);
+                buttonView.setChecked(false);
+                buttonView.setOnCheckedChangeListener(this);
+
+            });
+
+        } else {
+
+            // remove this recipe from favorites
+            database.removeFavorite(recipe.uniqueKey).addOnSuccessListener(s -> {
+
+                // display success message
+                Toast.makeText(this, "Recipe removed from favorites", Toast.LENGTH_SHORT).show();
+
+                // change background
+                buttonView.setBackground(getDrawable(R.drawable.heart_empty));
+
+                recipe.setLikes(recipe.likes - 1);
+
+                // for testing
+                buttonView.setTag("empty");
+
+            }).addOnFailureListener(e -> {
+
+                // display error message
+                Toast.makeText(this, "Error removing recipe from favorites: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+
+                buttonView.setOnCheckedChangeListener(null);
+                buttonView.setChecked(true);
+                buttonView.setOnCheckedChangeListener(this);
+
+            });
+        }
+    }
+}
 
