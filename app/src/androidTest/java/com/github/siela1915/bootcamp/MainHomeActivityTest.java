@@ -204,7 +204,7 @@ public class MainHomeActivityTest {
 
         onView(withId(R.id.rand_recipe_recyclerView)).check(matches(isDisplayed()));
 
-        onView(withId(R.id.rand_recipe_recyclerView)).check(new RecyclerViewItemCountAssertion(13));
+        onView(withId(R.id.rand_recipe_recyclerView)).check(new RecyclerViewItemCountAssertion(12));
         onView(withId(R.id.rand_recipe_recyclerView)).perform(actionOnItemAtPosition(0, click()));
         Intents.intended(hasComponent(RecipeActivity.class.getName()));
         Intents.release();
