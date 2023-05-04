@@ -24,7 +24,11 @@ import com.github.siela1915.bootcamp.Labelling.RecipeFetcher;
 import com.github.siela1915.bootcamp.Recipes.ExampleRecipes;
 import com.github.siela1915.bootcamp.Recipes.PreparationTime;
 import com.github.siela1915.bootcamp.Recipes.Recipe;
+
 import com.github.siela1915.bootcamp.Recipes.RecipeItemAdapter;
+
+import com.github.siela1915.bootcamp.UploadRecipe.UploadingRecipeFragment;
+
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 

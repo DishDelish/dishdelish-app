@@ -11,7 +11,7 @@ import org.junit.Test;
 public class DietTypeTest {
     @Test
     public void getAllReturnsAllEnums(){
-        String[] dt={"Keto","Vegan","Vegetarian","Paleo","Gluten-free",
+        String[] dt={"None", "Keto","Vegan","Vegetarian","Paleo","Gluten-free",
         "Histamine-free","Dairy-free","Sulfite-free"};
         assertThat(dt,is(DietType.getAll()));
     }

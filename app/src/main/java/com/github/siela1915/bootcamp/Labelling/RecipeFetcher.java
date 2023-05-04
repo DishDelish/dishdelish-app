@@ -111,4 +111,56 @@ public class RecipeFetcher{
                 .map(r -> r.recipeName)
                 .collect(Collectors.toList());
     }
+
+
+    /**
+     * Sort a list of recipes by their ascending protein value
+     * @param recipes to sort
+     * @return recipes sorted by protein value
+     */
+    public List<String> sortByProtein(List<Recipe> recipes) {
+        Objects.requireNonNull(recipes);
+        return recipes.stream().sorted(Comparator.comparingDouble(Recipe::getProtein)).map(r -> r.uniqueKey).collect(Collectors.toList());
+    }
+
+    /**
+     * Sort a list of recipes by their ascending fat value
+     * @param recipes to sort
+     * @return recipes sorted by fat value
+     */
+    public List<String> sortByFat(List<Recipe> recipes) {
+        Objects.requireNonNull(recipes);
+        return recipes.stream().sorted(Comparator.comparingDouble(Recipe::getFat)).map(r -> r.uniqueKey).collect(Collectors.toList());
+    }
+
+    /**
+     * Sort a list of recipes by their ascending carbohydrate value
+     * @param recipes to sort
+     * @return recipes sorted by carbohydrate value
+     */
+    public List<String> sortByCarbohydrates(List<Recipe> recipes) {
+        Objects.requireNonNull(recipes);
+        return recipes.stream().sorted(Comparator.comparingDouble(Recipe::getCarbohydrates)).map(r -> r.uniqueKey).collect(Collectors.toList());
+    }
+
+    /**
+     * Sort a list of recipes by their ascending calorie value
+     * @param recipes to sort
+     * @return recipes sorted by calorie value
+     */
+    public List<String> sortByCalories(List<Recipe> recipes) {
+        Objects.requireNonNull(recipes);
+        return recipes.stream().sorted(Comparator.comparingDouble(Recipe::getCalories)).map(r -> r.uniqueKey).collect(Collectors.toList());
+    }
+
+    /**
+     * Sort a list of recipes by their ascending sugar value
+     * @param recipes to sort
+     * @return recipes sorted by sugar value
+     */
+    public List<String> sortBySugar(List<Recipe> recipes) {
+        Objects.requireNonNull(recipes);
+        return recipes.stream().sorted(Comparator.comparingDouble(Recipe::getSugar)).map(r -> r.uniqueKey).collect(Collectors.toList());
+    }
+
 }

@@ -1,5 +1,8 @@
 package com.github.siela1915.bootcamp.AutocompleteApi;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Nutrient {
     public String name;
 
