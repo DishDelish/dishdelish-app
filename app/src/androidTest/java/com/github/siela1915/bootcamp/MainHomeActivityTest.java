@@ -101,7 +101,8 @@ public class MainHomeActivityTest {
         intent.putExtra("navToHelp", "true");
 
         try (ActivityScenario<MainHomeActivity> activityScenario = ActivityScenario.launch(intent)) {
-            onView(ViewMatchers.withId(R.id.chooseHelpGroup)).check(matches(isDisplayed()));
+            onView(ViewMatchers.withId(R.id.chooseHelpGroup))
+                    .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         }
     }
 
