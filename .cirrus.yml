@@ -36,11 +36,6 @@ check_android_task:
     adb shell settings put global window_animation_scale 0.0
     adb shell settings put global transition_animation_scale 0.0
     adb shell settings put global animator_duration_scale 0.0
-    adb shell svc power stayon true
-    adb shell pm grant com.github.dishdelish android.permission.ACCESS_FINE_LOCATION
-    adb shell pm grant com.github.dishdelish android.permission.POST_NOTIFICATIONS
-    adb shell pm grant com.github.dishdelish.test android.permission.ACCESS_FINE_LOCATION
-    adb shell pm grant com.github.dishdelish.test android.permission.POST_NOTIFICATIONS
   prepare_codeclimate_script: |
     curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
     chmod +x ./cc-test-reporter
