@@ -18,7 +18,10 @@ import static org.hamcrest.Matchers.endsWithIgnoringCase;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 
+import android.content.Intent;
+
 import androidx.test.core.app.ActivityScenario;
+import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.contrib.DrawerActions;
@@ -78,6 +81,26 @@ public class MainHomeActivityTest {
         onView(withId(R.id.navView))
                 .perform(navigateTo(R.id.menuItem_favorites));
         onView(withId(R.id.recipeList)).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void intentWithNavToProfileNavigatesToProfileTest() {
+        Intent intent = new Intent(ApplicationProvider.getApplicationContext(), MainHomeActivity.class);
+        intent.putExtra("com.github.siela1915.bootcamp.navToProfile", "true");
+
+        try (ActivityScenario activityScenario = ActivityScenario.launch(intent)) {
+            onView(ViewMatchers.withId(R.id.profileFragment)).check(matches(isDisplayed()));
+        }
+    }
+
+    @Test
+    public void intentWithNavToHelpNavigatesToNearbyHelpTest() {
+        Intent intent = new Intent(ApplicationProvider.getApplicationContext(), MainHomeActivity.class);
+        intent.putExtra("navToHelp", "true");
+
+        try (ActivityScenario activityScenario = ActivityScenario.launch(intent)) {
+            onView(ViewMatchers.withId(R.id.profileFragment)).check(matches(isDisplayed()));
+        }
     }
 
     @Test
