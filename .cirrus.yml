@@ -40,6 +40,8 @@ check_android_task:
     curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
     chmod +x ./cc-test-reporter
     ./cc-test-reporter before-build
+  start_logcat_background_script:
+    adb logcat > log.log
   screen_record_background_script:
     for n in $(seq 1 20); do adb exec-out screenrecord --time-limit=180 --output-format=h264 - > $n.h264; done
   check_script:
@@ -54,6 +56,12 @@ check_android_task:
     wait_for_screenrecord_script: |
       pkill -2 -x adb
       sleep 2
+    stop_logcat_script: |
+      if [[ $(adb devices | awk 'NR>1 {print $1}') =~ "emulator.*" ]]; then
+        adb logcat -c
+      fi
+    logs_artifacts:
+      path: log.log
     screenrecord_artifacts:
       path: "*.h264"
     android_lint_artifacts:
