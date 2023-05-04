@@ -28,7 +28,7 @@ public class NearbyHelpFragmentTest {
 
     @Rule
     public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(
-            Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.POST_NOTIFICATIONS);
+            Manifest.permission.ACCESS_FINE_LOCATION);
 
 
     @Before
