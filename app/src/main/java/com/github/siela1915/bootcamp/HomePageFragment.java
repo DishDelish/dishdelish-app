@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.siela1915.bootcamp.Recipes.ExampleRecipes;
 import com.github.siela1915.bootcamp.Recipes.Recipe;
+
 import com.github.siela1915.bootcamp.Recipes.RecipeItemAdapter;
 import com.github.siela1915.bootcamp.firebase.Database;
 import com.google.firebase.FirebaseApp;
@@ -22,6 +23,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -49,7 +51,7 @@ public class HomePageFragment extends Fragment {
     public RecipeItemAdapter getRecipeAdapter() {
         return recipeAdapter;
     }
-
+    
     public HomePageFragment() {
         // Required empty public constructor
     }
@@ -114,8 +116,13 @@ public class HomePageFragment extends Fragment {
                     recipeListRecyclerView.setAdapter(new RecipeItemAdapter(ExampleRecipes.recipes, view.getContext()));
                 });
         button.setOnClickListener(v -> {
-            Recipe recipe = ExampleRecipes.recipes.get((int)(Math.random()*2.999));
-            startActivity(RecipeConverter.convertToIntent(recipe, getContext()));
+            //Recipe recipe = ExampleRecipes.recipes.get((int)(Math.random()*2.999));
+            database.getByNameAsync("omelettte1")
+                    .addOnSuccessListener(recipes -> startActivity(RecipeConverter.convertToIntent(recipes.get(0), getContext())))
+                    .addOnFailureListener(e -> {
+                        e.printStackTrace();
+                        throw new RuntimeException(e);
+                    });
         });
     }
 }
