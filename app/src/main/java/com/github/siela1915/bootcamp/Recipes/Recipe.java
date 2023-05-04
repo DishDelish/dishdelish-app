@@ -20,7 +20,7 @@ public class Recipe implements Parcelable {
     public List<Integer> cuisineTypes, allergyTypes, dietTypes;
     public List<Ingredient> ingredientList;
     public List<String> steps;
-    public List<Comment> comments;
+    public List<Comment> comments= new ArrayList<>();
 
     //Nutritional values are all in grams, except calories which are in kCal
     public double calories, fat, carbohydrates, sugar, protein = 0;

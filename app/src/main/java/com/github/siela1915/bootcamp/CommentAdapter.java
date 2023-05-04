@@ -38,7 +38,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentViewHolder> {
 
     @Override
     public int getItemCount() {
-        return comments.size();
+            return comments.size();
     }
 
     public List<Comment> getData(){

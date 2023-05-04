@@ -2,12 +2,16 @@ package com.github.siela1915.bootcamp.Labelling;
 
 import static java.util.Collections.reverseOrder;
 
+import android.content.SyncStatusObserver;
 import android.util.Pair;
 
 import com.github.siela1915.bootcamp.Recipes.ExampleRecipes;
 import com.github.siela1915.bootcamp.Recipes.Ingredient;
 import com.github.siela1915.bootcamp.Recipes.Recipe;
+import com.github.siela1915.bootcamp.firebase.Database;
+import com.google.firebase.database.FirebaseDatabase;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -27,7 +31,6 @@ public class RecipeFetcher{
     private List<Integer> allergies;
     private List<Integer> cuisines;
     private List<Integer> diets;
-
     public RecipeFetcher(List<Integer> allergies, List<Integer> cuisines, List<Integer> diets) {
         this.allergies = allergies;
         this.cuisines = cuisines;
@@ -39,6 +42,7 @@ public class RecipeFetcher{
     public List<String> fetchRecipeList(){
         //String will represent the ID of the recipe, for now it's just the name
         Map<String, Float> mapOfRecipes = new HashMap<>();
+
         for(Recipe r :ExampleRecipes.recipes){
             //Base weight, will be lower only if diets or allergies are violated
             float weight = 5;

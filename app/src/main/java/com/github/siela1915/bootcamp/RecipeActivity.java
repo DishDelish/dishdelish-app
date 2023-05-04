@@ -11,6 +11,7 @@ import androidx.transition.TransitionManager;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -25,6 +26,8 @@ import com.github.siela1915.bootcamp.Recipes.Ingredient;
 import com.github.siela1915.bootcamp.Recipes.Recipe;
 import com.github.siela1915.bootcamp.Recipes.Unit;
 
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -118,8 +121,11 @@ public class RecipeActivity extends AppCompatActivity {
         TextView protein = (TextView) findViewById(R.id.nutritionalValuesProteinValue);
 
         // not sure about this
-        Bitmap recipeImage = BitmapFactory.decodeResource(this.getResources(), Integer.valueOf(recipe.image));
-        recipePicture.setImageBitmap(recipeImage);
+        //Bitmap recipeImage = BitmapFactory.decodeResource(this.getResources(), Integer.valueOf(recipe.image));
+        //recipePicture.setImageBitmap(recipeImage);
+
+        //Picasso.get().load(recipe.image).into(recipePicture);
+        new DownloadImageTask(recipePicture).execute(recipe.image);
 
         Bitmap avatar = BitmapFactory.decodeResource(this.getResources(), recipe.profilePicture);
         userAvatar.setImageBitmap(avatar);
@@ -235,3 +241,4 @@ public class RecipeActivity extends AppCompatActivity {
 
     }
 }
+
