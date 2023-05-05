@@ -52,6 +52,8 @@ public class MainActivityTest {
                 IntentMatchers.hasExtra("com.github.siela1915.bootcamp.userName", "Test"),
                 IntentMatchers.hasComponent(GreetingActivity.class.getName())
         ));
+
+        Intents.release();
     }
 
     @Test
