@@ -20,7 +20,6 @@ import com.github.siela1915.bootcamp.DownloadImageTask;
 import com.github.siela1915.bootcamp.R;
 import com.github.siela1915.bootcamp.RecipeActivity;
 import com.github.siela1915.bootcamp.RecipeConverter;
-import com.github.siela1915.bootcamp.databinding.FragmentRecipeItemBinding;
 import com.github.siela1915.bootcamp.databinding.RecipeItemBinding;
 
 import java.util.ArrayList;

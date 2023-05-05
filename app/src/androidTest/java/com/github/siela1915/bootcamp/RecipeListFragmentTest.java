@@ -49,7 +49,7 @@ public class RecipeListFragmentTest {
         bundle.putParcelableArrayList(RecipeListFragment.ARG_RECIPE_LIST, new ArrayList<>());
         scenario = FragmentScenario.launchInContainer(RecipeListFragment.class, bundle);
 
-        onView(withId(R.id.recipeItemLayout)).check(doesNotExist());
+        onView(withId(R.id.recipeCardView)).check(doesNotExist());
     }
 
     @Test
