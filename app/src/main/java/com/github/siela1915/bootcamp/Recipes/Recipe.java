@@ -185,7 +185,6 @@ public class Recipe implements Parcelable {
         this.steps = steps;
         this.comments = comments;
         this.likes = likes;
-        //this.uniqueKey = uniqueKey;
     }
 
 

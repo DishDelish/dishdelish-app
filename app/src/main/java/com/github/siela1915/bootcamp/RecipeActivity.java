@@ -142,11 +142,6 @@ public class RecipeActivity extends AppCompatActivity implements CompoundButton.
 
         heart.setOnCheckedChangeListener(this);
 
-        // not sure about this
-        //Bitmap recipeImage = BitmapFactory.decodeResource(this.getResources(), Integer.valueOf(recipe.image));
-        //recipePicture.setImageBitmap(recipeImage);
-
-        //Picasso.get().load(recipe.image).into(recipePicture);
         new DownloadImageTask(recipePicture).execute(recipe.image);
 
         Bitmap avatar = BitmapFactory.decodeResource(this.getResources(), recipe.profilePicture);

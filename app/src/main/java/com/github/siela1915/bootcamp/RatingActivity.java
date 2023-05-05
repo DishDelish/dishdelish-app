@@ -1,15 +1,12 @@
 package com.github.siela1915.bootcamp;
 
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.RatingBar;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.siela1915.bootcamp.Recipes.Recipe;
 import com.github.siela1915.bootcamp.firebase.Database;
@@ -33,7 +30,7 @@ public class RatingActivity extends AppCompatActivity implements RatingBar.OnRat
         recipe = getIntent().getParcelableExtra("Recipe");
 
         rating = 0;
-        RatingBar rbar = (RatingBar)findViewById(R.id.ratingActivityBar);
+        RatingBar rbar = (RatingBar) findViewById(R.id.ratingActivityBar);
         rbar.setOnRatingBarChangeListener(this);
 
         Button submitButton = (Button) findViewById(R.id.submitRatingButton);

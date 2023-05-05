@@ -8,17 +8,13 @@ import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
-import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
 import static androidx.test.espresso.matcher.ViewMatchers.Visibility.GONE;
-import static androidx.test.espresso.matcher.ViewMatchers.Visibility.INVISIBLE;
 import static androidx.test.espresso.matcher.ViewMatchers.Visibility.VISIBLE;
-
 import static androidx.test.espresso.matcher.ViewMatchers.assertThat;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
@@ -30,10 +26,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.VectorDrawable;
-import android.os.AsyncTask;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RatingBar;
@@ -52,9 +45,6 @@ import com.github.siela1915.bootcamp.Recipes.Comment;
 import com.github.siela1915.bootcamp.Recipes.ExampleRecipes;
 import com.github.siela1915.bootcamp.Recipes.Ingredient;
 import com.github.siela1915.bootcamp.Recipes.Recipe;
-import com.github.siela1915.bootcamp.firebase.Database;
-import com.github.siela1915.bootcamp.firebase.UserDatabase;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
@@ -63,43 +53,18 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutionException;
 
 public class RecipeActivityTest {
 
-    //private static final FirebaseDatabase fb = FirebaseDatabase.getInstance();
-    //private static final Database database = new Database(fb);
-
     private static Recipe omelette = ExampleRecipes.recipes.get(0);
-/*
-    private static CountDownLatch latch;
-    @BeforeClass
-    public static void setUpClass() throws InterruptedException {
-        latch = new CountDownLatch(1);
-        database.getByNameAsync("omelettte1")
-                .addOnSuccessListener(list -> {
-                    omelette = list.get(0);
-                    latch.countDown();
-                })
-                .addOnFailureListener(e -> {
-                    omelette = ExampleRecipes.recipes.get(0);
-                    latch.countDown();
-                });
 
-        latch.await();
-    }
-    */
 
     @Before
     public void prepareEmulator() {
@@ -122,7 +87,6 @@ public class RecipeActivityTest {
         onView(withId(R.id.recipePicture)).check(matches(isDisplayed()));
         scenario.close();
     }
-
 
 
     @Test
@@ -196,38 +160,9 @@ public class RecipeActivityTest {
 
     }
 
-//TODO
-/*
-    @Test
-    public void commentsListUpdatesAfterNonEmptyStringIsSent() {
-        ActivityScenario scenario = ActivityScenario.launch(i);
-
-        String test = "test";
-
-        onView(withId(R.id.enterComment)).perform(scrollTo(), typeText(test));
-
-        onView(withId(R.id.sendCommentButton))
-                .perform(scrollTo(), click());
-
-        List<Comment> newCommentsList = new ArrayList<>(omelette.comments);
-        newCommentsList.add(new Comment(test));
-
-        scenario.onActivity(activity -> {
-            RecyclerView commentsList = activity.findViewById(R.id.commentsList);
-            CommentAdapter commentAdapter = (CommentAdapter) commentsList.getAdapter();
-
-            for (int i = 0; i < newCommentsList.size(); i++) {
-                Comment expectedData = newCommentsList.get(i);
-                Comment actualData = commentAdapter.getData().get(i);
-                assertEquals(expectedData.getContent(), actualData.getContent());
-            }
-        });
-        scenario.close();
-
-    } */
 
     @Test
-    public void cannotCommentWhenUnauthenticated(){
+    public void cannotCommentWhenUnauthenticated() {
         ActivityScenario scenario = ActivityScenario.launch(i);
 
         String test = "test";
@@ -249,31 +184,9 @@ public class RecipeActivityTest {
         });
         scenario.close();
     }
-/*
+
     @Test
-    public void noErrorMessageWhenCommentingAuthenticated(){
-        FirebaseAuthActivityTest.loginSync("example@gmail.com");
-        ActivityScenario<RecipeActivity> scenario = ActivityScenario.launch(i);
-
-        String test = "test";
-
-        onView(withId(R.id.enterComment)).perform(scrollTo(), typeText(test));
-
-        onView(withId(R.id.sendCommentButton))
-                .perform(scrollTo(), click());
-
-        scenario.onActivity(activity -> {
-            onView(not(withText("Error adding new comment"))).inRoot(withDecorView(not(is(activity.getWindow().getDecorView()))))
-                    .check(matches(isDisplayed()));
-        });
-        scenario.close();
-        FirebaseAuthActivityTest.logoutSync();
-
-    }
-
- */
-    @Test
-    public void likeButtonRemainsTheSameWhenUnauthenticated(){
+    public void likeButtonRemainsTheSameWhenUnauthenticated() {
 
         ActivityScenario scenario = ActivityScenario.launch(i);
 
@@ -299,8 +212,9 @@ public class RecipeActivityTest {
         scenario.close();
 
     }
+
     @Test
-    public void likeCounterRemainsTheSameWhenUnauthenticated(){
+    public void likeCounterRemainsTheSameWhenUnauthenticated() {
         ActivityScenario scenario = ActivityScenario.launch(i);
 
         int commentIndex = 0;
@@ -321,7 +235,8 @@ public class RecipeActivityTest {
             assertThat(actual, is(expected));
 
             thumb.performClick();
-            actual = Integer.valueOf(likeCount.getText().toString());;
+            actual = Integer.valueOf(likeCount.getText().toString());
+            ;
             expected = likes;
             assertThat(actual, is(expected));
         });
@@ -391,12 +306,11 @@ public class RecipeActivityTest {
     }
 
 
-
     @Test
     public void plusButtonIncreasesNumberOfServings() {
         ActivityScenario scenario = ActivityScenario.launch(i);
         onView(withId(R.id.plusButton))
-                .perform( scrollTo(), click());
+                .perform(scrollTo(), click());
 
         onView(withId(R.id.nbServings)).check(matches(withText(String.valueOf(omelette.servings + 1))));
         onView(withId(R.id.servings)).check(matches(withText(String.valueOf(omelette.servings + 1))));
@@ -491,25 +405,9 @@ public class RecipeActivityTest {
 
         scenario.close();
     }
-/*
-    @Test
-    public void heartButtonBecomesFullWhenClicked(){
-        ActivityScenario scenario = ActivityScenario.launch(i);
 
-        scenario.onActivity(activity -> {
-            // Check that the background drawable has changed to the checked state drawable
-            ToggleButton heart = (ToggleButton) activity.findViewById(R.id.favoriteButton);
-            heart.performClick();
-            String actual = (String) heart.getTag();
-            String expected = "full";
-            assertTrue(actual.equals(expected));
-
-        });
-        scenario.close();
-    }
-*/
     @Test
-    public void heartButtonStillEmptyWhenUnauthenticated(){
+    public void heartButtonStillEmptyWhenUnauthenticated() {
 
         //FirebaseAuthActivityTest.loginSync("example@gmail.com");
         ActivityScenario scenario = ActivityScenario.launch(i);
@@ -592,7 +490,6 @@ public class RecipeActivityTest {
 
         scenario.close();
     }
-
 
 
     public static Matcher<View> withRating(final float rating) {
@@ -709,7 +606,7 @@ public class RecipeActivityTest {
         }
 
 
-}
+    }
 
     public static Matcher<View> withDrawable(final Drawable expectedDrawable) {
         return new BoundedMatcher<View, ImageView>(ImageView.class) {
@@ -767,19 +664,10 @@ public class RecipeActivityTest {
     }
 
 
-
     private static Drawable fetchDrawable(String urlString, Context context) throws IOException {
         InputStream is = (InputStream) new URL(urlString).getContent();
         return Drawable.createFromStream(is, null);
     }
-
-
-
-
-
-
-
-
 
 }
 
