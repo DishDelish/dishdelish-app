@@ -39,7 +39,7 @@ public class MainHomeActivity extends AppCompatActivity {
     DrawerLayout drawerLayout;
     NavigationView navigationView;
     ActionBarDrawerToggle toggle;
-    ConstraintLayout constraintLayout;
+    View filterView;
     FragmentContainerView fragmentContainerView;
     Button cuisineBtn,timeBtn,allergyBtn, dietBtn,filterBtn;
     FragmentManager fragmentManager;
@@ -50,8 +50,8 @@ public class MainHomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_home2);
         fragmentManager= getSupportFragmentManager();
-        constraintLayout = findViewById(R.id.filterLayout);
-        constraintLayout.setVisibility(View.GONE);
+        filterView = findViewById(R.id.scrollview);
+        filterView.setVisibility(View.GONE);
         if(savedInstanceState== null){
             setContainerContent(R.id.fragContainer,HomePageFragment.class,true);
         }
@@ -133,7 +133,7 @@ public class MainHomeActivity extends AppCompatActivity {
 
 
         navigationView.setNavigationItemSelectedListener(item ->{
-            constraintLayout.setVisibility(View.GONE);
+            filterView.setVisibility(View.GONE);
             switch (item.getItemId()){
                 case R.id.menuItem_home:
                     setContainerContent(R.id.fragContainer,HomePageFragment.class,false);
@@ -152,10 +152,10 @@ public class MainHomeActivity extends AppCompatActivity {
                 case R.id.menuItem_filter:
                     if(item.isChecked()){
                         item.setChecked(false);
-                        constraintLayout.setVisibility(View.GONE);
+                        filterView.setVisibility(View.GONE);
                     }else{
                         item.setChecked(true);
-                        constraintLayout.setVisibility(View.VISIBLE);
+                        filterView.setVisibility(View.VISIBLE);
                     }
                     fragmentContainerView= findViewById(R.id.fragContainer);
                     boolean homeFragmentCheck=fragmentContainerView.getFragment().getId()==R.id.homeFragment;
@@ -172,7 +172,7 @@ public class MainHomeActivity extends AppCompatActivity {
                     setContainerContent(R.id.fragContainer, NearbyHelpFragment.class, false);
                     break;
                 case R.id.menuItem_soppingCart:
-                    constraintLayout.setVisibility(View.GONE);
+                    filterView.setVisibility(View.GONE);
                     setContainerContent(R.id.fragContainer,ShoppingCartFragment.class,false);
                     break;
                 default:
@@ -180,12 +180,24 @@ public class MainHomeActivity extends AppCompatActivity {
             drawerLayout.close();
             return true;
         });
-        
-        if (getIntent().hasExtra("com.github.siela1915.bootcamp.navToProfile")) {
-            navigationView.setCheckedItem(R.id.menuItem_login);
-            setContainerContent(R.id.fragContainer,ProfileFragment.class,false);
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            if (extras.containsKey("com.github.siela1915.bootcamp.navToProfile")) {
+                navigationView.setCheckedItem(R.id.menuItem_login);
+                setContainerContent(R.id.fragContainer, ProfileFragment.class, false);
+            }
+
+            if (extras.containsKey("navToHelp")) {
+                navigationView.setCheckedItem(R.id.menuItem_help);
+                setContainerContent(R.id.fragContainer, NearbyHelpFragment.newInstance(
+                                extras.getString("sender"),
+                                extras.getString("ingredient")),
+                        false);
+            }
         }
     }
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if(toggle.onOptionsItemSelected(item)){
