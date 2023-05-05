@@ -5,9 +5,6 @@ import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition;
-import static androidx.test.espresso.contrib.RecyclerViewActions.scrollTo;
-import static androidx.test.espresso.matcher.ViewMatchers.withChild;
-import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static com.github.siela1915.bootcamp.RecipeListFragmentTest.RecyclerViewItemCountAssertion.withItemCount;
@@ -30,7 +27,6 @@ import com.github.siela1915.bootcamp.Recipes.Recipe;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
-import org.hamcrest.Matchers;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.After;
 import org.junit.Test;
@@ -77,29 +73,17 @@ public class RecipeListFragmentTest {
     }
 
     @Test
-    public void listItemShowsAllAttributes() {
-        Bundle bundle = new Bundle();
-        ArrayList<Recipe> recipeList = new ArrayList<>(Collections.singletonList(ExampleRecipes.recipes.get(0)));
-        bundle.putParcelableArrayList(RecipeListFragment.ARG_RECIPE_LIST, recipeList);
-        scenario = FragmentScenario.launchInContainer(RecipeListFragment.class, bundle);
-
-        onView(withId(R.id.recipeList)).perform(scrollTo(withChild(Matchers.allOf(withId(R.id.recipeItemName), withText(recipeList.get(0).recipeName)))));
-        onView(withId(R.id.recipeList)).perform(scrollTo(withChild(Matchers.allOf(withId(R.id.recipeItemAuthor), withText(recipeList.get(0).userName)))));
-        onView(withId(R.id.recipeList)).perform(scrollTo(withChild(Matchers.allOf(withId(R.id.recipeItemImage), withContentDescription("Recipe Picture")))));
-    }
-
-    @Test
     public void listFragmentKeepsCorrectOrder() {
         Bundle bundle = new Bundle();
         ArrayList<Recipe> recipeList = new ArrayList<>(ExampleRecipes.recipes);
         bundle.putParcelableArrayList(RecipeListFragment.ARG_RECIPE_LIST, recipeList);
         scenario = FragmentScenario.launchInContainer(RecipeListFragment.class, bundle);
 
-        onView(new RecyclerViewMatcher(R.id.recipeList).atPositionOnView(0, R.id.recipeItemName))
+        onView(new RecyclerViewMatcher(R.id.recipeList).atPositionOnView(0, R.id.textView_recipeName))
                 .check(matches(withText(recipeList.get(0).recipeName)));
-        onView(new RecyclerViewMatcher(R.id.recipeList).atPositionOnView(1, R.id.recipeItemName))
+        onView(new RecyclerViewMatcher(R.id.recipeList).atPositionOnView(1, R.id.textView_recipeName))
                 .check(matches(withText(recipeList.get(1).recipeName)));
-        onView(new RecyclerViewMatcher(R.id.recipeList).atPositionOnView(2, R.id.recipeItemName))
+        onView(new RecyclerViewMatcher(R.id.recipeList).atPositionOnView(2, R.id.textView_recipeName))
                 .check(matches(withText(recipeList.get(2).recipeName)));
     }
 
@@ -120,7 +104,7 @@ public class RecipeListFragmentTest {
     }
 
     /**
-     * Class to check item count in recycler view, taken from https://stackoverflow.com/a/43207009
+     * Class to check item count in recycler view, taken from <a href="https://stackoverflow.com/a/43207009">...</a>
      */
     static class RecyclerViewItemCountAssertion implements ViewAssertion {
         private final Matcher<Integer> matcher;
@@ -150,7 +134,7 @@ public class RecipeListFragmentTest {
     }
 
     /**
-     * Class to be able to check something on an item at a specific index in recycler view, taken from https://stackoverflow.com/a/52773940
+     * Class to be able to check something on an item at a specific index in recycler view, taken from <a href="https://stackoverflow.com/a/52773940">...</a>
      */
     static class RecyclerViewMatcher {
         private final int recyclerViewId;

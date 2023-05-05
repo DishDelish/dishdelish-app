@@ -1,8 +1,6 @@
 package com.github.siela1915.bootcamp;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -13,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.siela1915.bootcamp.Recipes.Recipe;
 import com.github.siela1915.bootcamp.databinding.FragmentRecipeItemBinding;
+import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.List;
 
@@ -39,11 +38,8 @@ public class RecipeItemRecyclerViewAdapter extends RecyclerView.Adapter<RecipeIt
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
 
+        new DownloadImageTask(holder.mRecipeItemImage).execute(mValues.get(position).image);
 
-        Bitmap recipeImage = BitmapFactory.decodeResource(holder.itemView.getResources(), Integer.parseInt(mValues.get(position).image));
-
-
-        holder.mRecipeItemImage.setImageBitmap(recipeImage);
         holder.mRecipeItemName.setText(mValues.get(position).recipeName);
         holder.mRecipeItemAuthor.setText(mValues.get(position).userName);
     }
