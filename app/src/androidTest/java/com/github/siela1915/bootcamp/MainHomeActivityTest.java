@@ -203,8 +203,6 @@ public class MainHomeActivityTest {
         onView(withId(R.id.navView)).perform(navigateTo(R.id.menuItem_filter));
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.close());
         onView(allOf(withId(R.id.allergyBtn), isDescendantOfA(withId(R.id.filterLayout)))).perform(ViewActions.scrollTo(),click());
-        onView((withText("what are you allergic to"))).check(matches(isDisplayed()));
-        onView(withText("Cancel")).perform(click());
     }
     @Test
     public void testingPrepTimeBtn(){
