@@ -26,6 +26,7 @@ import com.github.siela1915.bootcamp.Recipes.Comment;
 import com.github.siela1915.bootcamp.Recipes.Ingredient;
 import com.github.siela1915.bootcamp.Recipes.Recipe;
 import com.github.siela1915.bootcamp.Recipes.Unit;
+import com.github.siela1915.bootcamp.Tools.LanguageFilter;
 import com.github.siela1915.bootcamp.firebase.Database;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
@@ -205,7 +206,7 @@ public class RecipeActivity extends AppCompatActivity implements CompoundButton.
     private void setCommentContents(RecyclerView commentsList) {
 
         commentsList.setLayoutManager(new LinearLayoutManager(this));
-        CommentAdapter commentAdapter = new CommentAdapter(getApplicationContext(), recipe.comments, recipe);
+        CommentAdapter commentAdapter = new CommentAdapter(getApplicationContext(), LanguageFilter.filterComments(recipe.comments, true), recipe);
         commentsList.setAdapter(commentAdapter);
 
         EditText commentBox = (EditText) findViewById(R.id.enterComment);
