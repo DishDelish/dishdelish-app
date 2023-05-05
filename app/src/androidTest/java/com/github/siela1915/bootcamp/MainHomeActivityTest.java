@@ -1,5 +1,6 @@
 package com.github.siela1915.bootcamp;
 
+import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
@@ -23,7 +24,6 @@ import android.view.View;
 
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.test.core.app.ActivityScenario;
-import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.NoMatchingViewException;
 import androidx.test.espresso.ViewAssertion;
 import androidx.test.espresso.ViewInteraction;
@@ -35,6 +35,11 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.GrantPermissionRule;
 
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
+
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -44,12 +49,22 @@ public class MainHomeActivityTest {
     @Rule
     public ActivityScenarioRule<MainHomeActivity> testRule = new ActivityScenarioRule<>(MainHomeActivity.class);
 
-
-    ActivityScenario<MainHomeActivity> scenario = ActivityScenario.launch(MainHomeActivity.class);
-
     @Rule
     public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(
             Manifest.permission.ACCESS_FINE_LOCATION);
+
+    @Before
+    public void setupEmulators() {
+        FirebaseApp.clearInstancesForTest();
+        FirebaseApp.initializeApp(getApplicationContext());
+        FirebaseAuth.getInstance().useEmulator("10.0.2.2", 9099);
+        FirebaseDatabase.getInstance().useEmulator("10.0.2.2", 9000);
+
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            FirebaseAuthActivityTest.logoutSync();
+        }
+    }
+
 
     @Test
     public void startingApplicationWithHomePageViewTest(){
@@ -87,15 +102,29 @@ public class MainHomeActivityTest {
 
     @Test
     public void clickingOnFavoritesMenuNavigatesToProfileFragmentTest() {
+        FirebaseAuthActivityTest.loginSync("clickingOnFavoritesMenuNavigatesToProfileFragment@test.com");
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
         onView(withId(R.id.navView))
                 .perform(navigateTo(R.id.menuItem_favorites));
-        onView(withId(R.id.recipeList)).check(matches(isDisplayed()));
+        onView(withId(R.id.recipeList)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+        FirebaseAuthActivityTest.logoutSync();
+    }
+
+    @Test
+    public void intentWithNavToFavoritesNavigatesToFavoritesTest() {
+        FirebaseAuthActivityTest.loginSync("clickingOnFavoritesMenuNavigatesToProfileFragment@test.com");
+        Intent intent = new Intent(getApplicationContext(), MainHomeActivity.class);
+        intent.putExtra("com.github.siela1915.bootcamp.navToFavorites", "true");
+
+        try (ActivityScenario<MainHomeActivity> activityScenario = ActivityScenario.launch(intent)) {
+            onView(withId(R.id.recipeList)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+        }
+        FirebaseAuthActivityTest.logoutSync();
     }
 
     @Test
     public void intentWithNavToProfileNavigatesToProfileTest() {
-        Intent intent = new Intent(ApplicationProvider.getApplicationContext(), MainHomeActivity.class);
+        Intent intent = new Intent(getApplicationContext(), MainHomeActivity.class);
         intent.putExtra("com.github.siela1915.bootcamp.navToProfile", "true");
 
         try (ActivityScenario<MainHomeActivity> activityScenario = ActivityScenario.launch(intent)) {
@@ -105,7 +134,7 @@ public class MainHomeActivityTest {
 
     @Test
     public void intentWithNavToHelpNavigatesToNearbyHelpTest() {
-        Intent intent = new Intent(ApplicationProvider.getApplicationContext(), MainHomeActivity.class);
+        Intent intent = new Intent(getApplicationContext(), MainHomeActivity.class);
         intent.putExtra("navToHelp", "true");
 
         try (ActivityScenario<MainHomeActivity> activityScenario = ActivityScenario.launch(intent)) {
@@ -148,7 +177,7 @@ public class MainHomeActivityTest {
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.close());
         onView(allOf(withId(R.id.cuisineBtn), isDescendantOfA(withId(R.id.filterLayout)))).perform(ViewActions.scrollTo(),click());
         onView(withText("Choose your preferred cuisine")).check(matches(isDisplayed()));
-
+        onView(withText("Cancel")).perform(click());
     }
     @Test
     public void testingDietTypeBtn(){
@@ -157,19 +186,16 @@ public class MainHomeActivityTest {
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.close());
         onView(allOf(withId(R.id.dietBtn), isDescendantOfA(withId(R.id.filterLayout)))).perform(ViewActions.scrollTo(),click());
         onView((withText(endsWithIgnoringCase("Choose your diet")))).check(matches(isDisplayed()));
+        onView(withText("Cancel")).perform(click());
     }
     @Test
     public void testingAllergyBtn(){
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
         onView(withId(R.id.navView)).perform(navigateTo(R.id.menuItem_filter));
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.close());
-        try {
-
-            onView(allOf(withId(R.id.allergyBtn), isDescendantOfA(withId(R.id.filterLayout)))).perform(ViewActions.scrollTo(),click());
-            onView((withText("what are you allergic to"))).check(matches(isDisplayed()));
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+        onView(allOf(withId(R.id.allergyBtn), isDescendantOfA(withId(R.id.filterLayout)))).perform(ViewActions.scrollTo(),click());
+        onView((withText("what are you allergic to"))).check(matches(isDisplayed()));
+        onView(withText("Cancel")).perform(click());
     }
     @Test
     public void testingPrepTimeBtn(){
@@ -178,7 +204,7 @@ public class MainHomeActivityTest {
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.close());
         onView(allOf(withId(R.id.timingBtn), isDescendantOfA(withId(R.id.filterLayout)))).perform(ViewActions.scrollTo(),click());
         onView((withText("Choose the preparation time"))).check(matches(isDisplayed()));
-
+        onView(withText("Cancel")).perform(click());
     }
     @Test
     public void testingFilterBtn(){
@@ -196,10 +222,9 @@ public class MainHomeActivityTest {
     }
     @Test
     public void test1(){
-        ActivityScenario scenario1= ActivityScenario.launch(MainHomeActivity.class);
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
         onView(withId(R.id.navView)).perform(navigateTo(R.id.menuItem_soppingCart));
-        scenario.onActivity(activity -> {
+        testRule.getScenario().onActivity(activity -> {
             ShoppingListManager manager =new ShoppingListManager(activity.getApplicationContext());
             manager.addIngredient("item1");
         });
@@ -214,15 +239,11 @@ public class MainHomeActivityTest {
         }catch (Exception e){
             e.printStackTrace();
         }
-        scenario1.close();
-
     }
     @Test
     public void isCorrectListOfRecipesDisplayed(){
         Intents.release();
         Intents.init();
-        onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
-        onView(withId(R.id.navView)).perform(navigateTo(R.id.menuItem_home));
         onView(withId(R.id.homeFragment)).check(matches(isDisplayed()));
 
         onView(withId(R.id.rand_recipe_recyclerView)).check(matches(isDisplayed()));
