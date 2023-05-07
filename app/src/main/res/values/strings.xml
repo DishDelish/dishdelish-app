@@ -58,7 +58,8 @@
     <string name="cancel_uploading">Cancel</string>
     <string name="login_required_popup_title">Login Required</string>
     <string name="login_required_popup_message">Please login before uploading a recipe :)</string>
-    <string name="fill_required_fields_popup_message">"Please fill required fields before uploading"</string>
+    <string name="fill_required_fields_popup_message">Please fill required fields before uploading</string>
+    <string name="invalid_type_popup_message">Only provided types can be added</string>
     <string name="upload_recipe_error_message">Recipe failed to be uploaded</string>
     <string name="upload_recipe_success_message">Recipe uploaded successfully</string>
     <string name="upload_recipe_image_error_message">Recipe Image failed to be uploaded</string>
