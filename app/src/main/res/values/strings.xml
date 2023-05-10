@@ -185,4 +185,22 @@
     <string name="recipe_nutritional_value_sugar_title">Sugar (g): </string>
     <string name="recipe_nutritional_value_protein_title">Protein (g): </string>
 
+    <string name="cook_now_step_title">Step</string>
+    <string name="cook_now_timer_finish_message">Done</string>
+    <string name="cook_now_timer_edit_title">Edit Timer</string>
+    <string name="cook_now_timer_edit_pause_button">PAUSE</string>
+    <string name="cook_now_timer_edit_resume_button">RESUME</string>
+    <string name="cook_now_timer_edit_cancel_button">CANCEL</string>
+    <string name="cook_now_timer_create_title">Add Timer</string>
+    <string name="cook_now_timer_create_button">START</string>
+    <string name="cook_now_timer_create_invalid_input_message">Please fill all fields before starting the timer :)</string>
+    <string name="cook_now_timer_list_title">Timer List</string>
+    <string name="cook_now_timer_item_title">Step</string>
+    <string name="cook_now_timer_close_button">CLOSE</string>
+    <string name="timer_hour_hint">1</string>
+    <string name="timer_hour_unit">hour</string>
+    <string name="timer_min_hint">15</string>
+    <string name="timer_min_unit">min</string>
+    <string name="timer_sec_hint">30</string>
+    <string name="timer_sec_unit">sec</string>
 </resources>
