@@ -1,7 +1,11 @@
 package com.github.siela1915.bootcamp;
 
+import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -10,27 +14,22 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentContainerView;
-import androidx.fragment.app.FragmentTransaction;
-
-
-import android.annotation.SuppressLint;
-import android.app.AlertDialog;
-import android.os.Bundle;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.Toast;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.siela1915.bootcamp.Labelling.AllergyType;
 import com.github.siela1915.bootcamp.Labelling.CuisineType;
 import com.github.siela1915.bootcamp.Labelling.DietType;
 import com.github.siela1915.bootcamp.Labelling.RecipeFetcher;
-import com.github.siela1915.bootcamp.Recipes.PreparationTime;
-
 import com.github.siela1915.bootcamp.Recipes.ExampleRecipes;
+import com.github.siela1915.bootcamp.Recipes.PreparationTime;
 import com.github.siela1915.bootcamp.Recipes.Recipe;
-import com.github.siela1915.bootcamp.firebase.Database;
 
+import com.github.siela1915.bootcamp.Recipes.RecipeItemAdapter;
+
+import com.github.siela1915.bootcamp.UploadRecipe.UploadingRecipeFragment;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
@@ -40,20 +39,23 @@ public class MainHomeActivity extends AppCompatActivity {
     DrawerLayout drawerLayout;
     NavigationView navigationView;
     ActionBarDrawerToggle toggle;
-    ConstraintLayout constraintLayout;
+    View filterView;
     FragmentContainerView fragmentContainerView;
     Button cuisineBtn,timeBtn,allergyBtn, dietBtn,filterBtn;
+    FragmentManager fragmentManager;
 
-    @SuppressLint("MissingInflatedId")
+    @SuppressLint({"MissingInflatedId", "NonConstantResourceId"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_home2);
-        constraintLayout = findViewById(R.id.filterLayout);
-        constraintLayout.setVisibility(View.GONE);
+        fragmentManager= getSupportFragmentManager();
+        filterView = findViewById(R.id.scrollview);
+        filterView.setVisibility(View.GONE);
         if(savedInstanceState== null){
             setContainerContent(R.id.fragContainer,HomePageFragment.class,true);
         }
+
         drawerLayout= findViewById(R.id.drawer_layout);
         navigationView= findViewById(R.id.navView);
         cuisineBtn =findViewById(R.id.cuisineBtn);
@@ -61,6 +63,8 @@ public class MainHomeActivity extends AppCompatActivity {
         allergyBtn=findViewById(R.id.allergyBtn);
         dietBtn=findViewById(R.id.dietBtn);
         filterBtn=findViewById(R.id.filterBtn);
+
+
         List<String> selectedCuisine = new ArrayList<>();
         List<String> selectedDiet = new ArrayList<>();
         List<String> selectedAllery= new ArrayList<>();
@@ -72,6 +76,7 @@ public class MainHomeActivity extends AppCompatActivity {
             String title = "Choose your preferred cuisine";
             popUpDialogBuilder(cuisineTypes,checksum,title,selectedCuisine);
         });
+
         dietBtn.setOnClickListener(v -> {
             String [] diets= DietType.getAll();
             boolean[] checksum= new boolean[diets.length];
@@ -106,6 +111,7 @@ public class MainHomeActivity extends AppCompatActivity {
                 CuisineType ct= CuisineType.fromString(elem);
                 cuisineType.add(ct.ordinal());
             }
+
             RecipeFetcher recipeFetcher = new RecipeFetcher(allergy,cuisineType,dietType);
             List<String> filteredRecipes= recipeFetcher.fetchRecipeList();
             List<Recipe> recipeList = new ArrayList<>();
@@ -125,11 +131,13 @@ public class MainHomeActivity extends AppCompatActivity {
         toggle.syncState();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+
         navigationView.setNavigationItemSelectedListener(item ->{
-            constraintLayout.setVisibility(View.GONE);
+            filterView.setVisibility(View.GONE);
             switch (item.getItemId()){
                 case R.id.menuItem_home:
                     setContainerContent(R.id.fragContainer,HomePageFragment.class,false);
+                    System.out.println("\n\n\n\n inside the switch "+fragmentManager.getBackStackEntryCount()+"\n\n\n\n\n");
                     break;
 
                 case R.id.menuItem_about:
@@ -144,10 +152,10 @@ public class MainHomeActivity extends AppCompatActivity {
                 case R.id.menuItem_filter:
                     if(item.isChecked()){
                         item.setChecked(false);
-                        constraintLayout.setVisibility(View.GONE);
+                        filterView.setVisibility(View.GONE);
                     }else{
                         item.setChecked(true);
-                        constraintLayout.setVisibility(View.VISIBLE);
+                        filterView.setVisibility(View.VISIBLE);
                     }
                     fragmentContainerView= findViewById(R.id.fragContainer);
                     boolean homeFragmentCheck=fragmentContainerView.getFragment().getId()==R.id.homeFragment;
@@ -160,17 +168,36 @@ public class MainHomeActivity extends AppCompatActivity {
                                         ExampleRecipes.recipes
                                 ), false);
                     break;
+                case R.id.menuItem_help:
+                    setContainerContent(R.id.fragContainer, NearbyHelpFragment.class, false);
+                    break;
+                case R.id.menuItem_soppingCart:
+                    filterView.setVisibility(View.GONE);
+                    setContainerContent(R.id.fragContainer,ShoppingCartFragment.class,false);
+                    break;
                 default:
             }
             drawerLayout.close();
             return true;
         });
-        
-        if (getIntent().hasExtra("com.github.siela1915.bootcamp.navToProfile")) {
-            navigationView.setCheckedItem(R.id.menuItem_login);
-            setContainerContent(R.id.fragContainer,ProfileFragment.class,false);
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            if (extras.containsKey("com.github.siela1915.bootcamp.navToProfile")) {
+                navigationView.setCheckedItem(R.id.menuItem_login);
+                setContainerContent(R.id.fragContainer, ProfileFragment.class, false);
+            }
+
+            if (extras.containsKey("navToHelp")) {
+                navigationView.setCheckedItem(R.id.menuItem_help);
+                setContainerContent(R.id.fragContainer, NearbyHelpFragment.newInstance(
+                                extras.getString("sender"),
+                                extras.getString("ingredient")),
+                        false);
+            }
         }
     }
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if(toggle.onOptionsItemSelected(item)){
@@ -181,18 +208,21 @@ public class MainHomeActivity extends AppCompatActivity {
 
     private void setContainerContent(int containerId, @NonNull Class<? extends Fragment> fragmentClass, boolean setOrReplace){
         if(setOrReplace){
-            getSupportFragmentManager().beginTransaction()
+            fragmentManager.beginTransaction()
                     .setReorderingAllowed(true)
                     .add(containerId,fragmentClass,null)
+                    .addToBackStack("fragment")
                     .commit();
         }else{
-            getSupportFragmentManager().beginTransaction()
+            fragmentManager.beginTransaction()
                     .setReorderingAllowed(true)
                     .replace(containerId,fragmentClass,null)
+                    .addToBackStack("fragment")
                     .commit();
         }
     }
 
+    @SuppressLint("ResourceAsColor")
     private void popUpDialogBuilder(String[] items, boolean[] checksum, String title, List<String> selected){
         AlertDialog.Builder builder= new AlertDialog.Builder(MainHomeActivity.this,R.style.AlertDialogTheme);
         builder.setTitle(title);
@@ -204,7 +234,7 @@ public class MainHomeActivity extends AppCompatActivity {
         });
         builder.setPositiveButton("Ok", (dialog, which) -> {
             for(int i=0; i< checksum.length; i++){
-                if(checksum[i]== true){
+                if(checksum[i]){
                     selected.add(items[i]);
                 }
             }
@@ -219,8 +249,8 @@ public class MainHomeActivity extends AppCompatActivity {
 
         AlertDialog dialog=builder.create();
         dialog.setOnShowListener(arg0 -> {
-            dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.teal_700));
-            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.teal_700));
+            dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(R.color.teal_700);
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(R.color.teal_700);
         });
         dialog.show();
     }

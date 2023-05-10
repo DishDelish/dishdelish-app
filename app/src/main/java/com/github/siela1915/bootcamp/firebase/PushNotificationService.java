@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
+import android.security.keystore.UserNotAuthenticatedException;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -16,7 +17,12 @@ import androidx.core.app.NotificationCompat;
 
 import com.github.siela1915.bootcamp.MainHomeActivity;
 import com.github.siela1915.bootcamp.R;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -58,7 +64,16 @@ public class PushNotificationService extends FirebaseMessagingService {
             notifMap.put("body", message.getNotification().getBody());
             notifMap.put("color", message.getNotification().getColor());
             notifMap.put("channelId", message.getNotification().getChannelId());
-            sendNotification(this, notifMap);
+
+            Intent intent = new Intent(this, MainHomeActivity.class);
+
+            if (message.getData().get("ingredient") != null) {
+                intent.putExtra("navToHelp", "true");
+                intent.putExtra("ingredient", message.getData().get("ingredient"));
+                intent.putExtra("sender", message.getData().get("sender"));
+            }
+
+            sendNotification(this, notifMap, intent);
         }
     }
 
@@ -71,11 +86,10 @@ public class PushNotificationService extends FirebaseMessagingService {
         }
     }
 
-    static void sendNotification(Context context, Map<String, String> notification) {
-        Intent intent = new Intent(context, MainHomeActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0 /* Request code */, intent,
-                PendingIntent.FLAG_IMMUTABLE);
+    static void sendNotification(Context context, Map<String, String> notification, Intent clickIntent) {
+        clickIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0 /* Request code */, clickIntent,
+                PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
 
         String channelId = Optional.ofNullable(notification.get("channelId")).orElse(context.getString(R.string.default_notification_channel_id));
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
@@ -86,10 +100,13 @@ public class PushNotificationService extends FirebaseMessagingService {
                         .setContentText(notification.get("body"))
                         .setAutoCancel(true)
                         .setSound(defaultSoundUri)
+                        .setStyle(new NotificationCompat.BigTextStyle()
+                                .bigText(notification.get("body")))
                         .setContentIntent(pendingIntent);
 
-        if (notification.containsKey("color")) {
-            notificationBuilder.setColor(Color.parseColor(notification.get("color").toUpperCase()));
+        String color = notification.get("color");
+        if (color != null) {
+            notificationBuilder.setColor(Color.parseColor(color.toUpperCase()));
         }
 
         NotificationManager notificationManager =
@@ -116,5 +133,33 @@ public class PushNotificationService extends FirebaseMessagingService {
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
         }
+    }
+
+    static public Task<Void> sendRemoteNotification(String userId, String title, String body, Map<String, String> data) {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            Map<String, Object> notif = new HashMap<>();
+            notif.put("sender", user.getUid());
+            notif.put("receiver", userId);
+            notif.put("title", title);
+            notif.put("body", body);
+            if (data != null) {
+                data.put("sender", user.getUid());
+                data.put("navToHelp", "true");
+
+                notif.put("data", data);
+            }
+            notif.put("sent", false);
+
+            DatabaseReference db = FirebaseDatabase.getInstance().getReference("notifications");
+            String uniqueKey = db.push().getKey();
+            if (uniqueKey != null) {
+                return db.child(uniqueKey).updateChildren(notif);
+            }
+
+            return Tasks.forException(new RuntimeException("Couldn't generate a unique id for the notification"));
+        }
+
+        return Tasks.forException(new UserNotAuthenticatedException("User need to be authenticated to send notifications"));
     }
 }

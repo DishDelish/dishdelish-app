@@ -10,7 +10,7 @@ import java.util.List;
 
 //Might be better to implement using ingredients
 public enum AllergyType {
-    EGGS("Eggs"), FISH("Fish"), CRUSTACEANS("Crustaceans"), TREE_NUTS("Tree nuts"),
+    NONE("None"), EGGS("Eggs"), FISH("Fish"), CRUSTACEANS("Crustaceans"), TREE_NUTS("Tree nuts"),
     PEANUTS("Peanuts"), WHEAT("Wheat"), SOYBEANS("Soybeans"), SESAME("Sesame"), MILK("Milk");
 
     private final String display_string;
@@ -40,4 +40,5 @@ public enum AllergyType {
     public String toString() {
         return display_string;
     }
+
 }

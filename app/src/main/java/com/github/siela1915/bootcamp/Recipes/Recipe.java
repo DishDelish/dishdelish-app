@@ -7,37 +7,31 @@ import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class Recipe implements Parcelable {
-    //Images should be usable in activity classes like this:
-    //Bitmap image = BitmapFactory.decodeResource(this.getResources(), image);
-    public int image;
-    public String recipeName;
-    public String userName;
-    public int profilePicture;
+    public String image, recipeName, userName, uniqueKey = "";
+    public int profilePicture, prepTime, cookTime, servings, likes, numRatings = 0;
     public double rating;
-    public int prepTime;
-    public int cookTime;
-    public int servings;
+
     public Utensils utensils;
-    public List<Integer> cuisineTypes;
-    public List<Integer> allergyTypes;
-
-    public List<Integer> dietTypes;
+    public List<Integer> cuisineTypes, allergyTypes, dietTypes;
     public List<Ingredient> ingredientList;
-    //Every step and comment will be a separate String in the list
     public List<String> steps;
-    public List<String> comments;
-    public int likes;
-    public String uniqueKey = "";
 
-    public int getImage() {
+    public List<Comment> comments = new ArrayList<>();
+
+
+    //Nutritional values are all in grams, except calories which are in kCal
+    public double calories, fat, carbohydrates, sugar, protein = 0;
+
+    public String getImage() {
         return image;
     }
 
-    public void setImage(int image) {
+    public void setImage(String image) {
         this.image = image;
     }
 
@@ -145,11 +139,11 @@ public class Recipe implements Parcelable {
         this.steps = steps;
     }
 
-    public List<String> getComments() {
+    public List<Comment> getComments() {
         return comments;
     }
 
-    public void setComments(List<String> comments) {
+    public void setComments(List<Comment> comments) {
         this.comments = comments;
     }
 
@@ -165,12 +159,16 @@ public class Recipe implements Parcelable {
 
     public void setUniqueKey(String key) {this.uniqueKey = key;}
 
+    public int getNumRatings() {return numRatings;}
+
+    public void setNumRatings(int numRatings) {this.numRatings = numRatings;}
+
     public Recipe() {}
 
-    public Recipe(int image, String recipeName, String userName, int profilePicture, double rating,
+    public Recipe(String image, String recipeName, String userName, int profilePicture, double rating,
                   int prepTime, int cookTime, int servings, Utensils utensils, List<Integer> cuisineTypes,
                   List<Integer> allergyTypes, List<Integer> dietTypes, List<Ingredient> ingredientList,
-                  List<String> steps, List<String> comments, int likes) {
+                  List<String> steps, List<Comment> comments, int likes) {
         this.image = image;
         this.recipeName = recipeName;
         this.userName = userName;
@@ -187,11 +185,12 @@ public class Recipe implements Parcelable {
         this.steps = steps;
         this.comments = comments;
         this.likes = likes;
+        //this.uniqueKey = uniqueKey;
     }
 
 
     protected Recipe(Parcel in) {
-        image = in.readInt();
+        image = in.readString();
         recipeName = in.readString();
         userName = in.readString();
         profilePicture = in.readInt();
@@ -205,7 +204,13 @@ public class Recipe implements Parcelable {
         dietTypes = IntStream.of(in.createIntArray()).boxed().collect(Collectors.toCollection(ArrayList::new));
         ingredientList = in.createTypedArrayList(Ingredient.CREATOR);
         steps = in.createStringArrayList();
-        comments = in.createStringArrayList();
+        comments = in.createTypedArrayList(Comment.CREATOR);
+        uniqueKey = in.readString();
+        calories = in.readDouble();
+        fat = in.readDouble();
+        carbohydrates = in.readDouble();
+        sugar = in.readDouble();
+        protein = in.readDouble();
     }
 
     public static final Creator<Recipe> CREATOR = new Creator<Recipe>() {
@@ -227,7 +232,7 @@ public class Recipe implements Parcelable {
 
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
-        dest.writeInt(image);
+        dest.writeString(image);
         dest.writeString(recipeName);
         dest.writeString(userName);
         dest.writeInt(profilePicture);
@@ -241,34 +246,82 @@ public class Recipe implements Parcelable {
         dest.writeIntArray(dietTypes.stream().mapToInt(x -> x).toArray());
         dest.writeTypedList(ingredientList);
         dest.writeStringList(steps);
-        dest.writeStringList(comments);
+        dest.writeTypedList(comments);
+        dest.writeString(uniqueKey);
+        dest.writeDouble(calories);
+        dest.writeDouble(fat);
+        dest.writeDouble(carbohydrates);
+        dest.writeDouble(sugar);
+        dest.writeDouble(protein);
     }
 
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Recipe) {
             Recipe recipe = (Recipe) obj;
-            return image == recipe.image
+            boolean temp0 = Objects.equals(image, recipe.image)
                     && recipeName.equals(recipe.recipeName)
-                    && userName.equals(recipe.userName)
-                    && profilePicture == recipe.profilePicture
+                    && userName.equals(recipe.userName);
+            boolean temp1 = profilePicture == recipe.profilePicture
                     && Math.abs(rating - recipe.rating) < 1e-6      //Never compare double types with strict equality
-                    && prepTime == recipe.prepTime
-                    && cookTime == recipe.cookTime
+                    && prepTime == recipe.prepTime;
+            boolean temp2 = cookTime == recipe.cookTime
                     && servings == recipe.servings
-                    && utensils.equals(recipe.utensils)
-                    && ingredientList.equals(recipe.ingredientList)
+                    && utensils.equals(recipe.utensils);
+            boolean temp3 = ingredientList.equals(recipe.ingredientList)
                     && steps.equals(recipe.steps)
-                    && comments.equals(recipe.comments)
-                    && likes == recipe.likes
+                    && comments.equals(recipe.comments);
+            boolean temp4 = likes == recipe.likes
                     && allergyTypes.equals(recipe.allergyTypes)
-                    && cuisineTypes.equals(recipe.cuisineTypes)
-                    && dietTypes.equals(recipe.dietTypes)
+                    && cuisineTypes.equals(recipe.cuisineTypes);
+            boolean temp5 = dietTypes.equals(recipe.dietTypes)
                     && uniqueKey.equals(recipe.uniqueKey);
+            return  temp0 && temp1 && temp2 && temp3 && temp4 && temp5;
         }
         return false;
     }
 
+    public double getCalories() {
+        return calories;
+    }
+
+    public void setCalories(double calories) {
+        this.calories = calories;
+    }
+
+    public double getFat() {
+        return fat;
+    }
+
+    public void setFat(double fat) {
+        this.fat = fat;
+    }
+
+    public double getCarbohydrates() {
+        return carbohydrates;
+    }
+
+    public void setCarbohydrates(double carbohydrates) {
+        this.carbohydrates = carbohydrates;
+    }
+
+    public double getSugar() {
+        return sugar;
+    }
+
+    public void setSugar(double sugar) {
+        this.sugar = sugar;
+    }
+
+    public double getProtein() {
+        return protein;
+    }
+
+    public void setProtein(double protein) {
+        this.protein = protein;
+    }
+
+    @NonNull
     @Override
     public String toString() {
         return recipeName;

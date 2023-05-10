@@ -1,4 +1,4 @@
-package com.github.siela1915.bootcamp;
+package com.github.siela1915.bootcamp.UploadRecipe;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -14,11 +14,13 @@ import android.widget.TextView;
 
 import androidx.fragment.app.DialogFragment;
 
+import com.github.siela1915.bootcamp.R;
+
 import java.io.IOException;
 
 public class ReviewRecipeBeforeUploadingDialog extends DialogFragment
 {
-    OnMyDialogResult mDialogResult;
+    private OnMyDialogResult mDialogResult;
 
     public ReviewRecipeBeforeUploadingDialog()
     {
@@ -50,6 +52,7 @@ public class ReviewRecipeBeforeUploadingDialog extends DialogFragment
         TextView steps = reviewDialogView.findViewById(R.id.reviewRecipeSteps);
         ImageView image = reviewDialogView.findViewById(R.id.reviewRecipeImage);
 
+        // display image if provided
         Bitmap bitmap = null;
         try {
             if (getArguments().getString("image") != null) {
