@@ -34,11 +34,11 @@ public class TimerEditorDialog extends DialogFragment {
     public TimerEditorDialog() {
     }
 
-    public void setDialogResult(OnMyDialogResult dialogResult){
+    public void setDialogResult(OnMyDialogResult dialogResult) {
         mDialogResult = dialogResult;
     }
 
-    public interface OnMyDialogResult{
+    public interface OnMyDialogResult {
         void finish();
     }
 
@@ -120,39 +120,39 @@ public class TimerEditorDialog extends DialogFragment {
         timerEditorDialogView.findViewById(R.id.timerCreate).setVisibility(View.VISIBLE);
 
         ((Button) timerEditorDialogView.findViewById(R.id.startTimer)).setOnClickListener(l -> {
-            long time = getTime();
-            CountDownTimerWithPause newTimer = new CountDownTimerWithPause(time, interval) {
-                @Override
-                public void onTick(long millisUntilFinished) {}
-                @Override
-                public void onFinish() {}
-            };
+            if (requiredFieldsFilledAndValid()) {
+                long time = getTime();
+                CountDownTimerWithPause newTimer = new CountDownTimerWithPause(time, interval) {
+                    @Override
+                    public void onTick(long millisUntilFinished) {
+                    }
 
-            timerViewModel.addTimer(index, newTimer);
-            newTimer.start();
-            enterEditMode(index);
+                    @Override
+                    public void onFinish() {
+                    }
+                };
+
+                timerViewModel.addTimer(index, newTimer);
+                newTimer.start();
+                enterEditMode(index);
+            } else {
+                Toast.makeText(requireActivity(), R.string.cook_now_timer_create_invalid_input_message, Toast.LENGTH_SHORT).show();
+            }
         });
     }
 
     private long getTime() {
-        if (requiredFieldsFilledAndValid()) {
-            long hour = Long.parseLong(((TextInputLayout) timerEditorDialogView.findViewById(R.id.timerHour)).getEditText().getText().toString());
-            long min = Long.parseLong(((TextInputLayout) timerEditorDialogView.findViewById(R.id.timerMin)).getEditText().getText().toString());
-            long sec = Long.parseLong(((TextInputLayout) timerEditorDialogView.findViewById(R.id.timerSec)).getEditText().getText().toString());
-            return hour * 60 * 60 * 1000 + min * 60 * 1000 + sec * 1000;
-        } else {
-            Toast.makeText(requireActivity(), R.string.cook_now_timer_create_invalid_input_message, Toast.LENGTH_SHORT).show();
-        }
-        return 0;
+        long hour = Long.parseLong(((TextInputLayout) timerEditorDialogView.findViewById(R.id.timerHour)).getEditText().getText().toString());
+        long min = Long.parseLong(((TextInputLayout) timerEditorDialogView.findViewById(R.id.timerMin)).getEditText().getText().toString());
+        long sec = Long.parseLong(((TextInputLayout) timerEditorDialogView.findViewById(R.id.timerSec)).getEditText().getText().toString());
+        return hour * 60 * 60 * 1000 + min * 60 * 1000 + sec * 1000;
     }
 
     private boolean requiredFieldsFilledAndValid() {
         String hour = ((TextInputLayout) timerEditorDialogView.findViewById(R.id.timerHour)).getEditText().getText().toString();
         String min = ((TextInputLayout) timerEditorDialogView.findViewById(R.id.timerMin)).getEditText().getText().toString();
         String sec = ((TextInputLayout) timerEditorDialogView.findViewById(R.id.timerSec)).getEditText().getText().toString();
-        return TextValidator.isTextValid(hour) && TextValidator.isNumberPositive(hour)
-                && TextValidator.isTextValid(min) && TextValidator.isNumberPositive(min)
-                && TextValidator.isTextValid(sec) && TextValidator.isNumberPositive(sec);
+        return TextValidator.isTextValid(hour) && TextValidator.isTextValid(min) && TextValidator.isTextValid(sec);
     }
 
     private void enterEditMode(int index) {

@@ -197,7 +197,7 @@
     <string name="cook_now_timer_list_title">Timer List</string>
     <string name="cook_now_timer_item_title">Step</string>
     <string name="cook_now_timer_close_button">CLOSE</string>
-    <string name="timer_hour_hint">1</string>
+    <string name="timer_hour_hint">0</string>
     <string name="timer_hour_unit">hour</string>
     <string name="timer_min_hint">15</string>
     <string name="timer_min_unit">min</string>
