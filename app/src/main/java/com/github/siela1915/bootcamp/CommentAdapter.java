@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.siela1915.bootcamp.Recipes.Comment;
@@ -38,6 +39,10 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentViewHolder> {
 
         holder.comment.setText(comments.get(position).getContent());
         holder.likes.setText(Integer.toString(comments.get(position).getLikes()));
+
+        holder.replies.setLayoutManager(new LinearLayoutManager(context));
+        ReplyAdapter replyAdapter = new ReplyAdapter(context.getApplicationContext(), comments.get(position).getReplies(), comments.get(position));
+        holder.replies.setAdapter(replyAdapter);
 
     }
 

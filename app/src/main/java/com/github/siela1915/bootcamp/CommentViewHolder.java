@@ -23,6 +23,8 @@ public class CommentViewHolder extends RecyclerView.ViewHolder implements Compou
     TextView comment;
     TextView likes;
 
+    RecyclerView replies;
+
     Recipe recipe;
 
     CommentAdapter adapter;
@@ -37,6 +39,8 @@ public class CommentViewHolder extends RecyclerView.ViewHolder implements Compou
         likes = itemView.findViewById(R.id.likeCount);
         this.recipe = recipe;
         this.adapter = adapter;
+
+        replies = itemView.findViewById(R.id.repliesRecyclerView);
 
         ToggleButton thumb = itemView.findViewById(R.id.thumbButton);
         thumb.setTag("unliked");
