@@ -5,7 +5,9 @@ import static androidx.appcompat.content.res.AppCompatResources.getDrawable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.view.View;
+import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -45,6 +47,20 @@ public class CommentViewHolder extends RecyclerView.ViewHolder implements Compou
         ToggleButton thumb = itemView.findViewById(R.id.thumbButton);
         thumb.setTag("unliked");
         thumb.setOnCheckedChangeListener(this);
+
+        Button replyButton = itemView.findViewById(R.id.replyButton);
+        Button sendReply = itemView.findViewById(R.id.sendReplyButton);
+        EditText enterReply = itemView.findViewById(R.id.enterReply);
+
+        replyButton.setOnClickListener(v -> {
+            if (enterReply.getVisibility() == View.VISIBLE) {
+                enterReply.setVisibility(View.GONE);
+                sendReply.setVisibility(View.GONE);
+            } else {
+                enterReply.setVisibility(View.VISIBLE);
+                sendReply.setVisibility(View.VISIBLE);
+            }
+        });
 
     }
 

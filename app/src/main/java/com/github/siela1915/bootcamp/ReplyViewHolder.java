@@ -1,6 +1,8 @@
 package com.github.siela1915.bootcamp;
 
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;

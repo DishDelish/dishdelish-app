@@ -120,6 +120,8 @@ public class Comment implements Parcelable {
     protected Comment(Parcel in) {
         likes = in.readInt();
         content = in.readString();
+        replies = new LinkedList<>();
+        in.readList(replies, Comment.class.getClassLoader());
     }
 
     public static final Parcelable.Creator<Comment> CREATOR = new Parcelable.Creator<Comment>() {
@@ -143,6 +145,7 @@ public class Comment implements Parcelable {
     public void writeToParcel(@NonNull Parcel dest, int flags) {
         dest.writeInt(likes);
         dest.writeString(content);
+        dest.writeList(replies);
     }
 
 }
