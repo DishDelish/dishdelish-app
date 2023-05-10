@@ -34,6 +34,7 @@ public class CommentViewHolder extends RecyclerView.ViewHolder implements Compou
     private final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
 
     private final Database database = new Database(firebaseDatabase);
+    private final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
 
     public CommentViewHolder(@NonNull View itemView, Recipe recipe, CommentAdapter adapter) {
         super(itemView);
@@ -62,6 +63,28 @@ public class CommentViewHolder extends RecyclerView.ViewHolder implements Compou
             }
         });
 
+        sendReply.setOnClickListener(view -> {
+            String input = enterReply.getText().toString();
+            if (!input.isEmpty()) {
+                enterReply.setText("");
+                // authentication check
+                if (firebaseAuth.getCurrentUser() == null) {
+                    Toast.makeText(view.getContext(), "Sign in to reply", Toast.LENGTH_SHORT).show();
+                } else {
+                    int position = getAdapterPosition();
+                    Comment currentComment = adapter.getData().get(position);
+
+                    currentComment.addReply(input);
+                    database.updateAsync(recipe).addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            adapter.notifyItemChanged(position);
+                        } else {
+                            Toast.makeText(view.getContext(), "Error adding new reply", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+                }
+            });
     }
 
     /**
