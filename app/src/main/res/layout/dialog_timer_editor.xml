@@ -245,7 +245,7 @@
                 android:id="@+id/resumeTimer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
+                android:layout_marginStart="5dp"
                 android:text="@string/cook_now_timer_edit_resume_button"
                 app:layout_constraintStart_toEndOf="@+id/pauseTimer"
                 app:layout_constraintTop_toBottomOf="@+id/timerEditContent" />
@@ -254,7 +254,7 @@
                 android:id="@+id/cancelTimer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
+                android:layout_marginStart="5dp"
                 android:text="@string/cook_now_timer_edit_cancel_button"
                 app:layout_constraintStart_toEndOf="@+id/resumeTimer"
                 app:layout_constraintTop_toBottomOf="@+id/timerEditContent" />
