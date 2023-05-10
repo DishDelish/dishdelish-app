@@ -8,27 +8,7 @@ import android.os.Message;
  * Schedule a countdown until a time in the future, with
  * regular notifications on intervals along the way.
  *
- * Example of showing a 30 second countdown in a text field:
- *
- * <pre class="prettyprint">
- * new CountdownTimer(30000, 1000) {
- *
- *     public void onTick(long millisUntilFinished) {
- *         mTextField.setText("seconds remaining: " + millisUntilFinished / 1000);
- *     }
- *
- *     public void onFinish() {
- *         mTextField.setText("done!");
- *     }
- *  }.start();
- * </pre>
- *
- * The calls to {@link #onTick(long)} are synchronized to this object so that
- * one call to {@link #onTick(long)} won't ever occur before the previous
- * callback is complete.  This is only relevant when the implementation of
- * {@link #onTick(long)} takes an amount of time to execute that is significant
- * compared to the countdown interval.
- */
+**/
 public abstract class CountDownTimerWithPause {
 
     /**
@@ -48,6 +28,39 @@ public abstract class CountDownTimerWithPause {
     private boolean mCancelled = false;
 
     private boolean mPaused = false;
+    private static final int MSG = 1;
+    // handles counting down
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            synchronized (CountDownTimerWithPause.this) {
+                if (!mPaused) {
+                    final long millisLeft = mStopTimeInFuture - getRealTime();
+
+                    if (millisLeft <= 0) {
+                        onFinish();
+                    } else if (millisLeft < mCountdownInterval) {
+                        // no tick, just delay until done
+                        sendMessageDelayed(obtainMessage(MSG), millisLeft);
+                    } else {
+                        long lastTickStart = getRealTime();
+                        onTick(millisLeft);
+
+                        // take into account user's onTick taking time to execute
+                        long delay = lastTickStart + mCountdownInterval - getRealTime();
+
+                        // special case: user's onTick took more than interval to
+                        // complete, skip to next interval
+                        while (delay < 0) delay += mCountdownInterval;
+
+                        if (!mCancelled) {
+                            sendMessageDelayed(obtainMessage(MSG), delay);
+                        }
+                    }
+                }
+            }
+        }
+    };
 
     /**
      * @param millisInFuture The number of millis in the future from the call
@@ -61,36 +74,30 @@ public abstract class CountDownTimerWithPause {
         mCountdownInterval = countDownInterval;
     }
 
-    /**
-     * Cancel the countdown.
-     *
-     * Do not call it from inside CountDownTimer threads
-     */
-    public final void cancel() {
-        mHandler.removeMessages(MSG);
-        mCancelled = true;
+    public CountDownTimerWithPause(long millisInFuture, long countDownInterval, Handler handler) {
+        mMillisInFuture = millisInFuture;
+        mCountdownInterval = countDownInterval;
+        mHandler = handler;
     }
 
     /**
      * Start the countdown.
      */
-    public synchronized final CountDownTimerWithPause start() {
+    public synchronized final void start() {
         if (mMillisInFuture <= 0) {
             onFinish();
-            return this;
         }
-        mStopTimeInFuture = SystemClock.elapsedRealtime() + mMillisInFuture;
+        mStopTimeInFuture = getRealTime() + mMillisInFuture;
         mHandler.sendMessage(mHandler.obtainMessage(MSG));
         mCancelled = false;
         mPaused = false;
-        return this;
     }
 
     /**
      * Pause the countdown.
      */
     public long pause() {
-        mPauseTime = mStopTimeInFuture - SystemClock.elapsedRealtime();
+        mPauseTime = mStopTimeInFuture - getRealTime();
         mPaused = true;
         return mPauseTime;
     }
@@ -99,7 +106,7 @@ public abstract class CountDownTimerWithPause {
      * Resume the countdown.
      */
     public long resume() {
-        mStopTimeInFuture = mPauseTime + SystemClock.elapsedRealtime();
+        mStopTimeInFuture = mPauseTime + getRealTime();
         mPaused = false;
         mHandler.sendMessage(mHandler.obtainMessage(MSG));
         return mPauseTime;
@@ -109,7 +116,7 @@ public abstract class CountDownTimerWithPause {
      * Get the remaining time.
      */
     public long getRemainingTime() {
-        return mStopTimeInFuture - SystemClock.elapsedRealtime();
+        return mStopTimeInFuture - getRealTime();
     }
 
     /**
@@ -124,6 +131,13 @@ public abstract class CountDownTimerWithPause {
      */
     public long getmPauseTime() {
         return mPauseTime;
+    }
+
+    /**
+     * Get the time that the timer will stop.
+     */
+    public long getmStopTimeInFuture() {
+        return mStopTimeInFuture;
     }
 
     /**
@@ -144,42 +158,10 @@ public abstract class CountDownTimerWithPause {
      */
     public abstract void onFinish();
 
-
-    private static final int MSG = 1;
-
-
-    // handles counting down
-    private final Handler mHandler = new Handler() {
-
-        @Override
-        public void handleMessage(Message msg) {
-
-            synchronized (CountDownTimerWithPause.this) {
-                if (!mPaused) {
-                    final long millisLeft = mStopTimeInFuture - SystemClock.elapsedRealtime();
-
-                    if (millisLeft <= 0) {
-                        onFinish();
-                    } else if (millisLeft < mCountdownInterval) {
-                        // no tick, just delay until done
-                        sendMessageDelayed(obtainMessage(MSG), millisLeft);
-                    } else {
-                        long lastTickStart = SystemClock.elapsedRealtime();
-                        onTick(millisLeft);
-
-                        // take into account user's onTick taking time to execute
-                        long delay = lastTickStart + mCountdownInterval - SystemClock.elapsedRealtime();
-
-                        // special case: user's onTick took more than interval to
-                        // complete, skip to next interval
-                        while (delay < 0) delay += mCountdownInterval;
-
-                        if (!mCancelled) {
-                            sendMessageDelayed(obtainMessage(MSG), delay);
-                        }
-                    }
-                }
-            }
-        }
+    /**
+     * Get real time.
+     */
+    public long getRealTime() {
+        return SystemClock.elapsedRealtime();
     };
 }

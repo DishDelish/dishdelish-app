@@ -81,6 +81,4 @@ public class CookNowTimerFragment extends Fragment {
         timerEditorDialog.setArguments(bundle);
         timerEditorDialog.show(getActivity().getSupportFragmentManager(), timerEditorTag);
     }
-
-
 }

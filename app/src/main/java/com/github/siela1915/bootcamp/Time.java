@@ -1,5 +1,6 @@
 package com.github.siela1915.bootcamp;
 
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 public class Time {
@@ -36,5 +37,15 @@ public class Time {
 
     public long getSec() {
         return sec;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Time) {
+            return Objects.equals(sec, ((Time) obj).getSec())
+                    && Objects.equals(min, ((Time) obj).getMin())
+                    && Objects.equals(hour, ((Time) obj).getHour());
+        }
+        return false;
     }
 }

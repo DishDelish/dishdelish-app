@@ -6,16 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class TimerViewModel extends ViewModel {
-    private int currentTimerIndex;
     private Map<Integer, CountDownTimerWithPause> timerList = new HashMap<>();
-
-    public void setCurrentTimerIndex(int index) {
-        currentTimerIndex = index;
-    }
-
-    public int getCurrentTimerIndex() {
-        return currentTimerIndex;
-    }
 
     public void addTimer(int index, CountDownTimerWithPause timer) {
         timerList.put(index, timer);
@@ -34,46 +25,46 @@ public class TimerViewModel extends ViewModel {
         return 0;
     }
 
-    // TODO: test only
-    public TimerViewModel() {
-        CountDownTimerWithPause timer1 = new CountDownTimerWithPause(100000, 1000) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-            }
-
-            @Override
-            public void onFinish() {
-            }
-        };
-        CountDownTimerWithPause timer2 = new CountDownTimerWithPause(300000, 1000) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-            }
-
-            @Override
-            public void onFinish() {
-            }
-        };
-
-        CountDownTimerWithPause timer3 = new CountDownTimerWithPause(600000, 1000) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-            }
-
-            @Override
-            public void onFinish() {
-            }
-        };
-
-        timerList.put(2, timer1);
-        timerList.put(3, timer2);
-        timerList.put(9, timer3);
-
-        timer1.start();
-        timer2.start();
-        timer3.start();
-        timer3.pause();
-    }
+//    // TODO: test only
+//    public TimerViewModel() {
+//        CountDownTimerWithPause timer1 = new CountDownTimerWithPause(100000, 1000) {
+//            @Override
+//            public void onTick(long millisUntilFinished) {
+//            }
+//
+//            @Override
+//            public void onFinish() {
+//            }
+//        };
+//        CountDownTimerWithPause timer2 = new CountDownTimerWithPause(300000, 1000) {
+//            @Override
+//            public void onTick(long millisUntilFinished) {
+//            }
+//
+//            @Override
+//            public void onFinish() {
+//            }
+//        };
+//
+//        CountDownTimerWithPause timer3 = new CountDownTimerWithPause(600000, 1000) {
+//            @Override
+//            public void onTick(long millisUntilFinished) {
+//            }
+//
+//            @Override
+//            public void onFinish() {
+//            }
+//        };
+//
+//        timerList.put(2, timer1);
+//        timerList.put(3, timer2);
+//        timerList.put(9, timer3);
+//
+//        timer1.start();
+//        timer2.start();
+//        timer3.start();
+//        timer3.pause();
+//    }
 
     public long pauseTimer(int index) {
         if (timerList.containsKey(index)) {
