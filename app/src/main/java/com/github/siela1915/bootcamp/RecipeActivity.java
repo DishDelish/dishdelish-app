@@ -224,7 +224,7 @@ public class RecipeActivity extends AppCompatActivity implements CompoundButton.
                 if (firebaseAuth.getCurrentUser() == null) {
                     Toast.makeText(this, "Sign in to add a comment", Toast.LENGTH_SHORT).show();
                 } else {
-                    recipe.comments.add(new Comment(input));
+                    recipe.comments.add(new Comment(input, firebaseAuth.getCurrentUser().getUid()));
                     // Update the database with the new comment
                     database.updateAsync(recipe).addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {

@@ -16,6 +16,13 @@ public class Comment implements Parcelable {
 
     private LinkedList<Comment> replies;
 
+    public Comment(String content, String userId) {
+        this.likes = 0;
+        this.content = content;
+        this.replies = new LinkedList<>();
+        this.userId = userId;
+    }
+
     /**
      * Creates a new Comment. Replies are implemented as a doubly linked list as a notion of
      * temporal order of the replies is required. Replies must therefore be kept ordered.
@@ -69,6 +76,10 @@ public class Comment implements Parcelable {
         this.replies = replies;
     }
 
+    public String getUserId(){ return userId; }
+
+    public void setUserId(String userId){ this.userId = userId; }
+
     public void increaseLikes() {
         ++likes;
     }
@@ -86,6 +97,8 @@ public class Comment implements Parcelable {
     public void addReply(String reply) {
         replies.add(new Comment(reply));
     }
+
+    public void addReply(String reply, String userId){ replies.add(new Comment(reply, userId));}
 
     public void removeReply(Comment comment) {
         replies.remove(comment);
@@ -122,6 +135,7 @@ public class Comment implements Parcelable {
         content = in.readString();
         replies = new LinkedList<>();
         in.readList(replies, Comment.class.getClassLoader());
+        userId = in.readString();
     }
 
     public static final Parcelable.Creator<Comment> CREATOR = new Parcelable.Creator<Comment>() {
@@ -146,6 +160,7 @@ public class Comment implements Parcelable {
         dest.writeInt(likes);
         dest.writeString(content);
         dest.writeList(replies);
+        dest.writeString(userId);
     }
 
 }

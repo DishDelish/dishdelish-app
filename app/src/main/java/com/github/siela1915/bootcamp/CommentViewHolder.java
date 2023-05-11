@@ -74,7 +74,7 @@ public class CommentViewHolder extends RecyclerView.ViewHolder implements Compou
                     int position = getAdapterPosition();
                     Comment currentComment = adapter.getData().get(position);
 
-                    currentComment.addReply(input);
+                    currentComment.addReply(input, firebaseAuth.getCurrentUser().getUid());
                     database.updateAsync(recipe).addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
                             adapter.notifyItemChanged(position);
