@@ -1,9 +1,14 @@
 package com.github.siela1915.bootcamp.Tools;
 
+import com.github.siela1915.bootcamp.Labelling.AllergyType;
+import com.github.siela1915.bootcamp.Labelling.CuisineType;
+import com.github.siela1915.bootcamp.Labelling.DietType;
 import com.github.siela1915.bootcamp.Recipes.Recipe;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class Utilities {
@@ -44,5 +49,39 @@ public class Utilities {
                 .collect(Collectors.toList());
     }
 
+    public static AllergyType getDominantAllergy(List<Recipe> ls) {
+        int[] arr = new int[AllergyType.values().length];
+        for (Recipe elem : ls) {
+            elem.getAllergyTypes().forEach(allergy -> ++arr[allergy]);
+        }
+        return AllergyType.values()[getMaxIndex(arr)];
+    }
+
+    public static DietType getDominantDiet(List<Recipe> ls) {
+        int[] arr = new int[DietType.values().length];
+        for (Recipe elem : ls) {
+            elem.getDietTypes().forEach(diet -> ++arr[diet]);
+        }
+        return DietType.values()[getMaxIndex(arr)];
+    }
+
+    public static CuisineType getDominantCuisine(List<Recipe> ls) {
+        int[] arr = new int[CuisineType.values().length];
+        for (Recipe elem : ls) {
+            elem.getCuisineTypes().forEach(cuisine -> ++arr[cuisine]);
+        }
+        return CuisineType.values()[getMaxIndex(arr)];
+    }
+
+    private static int getMaxIndex(int[] arr) {
+        int max = 0, index = 0;
+        for (int i = 0; i < arr.length; ++i) {
+            if (arr[i] > max) {
+                max = arr[i];
+                index = i;
+            }
+        }
+        return index;
+    }
 
 }
