@@ -5,10 +5,8 @@ import com.github.siela1915.bootcamp.Labelling.CuisineType;
 import com.github.siela1915.bootcamp.Labelling.DietType;
 import com.github.siela1915.bootcamp.Recipes.Recipe;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 public class Utilities {
@@ -49,6 +47,12 @@ public class Utilities {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Finds the most popular allergy type among the provided list of recipes.
+     * @param ls The list of recipes submitted to the search.
+     * @return The most popular allergy type (in case of an equality just returns the first
+     * occurrence).
+     */
     public static AllergyType getDominantAllergy(List<Recipe> ls) {
         int[] arr = new int[AllergyType.values().length];
         for (Recipe elem : ls) {
@@ -57,6 +61,12 @@ public class Utilities {
         return AllergyType.values()[getMaxIndex(arr)];
     }
 
+    /**
+     * Finds the most popular diet type among the provided list of recipes.
+     * @param ls The list of recipes submitted to the search.
+     * @return The most popular diet type (in case of an equality just returns the first
+     * occurrence).
+     */
     public static DietType getDominantDiet(List<Recipe> ls) {
         int[] arr = new int[DietType.values().length];
         for (Recipe elem : ls) {
@@ -65,6 +75,12 @@ public class Utilities {
         return DietType.values()[getMaxIndex(arr)];
     }
 
+    /**
+     * Finds the most popular cuisine type among the provided list of recipes.
+     * @param ls The list of recipes submitted to the search.
+     * @return The most popular cuisine type (in case of an equality just returns the first
+     * occurrence).
+     */
     public static CuisineType getDominantCuisine(List<Recipe> ls) {
         int[] arr = new int[CuisineType.values().length];
         for (Recipe elem : ls) {
