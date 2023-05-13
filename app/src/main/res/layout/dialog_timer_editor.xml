@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:padding="16dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -238,8 +239,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/cook_now_timer_edit_pause_button"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/timerEditContent" />
+                tools:ignore="MissingConstraints" />
 
             <Button
                 android:id="@+id/resumeTimer"
@@ -247,8 +247,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:text="@string/cook_now_timer_edit_resume_button"
-                app:layout_constraintStart_toEndOf="@+id/pauseTimer"
-                app:layout_constraintTop_toBottomOf="@+id/timerEditContent" />
+                tools:ignore="MissingConstraints" />
 
             <Button
                 android:id="@+id/cancelTimer"
@@ -256,7 +255,19 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:text="@string/cook_now_timer_edit_cancel_button"
-                app:layout_constraintStart_toEndOf="@+id/resumeTimer"
+                tools:ignore="MissingConstraints" />
+
+            <androidx.constraintlayout.helper.widget.Flow
+                android:id="@+id/timerEditButtonFlow"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:constraint_referenced_ids="cancelTimer,resumeTimer,pauseTimer"
+                app:flow_horizontalBias="0"
+                app:flow_horizontalGap="10dp"
+                app:flow_horizontalStyle="packed"
+                app:flow_verticalBias="0"
+                app:flow_wrapMode="chain"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/timerEditContent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
