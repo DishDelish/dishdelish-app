@@ -2,6 +2,7 @@ package com.github.siela1915.bootcamp;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -10,12 +11,10 @@ import android.widget.Button;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentContainerView;
 import androidx.fragment.app.FragmentManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.siela1915.bootcamp.Labelling.AllergyType;
 import com.github.siela1915.bootcamp.Labelling.CuisineType;
@@ -24,16 +23,16 @@ import com.github.siela1915.bootcamp.Labelling.RecipeFetcher;
 import com.github.siela1915.bootcamp.Recipes.ExampleRecipes;
 import com.github.siela1915.bootcamp.Recipes.PreparationTime;
 import com.github.siela1915.bootcamp.Recipes.Recipe;
-
-import com.github.siela1915.bootcamp.Recipes.RecipeItemAdapter;
-
 import com.github.siela1915.bootcamp.UploadRecipe.UploadingRecipeFragment;
-
-import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.github.siela1915.bootcamp.firebase.Database;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class MainHomeActivity extends AppCompatActivity {
     DrawerLayout drawerLayout;
@@ -164,9 +163,7 @@ public class MainHomeActivity extends AppCompatActivity {
                     }
                     break;
                 case R.id.menuItem_favorites:
-                    setContainerContent(R.id.fragContainer, RecipeListFragment.newInstance(
-                                        ExampleRecipes.recipes
-                                ), false);
+                    loadAndOpenFavorites();
                     break;
                 case R.id.menuItem_help:
                     setContainerContent(R.id.fragContainer, NearbyHelpFragment.class, false);
@@ -188,6 +185,11 @@ public class MainHomeActivity extends AppCompatActivity {
                 setContainerContent(R.id.fragContainer, ProfileFragment.class, false);
             }
 
+            if (extras.containsKey("com.github.siela1915.bootcamp.navToFavorites")) {
+                navigationView.setCheckedItem(R.id.menuItem_favorites);
+                loadAndOpenFavorites();
+            }
+
             if (extras.containsKey("navToHelp")) {
                 navigationView.setCheckedItem(R.id.menuItem_help);
                 setContainerContent(R.id.fragContainer, NearbyHelpFragment.newInstance(
@@ -204,6 +206,32 @@ public class MainHomeActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void loadAndOpenFavorites() {
+        Intent intent = new Intent(this, MainHomeActivity.class);
+        intent.putExtra("com.github.siela1915.bootcamp.navToFavorites", true);
+        FirebaseAuthActivity.promptLogin(this, this, intent);
+
+        setContainerContent(R.id.fragContainer, RecipeListFragment.newInstance(new ArrayList<>()), false);
+
+        Database db = new Database(FirebaseDatabase.getInstance());
+        db.getFavorites().continueWith(favTask -> {
+            List<String> favorites = favTask.getResult();
+            List<Task<Recipe>> favListTasks = favorites.stream().map(db::getAsync).collect(Collectors.toList());
+            Tasks.whenAll(favListTasks).addOnSuccessListener(voidRes -> {
+                Fragment currentFrag = fragmentManager.findFragmentById(R.id.fragContainer);
+                if (currentFrag == null || currentFrag.getClass() != RecipeListFragment.class) {
+                    return;
+                }
+                List<Recipe> favRecipes = favListTasks
+                        .stream().map(Task::getResult).collect(Collectors.toList());
+                setContainerContent(R.id.fragContainer, RecipeListFragment.newInstance(
+                        favRecipes
+                ), false);
+            });
+            return null;
+        });
     }
 
     private void setContainerContent(int containerId, @NonNull Class<? extends Fragment> fragmentClass, boolean setOrReplace){
@@ -224,7 +252,7 @@ public class MainHomeActivity extends AppCompatActivity {
 
     @SuppressLint("ResourceAsColor")
     private void popUpDialogBuilder(String[] items, boolean[] checksum, String title, List<String> selected){
-        AlertDialog.Builder builder= new AlertDialog.Builder(MainHomeActivity.this,R.style.AlertDialogTheme);
+        AlertDialog.Builder builder= new AlertDialog.Builder(this,R.style.AlertDialogTheme);
         builder.setTitle(title);
         builder.setCancelable(false);
         //List<String> selected = new ArrayList<>();

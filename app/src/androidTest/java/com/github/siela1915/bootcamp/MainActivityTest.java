@@ -1,6 +1,12 @@
 package com.github.siela1915.bootcamp;
 
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.intent.Intents.intending;
+import static androidx.test.espresso.intent.matcher.IntentMatchers.anyIntent;
+
+import android.app.Activity;
+import android.app.Instrumentation;
+import android.content.Intent;
 
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.action.ViewActions;
@@ -9,9 +15,6 @@ import androidx.test.espresso.intent.matcher.IntentMatchers;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-
-import com.github.siela1915.bootcamp.GreetingActivity;
-import com.github.siela1915.bootcamp.MainActivity;
 
 import org.hamcrest.Matchers;
 import org.junit.Rule;
@@ -49,11 +52,17 @@ public class MainActivityTest {
                 IntentMatchers.hasExtra("com.github.siela1915.bootcamp.userName", "Test"),
                 IntentMatchers.hasComponent(GreetingActivity.class.getName())
         ));
+
+        Intents.release();
     }
 
     @Test
     public void correctLoginIntentSent() {
         Intents.init();
+        Intent intent = new Intent();
+        Instrumentation.ActivityResult intentResult = new Instrumentation.ActivityResult(Activity.RESULT_OK,intent);
+        intending(anyIntent()).respondWith(intentResult);
+
         ViewInteraction button = onView(ViewMatchers.withId(R.id.mainLoginButton));
 
         button.perform(ViewActions.click());
@@ -68,6 +77,10 @@ public class MainActivityTest {
     @Test
     public void correctLogoutIntentSent() {
         Intents.init();
+        Intent intent = new Intent();
+        Instrumentation.ActivityResult intentResult = new Instrumentation.ActivityResult(Activity.RESULT_OK,intent);
+        intending(anyIntent()).respondWith(intentResult);
+
         ViewInteraction button = onView(ViewMatchers.withId(R.id.mainLogoutButton));
 
         button.perform(ViewActions.click());
