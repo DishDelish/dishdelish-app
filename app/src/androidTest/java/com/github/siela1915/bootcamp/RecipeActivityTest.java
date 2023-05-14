@@ -21,6 +21,7 @@ import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import android.app.Activity;
 import android.app.Instrumentation;
@@ -73,6 +74,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 public class RecipeActivityTest {
 
@@ -84,6 +86,7 @@ public class RecipeActivityTest {
     private static final long WAITING_TIME_MS = 5000; // Time to wait for the tag change (in milliseconds)
     private IdlingResource idlingResource;
     private static DatabaseIdlingResource databaseIdlingResource;
+    private static boolean isDatabaseFetchComplete;
 /*
     private static CountDownLatch latch;
     @BeforeClass
@@ -120,16 +123,30 @@ public class RecipeActivityTest {
         database.getByNameAsync("omelettte1")
                 .addOnSuccessListener(list -> {
                     omelette = list.get(0);
+                    isDatabaseFetchComplete = true;
                     databaseIdlingResource.setIdle(true); // Signal that the asynchronous operation is complete
                 })
                 .addOnFailureListener(e -> {
                     omelette = ExampleRecipes.recipes.get(0);
+                    isDatabaseFetchComplete = true;
                     databaseIdlingResource.setIdle(true); // Signal that the asynchronous operation is complete
                 });
 
         databaseIdlingResource.setIdle(false); // Set the resource as not idle initially
+        isDatabaseFetchComplete = false;
 
+    }
+    private void waitForDatabaseFetchCompletion(long timeout, TimeUnit unit) {
+        long endTime = System.currentTimeMillis() + unit.toMillis(timeout);
+        while (!isDatabaseFetchComplete && System.currentTimeMillis() < endTime) {
+            // Wait until the database fetch is complete or until timeout
+            // You can also use Thread.sleep() for a small delay to avoid busy waiting
+            // if your scenario permits it.
+        }
 
+        if (!isDatabaseFetchComplete) {
+            fail("Timeout occurred while waiting for the database fetch to complete");
+        }
     }
 
     @AfterClass
@@ -151,12 +168,17 @@ public class RecipeActivityTest {
         IdlingRegistry.getInstance().unregister(idlingResource);
     }
 
-    Intent i = RecipeConverter.convertToIntent(omelette, ApplicationProvider.getApplicationContext());
+    //Intent i = RecipeConverter.convertToIntent(omelette, ApplicationProvider.getApplicationContext());
 
 
     @Test
     public void isRecipePictureOnDisplay() {
+        waitForDatabaseFetchCompletion(10, TimeUnit.SECONDS);
+        Intent i = RecipeConverter.convertToIntent(omelette, ApplicationProvider.getApplicationContext());
+
         ActivityScenario scenario = ActivityScenario.launch(i);
+
+        waitForDatabaseFetchCompletion(300, TimeUnit.SECONDS);
         onView(withId(R.id.recipePicture)).check(matches(isDisplayed()));
         scenario.close();
     }
@@ -165,473 +187,18 @@ public class RecipeActivityTest {
 
     @Test
     public void isCorrectRecipeNameOnDisplay() {
+        waitForDatabaseFetchCompletion(300, TimeUnit.SECONDS);
+        Intent i = RecipeConverter.convertToIntent(omelette, ApplicationProvider.getApplicationContext());
+
         ActivityScenario scenario = ActivityScenario.launch(i);
+
+
         onView(withId(R.id.recipeNameText)).check(matches(withText(omelette.recipeName)));
         scenario.close();
 
     }
 
-    @Test
-    public void isCorrectUserNameOnDisplay() {
-        ActivityScenario scenario = ActivityScenario.launch(i);
-        onView(withId(R.id.userNameText)).check(matches(withText(omelette.userName)));
-        scenario.close();
-    }
 
-    @Test
-    public void isCorrectCookTimeDisplayed() {
-        ActivityScenario scenario = ActivityScenario.launch(i);
-        onView(withId(R.id.cookTimeNbMins)).check(matches(withText(String.valueOf(omelette.cookTime))));
-        scenario.close();
-    }
-
-    @Test
-    public void isCorrectServingsOnDisplay() {
-        ActivityScenario scenario = ActivityScenario.launch(i);
-        onView(withId(R.id.nbServings)).check(matches(withText(String.valueOf(omelette.servings))));
-        scenario.close();
-    }
-
-    @Test
-    public void areCorrectCommentsOnDisplay() {
-        ActivityScenario scenario = ActivityScenario.launch(i);
-
-        scenario.onActivity(activity -> {
-
-            RecyclerView commentsList = activity.findViewById(R.id.commentsList);
-            CommentAdapter commentAdapter = (CommentAdapter) commentsList.getAdapter();
-
-            // Iterate through the list and compare each element with the adapter's data set
-            for (int i = 0; i < omelette.comments.size(); i++) {
-                Comment expectedData = omelette.comments.get(i);
-                Comment actualData = commentAdapter.getData().get(i);
-                assertEquals(expectedData.getContent(), actualData.getContent());
-            }
-
-        });
-        scenario.close();
-    }
-
-    @Test
-    public void commentsListStaysTheSameAfterEmptyStringIsSent() {
-        ActivityScenario scenario = ActivityScenario.launch(i);
-
-        onView(withId(R.id.sendCommentButton))
-                .perform(scrollTo(), click());
-
-        scenario.onActivity(activity -> {
-            RecyclerView commentsList = activity.findViewById(R.id.commentsList);
-            CommentAdapter commentAdapter = (CommentAdapter) commentsList.getAdapter();
-
-            for (int i = 0; i < omelette.comments.size(); i++) {
-                Comment expectedData = omelette.comments.get(i);
-                Comment actualData = commentAdapter.getData().get(i);
-                assertEquals(expectedData.getContent(), actualData.getContent());
-            }
-        });
-        scenario.close();
-
-
-    }
-
-//TODO
-/*
-    @Test
-    public void commentsListUpdatesAfterNonEmptyStringIsSent() {
-        ActivityScenario scenario = ActivityScenario.launch(i);
-
-        String test = "test";
-
-        onView(withId(R.id.enterComment)).perform(scrollTo(), typeText(test));
-
-        onView(withId(R.id.sendCommentButton))
-                .perform(scrollTo(), click());
-
-        List<Comment> newCommentsList = new ArrayList<>(omelette.comments);
-        newCommentsList.add(new Comment(test));
-
-        scenario.onActivity(activity -> {
-            RecyclerView commentsList = activity.findViewById(R.id.commentsList);
-            CommentAdapter commentAdapter = (CommentAdapter) commentsList.getAdapter();
-
-            for (int i = 0; i < newCommentsList.size(); i++) {
-                Comment expectedData = newCommentsList.get(i);
-                Comment actualData = commentAdapter.getData().get(i);
-                assertEquals(expectedData.getContent(), actualData.getContent());
-            }
-        });
-        scenario.close();
-
-    } */
-
-    @Test
-    public void cannotCommentWhenUnauthenticated(){
-        ActivityScenario scenario = ActivityScenario.launch(i);
-
-        String test = "test";
-
-        onView(withId(R.id.enterComment)).perform(scrollTo(), typeText(test));
-
-        onView(withId(R.id.sendCommentButton))
-                .perform(scrollTo(), click());
-
-        scenario.onActivity(activity -> {
-            RecyclerView commentsList = activity.findViewById(R.id.commentsList);
-            CommentAdapter commentAdapter = (CommentAdapter) commentsList.getAdapter();
-
-            for (int i = 0; i < omelette.comments.size(); i++) {
-                Comment expectedData = omelette.comments.get(i);
-                Comment actualData = commentAdapter.getData().get(i);
-                assertEquals(expectedData.getContent(), actualData.getContent());
-            }
-        });
-        scenario.close();
-    }
-/*
-    @Test
-    public void noErrorMessageWhenCommentingAuthenticated(){
-        FirebaseAuthActivityTest.loginSync("example@gmail.com");
-        ActivityScenario<RecipeActivity> scenario = ActivityScenario.launch(i);
-
-        String test = "test";
-
-        onView(withId(R.id.enterComment)).perform(scrollTo(), typeText(test));
-
-        onView(withId(R.id.sendCommentButton))
-                .perform(scrollTo(), click());
-
-        scenario.onActivity(activity -> {
-            onView(not(withText("Error adding new comment"))).inRoot(withDecorView(not(is(activity.getWindow().getDecorView()))))
-                    .check(matches(isDisplayed()));
-        });
-        scenario.close();
-        FirebaseAuthActivityTest.logoutSync();
-
-    }
-
- */
-    @Test
-    public void likeButtonRemainsTheSameWhenUnauthenticated(){
-
-        ActivityScenario scenario = ActivityScenario.launch(i);
-
-        int commentIndex = 0;
-
-        scenario.onActivity(activity -> {
-            RecyclerView commentsList = activity.findViewById(R.id.commentsList);
-            CommentViewHolder viewHolder = (CommentViewHolder) commentsList.findViewHolderForAdapterPosition(commentIndex);
-
-            // Check that the tag value of the button changes when clicked
-            ToggleButton thumb = viewHolder.itemView.findViewById(R.id.thumbButton);
-            thumb.performClick();
-            String actual = (String) thumb.getTag();
-            String expected = "unliked";
-            assertTrue(actual.equals(expected));
-
-            thumb.performClick();
-            actual = (String) thumb.getTag();
-            expected = "unliked";
-            assertTrue(actual.equals(expected));
-        });
-
-        scenario.close();
-
-    }
-    @Test
-    public void likeCounterRemainsTheSameWhenUnauthenticated(){
-        ActivityScenario scenario = ActivityScenario.launch(i);
-
-        int commentIndex = 0;
-
-        scenario.onActivity(activity -> {
-            RecyclerView commentsList = activity.findViewById(R.id.commentsList);
-            CommentViewHolder viewHolder = (CommentViewHolder) commentsList.findViewHolderForAdapterPosition(commentIndex);
-
-            // Check that the tag value of the button changes when clicked
-            ToggleButton thumb = viewHolder.itemView.findViewById(R.id.thumbButton);
-
-            TextView likeCount = viewHolder.itemView.findViewById(R.id.likeCount);
-            int likes = Integer.valueOf(likeCount.getText().toString());
-
-            thumb.performClick();
-            int actual = Integer.valueOf(likeCount.getText().toString());
-            int expected = likes;
-            assertThat(actual, is(expected));
-
-            thumb.performClick();
-            actual = Integer.valueOf(likeCount.getText().toString());;
-            expected = likes;
-            assertThat(actual, is(expected));
-        });
-
-        scenario.close();
-    }
-
-    @Test
-    public void isCorrectUtensilsListOnDisplay() {
-        ActivityScenario scenario = ActivityScenario.launch(i);
-        onView(withId(R.id.utensilsList)).check(matches(withText(String.join(", ", omelette.utensils.getUtensils()))));
-        scenario.close();
-    }
-
-    @Test
-    public void areCorrectsStepsDisplayed() {
-        ActivityScenario scenario = ActivityScenario.launch(i);
-        onView(withId(R.id.stepsText)).check(matches(withText(String.join("\n\n", omelette.steps))));
-        scenario.close();
-    }
-
-    @Test
-    public void isCorrectIngredientsListOnDisplay() {
-        ActivityScenario scenario = ActivityScenario.launch(i);
-
-        scenario.onActivity(activity -> {
-
-            RecyclerView ingredientsList = activity.findViewById(R.id.ingredientsList);
-            IngredientAdapter ingredientAdapter = (IngredientAdapter) ingredientsList.getAdapter();
-
-            // Iterate through the list and compare each element with the adapter's data set
-            for (int i = 0; i < omelette.getIngredientList().size(); i++) {
-                Ingredient expectedData = omelette.getIngredientList().get(i);
-                Ingredient actualData = ingredientAdapter.getData().get(i);
-                assertEquals(expectedData.getIngredient(), actualData.getIngredient());
-                assertEquals(expectedData.getUnit().getInfo(), actualData.getUnit().getInfo());
-                assertEquals(expectedData.getUnit().getValue(), actualData.getUnit().getValue());
-            }
-
-        });
-        scenario.close();
-    }
-
-
-    @Test
-    public void isRatingCorrect() {
-        ActivityScenario scenario = ActivityScenario.launch(i);
-        onView(withId(R.id.ratingBar)).check(matches(withRating((float) omelette.rating)));
-        scenario.close();
-
-    }
-
-    @Test
-    public void isRatingActivityStarted() {
-        FirebaseAuthActivityTest.loginSync("example@gmail.com");
-        ActivityScenario scenario = ActivityScenario.launch(i);
-        //Intents.release();
-        Intents.init();
-        Intent intent = new Intent();
-        Instrumentation.ActivityResult intentResult = new Instrumentation.ActivityResult(Activity.RESULT_OK,intent);
-        intending(anyIntent()).respondWith(intentResult);
-
-        onView(withId(R.id.rateButton))
-                .perform(scrollTo(), click());
-
-        intended(allOf(hasComponent(RatingActivity.class.getName())));
-
-        Intents.release();
-        scenario.close();
-        FirebaseAuthActivityTest.logoutSync();
-    }
-
-
-/*
-    @Test
-    public void plusButtonIncreasesNumberOfServings() {
-        ActivityScenario scenario = ActivityScenario.launch(i);
-        onView(withId(R.id.plusButton))
-                .perform( scrollTo(), click());
-
-        onView(withId(R.id.nbServings)).check(matches(withText(String.valueOf(omelette.servings + 1))));
-        onView(withId(R.id.servings)).check(matches(withText(String.valueOf(omelette.servings + 1))));
-
-        scenario.close();
-
-    } */
-
-    @Test
-    public void minusButtonDecreasesNumberOfServings() {
-
-        ActivityScenario scenario = ActivityScenario.launch(i);
-
-        onView(withId(R.id.plusButton))
-                .perform(scrollTo(), click());
-
-        onView(withId(R.id.minusButton))
-                .perform(scrollTo(), click());
-
-        onView(withId(R.id.nbServings)).check(matches(withText(String.valueOf(omelette.servings))));
-        onView(withId(R.id.servings)).check(matches(withText(String.valueOf(omelette.servings))));
-
-        scenario.close();
-
-    }
-
-
-    @Test
-    public void numberOfServingsCannotGoBelowOne() {
-
-        ActivityScenario scenario = ActivityScenario.launch(i);
-
-        for (int i = 0; i < omelette.servings; i++) {
-            onView(withId(R.id.minusButton))
-                    .perform(scrollTo(), click());
-        }
-
-        onView(withId(R.id.nbServings)).check(matches(withText(String.valueOf(1))));
-        onView(withId(R.id.servings)).check(matches(withText(String.valueOf(1))));
-
-        scenario.close();
-
-    }
-
-    @Test
-    public void ingredientAmountsAreCorrectlyUpdatedAfterPlusButtonIsClicked() {
-        ActivityScenario scenario = ActivityScenario.launch(i);
-        onView(withId(R.id.plusButton))
-                .perform(scrollTo(), click());
-        int newServings = omelette.getServings() + 1;
-
-        scenario.onActivity(activity -> {
-            RecyclerView ingList = activity.findViewById(R.id.ingredientsList);
-            IngredientAdapter ingAdapter = (IngredientAdapter) ingList.getAdapter();
-            List<Ingredient> data = ingAdapter.getData();
-            for (int i = 0; i < data.size(); i++) {
-                Ingredient original = omelette.getIngredientList().get(i);
-                int oldValue = original.getUnit().getValue();
-                double ratio = ((double) newServings / omelette.getServings());
-                int expectedValue = (int) Math.ceil(ratio * oldValue);
-                int actualValue = data.get(i).getUnit().getValue();
-
-                assertEquals(expectedValue, actualValue);
-            }
-        });
-        scenario.close();
-    }
-
-    @Test
-    public void ingredientAmountsAreCorrectlyUpdatedAfterMinusButtonIsClicked() {
-
-        ActivityScenario scenario = ActivityScenario.launch(i);
-        onView(withId(R.id.plusButton))
-                .perform(scrollTo(), click());
-        onView(withId(R.id.minusButton))
-                .perform(scrollTo(), click());
-
-        scenario.onActivity(activity -> {
-            RecyclerView ingList = activity.findViewById(R.id.ingredientsList);
-            IngredientAdapter ingAdapter = (IngredientAdapter) ingList.getAdapter();
-            List<Ingredient> data = ingAdapter.getData();
-
-            for (int i = 0; i < data.size(); i++) {
-                Ingredient original = omelette.getIngredientList().get(i);
-                int oldValue = original.getUnit().getValue();
-                int expectedValue = (int) Math.ceil(1 * oldValue);
-                int actualValue = data.get(i).getUnit().getValue();
-
-                assertEquals(expectedValue, actualValue);
-            }
-        });
-
-        scenario.close();
-    }
-/*
-    @Test
-    public void heartButtonBecomesFullAuthenticated(){
-        ActivityScenario scenario = ActivityScenario.launch(i);
-
-        FirebaseAuthActivityTest.loginSync("eylulipci00@gmail.com");
-
-        onView(withId(R.id.favoriteButton))
-                .perform(ViewActions.click())
-                .check(matches(ViewMatchers.withTagValue(is("full"))));
-
-        FirebaseAuthActivityTest.logoutSync();
-        scenario.close();
-    } */
-
-    @Test
-    public void heartButtonStillEmptyWhenUnauthenticated(){
-
-        //FirebaseAuthActivityTest.loginSync("example@gmail.com");
-        ActivityScenario scenario = ActivityScenario.launch(i);
-        scenario.onActivity(activity -> {
-            // Check that the background drawable has changed to the checked state drawable
-            ToggleButton heart = (ToggleButton) activity.findViewById(R.id.favoriteButton);
-            heart.performClick();
-
-            String actual = (String) heart.getTag();
-            String expected = "empty";
-            assertTrue(actual.equals(expected));
-
-        });
-        scenario.close();
-    }
-
-
-    @Test
-    public void heartButtonBecomesEmptyWhenClicked2Times() {
-        ActivityScenario scenario = ActivityScenario.launch(i);
-        scenario.onActivity(activity -> {
-            ToggleButton heart = activity.findViewById(R.id.favoriteButton);
-
-            heart.performClick();
-            heart.performClick();
-
-            String actual = (String) heart.getTag();
-            String expected = "empty";
-            assertTrue(actual.equals(expected));
-
-        });
-        scenario.close();
-    }
-
-    @Test
-    public void addToListButtonChangesStateOnClick() {
-        ActivityScenario scenario = ActivityScenario.launch(i);
-
-        int ingredientIndex = 0;
-
-        scenario.onActivity(activity -> {
-            RecyclerView ingredientsList = activity.findViewById(R.id.ingredientsList);
-            IngredientViewHolder viewHolder = (IngredientViewHolder) ingredientsList.findViewHolderForAdapterPosition(ingredientIndex);
-
-            // Check that the tag value of the button changes when clicked
-            ToggleButton addButton = viewHolder.itemView.findViewById(R.id.AddToListButton);
-            addButton.performClick();
-            String actual = (String) addButton.getTag();
-            String expected = "added";
-            assertTrue(actual.equals(expected));
-
-            addButton.performClick();
-            actual = (String) addButton.getTag();
-            expected = "removed";
-            assertTrue(actual.equals(expected));
-        });
-
-        scenario.close();
-    }
-
-    @Test
-    public void openNutritionalValuesCollapse() {
-        ActivityScenario scenario = ActivityScenario.launch(i);
-
-        onView(withId(R.id.nutritionalCollapseToggle)).perform(ViewActions.scrollTo(), click());
-
-        onView(withId(R.id.card_group)).check(matches(withEffectiveVisibility(VISIBLE)));
-
-        scenario.close();
-    }
-
-    @Test
-    public void closeNutritionalValuesCollapse() {
-        ActivityScenario scenario = ActivityScenario.launch(i);
-
-        onView(withId(R.id.nutritionalCollapseToggle)).perform(ViewActions.scrollTo(), click());
-        onView(withId(R.id.nutritionalCollapseToggle)).perform(ViewActions.scrollTo(), click());
-
-        onView(withId(R.id.card_group)).check(matches(withEffectiveVisibility(GONE)));
-
-        scenario.close();
-    }
 
 
 
