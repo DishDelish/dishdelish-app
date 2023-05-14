@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.siela1915.bootcamp.Recipes.Comment;
 import com.github.siela1915.bootcamp.Recipes.Recipe;
+import com.github.siela1915.bootcamp.firebase.UserDatabase;
 
 import java.util.List;
 
@@ -21,6 +22,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentViewHolder> {
     List<Comment> comments;
 
     Recipe recipe;
+    UserDatabase userDb = new UserDatabase();
 
     public CommentAdapter(Context context, List<Comment> comments, Recipe recipe) {
         this.context = context;
@@ -39,6 +41,15 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentViewHolder> {
 
         holder.comment.setText(comments.get(position).getContent());
         holder.likes.setText(Integer.toString(comments.get(position).getLikes()));
+
+        // fetch user info from the database and initialize corresponding fields
+        userDb.getUser(comments.get(position).getUserId()).addOnSuccessListener(user -> {
+            holder.userName.setText(user.getDisplayName());
+            new DownloadImageTask(holder.photo).execute(user.getPhotoUrl());
+        });
+
+
+
 
         holder.replies.setLayoutManager(new LinearLayoutManager(context));
         ReplyAdapter replyAdapter = new ReplyAdapter(context.getApplicationContext(), comments.get(position).getReplies(), comments.get(position));

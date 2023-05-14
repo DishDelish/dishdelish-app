@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -24,6 +25,8 @@ import com.google.firebase.database.FirebaseDatabase;
 public class CommentViewHolder extends RecyclerView.ViewHolder implements CompoundButton.OnCheckedChangeListener {
     TextView comment;
     TextView likes;
+    TextView userName;
+    ImageView photo;
 
     RecyclerView replies;
 
@@ -36,10 +39,13 @@ public class CommentViewHolder extends RecyclerView.ViewHolder implements Compou
     private final Database database = new Database(firebaseDatabase);
     private final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
 
+
     public CommentViewHolder(@NonNull View itemView, Recipe recipe, CommentAdapter adapter) {
         super(itemView);
         comment = itemView.findViewById(R.id.commentText);
         likes = itemView.findViewById(R.id.likeCount);
+        userName = itemView.findViewById(R.id.userName);
+        photo = itemView.findViewById(R.id.profilePhoto);
         this.recipe = recipe;
         this.adapter = adapter;
 

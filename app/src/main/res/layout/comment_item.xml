@@ -5,79 +5,108 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/commentLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/comment_box"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:background="@drawable/comment_box">
 
+        <ImageView
+            android:id="@+id/profilePhoto"
+            android:layout_width="75dp"
+            android:layout_height="105dp"
+            android:layout_marginStart="15dp"
+            android:background="@drawable/comment_box"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
 
-        <TextView
-            android:id="@+id/userName"
+            android:clipToOutline="true"
+            tools:srcCompat="@tools:sample/avatars" />
+
+        <LinearLayout
+            android:id="@+id/textLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="5dp"
-            android:fontFamily="@font/poppins"
-            android:text="User"
-            android:textColor="@color/black" />
+            android:layout_alignTop="@id/profilePhoto"
+            android:layout_marginStart="16dp"
+            android:layout_toEndOf="@id/profilePhoto"
+            android:orientation="vertical"
+            app:layout_constraintStart_toEndOf="@+id/profilePhoto"
+            app:layout_constraintTop_toTopOf="@+id/profilePhoto">
 
-        <TextView
-            android:id="@+id/commentText"
+            <TextView
+                android:id="@+id/userName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="5dp"
+                android:fontFamily="@font/poppins"
+                android:text="User"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/commentText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@id/userName"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="15dp"
+                android:layout_marginBottom="5dp"
+                android:fontFamily="@font/poppins"
+                android:text="This is a comment"
+                android:textColor="@color/black" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/thumbLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/userName"
-            android:layout_alignStart="@+id/userName"
-            android:layout_marginTop="5dp"
-            android:layout_marginEnd="15dp"
-            android:layout_marginBottom="5dp"
-            android:fontFamily="@font/poppins"
-            android:text="This is a comment"
-            android:textColor="@color/black" />
+            android:layout_alignTop="@id/textLayout"
+            android:layout_marginBottom="4dp"
+            android:layout_toEndOf="@id/profilePhoto"
+            android:gravity="end"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/textLayout">
 
-        <ToggleButton
-            android:id="@+id/thumbButton"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_below="@id/commentText"
-            android:layout_alignStart="@+id/userName"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:background="@drawable/ic_thumb_empty"
-            android:textOff=""
-            android:textOn="" />
+            <ToggleButton
+                android:id="@+id/thumbButton"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:background="@drawable/ic_thumb_empty"
+                android:textOff=""
+                android:textOn="" />
 
-        <TextView
-            android:id="@+id/likeCount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@id/thumbButton"
-            android:layout_marginStart="5dp"
-            android:layout_toEndOf="@id/thumbButton"
-            android:fontFamily="@font/poppins"
-            android:text="5"
-            android:textColor="#333333" />
+            <TextView
+                android:id="@+id/likeCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:fontFamily="@font/poppins"
+                android:text="5"
+                android:textColor="#333333"
+                android:textSize="16sp"
+                app:layout_constraintStart_toEndOf="@+id/thumbButton" />
 
-        <Button
-            android:id="@+id/replyButton"
-            android:layout_width="25dp"
-            android:layout_height="30dp"
-            android:layout_alignStart="@+id/likeCount"
-            android:layout_alignTop="@id/likeCount"
-            android:layout_alignBottom="@id/thumbButton"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="0dp"
-            android:layout_marginBottom="2dp"
-            android:layout_toEndOf="@id/likeCount"
-            android:background="@drawable/ic_reply"
-            android:text="" />
+            <Button
+                android:id="@+id/replyButton"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_alignBottom="@id/thumbLayout"
+                android:layout_marginStart="20dp"
+                android:background="@drawable/ic_reply"
+                android:text=""
+                app:layout_constraintStart_toEndOf="@+id/likeCount"
+                tools:layout_editor_absoluteY="76dp" />
 
 
-    </RelativeLayout>
+        </LinearLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/repliesRecyclerView"
