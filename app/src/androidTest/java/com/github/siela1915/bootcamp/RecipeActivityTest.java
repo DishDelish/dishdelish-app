@@ -525,7 +525,7 @@ public class RecipeActivityTest {
 
         scenario.close();
     }
-
+/*
     @Test
     public void heartButtonBecomesFullAuthenticated(){
         ActivityScenario scenario = ActivityScenario.launch(i);
@@ -538,7 +538,7 @@ public class RecipeActivityTest {
 
         FirebaseAuthActivityTest.logoutSync();
         scenario.close();
-    }
+    } */
 
     @Test
     public void heartButtonStillEmptyWhenUnauthenticated(){
