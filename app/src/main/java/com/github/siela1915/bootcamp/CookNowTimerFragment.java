@@ -45,10 +45,10 @@ public class CookNowTimerFragment extends Fragment {
             CountDownTimerWithPause countDownTimerWithPause = timerViewModel.getTimerList().get(stepIndex);
 
             // set the display of remaining time under the clock icon
-            if (countDownTimerWithPause.ismPaused()) {
-                remainingTime.setText(Time.milliSecToString(countDownTimerWithPause.getmPauseTime()));
+            if (countDownTimerWithPause.isPaused()) {
+                remainingTime.setText(Time.milliSecToString(countDownTimerWithPause.getPauseTime()));
             } else {
-                timerOnDisplay = new CountDownTimer(countDownTimerWithPause.getRemainingTime(), countDownTimerWithPause.getmCountdownInterval()) {
+                timerOnDisplay = new CountDownTimer(countDownTimerWithPause.getRemainingTime(), countDownTimerWithPause.getCountdownInterval()) {
 
                     @Override
                     public void onTick(long millisUntilFinished) {
