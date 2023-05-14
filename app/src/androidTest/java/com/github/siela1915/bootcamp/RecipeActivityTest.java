@@ -41,14 +41,19 @@ import androidx.annotation.DrawableRes;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.core.app.ApplicationProvider;
+import androidx.test.espresso.IdlingRegistry;
+import androidx.test.espresso.IdlingResource;
 import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.espresso.matcher.BoundedMatcher;
+import androidx.test.espresso.matcher.ViewMatchers;
 
 import com.github.siela1915.bootcamp.Recipes.Comment;
 import com.github.siela1915.bootcamp.Recipes.ExampleRecipes;
 import com.github.siela1915.bootcamp.Recipes.Ingredient;
 import com.github.siela1915.bootcamp.Recipes.Recipe;
+import com.github.siela1915.bootcamp.firebase.Database;
+import com.github.siela1915.bootcamp.firebase.UserDatabase;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
@@ -56,7 +61,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
+import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -64,13 +71,17 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
 public class RecipeActivityTest {
 
-    //private static final FirebaseDatabase fb = FirebaseDatabase.getInstance();
-    //private static final Database database = new Database(fb);
+    private static FirebaseDatabase fb = FirebaseDatabase.getInstance();
+    private static Database database = new Database(fb);
 
-    private static Recipe omelette = ExampleRecipes.recipes.get(0);
+    private static Recipe omelette;// = ExampleRecipes.recipes.get(0);
+
+    private static final long WAITING_TIME_MS = 5000; // Time to wait for the tag change (in milliseconds)
+    private IdlingResource idlingResource;
 /*
     private static CountDownLatch latch;
     @BeforeClass
@@ -90,8 +101,8 @@ public class RecipeActivityTest {
     }
     */
 
-    @Before
-    public void prepareEmulator() {
+    @BeforeClass
+    public static void prepareEmulator() throws InterruptedException {
         FirebaseApp.clearInstancesForTest();
         FirebaseApp.initializeApp(getApplicationContext());
         FirebaseAuth.getInstance().useEmulator("10.0.2.2", 9099);
@@ -100,6 +111,36 @@ public class RecipeActivityTest {
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             FirebaseAuthActivityTest.logoutSync();
         }
+
+        CountDownLatch latch = new CountDownLatch(1);
+
+        database.getByNameAsync("omelettte1")
+                .addOnSuccessListener(list -> {
+                    omelette = list.get(0);
+                    latch.countDown();
+                })
+                .addOnFailureListener(e -> {
+                    omelette = ExampleRecipes.recipes.get(0);
+                    latch.countDown();
+                });
+
+        latch.await();
+
+
+    }
+
+    @Before
+    public void setUp(){
+        idlingResource = new TimerIdlingResource(WAITING_TIME_MS);
+        IdlingRegistry.getInstance().register(idlingResource);
+    }
+
+    @After
+    public void tearDown() {
+        if(FirebaseAuth.getInstance().getCurrentUser() != null){
+            FirebaseAuthActivityTest.logoutSync();
+        }
+        IdlingRegistry.getInstance().unregister(idlingResource);
     }
 
     Intent i = RecipeConverter.convertToIntent(omelette, ApplicationProvider.getApplicationContext());
@@ -484,23 +525,21 @@ public class RecipeActivityTest {
 
         scenario.close();
     }
-/*
+
     @Test
-    public void heartButtonBecomesFullWhenClicked(){
+    public void heartButtonBecomesFullAuthenticated(){
         ActivityScenario scenario = ActivityScenario.launch(i);
 
-        scenario.onActivity(activity -> {
-            // Check that the background drawable has changed to the checked state drawable
-            ToggleButton heart = (ToggleButton) activity.findViewById(R.id.favoriteButton);
-            heart.performClick();
-            String actual = (String) heart.getTag();
-            String expected = "full";
-            assertTrue(actual.equals(expected));
+        FirebaseAuthActivityTest.loginSync("eylulipci00@gmail.com");
 
-        });
+        onView(withId(R.id.favoriteButton))
+                .perform(ViewActions.click())
+                .check(matches(ViewMatchers.withTagValue(is("full"))));
+
+        FirebaseAuthActivityTest.logoutSync();
         scenario.close();
     }
-*/
+
     @Test
     public void heartButtonStillEmptyWhenUnauthenticated(){
 
@@ -766,13 +805,37 @@ public class RecipeActivityTest {
         return Drawable.createFromStream(is, null);
     }
 
-
-
-
-
-
-
-
-
 }
+
+class TimerIdlingResource implements IdlingResource {
+    private final long startTime;
+    private final long waitingTime;
+    private ResourceCallback resourceCallback;
+
+    public TimerIdlingResource(long waitingTime) {
+        this.startTime = System.currentTimeMillis();
+        this.waitingTime = waitingTime;
+    }
+
+    @Override
+    public String getName() {
+        return TimerIdlingResource.class.getName();
+    }
+
+    @Override
+    public boolean isIdleNow() {
+        long elapsedTime = System.currentTimeMillis() - startTime;
+        boolean idle = (elapsedTime >= waitingTime);
+        if (idle && resourceCallback != null) {
+            resourceCallback.onTransitionToIdle();
+        }
+        return idle;
+    }
+
+    @Override
+    public void registerIdleTransitionCallback(ResourceCallback resourceCallback) {
+        this.resourceCallback = resourceCallback;
+    }
+}
+
 
