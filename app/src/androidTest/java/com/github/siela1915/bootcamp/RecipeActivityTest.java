@@ -62,6 +62,7 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -82,6 +83,7 @@ public class RecipeActivityTest {
 
     private static final long WAITING_TIME_MS = 5000; // Time to wait for the tag change (in milliseconds)
     private IdlingResource idlingResource;
+    private static DatabaseIdlingResource databaseIdlingResource;
 /*
     private static CountDownLatch latch;
     @BeforeClass
@@ -112,21 +114,27 @@ public class RecipeActivityTest {
             FirebaseAuthActivityTest.logoutSync();
         }
 
-        CountDownLatch latch = new CountDownLatch(1);
+        databaseIdlingResource = new DatabaseIdlingResource();
+        IdlingRegistry.getInstance().register(databaseIdlingResource);
 
         database.getByNameAsync("omelettte1")
                 .addOnSuccessListener(list -> {
                     omelette = list.get(0);
-                    latch.countDown();
+                    databaseIdlingResource.setIdle(true); // Signal that the asynchronous operation is complete
                 })
                 .addOnFailureListener(e -> {
                     omelette = ExampleRecipes.recipes.get(0);
-                    latch.countDown();
+                    databaseIdlingResource.setIdle(true); // Signal that the asynchronous operation is complete
                 });
 
-        latch.await();
+        databaseIdlingResource.setIdle(false); // Set the resource as not idle initially
 
 
+    }
+
+    @AfterClass
+    public static void cleanup() {
+        IdlingRegistry.getInstance().unregister(databaseIdlingResource);
     }
 
     @Before
@@ -837,5 +845,33 @@ class TimerIdlingResource implements IdlingResource {
         this.resourceCallback = resourceCallback;
     }
 }
+
+class DatabaseIdlingResource implements IdlingResource {
+    private ResourceCallback resourceCallback;
+    private boolean isIdle = false;
+
+    public void setIdle(boolean idle) {
+        isIdle = idle;
+        if (isIdle && resourceCallback != null) {
+            resourceCallback.onTransitionToIdle();
+        }
+    }
+
+    @Override
+    public String getName() {
+        return DatabaseIdlingResource.class.getName();
+    }
+
+    @Override
+    public boolean isIdleNow() {
+        return isIdle;
+    }
+
+    @Override
+    public void registerIdleTransitionCallback(ResourceCallback resourceCallback) {
+        this.resourceCallback = resourceCallback;
+    }
+}
+
 
 
