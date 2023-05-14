@@ -248,7 +248,7 @@ public class UploadingRecipeFragment extends Fragment {
         String text = autoCompleteTextView.getText().toString();
         autoCompleteTextView.getText().clear();
         // only provided types can be added
-        if (TextValidator.isTextValid(text) && Stream.of(enumValues).map(Enum::name).collect(Collectors.toList()).contains(text)) {
+        if (TextValidator.isTextValid(text) && Stream.of(enumValues).map(Enum::name).collect(Collectors.toList()).contains(text.toUpperCase())) {
             LinearLayout linearLayout = view.findViewById(linearLayoutId);
             addType(linearLayout, text);
         } else {
