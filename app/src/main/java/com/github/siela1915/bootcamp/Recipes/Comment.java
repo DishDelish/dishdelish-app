@@ -19,7 +19,7 @@ public class Comment implements Parcelable {
     public Comment(String content, String userId) {
         this.likes = 0;
         this.content = content;
-        this.replies = new LinkedList<>();
+        this.replies = new ArrayList<>();
         this.userId = userId;
     }
 
@@ -133,7 +133,7 @@ public class Comment implements Parcelable {
     protected Comment(Parcel in) {
         likes = in.readInt();
         content = in.readString();
-        replies = new LinkedList<>();
+        replies = new ArrayList<>();
         in.readList(replies, Comment.class.getClassLoader());
         userId = in.readString();
     }
