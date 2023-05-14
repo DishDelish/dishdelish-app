@@ -90,10 +90,10 @@ public class TimerEditorDialog extends DialogFragment {
         TextView timerRemainingTime = timer.findViewById(R.id.timerRemainingTime);
 
         // set the display of remaining time under the clock icon
-        if (countDownTimerWithPause.ismPaused()) {
+        if (countDownTimerWithPause.isPaused()) {
             timerRemainingTime.setText(Time.milliSecToString(countDownTimerWithPause.getRemainingTime()));
         } else {
-            CountDownTimer timerToBeDisplayedOnList = new CountDownTimer(countDownTimerWithPause.getRemainingTime(), countDownTimerWithPause.getmCountdownInterval()) {
+            CountDownTimer timerToBeDisplayedOnList = new CountDownTimer(countDownTimerWithPause.getRemainingTime(), countDownTimerWithPause.getCountdownInterval()) {
                 @Override
                 public void onTick(long millisUntilFinished) {
                     timerRemainingTime.setText(Time.milliSecToString(millisUntilFinished));
@@ -168,10 +168,10 @@ public class TimerEditorDialog extends DialogFragment {
         ((Button) timerEditorDialogView.findViewById(R.id.resumeTimer)).setOnClickListener(l -> resumeTimer(index));
         ((Button) timerEditorDialogView.findViewById(R.id.cancelTimer)).setOnClickListener(l -> cancelTimer(index));
 
-        if (countDownTimerWithPause.ismPaused()) {
-            setTime(countDownTimerWithPause.getmPauseTime());
+        if (countDownTimerWithPause.isPaused()) {
+            setTime(countDownTimerWithPause.getPauseTime());
         } else {
-            timerOnDisplay = createDisplayTimer(countDownTimerWithPause.getRemainingTime(), countDownTimerWithPause.getmCountdownInterval());
+            timerOnDisplay = createDisplayTimer(countDownTimerWithPause.getRemainingTime(), countDownTimerWithPause.getCountdownInterval());
         }
     }
 

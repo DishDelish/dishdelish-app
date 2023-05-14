@@ -57,8 +57,8 @@ public class CountDownTimerWithPauseTest {
 
         countDownTimerWithPause.start();
 
-        assertFalse(countDownTimerWithPause.ismPaused());
-        assertEquals(countDownTimerWithPause.getmStopTimeInFuture(), 1000 + timeStart);
+        assertFalse(countDownTimerWithPause.isPaused());
+        assertEquals(countDownTimerWithPause.getStopTimeInFuture(), 1000 + timeStart);
     }
 
     @Test
@@ -66,7 +66,7 @@ public class CountDownTimerWithPauseTest {
         countDownTimerWithPause.start();
         long pauseTime = countDownTimerWithPause.pause();
 
-        assertTrue(countDownTimerWithPause.ismPaused());
+        assertTrue(countDownTimerWithPause.isPaused());
         assertEquals(pauseTime, timeStart);
     }
 
@@ -76,7 +76,7 @@ public class CountDownTimerWithPauseTest {
         countDownTimerWithPause.pause();
         long resumeTime = countDownTimerWithPause.resume();
 
-        assertFalse(countDownTimerWithPause.ismPaused());
+        assertFalse(countDownTimerWithPause.isPaused());
         assertEquals(resumeTime, timeStart);
     }
 
@@ -92,7 +92,7 @@ public class CountDownTimerWithPauseTest {
     public void getmCountdownIntervalTest() {
         countDownTimerWithPause.start();
 
-        assertEquals(timeInterval, countDownTimerWithPause.getmCountdownInterval());
+        assertEquals(timeInterval, countDownTimerWithPause.getCountdownInterval());
     }
 
     @Test
@@ -100,13 +100,13 @@ public class CountDownTimerWithPauseTest {
         countDownTimerWithPause.start();
         countDownTimerWithPause.pause();
 
-        assertEquals(timeStart, countDownTimerWithPause.getmPauseTime());
+        assertEquals(timeStart, countDownTimerWithPause.getPauseTime());
     }
 
     @Test
     public void getmStopTimeInFutureTest() {
         countDownTimerWithPause.start();
 
-        assertEquals(timeStart + 1000, countDownTimerWithPause.getmStopTimeInFuture());
+        assertEquals(timeStart + 1000, countDownTimerWithPause.getStopTimeInFuture());
     }
 }

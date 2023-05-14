@@ -1,14 +1,10 @@
 package com.github.siela1915.dishdelish;
 
-import static com.google.common.base.CharMatcher.any;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.doThrow;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-
-import android.os.SystemClock;
 
 import com.github.siela1915.bootcamp.CountDownTimerWithPause;
 import com.github.siela1915.bootcamp.TimerViewModel;
@@ -71,7 +67,7 @@ public class TimerViewModelTest {
     @Test
     public void resumeTimerIfTimerPaused() {
         when(testTimer.resume()).thenReturn(timeStart);
-        when(testTimer.ismPaused()).thenReturn(true);
+        when(testTimer.isPaused()).thenReturn(true);
 
         timerViewModel.addTimer(testIndex, testTimer);
 
@@ -83,7 +79,7 @@ public class TimerViewModelTest {
     @Test
     public void pauseTimerIfTimerIsRunning() {
         when(testTimer.pause()).thenReturn(timeStart);
-        when(testTimer.ismPaused()).thenReturn(false);
+        when(testTimer.isPaused()).thenReturn(false);
 
         timerViewModel.addTimer(testIndex, testTimer);
 
@@ -94,8 +90,8 @@ public class TimerViewModelTest {
 
     @Test
     public void pauseTimerIfTimerIsNotRunning() {
-        when(testTimer.ismPaused()).thenReturn(true);
-        when(testTimer.getmPauseTime()).thenReturn(0L);
+        when(testTimer.isPaused()).thenReturn(true);
+        when(testTimer.getPauseTime()).thenReturn(0L);
 
         timerViewModel.addTimer(testIndex, testTimer);
 

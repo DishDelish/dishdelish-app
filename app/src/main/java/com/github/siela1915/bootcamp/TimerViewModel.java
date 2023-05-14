@@ -19,7 +19,7 @@ public class TimerViewModel extends ViewModel {
     public long resumeTimer(int index) {
         if (timerList.containsKey(index)) {
             CountDownTimerWithPause timer = timerList.get(index);
-            if (timer.ismPaused()) return timerList.get(index).resume();
+            if (timer.isPaused()) return timerList.get(index).resume();
             return timer.getRemainingTime();
         }
         return 0;
@@ -28,8 +28,8 @@ public class TimerViewModel extends ViewModel {
     public long pauseTimer(int index) {
         if (timerList.containsKey(index)) {
             CountDownTimerWithPause timer = timerList.get(index);
-            if (!timer.ismPaused()) return timerList.get(index).pause();
-            return timer.getmPauseTime();
+            if (!timer.isPaused()) return timerList.get(index).pause();
+            return timer.getPauseTime();
         }
         return 0;
     }

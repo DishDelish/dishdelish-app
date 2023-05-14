@@ -14,32 +14,32 @@ public abstract class CountDownTimerWithPause {
     /**
      * Millis since epoch when alarm should stop.
      */
-    private final long mMillisInFuture;
+    private final long millisInFuture;
 
     /**
      * The interval in millis that the user receives callbacks
      */
-    private final long mCountdownInterval;
+    private final long countdownInterval;
 
-    private long mStopTimeInFuture;
+    private long stopTimeInFuture;
 
-    private long mPauseTime;
+    private long pauseTime;
 
-    private boolean mCancelled = false;
+    private boolean cancelled = false;
 
-    private boolean mPaused = false;
+    private boolean paused = false;
     private static final int MSG = 1;
     // handles counting down
-    private Handler mHandler = new Handler() {
+    private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             synchronized (CountDownTimerWithPause.this) {
-                if (!mPaused) {
-                    final long millisLeft = mStopTimeInFuture - getRealTime();
+                if (!paused) {
+                    final long millisLeft = stopTimeInFuture - getRealTime();
 
                     if (millisLeft <= 0) {
                         onFinish();
-                    } else if (millisLeft < mCountdownInterval) {
+                    } else if (millisLeft < countdownInterval) {
                         // no tick, just delay until done
                         sendMessageDelayed(obtainMessage(MSG), millisLeft);
                     } else {
@@ -47,13 +47,13 @@ public abstract class CountDownTimerWithPause {
                         onTick(millisLeft);
 
                         // take into account user's onTick taking time to execute
-                        long delay = lastTickStart + mCountdownInterval - getRealTime();
+                        long delay = lastTickStart + countdownInterval - getRealTime();
 
                         // special case: user's onTick took more than interval to
                         // complete, skip to next interval
-                        while (delay < 0) delay += mCountdownInterval;
+                        while (delay < 0) delay += countdownInterval;
 
-                        if (!mCancelled) {
+                        if (!cancelled) {
                             sendMessageDelayed(obtainMessage(MSG), delay);
                         }
                     }
@@ -70,81 +70,81 @@ public abstract class CountDownTimerWithPause {
      *   {@link #onTick(long)} callbacks.
      */
     public CountDownTimerWithPause(long millisInFuture, long countDownInterval) {
-        mMillisInFuture = millisInFuture;
-        mCountdownInterval = countDownInterval;
+        this.millisInFuture = millisInFuture;
+        countdownInterval = countDownInterval;
     }
 
     public CountDownTimerWithPause(long millisInFuture, long countDownInterval, Handler handler) {
-        mMillisInFuture = millisInFuture;
-        mCountdownInterval = countDownInterval;
-        mHandler = handler;
+        this.millisInFuture = millisInFuture;
+        countdownInterval = countDownInterval;
+        this.handler = handler;
     }
 
     /**
      * Start the countdown.
      */
     public synchronized final void start() {
-        if (mMillisInFuture <= 0) {
+        if (millisInFuture <= 0) {
             onFinish();
         }
-        mStopTimeInFuture = getRealTime() + mMillisInFuture;
-        mHandler.sendMessage(mHandler.obtainMessage(MSG));
-        mCancelled = false;
-        mPaused = false;
+        stopTimeInFuture = getRealTime() + millisInFuture;
+        handler.sendMessage(handler.obtainMessage(MSG));
+        cancelled = false;
+        paused = false;
     }
 
     /**
      * Pause the countdown.
      */
     public long pause() {
-        mPauseTime = mStopTimeInFuture - getRealTime();
-        mPaused = true;
-        return mPauseTime;
+        pauseTime = stopTimeInFuture - getRealTime();
+        paused = true;
+        return pauseTime;
     }
 
     /**
      * Resume the countdown.
      */
     public long resume() {
-        mStopTimeInFuture = mPauseTime + getRealTime();
-        mPaused = false;
-        mHandler.sendMessage(mHandler.obtainMessage(MSG));
-        return mPauseTime;
+        stopTimeInFuture = pauseTime + getRealTime();
+        paused = false;
+        handler.sendMessage(handler.obtainMessage(MSG));
+        return pauseTime;
     }
 
     /**
      * Get the remaining time.
      */
     public long getRemainingTime() {
-        return mStopTimeInFuture - getRealTime();
+        return stopTimeInFuture - getRealTime();
     }
 
     /**
      * Get the countdown interval.
      */
-    public long getmCountdownInterval() {
-        return mCountdownInterval;
+    public long getCountdownInterval() {
+        return countdownInterval;
     }
 
     /**
      * Get the time left when the timer is paused.
      */
-    public long getmPauseTime() {
-        return mPauseTime;
+    public long getPauseTime() {
+        return pauseTime;
     }
 
     /**
      * Get the time that the timer will stop.
      */
-    public long getmStopTimeInFuture() {
-        return mStopTimeInFuture;
+    public long getStopTimeInFuture() {
+        return stopTimeInFuture;
     }
 
     /**
      * Get if the timer is paused.
      */
-    public boolean ismPaused() {
-        return mPaused;
+    public boolean isPaused() {
+        return paused;
     }
 
     /**
