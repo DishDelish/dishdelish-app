@@ -5,7 +5,7 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Comment implements Parcelable {
@@ -14,13 +14,13 @@ public class Comment implements Parcelable {
 
     private String userId = "";
 
-    private LinkedList<Comment> replies;
+    private List<Comment> replies;
 
     /**
      * Creates a new Comment. Replies are implemented as a doubly linked list as a notion of
      * temporal order of the replies is required. Replies must therefore be kept ordered.
      */
-    public Comment(int likes, String content, LinkedList<Comment> replies) {
+    public Comment(int likes, String content, List<Comment> replies) {
         this.likes = likes;
         this.content = content;
         this.replies = replies;
@@ -29,19 +29,19 @@ public class Comment implements Parcelable {
     public Comment(int likes, String content) {
         this.likes = likes;
         this.content = content;
-        this.replies = new LinkedList<>();
+        this.replies = new ArrayList<>();
     }
 
     public Comment(String content) {
         this.likes = 0;
         this.content = content;
-        this.replies = new LinkedList<>();
+        this.replies = new ArrayList<>();
     }
 
     public Comment() {
         this.likes = 0;
         this.content = "";
-        this.replies = new LinkedList<>();
+        this.replies = new ArrayList<>();
     }
 
 
@@ -65,7 +65,7 @@ public class Comment implements Parcelable {
         return replies;
     }
 
-    public void setReplies(LinkedList<Comment> replies) {
+    public void setReplies(List<Comment> replies) {
         this.replies = replies;
     }
 
