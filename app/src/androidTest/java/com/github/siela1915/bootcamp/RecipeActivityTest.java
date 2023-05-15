@@ -78,8 +78,8 @@ import java.util.concurrent.TimeUnit;
 
 public class RecipeActivityTest {
 
-    private static FirebaseDatabase fb = FirebaseDatabase.getInstance();
-    private static Database database = new Database(fb);
+    private static FirebaseDatabase fb; //= FirebaseDatabase.getInstance();
+    private static Database database; //= new Database(fb);
 
     private static Recipe omelette;// = ExampleRecipes.recipes.get(0);
 
@@ -111,7 +111,11 @@ public class RecipeActivityTest {
         FirebaseApp.clearInstancesForTest();
         FirebaseApp.initializeApp(getApplicationContext());
         FirebaseAuth.getInstance().useEmulator("10.0.2.2", 9099);
-        FirebaseDatabase.getInstance().useEmulator("10.0.2.2", 9000);
+        fb = FirebaseDatabase.getInstance();
+        fb.useEmulator("10.0.2.2", 9000);
+
+        database = new Database(fb);
+
 
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             FirebaseAuthActivityTest.logoutSync();
@@ -197,6 +201,23 @@ public class RecipeActivityTest {
         scenario.close();
 
     }
+/*
+    @Test
+    public void heartButtonBecomesFullAuthenticated(){
+        waitForDatabaseFetchCompletion(300, TimeUnit.SECONDS);
+        Intent i = RecipeConverter.convertToIntent(omelette, ApplicationProvider.getApplicationContext());
+
+        ActivityScenario scenario = ActivityScenario.launch(i);
+
+        FirebaseAuthActivityTest.loginSync("eylulipci00@gmail.com");
+
+        onView(withId(R.id.favoriteButton))
+                .perform(ViewActions.click())
+                .check(matches(ViewMatchers.withTagValue(is("full"))));
+
+        FirebaseAuthActivityTest.logoutSync();
+        scenario.close();
+    } */
 
 
 
