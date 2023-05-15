@@ -12,7 +12,7 @@ import android.os.Bundle;
 import com.github.siela1915.bootcamp.Recipes.ExampleRecipes;
 import com.github.siela1915.bootcamp.Recipes.Recipe;
 
-public class GuidedCookingActivity extends AppCompatActivity {
+public class CookNowActivity extends AppCompatActivity {
 
     //index for keeping track which fragments to show
     private int index = 0;
