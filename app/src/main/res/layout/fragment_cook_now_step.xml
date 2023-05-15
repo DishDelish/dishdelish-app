@@ -4,6 +4,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp">
+    <include
+        layout="@layout/activity_guided_cooking"
+        android:id="@+id/container_timer"
+        />
 
     <TextView
         android:id="@+id/cookNowStepTitle"
@@ -15,14 +19,20 @@
         android:textStyle="bold">
     </TextView>
 
-    <TextView
-        android:id="@+id/cookNowStepContent"
+    <ScrollView
+        android:id="@+id/cookNowStepContentContainer"
+        android:layout_below="@+id/cookNowStepTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cookNowStepTitle"
-        android:layout_marginTop="20dp"
-        android:textSize="36sp">
-    </TextView>
+        >
+        <TextView
+            android:id="@+id/cookNowStepContent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            android:textSize="36sp"/>
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
