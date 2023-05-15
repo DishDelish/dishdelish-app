@@ -17,7 +17,9 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -57,6 +59,7 @@ import com.github.siela1915.bootcamp.firebase.Database;
 import com.github.siela1915.bootcamp.firebase.UserDatabase;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 
 import org.hamcrest.Description;
@@ -201,6 +204,55 @@ public class RecipeActivityTest {
         scenario.close();
 
     }
+
+    @Test
+    public void auth() {
+        waitForDatabaseFetchCompletion(300, TimeUnit.SECONDS);
+        Intent i = RecipeConverter.convertToIntent(omelette, ApplicationProvider.getApplicationContext());
+
+        ActivityScenario scenario = ActivityScenario.launch(i);
+
+        FirebaseAuthActivityTest.loginSync("example@email.com");
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        assertThat(FirebaseAuth.getInstance().getCurrentUser(), notNullValue());
+        //onView(withId(R.id.recipeNameText)).check(matches(withText(omelette.recipeName)));
+        scenario.close();
+
+    }
+
+    @Test
+    public void heartButtonBecomesFullAuthenticated() throws InterruptedException {
+        // Wait until the database fetch is complete or until a timeout occurs
+        waitForDatabaseFetchCompletion(5, TimeUnit.SECONDS);
+
+        Intent i = RecipeConverter.convertToIntent(omelette, ApplicationProvider.getApplicationContext());
+
+        ActivityScenario scenario = ActivityScenario.launch(i);
+
+        Thread.sleep(1000);
+
+        FirebaseAuthActivityTest.loginSync("eylulipci00@gmail.com");
+
+        TimerIdlingResource idlingResource = new TimerIdlingResource(15000);
+        IdlingRegistry.getInstance().register(idlingResource);
+
+        // Click on the button
+        onView(withId(R.id.favoriteButton)).perform(ViewActions.click());
+
+        IdlingRegistry.getInstance().unregister(idlingResource);
+
+
+        // Perform assertions on the updated UI
+        onView(withId(R.id.favoriteButton)).check(matches(ViewMatchers.withTagValue(is("full"))));
+
+        FirebaseAuthActivityTest.logoutSync();
+        scenario.close();
+    }
+
+
+
 /*
     @Test
     public void heartButtonBecomesFullAuthenticated(){
@@ -407,10 +459,12 @@ class TimerIdlingResource implements IdlingResource {
     private final long startTime;
     private final long waitingTime;
     private ResourceCallback resourceCallback;
+    private boolean idle;
 
     public TimerIdlingResource(long waitingTime) {
         this.startTime = System.currentTimeMillis();
         this.waitingTime = waitingTime;
+        this.idle = false;
     }
 
     @Override
@@ -421,10 +475,12 @@ class TimerIdlingResource implements IdlingResource {
     @Override
     public boolean isIdleNow() {
         long elapsedTime = System.currentTimeMillis() - startTime;
-        boolean idle = (elapsedTime >= waitingTime);
+        idle = (elapsedTime >= waitingTime);
+
         if (idle && resourceCallback != null) {
             resourceCallback.onTransitionToIdle();
         }
+
         return idle;
     }
 
@@ -433,6 +489,7 @@ class TimerIdlingResource implements IdlingResource {
         this.resourceCallback = resourceCallback;
     }
 }
+
 
 class DatabaseIdlingResource implements IdlingResource {
     private ResourceCallback resourceCallback;
