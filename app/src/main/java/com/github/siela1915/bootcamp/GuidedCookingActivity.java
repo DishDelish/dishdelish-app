@@ -28,7 +28,7 @@ public class GuidedCookingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        //temp testing
+        //TODO temp testing
         recipe = ExampleRecipes.recipes.get(0);
         //recipe = getIntent().getParcelableExtra("Recipe");
 
@@ -71,52 +71,6 @@ public class GuidedCookingActivity extends AppCompatActivity {
         //updateTimerFragment();
     }
 
-    private void updateTimerFragment(){
-        Bundle bundle = new Bundle();
-        bundle.putInt("index", index);
-        manager.beginTransaction()
-                .setReorderingAllowed(true)
-                .add(R.id.container_timer, CookNowTimerFragment.class, bundle)
-                .commit();
-
-        timerFrag = new CookNowTimerFragment();
-    }
-
-    private void nextStep(){
-        //maybe a final screen before end?
-        if(index > recipe.steps.size())
-            endGuidedCooking();
-        index += 1;
-        Bundle bundle = new Bundle();
-        bundle.putInt("index", index);
-        putStringForStep(bundle);
-    }
-
-    private void previousStep(){
-        if(index < recipe.steps.size())
-            return;
-        index -= 1;
-        Bundle bundle = new Bundle();
-        bundle.putInt("index", index);
-        putStringForStep(bundle);
-
-    }
-
-    private void putStringForStep(Bundle bundle){
-        //index 0 is the checklist view
-        if(index > 0)
-            bundle.putString("step", recipe.steps.get(index-1));
-        if(index == 0)
-            bundle.putString("step", "Placeholder for checklist fragment text");
-    }
-    private void endGuidedCooking(){
-        //go back to the previous activity on the stack
-        finish();
-    }
-
-
-
-
     @Override
     public void onBackPressed() {
         if (viewPager.getCurrentItem() == 0) {
@@ -130,8 +84,6 @@ public class GuidedCookingActivity extends AppCompatActivity {
     }
 
 
-
-
     private class ScreenSlidePagerAdapterStep extends FragmentStateAdapter {
         public ScreenSlidePagerAdapterStep(FragmentActivity fa) {
             super(fa);
@@ -139,12 +91,16 @@ public class GuidedCookingActivity extends AppCompatActivity {
 
         @Override
         public Fragment createFragment(int position) {
-            return CookNowStepFragment.newInstance(position, recipe.steps.get(position));
+            if(position == 0){
+                //TODO placeholder
+                return CookNowTimerFragment.newInstance(0);
+            }
+            return CookNowStepFragment.newInstance(position-1, recipe.steps.get(position-1));
         }
 
         @Override
         public int getItemCount() {
-            return recipe.steps.size();
+            return recipe.steps.size()+1;
         }
     }
 
