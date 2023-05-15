@@ -12,11 +12,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.siela1915.bootcamp.Recipes.Recipe;
+import com.github.siela1915.bootcamp.Recipes.RecipeItemAdapter;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * A fragment representing a list of Items.
@@ -60,7 +60,7 @@ public class RecipeListFragment extends Fragment {
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            recyclerView.setAdapter(new RecipeItemRecyclerViewAdapter(mRecipeList));
+            recyclerView.setAdapter(new RecipeItemAdapter(mRecipeList, context));
             recyclerView.addItemDecoration(new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL));
         }
         return view;
