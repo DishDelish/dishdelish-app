@@ -32,8 +32,8 @@ public class RecipeItemAdapter extends RecyclerView.Adapter<RecipeItemViewHolder
     public RecipeItemAdapter(List<Recipe> recipes, Context context) {
         this.recipes = recipes;
         this.context= context;
-    }
 
+    }
     @NonNull
     @Override
     public RecipeItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
