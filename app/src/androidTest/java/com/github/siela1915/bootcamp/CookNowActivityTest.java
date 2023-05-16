@@ -6,6 +6,8 @@ import androidx.test.core.app.ActivityScenario;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.Espresso;
 import static androidx.test.espresso.Espresso.onView;
+
+import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.matcher.BoundedMatcher;
 import androidx.test.espresso.matcher.ViewMatchers;
@@ -30,14 +32,20 @@ import org.junit.Test;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.Visibility.VISIBLE;
+import static androidx.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withParent;
 import static androidx.test.espresso.matcher.ViewMatchers.withParentIndex;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
+import static net.bytebuddy.matcher.ElementMatchers.is;
 import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.anyOf;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.instanceOf;
+import static org.junit.Assert.assertTrue;
 
 import com.github.siela1915.bootcamp.Recipes.ExampleRecipes;
 import com.github.siela1915.bootcamp.Recipes.Recipe;
@@ -79,26 +87,39 @@ public class CookNowActivityTest {
         ActivityScenario scenario = ActivityScenario.launch(intent);
     }
 
+
     @Test
     public void viewPagerSwipeShouldNavigateToNextStepFragment() throws InterruptedException {
         // Click the next button on the ViewPager2
-        onView(withId(R.id.container_step))
+        onView(anyOf(withId(R.id.container_step)))
                 .perform(ViewActions.swipeLeft());
-        Thread.sleep(100);
+
+        ViewInteraction interaction = onView(
+                allOf(withId(R.id.container_step), isCompletelyDisplayed()));
+        boolean objectIsVisible = isVisible(interaction);
+        assertTrue(objectIsVisible);
 
         //testing swiping and content of the fragments
         onView(withId(R.id.cookNowStepContent))
                 .check(matches(withText(getExpectedStringFromStep(recipe.steps.get(0)))));
-
-        onView(withId(R.id.container_step))
+        onView(allOf(withId(R.id.container_step), isCompletelyDisplayed()))
                 .perform(ViewActions.swipeLeft());
-        Thread.sleep(100);
+
+        interaction = onView(
+                allOf(withId(R.id.container_step), isCompletelyDisplayed()));
+        objectIsVisible = isVisible(interaction);
+        assertTrue(objectIsVisible);
+
         onView(withId(R.id.cookNowStepContent))
                 .check(matches(withText(getExpectedStringFromStep(recipe.steps.get(1)))));
-
-        onView(withId(R.id.container_step))
+        onView(allOf(withId(R.id.container_step), isCompletelyDisplayed()))
                 .perform(ViewActions.swipeRight());
-        Thread.sleep(100);
+
+        interaction = onView(
+                allOf(withId(R.id.container_step), isCompletelyDisplayed()));
+        objectIsVisible = isVisible(interaction);
+        assertTrue(objectIsVisible);
+
         onView(withId(R.id.cookNowStepContent))
                 .check(matches(withText(getExpectedStringFromStep(recipe.steps.get(0)))));
     }
@@ -107,6 +128,34 @@ public class CookNowActivityTest {
         Matcher<View> parentMatcher = ViewMatchers.withId(parentViewId);
 
         return allOf(withParent(parentMatcher), withParentIndex(position));
+    }
+
+
+    private final int TIMEOUT_MILLISECONDS = 1000;
+    private final int SLEEP_MILLISECONDS = 100;
+    private int time = 0;
+    private boolean wasDisplayed = false;
+
+    public Boolean isVisible(ViewInteraction interaction) throws InterruptedException {
+        interaction.withFailureHandler((error, viewMatcher) -> wasDisplayed = false);
+        if (wasDisplayed) {
+            time = 0;
+            wasDisplayed = false;
+            return true;
+        }
+        if (time >= TIMEOUT_MILLISECONDS) {
+            time = 0;
+            wasDisplayed = false;
+            return false;
+        }
+
+        //set it to true if failing handle should set it to false again.
+        wasDisplayed = true;
+        Thread.sleep(SLEEP_MILLISECONDS);
+        time += SLEEP_MILLISECONDS;
+
+        interaction.check(matches(isDisplayed()));
+        return isVisible(interaction);
     }
 
 
