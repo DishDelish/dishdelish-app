@@ -25,6 +25,8 @@ public class CookNowStepFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         int index = requireArguments().getInt("index");
         String step = requireArguments().getString("step");
+        //add to the beginning and any line breaks a "bullet point" character
+        step = "\u25CF " + step.replaceAll("\n", "\n\u25CF ");
 
         // load content to layout
         String stepTitle = getResources().getString(R.string.cook_now_step_title) + " " + (index + 1);

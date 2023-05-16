@@ -22,41 +22,49 @@ public class CookNowActivity extends AppCompatActivity {
     private FragmentManager manager;
     private ViewPager2 viewPager;
     private ViewPager2 viewPagerTimer;
-    private FragmentStateAdapter pagerAdapter;
+
+    public FragmentStateAdapter getPagerAdapterStep() {
+        return pagerAdapterStep;
+    }
+
+    public FragmentStateAdapter getPagerAdapterTimer() {
+        return pagerAdapterTimer;
+    }
+
+    private FragmentStateAdapter pagerAdapterStep;
+    private FragmentStateAdapter pagerAdapterTimer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         //TODO temp testing
-        recipe = ExampleRecipes.recipes.get(0);
-        //recipe = getIntent().getParcelableExtra("Recipe");
+        recipe = getIntent().getParcelableExtra("recipe");
+        if(recipe==null)
+            recipe = ExampleRecipes.recipes.get(0);
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_guided_cooking);
+        setContentView(R.layout.activity_cook_now);
 
         //page sliding
         viewPager = findViewById(R.id.container_step);
-        pagerAdapter = new ScreenSlidePagerAdapterStep(this);
-        viewPager.setAdapter(pagerAdapter);
+        pagerAdapterStep = new ScreenSlidePagerAdapterStep(this);
+        viewPager.setAdapter(pagerAdapterStep);
         viewPager.setPageTransformer(new ZoomOutPageTransformer());
         viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
-
                 if(position != 0){
-
                     index=position;
-                    //updateTimerFragment();
                 }
             }
 
         });
 
         viewPagerTimer = findViewById(R.id.container_timer);
-        pagerAdapter = new ScreenSlidePagerAdapterTimer(this);
-        viewPagerTimer.setAdapter(pagerAdapter);
+        pagerAdapterTimer = new ScreenSlidePagerAdapterTimer(this);
+        viewPagerTimer.setAdapter(pagerAdapterTimer);
 
         viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
@@ -68,7 +76,6 @@ public class CookNowActivity extends AppCompatActivity {
         });
 
         manager = getSupportFragmentManager();
-        //updateTimerFragment();
     }
 
     @Override
@@ -84,7 +91,7 @@ public class CookNowActivity extends AppCompatActivity {
     }
 
 
-    private class ScreenSlidePagerAdapterStep extends FragmentStateAdapter {
+    public class ScreenSlidePagerAdapterStep extends FragmentStateAdapter {
         public ScreenSlidePagerAdapterStep(FragmentActivity fa) {
             super(fa);
         }
@@ -93,7 +100,7 @@ public class CookNowActivity extends AppCompatActivity {
         public Fragment createFragment(int position) {
             if(position == 0){
                 //TODO placeholder
-                return CookNowTimerFragment.newInstance(0);
+                return CookNowStepFragment.newInstance(position, recipe.steps.get(0));
             }
             return CookNowStepFragment.newInstance(position-1, recipe.steps.get(position-1));
         }
@@ -104,14 +111,14 @@ public class CookNowActivity extends AppCompatActivity {
         }
     }
 
-    private class ScreenSlidePagerAdapterTimer extends FragmentStateAdapter {
+    public class ScreenSlidePagerAdapterTimer extends FragmentStateAdapter {
         public ScreenSlidePagerAdapterTimer(FragmentActivity fa) {
             super(fa);
         }
 
         @Override
         public Fragment createFragment(int position) {
-            return CookNowTimerFragment.newInstance(position);
+            return CookNowTimerFragment.newInstance(position-1);
         }
 
         @Override

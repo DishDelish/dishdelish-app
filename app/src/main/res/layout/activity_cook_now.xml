@@ -11,8 +11,7 @@
         android:id="@+id/container_step"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_above="@+id/container_timer"
-        app:layout_constraintBottom_toTopOf="@id/container_timer"
+        app:layout_constraintBottom_toTopOf="@+id/container_timer"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
