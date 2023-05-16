@@ -47,6 +47,12 @@ public class MainHomeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        FirebaseDatabase firebaseDb = FirebaseDatabase.getInstance();
+        firebaseDb.setPersistenceEnabled(true);
+        Database db = new Database(firebaseDb);
+        db.syncFavorites();
+
         setContentView(R.layout.activity_main_home2);
         fragmentManager= getSupportFragmentManager();
         filterView = findViewById(R.id.scrollview);
@@ -239,13 +245,13 @@ public class MainHomeActivity extends AppCompatActivity {
             fragmentManager.beginTransaction()
                     .setReorderingAllowed(true)
                     .add(containerId,fragmentClass,null)
-                    .addToBackStack("fragment")
+                    .addToBackStack(fragmentClass.getName())
                     .commit();
         }else{
             fragmentManager.beginTransaction()
                     .setReorderingAllowed(true)
                     .replace(containerId,fragmentClass,null)
-                    .addToBackStack("fragment")
+                    .addToBackStack(fragmentClass.getName())
                     .commit();
         }
     }
@@ -287,11 +293,13 @@ public class MainHomeActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction()
                     .setReorderingAllowed(true)
                     .add(containerId,fragment,null)
+                    .addToBackStack(fragment.getClass().getName())
                     .commit();
         }else{
             getSupportFragmentManager().beginTransaction()
                     .setReorderingAllowed(true)
                     .replace(containerId,fragment,null)
+                    .addToBackStack(fragment.getClass().getName())
                     .commit();
         }
     }
