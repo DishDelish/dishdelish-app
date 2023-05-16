@@ -88,12 +88,7 @@ public class FragmentIngredientCheck extends Fragment {
         recyclerView = view.findViewById(R.id.neededIngredientsRV);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(),2));
-        List<String> ingList;
-        if(ingredientList.size()== 0){
-             ingList= extractNameOfIngredient(ExampleRecipes.recipes.get(0).getIngredientList());
-        }else {
-            ingList = extractNameOfIngredient(ingredientList);
-        }
+        List<String> ingList = extractNameOfIngredient(ingredientList);
         adapter = new IngredientCheckAdapter(ingList);
         recyclerView.setAdapter(adapter);
         shoppingCartBtn = view.findViewById(R.id.addToShoppingListBtn);
