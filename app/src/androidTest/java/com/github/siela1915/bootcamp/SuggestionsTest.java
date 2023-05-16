@@ -1,12 +1,41 @@
 package com.github.siela1915.bootcamp;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import android.app.Activity;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import com.github.siela1915.bootcamp.Labelling.AllergyType;
+import com.github.siela1915.bootcamp.Labelling.CuisineType;
+import com.github.siela1915.bootcamp.Labelling.DietType;
+import com.github.siela1915.bootcamp.Recipes.Recipe;
+import com.github.siela1915.bootcamp.Tools.SuggestionCalculator;
+import com.github.siela1915.bootcamp.firebase.Database;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.database.FirebaseDatabase;
 
+import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executor;
 
 public class SuggestionsTest {
 
     private FirebaseDatabase firebaseInstance;
+    private final int SIZE = 10;
 
     @Before
     public void useEmulator() {
@@ -14,35 +43,58 @@ public class SuggestionsTest {
         firebaseInstance.useEmulator("10.0.2.2", 9000);
     }
 
-    @Test
-    public void testGetSuggestions() throws ExecutionException, InterruptedException {
-        // Mock Database and Utilities
-        Database db = new Database(null);
-        Utilities.setMockData();
-
-        // Mock the expected results
-        List<Recipe> expectedSuggestions = Arrays.asList(
-                new Recipe("Recipe 1"),
-                new Recipe("Recipe 2"),
-                new Recipe("Recipe 3")
-        );
-
-        // Stub the async operations with mock data
-        MockTask<List<Recipe>> favouritesTask = new MockTask<>(Utilities.getMockFavourites());
-        MockTask<List<Recipe>> randomTask = new MockTask<>(Utilities.getMockRandomRecipes());
-        MockTask<List<Recipe>> maxLikesTask = new MockTask<>(Utilities.getMockTopRecipes());
-
-        // Create a list of the stubbed tasks
-        List<MockTask<List<Recipe>>> tasks = Arrays.asList(favouritesTask, randomTask, maxLikesTask);
-
-        // Execute the getSuggestions() method
-        Task<List<Recipe>> suggestionsTask = Suggestions.getSuggestions(tasks, db);
-
-        // Await the completion of the task and get the result
-        List<Recipe> actualSuggestions = suggestionsTask.getResult();
-
-        // Verify the result
-        Assert.assertEquals(expectedSuggestions.size(), actualSuggestions.size());
-        Assert.assertTrue(actualSuggestions.containsAll(expectedSuggestions));
+    @After
+    public void clearDatabase() {
+        if (firebaseInstance != null) {
+            firebaseInstance.getReference().setValue(null);
+        }
     }
+
+
+    @Test
+    public void testGetSuggestions() {
+        Database db = new Database(firebaseInstance);
+        try {
+            for (Recipe r : favourites()) {
+                db.set(r);
+            }
+            for (Recipe r : popular()) {
+                db.set(r);
+            }
+            List<Recipe> ls = Tasks.await(SuggestionCalculator.getSuggestions(db));
+            assertEquals(2*SIZE, ls.size());
+            assertTrue(ls.stream().filter(r -> !r.getDietTypes().isEmpty())
+                    .allMatch(r -> r.getDietTypes().contains(DietType.VEGETARIAN.ordinal())));
+            assertTrue(ls.stream().filter(r -> !r.getAllergyTypes().isEmpty())
+                    .allMatch(r -> r.getAllergyTypes().contains(AllergyType.EGGS.ordinal())));
+            assertTrue(ls.stream().filter(r -> !r.getCuisineTypes().isEmpty())
+                    .allMatch(r -> r.getCuisineTypes().contains(CuisineType.CHINESE.ordinal())));
+        } catch (ExecutionException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private List<Recipe> favourites() {
+        List<Recipe> ls = new ArrayList<>();
+        for (int i = 0; i < SIZE; ++i) {
+            Recipe r = new Recipe();
+            r.setAllergyTypes(Collections.singletonList(AllergyType.EGGS.ordinal()));
+            r.setCuisineTypes(Collections.singletonList(CuisineType.CHINESE.ordinal()));
+            r.setDietTypes(Collections.singletonList(DietType.VEGETARIAN.ordinal()));
+            ls.add(r);
+        }
+        return ls;
+    }
+
+    private List<Recipe> popular() {
+        List<Recipe> ls = new ArrayList<>();
+        for (int i = 0; i < SIZE; ++i) {
+            Recipe r = new Recipe();
+            r.setLikes(1000);
+            ls.add(r);
+        }
+        return ls;
+    }
+
+
 }

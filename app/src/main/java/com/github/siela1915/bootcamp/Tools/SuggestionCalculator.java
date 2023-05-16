@@ -15,11 +15,14 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.stream.Collectors;
 
 public class SuggestionCalculator {
 
@@ -30,8 +33,7 @@ public class SuggestionCalculator {
     private static int TOP = 10;
 
 
-    public static Task<List<Recipe>> getSuggestions() {
-        Database db = new Database(FirebaseDatabase.getInstance());
+    public static Task<List<Recipe>> getSuggestions(Database db) {
 
         // Create a list of tasks
         List<Task<List<Recipe>>> tasks = new ArrayList<>();
@@ -47,15 +49,16 @@ public class SuggestionCalculator {
                     CuisineType cuisine = Utilities.getDominantCuisine(favourites);
 
                     List<Recipe> random = (List<Recipe>) task.getResult().get(1);
-                    List<Recipe> result = new ArrayList<>();
+                    Set<Recipe> result = new HashSet<>(); //Use set to avoid duplicates
                     result.addAll(Utilities.getAllergy(allergy, random));
                     result.addAll(Utilities.getCuisine(cuisine, random));
                     result.addAll(Utilities.getDiet(diet, random));
 
                     result.addAll((Collection<? extends Recipe>) task.getResult().get(2));
-                    Collections.shuffle(result);
+                    List<Recipe> ls = result.stream().collect(Collectors.toList());
+                    Collections.shuffle(ls);
 
-                    return result;
+                    return ls;
                 });
     }
 
