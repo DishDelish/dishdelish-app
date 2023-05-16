@@ -324,7 +324,7 @@ public class RecipeActivity extends AppCompatActivity implements CompoundButton.
                 recipe.setLikes(recipe.likes - 1);
 
                 // for testing
-                buttonView.setTag("empty");
+                buttonView.setTag("removed");
 
             }).addOnFailureListener(e -> {
 

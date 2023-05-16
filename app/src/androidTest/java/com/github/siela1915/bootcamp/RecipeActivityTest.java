@@ -228,9 +228,13 @@ public class RecipeActivityTest {
         //TimerIdlingResource idlingResource = new TimerIdlingResource(100000);
         //IdlingRegistry.getInstance().register(idlingResource);
 
+        onView(withId(R.id.favoriteButton)).perform(click());
+
+
         scenario.onActivity(a -> {
             ToggleButton heart = a.findViewById(R.id.favoriteButton);
-            heart.performClick();
+            //heart.performClick();
+
             //((RecipeActivity)a).onCheckedChanged(heart, heart.isChecked());
 
             long startTime = System.currentTimeMillis();
