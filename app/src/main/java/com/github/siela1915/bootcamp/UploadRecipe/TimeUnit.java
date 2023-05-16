@@ -3,7 +3,7 @@ package com.github.siela1915.bootcamp.UploadRecipe;
 import java.util.stream.Stream;
 
 public enum TimeUnit {
-    MIN("min"), HOUR("hour"), DAY("day"), WEEK("week"), MONTH("month"), YEAR("year");
+    MIN("min"), HOUR("hour"), DAY("day");
 
     private final String display_string;
 
