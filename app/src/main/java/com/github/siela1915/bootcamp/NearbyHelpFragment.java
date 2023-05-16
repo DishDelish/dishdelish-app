@@ -58,10 +58,11 @@ import java.util.Map;
 public class NearbyHelpFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener {
     private final LocationDatabase locDb = new LocationDatabase();
     private FusedLocationProviderClient fusedLocationClient;
-    private String asked = "";
+    private Ingredient mAskedIngredient = null;
     private final Map<Marker, Pair<String, Ingredient>> offers = new HashMap<>();
     public static final String ARG_REPLY_OFFER_UID = "reply-offer-uid";
     public static final String ARG_REPLY_INGREDIENT = "reply-ingredient";
+    public static final String ARG_ASKED_INGREDIENT = "asked-ingredient";
     private String mReplyOfferUid = null;
     private String mReplyIngredient = null;
 
@@ -91,6 +92,14 @@ public class NearbyHelpFragment extends Fragment implements OnMapReadyCallback, 
         return fragment;
     }
 
+    public static NearbyHelpFragment newInstance(Ingredient askedIngredient) {
+        NearbyHelpFragment fragment = new NearbyHelpFragment();
+        Bundle args = new Bundle();
+        args.putParcelable(ARG_ASKED_INGREDIENT, askedIngredient);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -102,6 +111,9 @@ public class NearbyHelpFragment extends Fragment implements OnMapReadyCallback, 
         if (getArguments() != null && getArguments().getString(ARG_REPLY_OFFER_UID) != null) {
             mReplyOfferUid = getArguments().getString(ARG_REPLY_OFFER_UID);
             mReplyIngredient = getArguments().getString(ARG_REPLY_INGREDIENT);
+        }
+        if (getArguments() != null && getArguments().get(ARG_ASKED_INGREDIENT) != null) {
+            mAskedIngredient = getArguments().getParcelable(ARG_ASKED_INGREDIENT);
         }
     }
 
@@ -148,6 +160,10 @@ public class NearbyHelpFragment extends Fragment implements OnMapReadyCallback, 
             });
         }
 
+        if (mAskedIngredient != null) {
+            getHelpForIngredient(view);
+        }
+
         Button askSelectionButton = view.findViewById(R.id.askHelpButton);
         Button offerSelectionButton = view.findViewById(R.id.offerHelpButton);
         Button submitAskHelp = view.findViewById(R.id.submitAskHelpButton);
@@ -164,21 +180,11 @@ public class NearbyHelpFragment extends Fragment implements OnMapReadyCallback, 
         });
 
         submitAskHelp.setOnClickListener(v -> {
-            askGroup.setVisibility(View.INVISIBLE);
-            map.setVisibility(View.VISIBLE);
-
             EditText askedInput = view.findViewById(R.id.askedIngredient);
-            asked = askedInput.getText().toString();
+            mAskedIngredient = new Ingredient();
+            mAskedIngredient.setIngredient(askedInput.getText().toString());
 
-            GoogleMapOptions options = new GoogleMapOptions();
-
-            options.zoomControlsEnabled(true);
-            SupportMapFragment mapFragment = SupportMapFragment.newInstance(options);
-            requireActivity().getSupportFragmentManager()
-                    .beginTransaction()
-                    .add(R.id.map, mapFragment)
-                    .commit();
-            mapFragment.getMapAsync(this);
+            getHelpForIngredient(view);
         });
 
         submitOfferHelp.setOnClickListener(v -> {
@@ -206,7 +212,7 @@ public class NearbyHelpFragment extends Fragment implements OnMapReadyCallback, 
                     List<Pair<String, Location>> nearby = nearbyTask.getResult();
 
                     nearby.forEach(pair -> locDb.getOffered(pair.first).continueWith(offeredTask -> {
-                        if (offeredTask.getResult().toString().contains(asked.toLowerCase())) {
+                        if (offeredTask.getResult().toString().contains(mAskedIngredient.getIngredient().toLowerCase())) {
                             Marker marker = googleMap.addMarker(new MarkerOptions()
                                     .position(new LatLng(pair.second.getLatitude(), pair.second.getLongitude()))
                                     .title(offeredTask.getResult().toString())
@@ -259,6 +265,24 @@ public class NearbyHelpFragment extends Fragment implements OnMapReadyCallback, 
                         });
                     });
         }
+    }
+
+    private void getHelpForIngredient(View view) {
+        Group askGroup = view.findViewById(R.id.askHelpGroup);
+        FragmentContainerView map = view.findViewById(R.id.map);
+
+        askGroup.setVisibility(View.INVISIBLE);
+        map.setVisibility(View.VISIBLE);
+
+        GoogleMapOptions options = new GoogleMapOptions();
+
+        options.zoomControlsEnabled(true);
+        SupportMapFragment mapFragment = SupportMapFragment.newInstance(options);
+        requireActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .add(R.id.map, mapFragment)
+                .commit();
+        mapFragment.getMapAsync(this);
     }
 
     private void askLocationPermission() {
