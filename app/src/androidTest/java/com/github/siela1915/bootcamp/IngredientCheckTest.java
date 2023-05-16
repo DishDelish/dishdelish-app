@@ -43,5 +43,7 @@ public class IngredientCheckTest {
         onView(withId(R.id.neededIngredientsRV))
                 .perform(RecyclerViewActions.actionOnItemAtPosition(0,click()));
         onView(withId(R.id.addToShoppingListBtn)).check(ViewAssertions.matches(isClickable()));
+        onView(withId(R.id.nearByBtn)).check(ViewAssertions.matches(isClickable()));
     }
+
 }
