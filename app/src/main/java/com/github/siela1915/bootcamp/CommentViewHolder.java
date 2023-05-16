@@ -100,7 +100,6 @@ public class CommentViewHolder extends RecyclerView.ViewHolder implements Compou
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         int position = getAdapterPosition();
-        if (position != RecyclerView.NO_POSITION) {
             Comment currentComment = adapter.getData().get(position);
             if (isChecked) {
                 if(FirebaseAuth.getInstance().getCurrentUser()==null){
@@ -150,6 +149,6 @@ public class CommentViewHolder extends RecyclerView.ViewHolder implements Compou
                             buttonView.setOnCheckedChangeListener(this);
                         });
             }
-        }
+
     }
 }
