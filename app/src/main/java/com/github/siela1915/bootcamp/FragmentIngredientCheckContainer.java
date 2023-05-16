@@ -49,6 +49,11 @@ public class FragmentIngredientCheckContainer extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FragmentIngredientCheck initialFrag= new FragmentIngredientCheck();
+        getParentFragmentManager().beginTransaction()
+                .add(R.id.ingredientContainer,initialFrag)
+                .addToBackStack("initial")
+                .commit();
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
