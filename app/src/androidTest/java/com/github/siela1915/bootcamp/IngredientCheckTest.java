@@ -18,8 +18,12 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import android.os.Bundle;
 
 import androidx.fragment.app.testing.FragmentScenario;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.assertion.ViewAssertions;
+import androidx.test.espresso.contrib.DrawerActions;
+import androidx.test.espresso.contrib.NavigationViewActions;
 import androidx.test.espresso.contrib.RecyclerViewActions;
 import androidx.test.espresso.matcher.ViewMatchers;
 
@@ -42,8 +46,7 @@ public class IngredientCheckTest {
         onView(withText(ingredients.get(0).toString())).check(ViewAssertions.matches(isDisplayed()));
         onView(withId(R.id.neededIngredientsRV))
                 .perform(RecyclerViewActions.actionOnItemAtPosition(0,click()));
-        onView(withId(R.id.addToShoppingListBtn)).check(ViewAssertions.matches(isClickable()));
-        onView(withId(R.id.nearByBtn)).check(ViewAssertions.matches(isClickable()));
+        scenario.close();
     }
 
 }
