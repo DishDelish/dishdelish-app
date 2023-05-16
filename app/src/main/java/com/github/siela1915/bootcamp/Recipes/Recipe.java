@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class Recipe implements Parcelable {
-    public String image, recipeName, userName, uniqueKey = "";
+    public String image, recipeName, userName, uniqueKey, userId = "";
     public int profilePicture, prepTime, cookTime, servings, likes, numRatings = 0;
     public double rating;
 
@@ -163,6 +163,10 @@ public class Recipe implements Parcelable {
 
     public void setNumRatings(int numRatings) {this.numRatings = numRatings;}
 
+    public String getUserId() {return userId;}
+
+    public void setUserId(String id) {this.userId = id;}
+
     public Recipe() {}
 
     public Recipe(String image, String recipeName, String userName, int profilePicture, double rating,
@@ -211,6 +215,7 @@ public class Recipe implements Parcelable {
         carbohydrates = in.readDouble();
         sugar = in.readDouble();
         protein = in.readDouble();
+        userId = in.readString();
     }
 
     public static final Creator<Recipe> CREATOR = new Creator<Recipe>() {
@@ -253,6 +258,7 @@ public class Recipe implements Parcelable {
         dest.writeDouble(carbohydrates);
         dest.writeDouble(sugar);
         dest.writeDouble(protein);
+        dest.writeString(userId);
     }
 
     @Override

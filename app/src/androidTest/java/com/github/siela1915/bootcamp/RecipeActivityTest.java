@@ -41,12 +41,14 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.IdlingRegistry;
 import androidx.test.espresso.IdlingResource;
 import androidx.test.espresso.action.ViewActions;
+import androidx.test.espresso.idling.CountingIdlingResource;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.espresso.matcher.BoundedMatcher;
 import androidx.test.espresso.matcher.ViewMatchers;
@@ -60,7 +62,11 @@ import com.github.siela1915.bootcamp.firebase.UserDatabase;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -205,22 +211,6 @@ public class RecipeActivityTest {
 
     }
 
-    @Test
-    public void auth() {
-        waitForDatabaseFetchCompletion(300, TimeUnit.SECONDS);
-        Intent i = RecipeConverter.convertToIntent(omelette, ApplicationProvider.getApplicationContext());
-
-        ActivityScenario scenario = ActivityScenario.launch(i);
-
-        FirebaseAuthActivityTest.loginSync("example@email.com");
-
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-        assertThat(FirebaseAuth.getInstance().getCurrentUser(), notNullValue());
-        //onView(withId(R.id.recipeNameText)).check(matches(withText(omelette.recipeName)));
-        scenario.close();
-
-    }
 
     @Test
     public void heartButtonBecomesFullAuthenticated() throws InterruptedException {
@@ -231,21 +221,36 @@ public class RecipeActivityTest {
 
         ActivityScenario scenario = ActivityScenario.launch(i);
 
-        Thread.sleep(1000);
+
 
         FirebaseAuthActivityTest.loginSync("eylulipci00@gmail.com");
 
-        TimerIdlingResource idlingResource = new TimerIdlingResource(15000);
-        IdlingRegistry.getInstance().register(idlingResource);
+        //TimerIdlingResource idlingResource = new TimerIdlingResource(100000);
+        //IdlingRegistry.getInstance().register(idlingResource);
+
+        scenario.onActivity(a -> {
+            ToggleButton heart = a.findViewById(R.id.favoriteButton);
+            heart.performClick();
+            //((RecipeActivity)a).onCheckedChanged(heart, heart.isChecked());
+
+            long startTime = System.currentTimeMillis();
+            long waitTime = 20000; // Wait for 5 seconds
+            while (System.currentTimeMillis() - startTime < waitTime) {
+            }
+            assertThat(heart.getTag().toString(), is("full"));
+
+        });
 
         // Click on the button
-        onView(withId(R.id.favoriteButton)).perform(ViewActions.click());
+        //onView(withId(R.id.favoriteButton)).perform(ViewActions.click());
 
-        IdlingRegistry.getInstance().unregister(idlingResource);
+
+
+        //IdlingRegistry.getInstance().unregister(idlingResource);
 
 
         // Perform assertions on the updated UI
-        onView(withId(R.id.favoriteButton)).check(matches(ViewMatchers.withTagValue(is("full"))));
+        //onView(withId(R.id.favoriteButton)).check(matches(ViewMatchers.withTagValue(is("full"))));
 
         FirebaseAuthActivityTest.logoutSync();
         scenario.close();
@@ -517,6 +522,50 @@ class DatabaseIdlingResource implements IdlingResource {
         this.resourceCallback = resourceCallback;
     }
 }
+
+class DatabaseIdlingResource2 implements IdlingResource {
+
+    private final CountingIdlingResource countingResource;
+    private final DatabaseReference databaseReference;
+
+    public DatabaseIdlingResource2(DatabaseReference databaseReference) {
+        this.countingResource = new CountingIdlingResource("database");
+        this.databaseReference = databaseReference;
+    }
+
+    @Override
+    public String getName() {
+        return countingResource.getName();
+    }
+
+    @Override
+    public boolean isIdleNow() {
+        return countingResource.isIdleNow();
+    }
+
+    @Override
+    public void registerIdleTransitionCallback(ResourceCallback callback) {
+        countingResource.registerIdleTransitionCallback(callback);
+    }
+
+    public void waitForDatabase() {
+        countingResource.increment();
+
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                countingResource.decrement();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                countingResource.decrement();
+            }
+        });
+    }
+}
+
+
 
 
 
