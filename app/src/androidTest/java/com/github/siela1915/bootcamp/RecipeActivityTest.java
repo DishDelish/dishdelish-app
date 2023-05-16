@@ -27,6 +27,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import android.app.Activity;
+import android.app.Application;
 import android.app.Instrumentation;
 import android.content.Context;
 import android.content.Intent;
@@ -35,7 +36,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RatingBar;
@@ -44,6 +47,7 @@ import android.widget.ToggleButton;
 
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.core.app.ApplicationProvider;
@@ -54,6 +58,7 @@ import androidx.test.espresso.idling.CountingIdlingResource;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.espresso.matcher.BoundedMatcher;
 import androidx.test.espresso.matcher.ViewMatchers;
+import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.github.siela1915.bootcamp.Recipes.Comment;
 import com.github.siela1915.bootcamp.Recipes.ExampleRecipes;
@@ -99,6 +104,7 @@ public class RecipeActivityTest {
     private IdlingResource idlingResource;
     private static DatabaseIdlingResource databaseIdlingResource;
     private static boolean isDatabaseFetchComplete;
+    private ToastWatcher toastWatcher;
 /*
     private static CountDownLatch latch;
     @BeforeClass
@@ -174,6 +180,9 @@ public class RecipeActivityTest {
     public void setUp(){
         idlingResource = new TimerIdlingResource(WAITING_TIME_MS);
         IdlingRegistry.getInstance().register(idlingResource);
+
+        toastWatcher = new ToastWatcher();
+        InstrumentationRegistry.getInstrumentation().addMonitor(toastWatcher);
     }
 
     @After
@@ -182,6 +191,7 @@ public class RecipeActivityTest {
             FirebaseAuthActivityTest.logoutSync();
         }
         IdlingRegistry.getInstance().unregister(idlingResource);
+        InstrumentationRegistry.getInstrumentation().removeMonitor(toastWatcher);
     }
 
     //Intent i = RecipeConverter.convertToIntent(omelette, ApplicationProvider.getApplicationContext());
@@ -261,7 +271,171 @@ public class RecipeActivityTest {
 
         FirebaseAuthActivityTest.logoutSync();
         scenario.close();
+
+        String expectedMessage = "Your Toast Message";
+        String actualMessage = toastWatcher.getToastMessage();
+        assert((actualMessage).equals(expectedMessage));
     }
+
+    private static class ToastWatcher extends Instrumentation.ActivityMonitor implements Application.ActivityLifecycleCallbacks {
+        private final CountDownLatch latch = new CountDownLatch(1);
+        private String toastMessage;
+
+        public void onToastDisplayed(String message) {
+            this.toastMessage = message;
+            latch.countDown();
+        }
+
+        public String getToastMessage() {
+            return toastMessage;
+        }
+
+        /**
+         * @param activity
+         * @param savedInstanceState
+         */
+        @Override
+        public void onActivityPreCreated(@NonNull Activity activity, @Nullable Bundle savedInstanceState) {
+            Application.ActivityLifecycleCallbacks.super.onActivityPreCreated(activity, savedInstanceState);
+        }
+
+        @Override
+        public void onActivityCreated(Activity activity, Bundle savedInstanceState) {}
+
+        /**
+         * @param activity
+         * @param savedInstanceState
+         */
+        @Override
+        public void onActivityPostCreated(@NonNull Activity activity, @Nullable Bundle savedInstanceState) {
+            Application.ActivityLifecycleCallbacks.super.onActivityPostCreated(activity, savedInstanceState);
+        }
+
+        /**
+         * @param activity
+         */
+        @Override
+        public void onActivityPreStarted(@NonNull Activity activity) {
+            Application.ActivityLifecycleCallbacks.super.onActivityPreStarted(activity);
+        }
+
+        @Override
+        public void onActivityStarted(Activity activity) {}
+
+        /**
+         * @param activity
+         */
+        @Override
+        public void onActivityPostStarted(@NonNull Activity activity) {
+            Application.ActivityLifecycleCallbacks.super.onActivityPostStarted(activity);
+        }
+
+        /**
+         * @param activity
+         */
+        @Override
+        public void onActivityPreResumed(@NonNull Activity activity) {
+            Application.ActivityLifecycleCallbacks.super.onActivityPreResumed(activity);
+        }
+
+        @Override
+        public void onActivityResumed(Activity activity) {}
+
+        /**
+         * @param activity
+         */
+        @Override
+        public void onActivityPostResumed(@NonNull Activity activity) {
+            Application.ActivityLifecycleCallbacks.super.onActivityPostResumed(activity);
+        }
+
+        /**
+         * @param activity
+         */
+        @Override
+        public void onActivityPrePaused(@NonNull Activity activity) {
+            Application.ActivityLifecycleCallbacks.super.onActivityPrePaused(activity);
+        }
+
+        @Override
+        public void onActivityPaused(Activity activity) {}
+
+        /**
+         * @param activity
+         */
+        @Override
+        public void onActivityPostPaused(@NonNull Activity activity) {
+            Application.ActivityLifecycleCallbacks.super.onActivityPostPaused(activity);
+        }
+
+        /**
+         * @param activity
+         */
+        @Override
+        public void onActivityPreStopped(@NonNull Activity activity) {
+            Application.ActivityLifecycleCallbacks.super.onActivityPreStopped(activity);
+        }
+
+        @Override
+        public void onActivityStopped(Activity activity) {}
+
+        /**
+         * @param activity
+         */
+        @Override
+        public void onActivityPostStopped(@NonNull Activity activity) {
+            Application.ActivityLifecycleCallbacks.super.onActivityPostStopped(activity);
+        }
+
+        /**
+         * @param activity
+         * @param outState
+         */
+        @Override
+        public void onActivityPreSaveInstanceState(@NonNull Activity activity, @NonNull Bundle outState) {
+            Application.ActivityLifecycleCallbacks.super.onActivityPreSaveInstanceState(activity, outState);
+        }
+
+        @Override
+        public void onActivitySaveInstanceState(Activity activity, Bundle outState) {}
+
+        /**
+         * @param activity
+         * @param outState
+         */
+        @Override
+        public void onActivityPostSaveInstanceState(@NonNull Activity activity, @NonNull Bundle outState) {
+            Application.ActivityLifecycleCallbacks.super.onActivityPostSaveInstanceState(activity, outState);
+        }
+
+        /**
+         * @param activity
+         */
+        @Override
+        public void onActivityPreDestroyed(@NonNull Activity activity) {
+            Application.ActivityLifecycleCallbacks.super.onActivityPreDestroyed(activity);
+        }
+
+        @Override
+        public void onActivityDestroyed(Activity activity) {
+            // Delay the toast message retrieval until the activity is destroyed
+            // This ensures that the Toast has finished displaying
+            new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                if (latch.getCount() > 0) {
+                    latch.countDown();
+                }
+            }, 1000);
+        }
+
+        /**
+         * @param activity
+         */
+        @Override
+        public void onActivityPostDestroyed(@NonNull Activity activity) {
+            Application.ActivityLifecycleCallbacks.super.onActivityPostDestroyed(activity);
+        }
+    }
+
 
     @Test
     public void commentUpdate(){
