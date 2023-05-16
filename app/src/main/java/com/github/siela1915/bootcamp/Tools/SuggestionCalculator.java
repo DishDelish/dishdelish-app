@@ -1,15 +1,25 @@
 package com.github.siela1915.bootcamp.Tools;
 
+import com.github.siela1915.bootcamp.Labelling.AllergyType;
+import com.github.siela1915.bootcamp.Labelling.CuisineType;
+import com.github.siela1915.bootcamp.Labelling.DietType;
 import com.github.siela1915.bootcamp.Recipes.Recipe;
 import com.github.siela1915.bootcamp.firebase.Database;
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public class SuggestionCalculator {
 
@@ -22,11 +32,33 @@ public class SuggestionCalculator {
 
     public static Task<List<Recipe>> getSuggestions() {
         Database db = new Database(FirebaseDatabase.getInstance());
-        Task<List<Recipe>> favourites = getFavouritesFromDatabase(db);
-        Task<List<Recipe>> recipes = db.getNRandomAsync(N);
-        Task<List<Recipe>> topRecipes = db.getByMaxLikesAsync(TOP);
-        return null;
+
+        // Create a list of tasks
+        List<Task<List<Recipe>>> tasks = new ArrayList<>();
+        tasks.add(getFavouritesFromDatabase(db));
+        tasks.add(db.getNRandomAsync(N));
+        tasks.add(db.getByMaxLikesAsync(TOP));
+
+        return Tasks.whenAllSuccess(tasks)
+                .continueWith(task -> {
+                    List<Recipe> favourites = (List<Recipe>) task.getResult().get(0);
+                    AllergyType allergy = Utilities.getDominantAllergy(favourites);
+                    DietType diet = Utilities.getDominantDiet(favourites);
+                    CuisineType cuisine = Utilities.getDominantCuisine(favourites);
+
+                    List<Recipe> random = (List<Recipe>) task.getResult().get(1);
+                    List<Recipe> result = new ArrayList<>();
+                    result.addAll(Utilities.getAllergy(allergy, random));
+                    result.addAll(Utilities.getCuisine(cuisine, random));
+                    result.addAll(Utilities.getDiet(diet, random));
+
+                    result.addAll((Collection<? extends Recipe>) task.getResult().get(2));
+                    Collections.shuffle(result);
+
+                    return result;
+                });
     }
+
 
     private static Task<List<Recipe>> getFavouritesFromDatabase(Database db) {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -45,3 +77,4 @@ public class SuggestionCalculator {
 
 
 }
+

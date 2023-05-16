@@ -12,6 +12,39 @@ import java.util.stream.Collectors;
 public class Utilities {
 
     /**
+     * Retains from the provided list of recipes only the ones with the specified allergy.
+     * @param allergy The allergy type.
+     * @param ls the list of recipes to be filtered.
+     * @return A new list of recipes.
+     */
+    public static List<Recipe> getAllergy(AllergyType allergy, List<Recipe> ls) {
+        return ls.stream().filter(r -> r.getAllergyTypes().contains(allergy.ordinal()))
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Retains from the provided list of recipes only the ones with the specified diet.
+     * @param diet The diet type.
+     * @param ls the list of recipes to be filtered.
+     * @return A new list of recipes.
+     */
+    public static List<Recipe> getDiet(DietType diet, List<Recipe> ls) {
+        return ls.stream().filter(r -> r.getDietTypes().contains(diet.ordinal()))
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Retains from the provided list of recipes only the ones with the specified cuisine.
+     * @param cuisine The cuisine type.
+     * @param ls the list of recipes to be filtered.
+     * @return A new list of recipes.
+     */
+    public static List<Recipe> getCuisine(CuisineType cuisine, List<Recipe> ls) {
+        return ls.stream().filter(r -> r.getCuisineTypes().contains(cuisine.ordinal()))
+                .collect(Collectors.toList());
+    }
+
+    /**
      * Filters the provided list of recipes to retain only the recipes with the same cuisine types
      * as the recipe provided as first parameter to the function.
      * @param recipe The recipe on which the filtering will be based.

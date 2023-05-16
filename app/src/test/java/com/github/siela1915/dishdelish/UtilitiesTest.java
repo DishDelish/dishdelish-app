@@ -127,5 +127,56 @@ public class UtilitiesTest {
         assertEquals(CuisineType.CHINESE, Utilities.getDominantCuisine(ls));
     }
 
+    @Test
+    public void filterAllergy() {
+        List<Recipe> ls = new ArrayList<>(CAPACITY);
+        Random random = new Random();
+        int check = 0;
+        for (int i = 0; i < CAPACITY; ++i) {
+            Recipe r = new Recipe();
+            int next = random.nextInt(AllergyType.values().length);
+            if (next == AllergyType.EGGS.ordinal()) ++check;
+            r.setAllergyTypes(Collections.singletonList(next));
+            ls.add(r);
+        }
+        List<Recipe> same = Utilities.getAllergy(AllergyType.EGGS, ls);
+        assertEquals(check, same.size());
+        assertTrue(same.stream().allMatch(r -> r.getAllergyTypes().contains(AllergyType.EGGS.ordinal())));
+    }
+
+    @Test
+    public void filterDiet() {
+        List<Recipe> ls = new ArrayList<>(CAPACITY);
+        Random random = new Random();
+        int check = 0;
+        for (int i = 0; i < CAPACITY; ++i) {
+            Recipe r = new Recipe();
+            int next = random.nextInt(DietType.values().length);
+            if (next == DietType.DAIRY.ordinal()) ++check;
+            r.setDietTypes(Collections.singletonList(next));
+            ls.add(r);
+        }
+        List<Recipe> same = Utilities.getDiet(DietType.DAIRY, ls);
+        assertEquals(check, same.size());
+        assertTrue(same.stream().allMatch(r -> r.getDietTypes().contains(DietType.DAIRY.ordinal())));
+    }
+
+    @Test
+    public void filterCuisine() {
+        List<Recipe> ls = new ArrayList<>(CAPACITY);
+        Random random = new Random();
+        int check = 0;
+        for (int i = 0; i < CAPACITY; ++i) {
+            Recipe r = new Recipe();
+            int next = random.nextInt(CuisineType.values().length);
+            if (next == CuisineType.CHINESE.ordinal()) ++check;
+            r.setCuisineTypes(Collections.singletonList(next));
+            ls.add(r);
+        }
+        List<Recipe> same = Utilities.getCuisine(CuisineType.CHINESE, ls);
+        assertEquals(check, same.size());
+        assertTrue(same.stream().allMatch(r -> r.getCuisineTypes().contains(CuisineType.CHINESE.ordinal())));
+    }
+
 
 }
