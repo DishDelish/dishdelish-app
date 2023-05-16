@@ -3,6 +3,7 @@ package com.github.siela1915.bootcamp;
 import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
@@ -34,6 +35,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RatingBar;
@@ -81,6 +83,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -259,6 +262,58 @@ public class RecipeActivityTest {
         FirebaseAuthActivityTest.logoutSync();
         scenario.close();
     }
+
+    @Test
+    public void commentUpdate(){
+        waitForDatabaseFetchCompletion(5, TimeUnit.SECONDS);
+
+        Intent i = RecipeConverter.convertToIntent(omelette, ApplicationProvider.getApplicationContext());
+
+        ActivityScenario scenario = ActivityScenario.launch(i);
+
+        FirebaseAuthActivityTest.loginSync("eylulipci00@gmail.com");
+
+        String test = "test";
+
+        onView(withId(R.id.enterComment)).perform(scrollTo(), typeText(test), closeSoftKeyboard());
+
+        onView(withId(R.id.sendCommentButton))
+                .perform(scrollTo(), click());
+
+        List<Comment> newCommentsList = new ArrayList<>(omelette.comments);
+        newCommentsList.add(new Comment(test));
+
+        scenario.onActivity(activity -> {
+
+            //long startTime = System.currentTimeMillis();
+            //long waitTime = 20000; // Wait for 5 seconds
+            //while (System.currentTimeMillis() - startTime < waitTime) {
+            //}
+
+            try {
+                Thread.sleep(10000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+
+            RecyclerView commentsList = activity.findViewById(R.id.commentsList);
+            CommentAdapter commentAdapter = (CommentAdapter) commentsList.getAdapter();
+
+            for (int a = 0; a < newCommentsList.size(); a++) {
+                Comment expectedData = newCommentsList.get(a);
+                Comment actualData = commentAdapter.getData().get(a);
+                assertEquals(expectedData.getContent(), actualData.getContent());
+            }
+            FirebaseAuthActivityTest.logoutSync();
+
+
+        });
+        scenario.close();
+
+    }
+
+
+
 
 
 
