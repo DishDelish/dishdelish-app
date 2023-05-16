@@ -18,7 +18,7 @@ public class Utilities {
      * @return A new list of recipes.
      */
     public static List<Recipe> getAllergy(AllergyType allergy, List<Recipe> ls) {
-        return ls.stream().filter(r -> r.getAllergyTypes().contains(allergy.ordinal()))
+        return ls.stream().filter(r -> r.getAllergyTypes() != null && r.getAllergyTypes().contains(allergy.ordinal()))
                 .collect(Collectors.toList());
     }
 
@@ -29,7 +29,7 @@ public class Utilities {
      * @return A new list of recipes.
      */
     public static List<Recipe> getDiet(DietType diet, List<Recipe> ls) {
-        return ls.stream().filter(r -> r.getDietTypes().contains(diet.ordinal()))
+        return ls.stream().filter(r -> r.getDietTypes() != null && r.getDietTypes().contains(diet.ordinal()))
                 .collect(Collectors.toList());
     }
 
@@ -40,7 +40,7 @@ public class Utilities {
      * @return A new list of recipes.
      */
     public static List<Recipe> getCuisine(CuisineType cuisine, List<Recipe> ls) {
-        return ls.stream().filter(r -> r.getCuisineTypes().contains(cuisine.ordinal()))
+        return ls.stream().filter(r -> r.getCuisineTypes() != null && r.getCuisineTypes().contains(cuisine.ordinal()))
                 .collect(Collectors.toList());
     }
 
