@@ -87,20 +87,18 @@ public class CookNowActivityTest {
         Thread.sleep(100);
 
         //testing swiping and content of the fragments
-        onView(withId(R.id.container_step))
-                .check(matches(instanceOf(ViewPager2.class)));
         onView(withId(R.id.cookNowStepContent))
                 .check(matches(withText(getExpectedStringFromStep(recipe.steps.get(0)))));
 
-        Thread.sleep(100);
         onView(withId(R.id.container_step))
                 .perform(ViewActions.swipeLeft());
+        Thread.sleep(100);
         onView(withId(R.id.cookNowStepContent))
                 .check(matches(withText(getExpectedStringFromStep(recipe.steps.get(1)))));
 
-        Thread.sleep(100);
         onView(withId(R.id.container_step))
                 .perform(ViewActions.swipeRight());
+        Thread.sleep(100);
         onView(withId(R.id.cookNowStepContent))
                 .check(matches(withText(getExpectedStringFromStep(recipe.steps.get(0)))));
     }
@@ -164,19 +162,15 @@ public class CookNowActivityTest {
     @Test
     public void displayTest(){
         onView(withId(R.id.container_step))
+                .check(matches(instanceOf(ViewPager2.class)));
+        onView(withId(R.id.container_timer))
+                .check(matches(instanceOf(ViewPager2.class)));
+        onView(withId(R.id.container_step))
                 .check(matches(withEffectiveVisibility(VISIBLE)));
         onView(withId(R.id.container_timer))
                 .check(matches(withEffectiveVisibility(VISIBLE)));
 
     }
-
-
-//    private Fragment getCurrentFragment() {
-//        // Retrieve the current fragment attached to the ViewPager2
-//        FragmentManager fragmentManager = getActivityInstance().getSupportFragmentManager();
-//        FragmentStateAdapter adapter = ((CookNowActivity.ScreenSlidePagerAdapterStep) fragmentManager.findFragmentById(R.id.container_step)).getViewPager().getAdapter();
-//        return fragmentManager.findFragmentByTag("f" + adapter.getItemId(viewPager.getCurrentItem()));
-//    }
 
     private CookNowActivity getActivityInstance() {
         // Retrieve the current activity instance
