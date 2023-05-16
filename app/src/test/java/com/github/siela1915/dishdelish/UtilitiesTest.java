@@ -34,6 +34,7 @@ public class UtilitiesTest {
             int rand = random.nextInt(AllergyType.values().length);
             if (rand == AllergyType.EGGS.ordinal()) ++check;
             temp.setAllergyTypes(Collections.singletonList(AllergyType.values()[rand].ordinal()));
+            ls.add(temp);
         }
         List<Recipe> same = Utilities.getSameAllergyTypes(r, ls);
         assertEquals(check, same.size());
@@ -52,6 +53,7 @@ public class UtilitiesTest {
             int rand = random.nextInt(CuisineType.values().length);
             if (rand == CuisineType.CHINESE.ordinal()) ++check;
             temp.setCuisineTypes(Collections.singletonList(CuisineType.values()[rand].ordinal()));
+            ls.add(temp);
         }
         List<Recipe> same = Utilities.getSameCuisineTypes(r, ls);
         assertEquals(check, same.size());
@@ -70,6 +72,7 @@ public class UtilitiesTest {
             int rand = random.nextInt(DietType.values().length);
             if (rand == DietType.DAIRY.ordinal()) ++check;
             temp.setDietTypes(Collections.singletonList(DietType.values()[rand].ordinal()));
+            ls.add(temp);
         }
         List<Recipe> same = Utilities.getSameDietTypes(r, ls);
         assertEquals(check, same.size());
