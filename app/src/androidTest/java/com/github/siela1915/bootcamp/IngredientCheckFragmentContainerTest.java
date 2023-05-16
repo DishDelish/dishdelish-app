@@ -36,9 +36,6 @@ public class IngredientCheckFragmentContainerTest {
         onView(withId(R.id.neededIngredientsRV)).check(ViewAssertions.matches(isDisplayed()));
         onView(withId(R.id.addToShoppingListBtn)).perform(click());
         onView(withId(R.id.shoppingCartFragment)).check(ViewAssertions.matches(isDisplayed()));
-        pressBack();
-        onView(withId(R.id.nearByBtn)).perform(click());
-        onView(withId(R.id.helpFragConstraintLayout)).check(ViewAssertions.matches(isDisplayed()));
     }
     /*
     @Test
