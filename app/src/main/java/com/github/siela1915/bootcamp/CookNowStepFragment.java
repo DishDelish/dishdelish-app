@@ -18,6 +18,7 @@ public class CookNowStepFragment extends Fragment {
         args.putInt("index", index);
         args.putString("step", step);
         fragment.setArguments(args);
+
         return fragment;
     }
 

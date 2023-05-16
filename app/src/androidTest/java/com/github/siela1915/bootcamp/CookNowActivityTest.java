@@ -14,6 +14,8 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -60,6 +62,8 @@ public class CookNowActivityTest {
             }
         };
     }
+
+
     private Recipe recipe = ExampleRecipes.recipes.get(0);
 
     private String getExpectedStringFromStep(String step){
@@ -76,10 +80,11 @@ public class CookNowActivityTest {
     }
 
     @Test
-    public void viewPagerSwipeShouldNavigateToNextStepFragment() {
+    public void viewPagerSwipeShouldNavigateToNextStepFragment() throws InterruptedException {
         // Click the next button on the ViewPager2
         onView(withId(R.id.container_step))
                 .perform(ViewActions.swipeLeft());
+        Thread.sleep(100);
 
         //testing swiping and content of the fragments
         onView(withId(R.id.container_step))
@@ -87,11 +92,13 @@ public class CookNowActivityTest {
         onView(withId(R.id.cookNowStepContent))
                 .check(matches(withText(getExpectedStringFromStep(recipe.steps.get(0)))));
 
+        Thread.sleep(100);
         onView(withId(R.id.container_step))
                 .perform(ViewActions.swipeLeft());
         onView(withId(R.id.cookNowStepContent))
                 .check(matches(withText(getExpectedStringFromStep(recipe.steps.get(1)))));
 
+        Thread.sleep(100);
         onView(withId(R.id.container_step))
                 .perform(ViewActions.swipeRight());
         onView(withId(R.id.cookNowStepContent))

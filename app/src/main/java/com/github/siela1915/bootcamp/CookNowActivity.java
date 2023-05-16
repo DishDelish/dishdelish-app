@@ -118,7 +118,8 @@ public class CookNowActivity extends AppCompatActivity {
 
         @Override
         public Fragment createFragment(int position) {
-            return CookNowTimerFragment.newInstance(position-1);
+            CookNowTimerFragment frag = CookNowTimerFragment.newInstance(position-1);
+            return frag;
         }
 
         @Override
