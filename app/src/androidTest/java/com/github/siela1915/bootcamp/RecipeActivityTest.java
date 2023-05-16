@@ -31,6 +31,7 @@ import android.app.Application;
 import android.app.Instrumentation;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -469,6 +470,9 @@ public class RecipeActivityTest {
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
+
+            activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+            activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
             RecyclerView commentsList = activity.findViewById(R.id.commentsList);
             CommentAdapter commentAdapter = (CommentAdapter) commentsList.getAdapter();
