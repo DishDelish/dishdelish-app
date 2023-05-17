@@ -20,6 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -29,6 +30,7 @@ import androidx.constraintlayout.widget.Group;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentContainerView;
+import androidx.fragment.app.FragmentManager;
 
 import com.github.siela1915.bootcamp.AutocompleteApi.IngredientAutocomplete;
 import com.github.siela1915.bootcamp.Recipes.Ingredient;
@@ -137,6 +139,8 @@ public class NearbyHelpFragment extends Fragment implements OnMapReadyCallback, 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        handleBackPress(view);
 
         Group selectionGroup = view.findViewById(R.id.chooseHelpGroup);
         Group askGroup = view.findViewById(R.id.askHelpGroup);
@@ -349,6 +353,30 @@ public class NearbyHelpFragment extends Fragment implements OnMapReadyCallback, 
                 .add(R.id.map, mapFragment)
                 .commit();
         mapFragment.getMapAsync(this);
+    }
+
+    private void handleBackPress(View view) {
+        Group selectionGroup = view.findViewById(R.id.chooseHelpGroup);
+        Group askGroup = view.findViewById(R.id.askHelpGroup);
+        Group offerGroup = view.findViewById(R.id.offerHelpGroup);
+
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (offerGroup.getVisibility() == View.VISIBLE) {
+                    offerGroup.setVisibility(View.INVISIBLE);
+                    selectionGroup.setVisibility(View.VISIBLE);
+                } else if (askGroup.getVisibility() == View.VISIBLE) {
+                    askGroup.setVisibility(View.INVISIBLE);
+                    selectionGroup.setVisibility(View.VISIBLE);
+                } else {
+                    FragmentManager fragmentManager = getParentFragmentManager();
+                    fragmentManager.popBackStack(NearbyHelpFragment.class.getName(),
+                            FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                }
+            }
+        };
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
     }
 
     private void askLocationPermission() {
