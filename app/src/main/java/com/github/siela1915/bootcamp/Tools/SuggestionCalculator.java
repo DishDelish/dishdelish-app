@@ -29,7 +29,7 @@ public class SuggestionCalculator {
     /* Specifies the number of recipes to fetch from the database.
      * Should not be hardcoded.
      */
-    private static int N = 20;
+    private static int N = 100;
     private static int TOP = 10;
 
 
@@ -50,11 +50,17 @@ public class SuggestionCalculator {
 
                     List<Recipe> random = (List<Recipe>) task.getResult().get(1);
                     Set<Recipe> result = new HashSet<>(); //Use set to avoid duplicates
+
+                    //Add all recipes with dominant cuisine/allergy/diet types
                     result.addAll(Utilities.getAllergy(allergy, random));
                     result.addAll(Utilities.getCuisine(cuisine, random));
                     result.addAll(Utilities.getDiet(diet, random));
 
+                    //Add all top recipes
                     result.addAll((Collection<? extends Recipe>) task.getResult().get(2));
+
+                    //Add some different recipes too
+                    result.addAll(random.stream().filter(r -> !result.contains(r)).limit(N/10).collect(Collectors.toList()));
                     List<Recipe> ls = result.stream().collect(Collectors.toList());
                     Collections.shuffle(ls);
 
