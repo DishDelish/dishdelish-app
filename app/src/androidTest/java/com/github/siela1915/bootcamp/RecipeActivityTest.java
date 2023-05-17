@@ -28,19 +28,12 @@ import android.app.Activity;
 import android.app.Instrumentation;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
-import androidx.annotation.DrawableRes;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.core.app.ApplicationProvider;
@@ -48,7 +41,6 @@ import androidx.test.espresso.IdlingRegistry;
 import androidx.test.espresso.IdlingResource;
 import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.intent.Intents;
-import androidx.test.espresso.matcher.BoundedMatcher;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -62,7 +54,6 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 
-import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.After;
@@ -71,10 +62,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -178,17 +165,6 @@ public class RecipeActivityTest {
 
     }
 
-    /*
-        @Test
-        public void isCorrectUserNameOnDisplay() {
-            waitForDatabaseFetchCompletion(300, TimeUnit.SECONDS);
-            Intent i = RecipeConverter.convertToIntent(omelette, ApplicationProvider.getApplicationContext());
-
-            ActivityScenario scenario = ActivityScenario.launch(i);
-            onView(withId(R.id.userNameText)).check(matches(withText(omelette.userName)));
-            scenario.close();
-        }
-    */
     @Test
     public void isCorrectCookTimeDisplayed() {
         waitForDatabaseFetchCompletion(300, TimeUnit.SECONDS);
@@ -416,7 +392,7 @@ public class RecipeActivityTest {
         //Intents.release();
         Intents.init();
         Intent intent = new Intent();
-        Instrumentation.ActivityResult intentResult = new Instrumentation.ActivityResult(Activity.RESULT_OK,intent);
+        Instrumentation.ActivityResult intentResult = new Instrumentation.ActivityResult(Activity.RESULT_OK, intent);
         intending(anyIntent()).respondWith(intentResult);
 
         scenario.onActivity(a -> {
