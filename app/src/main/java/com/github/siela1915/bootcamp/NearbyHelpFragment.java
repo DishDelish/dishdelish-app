@@ -24,6 +24,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.Group;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -41,9 +42,12 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -138,38 +142,15 @@ public class NearbyHelpFragment extends Fragment implements OnMapReadyCallback, 
         Group askGroup = view.findViewById(R.id.askHelpGroup);
         Group offerGroup = view.findViewById(R.id.offerHelpGroup);
         Group replyGroup = view.findViewById(R.id.replyHelpGroup);
-        LinearLayout ingredientLayout = view.findViewById(R.id.ingredientEditLayout);
         FragmentContainerView map = view.findViewById(R.id.map);
         selectionGroup.setVisibility(View.VISIBLE);
         askGroup.setVisibility(View.INVISIBLE);
         offerGroup.setVisibility(View.INVISIBLE);
         map.setVisibility(View.INVISIBLE);
         replyGroup.setVisibility(View.INVISIBLE);
-        ingredientLayout.setVisibility(View.INVISIBLE);
-
-        ingredientManager = new RecipeStepAndIngredientManager(requireContext(), null, ingredientLayout);
-        ingredientManager.addIngredient(idMap, apiService);
-        view.findViewById(R.id.removeIngredient).setVisibility(View.GONE);
-
 
         if (mReplyOfferUid != null) {
-            selectionGroup.setVisibility(View.INVISIBLE);
-            replyGroup.setVisibility(View.VISIBLE);
-
-            Button sendReplyButton = view.findViewById(R.id.sendReplyHelpButton);
-
-            sendReplyButton.setOnClickListener(v -> {
-                EditText replyInput = view.findViewById(R.id.replyInputHelp);
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                if (user == null) {
-                    replyInput.setText("Can't reply without being authenticated");
-                    return;
-                }
-                PushNotificationService.sendRemoteNotification(mReplyOfferUid,
-                        String.format(Locale.ENGLISH, "Reply from %s for %s",
-                                user.getDisplayName(), mReplyIngredient),
-                        replyInput.getText().toString(), null);
-            });
+            replyView(view);
         }
 
         if (mAskedIngredient != null) {
@@ -183,15 +164,16 @@ public class NearbyHelpFragment extends Fragment implements OnMapReadyCallback, 
 
         askSelectionButton.setOnClickListener(v -> {
             askGroup.setVisibility(View.VISIBLE);
-            ingredientLayout.setVisibility(View.VISIBLE);
             selectionGroup.setVisibility(View.INVISIBLE);
+
+            LinearLayout ingLayout = view.findViewById(R.id.askIngredientLayout);
+
+            ingredientManager = new RecipeStepAndIngredientManager(requireContext(), null, ingLayout);
+            ingredientManager.addIngredient(idMap, apiService);
+            view.findViewById(R.id.removeIngredient).setVisibility(View.GONE);
         });
 
-        offerSelectionButton.setOnClickListener(v -> {
-            offerGroup.setVisibility(View.VISIBLE);
-            ingredientLayout.setVisibility(View.VISIBLE);
-            selectionGroup.setVisibility(View.INVISIBLE);
-        });
+        offerSelectionButton.setOnClickListener(v -> offerView(view));
 
         submitAskHelp.setOnClickListener(v -> {
             if (ingredientManager.isIngredientValid()) {
@@ -203,7 +185,7 @@ public class NearbyHelpFragment extends Fragment implements OnMapReadyCallback, 
 
         submitOfferHelp.setOnClickListener(v -> {
             if (ingredientManager.isIngredientValid()) {
-                Ingredient offered = ingredientManager.getIngredients().get(0);
+                List<Ingredient> offered = ingredientManager.getIngredients();
                 fusedLocationClient.getLastLocation()
                         .continueWithTask(locTask -> locDb.updateLocation(locTask.getResult()))
                         .continueWithTask(task -> locDb.updateOffered(offered));
@@ -218,23 +200,35 @@ public class NearbyHelpFragment extends Fragment implements OnMapReadyCallback, 
         googleMap.setOnInfoWindowClickListener(this);
         fusedLocationClient.getCurrentLocation(PRIORITY_BALANCED_POWER_ACCURACY, null)
                 .continueWithTask(locTask -> {
-                    googleMap.moveCamera(CameraUpdateFactory.newLatLng(
+                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
                             new LatLng(locTask.getResult().getLatitude(),
-                            locTask.getResult().getLongitude())));
+                            locTask.getResult().getLongitude()),
+                            15f));
                     return locDb.getNearby(locTask.getResult());
                 })
                 .continueWith(nearbyTask -> {
                     List<Pair<String, Location>> nearby = nearbyTask.getResult();
 
                     nearby.forEach(pair -> locDb.getOffered(pair.first).continueWith(offeredTask -> {
-                        if (offeredTask.getResult().toString().contains(mAskedIngredient.getIngredient().toLowerCase())) {
-                            Marker marker = googleMap.addMarker(new MarkerOptions()
-                                    .position(new LatLng(pair.second.getLatitude(), pair.second.getLongitude()))
-                                    .title(offeredTask.getResult().toString())
-                                    .snippet(String.format(Locale.ENGLISH, "(Lat: %f Lon: %f)",
-                                            pair.second.getLatitude(), pair.second.getLongitude()))
-                            );
-                            offers.put(marker, new Pair<>(pair.first, offeredTask.getResult()));
+                        for (Ingredient offer : offeredTask.getResult()) {
+                            if (offer.getIngredient().equals(mAskedIngredient.getIngredient().toLowerCase())) {
+                                BitmapDescriptor color = BitmapDescriptorFactory.defaultMarker();
+
+                                if (offer.getUnit().getInfo().equals(mAskedIngredient.getUnit().getInfo())) {
+                                    if (offer.getUnit().getValue() >= mAskedIngredient.getUnit().getValue()) {
+                                        color = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN);
+                                    } else {
+                                        color = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE);
+                                    }
+                                }
+
+                                Marker marker = googleMap.addMarker(new MarkerOptions()
+                                        .position(new LatLng(pair.second.getLatitude(), pair.second.getLongitude()))
+                                        .title(offer.toString())
+                                        .icon(color)
+                                        .snippet("Click to send request!"));
+                                offers.put(marker, new Pair<>(pair.first, offer));
+                            }
                         }
                         return null;
                     }));
@@ -280,6 +274,63 @@ public class NearbyHelpFragment extends Fragment implements OnMapReadyCallback, 
                         });
                     });
         }
+    }
+
+    private void offerView(View view) {
+        Group selectionGroup = view.findViewById(R.id.chooseHelpGroup);
+        Group offerGroup = view.findViewById(R.id.offerHelpGroup);
+
+        offerGroup.setVisibility(View.VISIBLE);
+        selectionGroup.setVisibility(View.INVISIBLE);
+
+        LinearLayout ingLayout = view.findViewById(R.id.offerIngredientLayout);
+        Button addIngredient = view.findViewById(R.id.offerAddIngredient);
+
+        ingredientManager = new RecipeStepAndIngredientManager(requireContext(), null, ingLayout);
+
+        addIngredient.setOnClickListener(v -> ingredientManager.addIngredient(idMap, apiService));
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            locDb.getOffered(user.getUid())
+                    .addOnSuccessListener(list -> {
+                        for (Ingredient ing : list) {
+                            ingredientManager.addIngredient(idMap, apiService);
+                            int lastIndex = ingLayout.getChildCount() - 1;
+                            if (ingLayout.getChildAt(lastIndex) instanceof ConstraintLayout) {
+                                ConstraintLayout step = (ConstraintLayout) ingLayout.getChildAt(lastIndex);
+                                if (step.getChildAt(0) instanceof TextInputLayout && step.getChildAt(1) instanceof TextInputLayout && step.getChildAt(2) instanceof TextInputLayout) {
+                                    ((TextInputLayout) step.getChildAt(2)).getEditText().setText(ing.getIngredient());
+                                    ((TextInputLayout) step.getChildAt(1)).getEditText().setText(ing.getUnit().getInfo());
+                                    ((TextInputLayout) step.getChildAt(0)).getEditText().setText(Integer.toString(ing.getUnit().getValue()));
+                                }
+                            }
+                        }
+                    });
+        }
+    }
+
+    private void replyView(View view) {
+        Group selectionGroup = view.findViewById(R.id.chooseHelpGroup);
+        Group replyGroup = view.findViewById(R.id.replyHelpGroup);
+
+        selectionGroup.setVisibility(View.INVISIBLE);
+        replyGroup.setVisibility(View.VISIBLE);
+
+        Button sendReplyButton = view.findViewById(R.id.sendReplyHelpButton);
+
+        sendReplyButton.setOnClickListener(v -> {
+            EditText replyInput = view.findViewById(R.id.replyInputHelp);
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            if (user == null) {
+                replyInput.setText("Can't reply without being authenticated");
+                return;
+            }
+            PushNotificationService.sendRemoteNotification(mReplyOfferUid,
+                    String.format(Locale.ENGLISH, "Reply from %s for %s",
+                            user.getDisplayName(), mReplyIngredient),
+                    replyInput.getText().toString(), null);
+        });
     }
 
     private void getHelpForIngredient(View view) {
