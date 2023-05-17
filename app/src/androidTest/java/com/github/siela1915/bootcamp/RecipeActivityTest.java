@@ -15,6 +15,7 @@ import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.ViewMatchers.Visibility.GONE;
 import static androidx.test.espresso.matcher.ViewMatchers.Visibility.VISIBLE;
 import static androidx.test.espresso.matcher.ViewMatchers.assertThat;
+import static androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
@@ -706,6 +707,85 @@ public class RecipeActivityTest {
         onView(withId(R.id.card_group)).check(matches(withEffectiveVisibility(GONE)));
 
         scenario.close();
+    }
+
+
+    @Test
+    public void replyUnauthenticated() throws InterruptedException {
+
+        waitForDatabaseFetchCompletion(300, TimeUnit.SECONDS);
+        Intent i = RecipeConverter.convertToIntent(omelette, ApplicationProvider.getApplicationContext());
+
+        ActivityScenario scenario = ActivityScenario.launch(i);
+
+        int commentIndex = 0;
+
+        scenario.onActivity(activity -> {
+            RecyclerView commentsList = activity.findViewById(R.id.commentsList);
+            CommentViewHolder viewHolder = (CommentViewHolder) commentsList.findViewHolderForAdapterPosition(commentIndex);
+
+            // Check that the tag value of the button changes when clicked
+            Button reply = viewHolder.itemView.findViewById(R.id.replyButton);
+            reply.performClick();
+
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        });
+
+        String test = "test";
+
+        onView(allOf(withId(R.id.enterReply), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE))).perform(scrollTo(), typeText(test), closeSoftKeyboard());
+
+        onView(allOf(withId(R.id.sendReplyButton), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+                .perform(scrollTo(), click());
+
+        Thread.sleep(5000);
+
+        onView(withId(R.id.enterComment)).perform(scrollTo()).check(matches(isDisplayed()));
+
+        scenario.close();
+
+    }
+
+    @Test
+    public void enterReplyBecomesInvisibleWhenClickedTwice(){
+        waitForDatabaseFetchCompletion(300, TimeUnit.SECONDS);
+        Intent i = RecipeConverter.convertToIntent(omelette, ApplicationProvider.getApplicationContext());
+
+        ActivityScenario scenario = ActivityScenario.launch(i);
+
+        int commentIndex = 0;
+
+        scenario.onActivity(activity -> {
+            RecyclerView commentsList = activity.findViewById(R.id.commentsList);
+            CommentViewHolder viewHolder = (CommentViewHolder) commentsList.findViewHolderForAdapterPosition(commentIndex);
+
+            // Check that the tag value of the button changes when clicked
+            Button reply = viewHolder.itemView.findViewById(R.id.replyButton);
+            reply.performClick();
+
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+
+            reply.performClick();
+
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+
+        });
+        
+        onView(withId(R.id.enterComment)).perform(scrollTo()).check(matches(isDisplayed()));
+        scenario.close();
+
     }
 
     // authenticated interactions

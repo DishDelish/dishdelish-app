@@ -216,7 +216,7 @@ public class Recipe implements Parcelable {
         carbohydrates = in.readDouble();
         sugar = in.readDouble();
         protein = in.readDouble();
-        //userId = in.readString();
+        userId = in.readString();
     }
 
     public static final Creator<Recipe> CREATOR = new Creator<Recipe>() {
@@ -259,7 +259,7 @@ public class Recipe implements Parcelable {
         dest.writeDouble(carbohydrates);
         dest.writeDouble(sugar);
         dest.writeDouble(protein);
-        //dest.writeString(userId);
+        dest.writeString(userId);
     }
 
     @Override

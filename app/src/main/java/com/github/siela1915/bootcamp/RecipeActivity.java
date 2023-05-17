@@ -147,12 +147,12 @@ public class RecipeActivity extends AppCompatActivity implements CompoundButton.
 
         new DownloadImageTask(recipePicture).execute(recipe.image);
 
-        /*UserDatabase userDb = new UserDatabase();
+        UserDatabase userDb = new UserDatabase();
 
         userDb.getUser(recipe.getUserId()).addOnSuccessListener(user -> {
             userNameText.setText(user.getDisplayName());
             new DownloadImageTask(userAvatar).execute(user.getPhotoUrl());
-        });*/
+        });
 
         recipeNameText.setText(recipe.recipeName);
 
