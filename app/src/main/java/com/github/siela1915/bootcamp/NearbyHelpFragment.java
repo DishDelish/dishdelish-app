@@ -53,6 +53,8 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -66,11 +68,12 @@ import java.util.Map;
 public class NearbyHelpFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener {
     private final LocationDatabase locDb = new LocationDatabase();
     private FusedLocationProviderClient fusedLocationClient;
-    private Ingredient mAskedIngredient = null;
+    private List<Ingredient> mAskedIngredients = null;
     private final Map<Marker, Pair<String, Ingredient>> offers = new HashMap<>();
     public static final String ARG_REPLY_OFFER_UID = "reply-offer-uid";
     public static final String ARG_REPLY_INGREDIENT = "reply-ingredient";
     public static final String ARG_ASKED_INGREDIENT = "asked-ingredient";
+    public static final String ARG_ASKED_INGREDIENTS = "asked-ingredients";
     private String mReplyOfferUid = null;
     private String mReplyIngredient = null;
     private final IngredientAutocomplete apiService = new IngredientAutocomplete();
@@ -111,6 +114,14 @@ public class NearbyHelpFragment extends Fragment implements OnMapReadyCallback, 
         return fragment;
     }
 
+    public static NearbyHelpFragment newInstance(List<Ingredient> askedIngredients) {
+        NearbyHelpFragment fragment = new NearbyHelpFragment();
+        Bundle args = new Bundle();
+        args.putParcelableArrayList(ARG_ASKED_INGREDIENTS, new ArrayList<>(askedIngredients));
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -124,7 +135,10 @@ public class NearbyHelpFragment extends Fragment implements OnMapReadyCallback, 
             mReplyIngredient = getArguments().getString(ARG_REPLY_INGREDIENT);
         }
         if (getArguments() != null && getArguments().get(ARG_ASKED_INGREDIENT) != null) {
-            mAskedIngredient = getArguments().getParcelable(ARG_ASKED_INGREDIENT);
+            mAskedIngredients = Collections.singletonList(getArguments().getParcelable(ARG_ASKED_INGREDIENT));
+        }
+        if (getArguments() != null && getArguments().get(ARG_ASKED_INGREDIENTS) != null) {
+            mAskedIngredients = getArguments().getParcelableArrayList(ARG_ASKED_INGREDIENTS);
         }
     }
 
@@ -155,7 +169,7 @@ public class NearbyHelpFragment extends Fragment implements OnMapReadyCallback, 
 
         if (mReplyOfferUid != null) {
             replyView(view);
-        } else if (mAskedIngredient != null) {
+        } else if (mAskedIngredients != null) {
             getHelpForIngredient(view);
         }
 
@@ -179,7 +193,7 @@ public class NearbyHelpFragment extends Fragment implements OnMapReadyCallback, 
 
         submitAskHelp.setOnClickListener(v -> {
             if (ingredientManager.isIngredientValid()) {
-                mAskedIngredient = ingredientManager.getIngredients().get(0);
+                mAskedIngredients = ingredientManager.getIngredients();
 
                 getHelpForIngredient(view);
             }
@@ -200,6 +214,9 @@ public class NearbyHelpFragment extends Fragment implements OnMapReadyCallback, 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         googleMap.setOnInfoWindowClickListener(this);
+
+        List<Ingredient> askedIngredients = mAskedIngredients;
+
         fusedLocationClient.getCurrentLocation(PRIORITY_BALANCED_POWER_ACCURACY, null)
                 .continueWithTask(locTask -> {
                     googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
@@ -213,23 +230,27 @@ public class NearbyHelpFragment extends Fragment implements OnMapReadyCallback, 
 
                     nearby.forEach(pair -> locDb.getOffered(pair.first).continueWith(offeredTask -> {
                         for (Ingredient offer : offeredTask.getResult()) {
-                            if (offer.getIngredient().equals(mAskedIngredient.getIngredient().toLowerCase())) {
-                                BitmapDescriptor color = BitmapDescriptorFactory.defaultMarker();
+                            for (Ingredient asked : askedIngredients) {
+                                if (offer.getIngredient().equals(asked.getIngredient().toLowerCase())) {
+                                    BitmapDescriptor color = BitmapDescriptorFactory.defaultMarker();
 
-                                if (offer.getUnit().getInfo().equals(mAskedIngredient.getUnit().getInfo())) {
-                                    if (offer.getUnit().getValue() >= mAskedIngredient.getUnit().getValue()) {
-                                        color = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN);
-                                    } else {
-                                        color = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE);
+                                    if (offer.getUnit().getInfo().equals(asked.getUnit().getInfo())) {
+                                        if (offer.getUnit().getValue() >= asked.getUnit().getValue()) {
+                                            color = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN);
+                                        } else {
+                                            color = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE);
+                                        }
                                     }
-                                }
 
-                                Marker marker = googleMap.addMarker(new MarkerOptions()
-                                        .position(new LatLng(pair.second.getLatitude(), pair.second.getLongitude()))
-                                        .title(offer.toString())
-                                        .icon(color)
-                                        .snippet("Click to send request!"));
-                                offers.put(marker, new Pair<>(pair.first, offer));
+                                    Marker marker = googleMap.addMarker(new MarkerOptions()
+                                            .position(new LatLng(pair.second.getLatitude(), pair.second.getLongitude()))
+                                            .title(offer.toString())
+                                            .icon(color)
+                                            .snippet("Click to send request!"));
+                                    offers.put(marker, new Pair<>(pair.first, offer));
+
+                                    break;
+                                }
                             }
                         }
                         return null;

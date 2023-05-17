@@ -22,6 +22,7 @@ import com.github.siela1915.bootcamp.Labelling.CuisineType;
 import com.github.siela1915.bootcamp.Labelling.DietType;
 import com.github.siela1915.bootcamp.Labelling.RecipeFetcher;
 import com.github.siela1915.bootcamp.Recipes.ExampleRecipes;
+import com.github.siela1915.bootcamp.Recipes.Ingredient;
 import com.github.siela1915.bootcamp.Recipes.PreparationTime;
 import com.github.siela1915.bootcamp.Recipes.Recipe;
 import com.github.siela1915.bootcamp.UploadRecipe.UploadingRecipeFragment;
@@ -250,7 +251,7 @@ public class MainHomeActivity extends AppCompatActivity {
                     false);
         } else if (extras != null && extras.containsKey("askedIngredient")) {
             setContainerContent(R.id.fragContainer, NearbyHelpFragment.newInstance(
-                            extras.getParcelable("askedIngredient")),
+                    (Ingredient)extras.getParcelable("askedIngredient")),
                     false);
         } else {
             setContainerContent(R.id.fragContainer, NearbyHelpFragment.class, false);
