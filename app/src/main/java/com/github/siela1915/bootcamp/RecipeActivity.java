@@ -1,8 +1,6 @@
 package com.github.siela1915.bootcamp;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -26,12 +24,15 @@ import com.github.siela1915.bootcamp.Recipes.Comment;
 import com.github.siela1915.bootcamp.Recipes.Ingredient;
 import com.github.siela1915.bootcamp.Recipes.Recipe;
 import com.github.siela1915.bootcamp.Recipes.Unit;
+import com.github.siela1915.bootcamp.Tools.LanguageFilter;
 import com.github.siela1915.bootcamp.firebase.Database;
+import com.github.siela1915.bootcamp.firebase.UserDatabase;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class RecipeActivity extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener {
 
@@ -69,6 +70,14 @@ public class RecipeActivity extends AppCompatActivity implements CompoundButton.
 
                 v.getContext().startActivity(ratingIntent);
             }
+        });
+
+        Button cookNow = findViewById(R.id.cookNowButton);
+        cookNow.setOnClickListener(v -> {
+            // Intent cookNowIntent = new Intent(v.getContext(), CookNowActivity.class);
+            // cookNowIntent.putExtra("Recipe", recipe);
+
+            // v.getContext().startActivity(cookNowIntent);
         });
 
 
@@ -142,18 +151,16 @@ public class RecipeActivity extends AppCompatActivity implements CompoundButton.
 
         heart.setOnCheckedChangeListener(this);
 
-        // not sure about this
-        //Bitmap recipeImage = BitmapFactory.decodeResource(this.getResources(), Integer.valueOf(recipe.image));
-        //recipePicture.setImageBitmap(recipeImage);
-
-        //Picasso.get().load(recipe.image).into(recipePicture);
         new DownloadImageTask(recipePicture).execute(recipe.image);
 
-        Bitmap avatar = BitmapFactory.decodeResource(this.getResources(), recipe.profilePicture);
-        userAvatar.setImageBitmap(avatar);
+        UserDatabase userDb = new UserDatabase();
+
+        userDb.getUser(recipe.getUserId()).addOnSuccessListener(user -> {
+            userNameText.setText(user.getDisplayName());
+            new DownloadImageTask(userAvatar).execute(user.getPhotoUrl());
+        });
 
         recipeNameText.setText(recipe.recipeName);
-        userNameText.setText(recipe.userName);
 
         ratingBar.setRating((float) recipe.rating);
         prepTime.setText(String.valueOf(recipe.prepTime));
@@ -210,7 +217,11 @@ public class RecipeActivity extends AppCompatActivity implements CompoundButton.
     private void setCommentContents(RecyclerView commentsList) {
 
         commentsList.setLayoutManager(new LinearLayoutManager(this));
-        CommentAdapter commentAdapter = new CommentAdapter(getApplicationContext(), recipe.comments, recipe);
+        CommentAdapter commentAdapter = new CommentAdapter(getApplicationContext(),
+                recipe.comments.stream()
+                        .peek(c -> c.setContent(LanguageFilter.filterLanguage(c.getContent())))
+                        .collect(Collectors.toList()),
+                recipe);
         commentsList.setAdapter(commentAdapter);
 
         EditText commentBox = (EditText) findViewById(R.id.enterComment);
@@ -224,7 +235,7 @@ public class RecipeActivity extends AppCompatActivity implements CompoundButton.
                 if (firebaseAuth.getCurrentUser() == null) {
                     Toast.makeText(this, "Sign in to add a comment", Toast.LENGTH_SHORT).show();
                 } else {
-                    recipe.comments.add(new Comment(input));
+                    recipe.comments.add(new Comment(LanguageFilter.filterLanguage(input), firebaseAuth.getCurrentUser().getUid()));
                     // Update the database with the new comment
                     database.updateAsync(recipe).addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
@@ -294,7 +305,6 @@ public class RecipeActivity extends AppCompatActivity implements CompoundButton.
                 buttonView.setTag("full");
 
             }).addOnFailureListener(e -> {
-
                 // Show an error message to the user
                 Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
 
@@ -302,6 +312,7 @@ public class RecipeActivity extends AppCompatActivity implements CompoundButton.
                 buttonView.setOnCheckedChangeListener(null);
                 buttonView.setChecked(false);
                 buttonView.setOnCheckedChangeListener(this);
+                buttonView.setTag("add fail");
 
             });
 
@@ -319,7 +330,7 @@ public class RecipeActivity extends AppCompatActivity implements CompoundButton.
                 recipe.setLikes(recipe.likes - 1);
 
                 // for testing
-                buttonView.setTag("empty");
+                buttonView.setTag("removed");
 
             }).addOnFailureListener(e -> {
 
@@ -329,6 +340,7 @@ public class RecipeActivity extends AppCompatActivity implements CompoundButton.
                 buttonView.setOnCheckedChangeListener(null);
                 buttonView.setChecked(true);
                 buttonView.setOnCheckedChangeListener(this);
+                buttonView.setTag("remove fail");
 
             });
         }
