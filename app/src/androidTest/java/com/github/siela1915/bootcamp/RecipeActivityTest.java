@@ -774,7 +774,7 @@ public class RecipeActivityTest {
             ToggleButton thumb = viewHolder.itemView.findViewById(R.id.thumbButton);
             thumb.performClick();
             try {
-                Thread.sleep(10000);
+                Thread.sleep(5000);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
