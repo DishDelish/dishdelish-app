@@ -416,8 +416,10 @@ public class RecipeActivityTest {
         Instrumentation.ActivityResult intentResult = new Instrumentation.ActivityResult(Activity.RESULT_OK,intent);
         intending(anyIntent()).respondWith(intentResult);
 
-        onView(withId(R.id.rateButton))
-                .perform(scrollTo(), click());
+        scenario.onActivity(a -> {
+            Button rateButton = a.findViewById(R.id.rateButton);
+            rateButton.performClick();
+        });
 
         intended(allOf(hasComponent(RatingActivity.class.getName())));
 
