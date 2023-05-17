@@ -1,11 +1,20 @@
 package com.github.siela1915.bootcamp;
 
+import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -47,11 +56,11 @@ public class HomePageFragment extends Fragment {
 
     private final Database database = new Database(firebaseDatabase);
     private RecipeItemAdapter recipeAdapter;
-
-    public RecipeItemAdapter getRecipeAdapter() {
-        return recipeAdapter;
-    }
-    
+    private TextView moreFilter;
+    private LinearLayout filterLayout, recipeListLinearLayout;
+    private SearchView searchView;
+    private Button pantryBtn,allergyBtn,cuisineBtn,prepTimeBtn;
+    private List<Recipe> fetchedRecipes= new ArrayList<>();
     public HomePageFragment() {
         // Required empty public constructor
     }
@@ -95,6 +104,9 @@ public class HomePageFragment extends Fragment {
         }
         //homeTextView.setText(cuis);
         //homeTextView.setTextSize(30);
+        TextView underlinedText = view.findViewById(R.id.moreFilterTextView);
+        underlinedText.setPaintFlags(underlinedText.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         return view;
     }
 
@@ -106,8 +118,56 @@ public class HomePageFragment extends Fragment {
         recipeListRecyclerView= view.findViewById(R.id.rand_recipe_recyclerView);
         recipeListRecyclerView.setHasFixedSize(true);
         recipeListRecyclerView.setLayoutManager(new GridLayoutManager(getContext(),2));
-
-        database.getNRandomAsync(20).addOnSuccessListener(list->{
+        moreFilter= view.findViewById(R.id.moreFilterTextView);
+        filterLayout = view.findViewById(R.id.filter);
+        recipeListLinearLayout = view.findViewById(R.id.recipeListLinearLayout);
+        searchView= view.findViewById(R.id.searchView);
+        pantryBtn= view.findViewById(R.id.btnPantry);
+        allergyBtn=view.findViewById(R.id.btnAllergy);
+        cuisineBtn = view.findViewById(R.id.btnCuisine);
+        prepTimeBtn= view.findViewById(R.id.btnPrpTime);
+        moreFilter.setOnClickListener(v->{
+            if (filterLayout.getVisibility() == View.VISIBLE) {
+                filterLayout.animate()
+                        .alpha(0f)
+                        .setDuration(200)
+                        .withEndAction(new Runnable() {
+                            @Override
+                            public void run() {
+                                filterLayout.setVisibility(View.GONE);
+                                adjustMainLayoutHeight(true);
+                            }
+                        })
+                        .start();
+            } else {
+                filterLayout.setVisibility(View.VISIBLE);
+                filterLayout.setAlpha(0f);
+                filterLayout.animate()
+                        .alpha(1f)
+                        .setDuration(200)
+                        .withEndAction(new Runnable() {
+                            @Override
+                            public void run() {
+                                //filterLayout.setVisibility(View.VISIBLE);
+                                adjustMainLayoutHeight(false);
+                            }
+                        })
+                        .start();
+            }
+        });
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                filterRecipesByName(newText);
+                return false;
+            }
+        });
+        database.getNRandomAsync(100).addOnSuccessListener(list->{
+                    fetchedRecipes = new ArrayList<>(list);
                     recipeAdapter =new RecipeItemAdapter(list, view.getContext());
                     recipeListRecyclerView.setAdapter(this.recipeAdapter/*new RecipeItemAdapter(list, view.getContext())*/);
         })
@@ -124,5 +184,67 @@ public class HomePageFragment extends Fragment {
                         throw new RuntimeException(e);
                     });
         });
+    }
+
+    private void filterRecipesByName(String text) {
+        List<Recipe> filtered= new ArrayList<>();
+        for(Recipe recipe: fetchedRecipes){
+            if(recipe.getRecipeName().toLowerCase().contains(text.toLowerCase())){
+                filtered.add(recipe);
+            }
+        }
+        if (filtered.isEmpty()){
+            recipeAdapter.setRecipes(filtered);
+            Toast.makeText(getContext(),"No recipe found",Toast.LENGTH_SHORT).show();
+        }else{
+            recipeAdapter.setRecipes(filtered);
+        }
+    }
+
+    private void adjustMainLayoutHeight(boolean filterLayoutGone) {
+
+        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) recipeListLinearLayout.getLayoutParams();
+
+        if (filterLayoutGone) {
+            layoutParams.height = 0;
+            layoutParams.weight = 0.84f;
+        } else {
+            layoutParams.height = 0;
+            layoutParams.weight = 0.71f;
+        }
+
+        recipeListLinearLayout.setLayoutParams(layoutParams);
+    }
+    @SuppressLint("ResourceAsColor")
+    private void popUpDialogBuilder(String[] items, boolean[] checksum, String title, List<String> selected){
+        AlertDialog.Builder builder= new AlertDialog.Builder(getContext(),R.style.AlertDialogTheme);
+        builder.setTitle(title);
+        builder.setCancelable(false);
+        //List<String> selected = new ArrayList<>();
+
+        builder.setMultiChoiceItems(items,checksum,(dialog,which,isChecked)->{
+            checksum[which]=isChecked;
+        });
+        builder.setPositiveButton("Ok", (dialog, which) -> {
+            for(int i=0; i< checksum.length; i++){
+                if(checksum[i]){
+                    selected.add(items[i]);
+                }
+            }
+        });
+
+        builder.setNegativeButton("Cancel", (dialog, which) -> {
+            for(int i= 0; i< checksum.length; i++){
+                checksum[i]=false;
+            }
+            dialog.cancel();
+        });
+
+        AlertDialog dialog=builder.create();
+        dialog.setOnShowListener(arg0 -> {
+            dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(R.color.orange);
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(R.color.orange);
+        });
+        dialog.show();
     }
 }

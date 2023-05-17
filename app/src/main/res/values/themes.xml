@@ -26,4 +26,7 @@
     <style name="AlertDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="colorAccent">@color/teal_700</item>
     </style>
+    <style name="SearchViewStyle" parent="Widget.AppCompat.SearchView">
+        <item name="android:background">@drawable/searchview_border</item> <!-- Set the border drawable as the background of the SearchView -->
+    </style>
 </resources>

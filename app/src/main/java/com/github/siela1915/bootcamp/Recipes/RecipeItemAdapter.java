@@ -26,13 +26,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RecipeItemAdapter extends RecyclerView.Adapter<RecipeItemViewHolder>{
-    private final List<Recipe> recipes;
+    private  List<Recipe> recipes;
     private Context context;
 
     public RecipeItemAdapter(List<Recipe> recipes, Context context) {
         this.recipes = recipes;
         this.context= context;
 
+    }
+    public void setRecipes(List<Recipe> newList){
+        recipes=newList;
+        notifyDataSetChanged();
     }
     @NonNull
     @Override
