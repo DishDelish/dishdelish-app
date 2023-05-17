@@ -145,6 +145,7 @@ public class MainHomeActivityTest {
 
     @Test
     public void intentWithNavToHelpNavigatesToNearbyHelpTest() {
+        FirebaseAuthActivityTest.loginSync("intentWithNavToHelp@test");
         Intent intent = new Intent(getApplicationContext(), MainHomeActivity.class);
         intent.putExtra("navToHelp", "true");
 
@@ -152,6 +153,8 @@ public class MainHomeActivityTest {
             onView(ViewMatchers.withId(R.id.chooseHelpGroup))
                     .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         }
+
+        FirebaseAuthActivityTest.logoutSync();
     }
 
     @Test
