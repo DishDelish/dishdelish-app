@@ -51,27 +51,6 @@ import com.github.siela1915.bootcamp.Recipes.ExampleRecipes;
 import com.github.siela1915.bootcamp.Recipes.Recipe;
 
 public class CookNowActivityTest {
-
-    // create a matcher to check the number of children elements which have the same id
-
-    public static Matcher<View> withCount(final int expectedCount, final int viewId) {
-        return new BoundedMatcher<View, View>(View.class) {
-            int count = 0;
-
-            @Override
-            protected boolean matchesSafely(View item) {
-                count = item.getRootView().findViewById(viewId).getTag() == null ? 0 : (int) item.getRootView().findViewById(viewId).getTag();
-                return count == expectedCount;
-            }
-
-            @Override
-            public void describeTo(Description description) {
-                description.appendText("Expected count: " + expectedCount + ", Actual count: " + count);
-            }
-        };
-    }
-
-
     private Recipe recipe = ExampleRecipes.recipes.get(0);
 
     private String getExpectedStringFromStep(String step){
@@ -158,56 +137,6 @@ public class CookNowActivityTest {
         return isVisible(interaction);
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//    @Test
-//    public void viewPagerBackButtonClick_ShouldNavigateToPreviousStepFragment() {
-//        // First navigate to the second step
-//        onView(withId(R.id.container_step))
-//                .perform(ViewActions.swipeLeft());
-//
-//        // Click the back button on the ViewPager2
-//        onView(withId(R.id.container_step))
-//                .perform(ViewActions.swipeRight());
-//
-//        // Verify that the expected fragment is displayed
-//        onView(withId(R.id.container_step))
-//                .check(matches(ViewMatchers.hasDescendant(withText("Timer"))));
-//    }
-//
-//    @Test
-//    public void viewPagerTimerFragment_ShouldMatchStepFragmentPosition() {
-//        // Click the next button on the ViewPager2
-//        onView(withId(R.id.container_step))
-//                .perform(ViewActions.swipeLeft());
-//
-//        // Verify that the corresponding timer fragment is displayed
-//        onView(withId(R.id.container_timer))
-//                .check(matches(ViewMatchers.hasDescendant(withText("Step 1 Timer"))));
-//    }
-
     @Test
     public void displayTest(){
         onView(withId(R.id.container_step))
@@ -219,20 +148,6 @@ public class CookNowActivityTest {
         onView(withId(R.id.container_timer))
                 .check(matches(withEffectiveVisibility(VISIBLE)));
 
-    }
-
-    private CookNowActivity getActivityInstance() {
-        // Retrieve the current activity instance
-        ActivityScenario<CookNowActivity> scenario = ActivityScenario
-                .launch(CookNowActivity.class);
-        final CookNowActivity[] activity = new CookNowActivity[1];
-        scenario.onActivity(new ActivityScenario.ActivityAction<CookNowActivity>() {
-            @Override
-            public void perform(CookNowActivity value) {
-                activity[0] = value;
-            }
-        });
-        return activity[0];
     }
 
 }
