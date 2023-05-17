@@ -408,15 +408,12 @@ public class RecipeActivityTest {
     @Test
     public void isRatingActivityStarted() {
         FirebaseAuthActivityTest.loginSync("example@gmail.com");
-        waitForDatabaseFetchCompletion(300, TimeUnit.SECONDS);
-        Intent i = RecipeConverter.convertToIntent(omelette, ApplicationProvider.getApplicationContext());
-
+        Intent i = RecipeConverter.convertToIntent(omelette, getApplicationContext());
         ActivityScenario scenario = ActivityScenario.launch(i);
-
         //Intents.release();
         Intents.init();
         Intent intent = new Intent();
-        Instrumentation.ActivityResult intentResult = new Instrumentation.ActivityResult(Activity.RESULT_OK, intent);
+        Instrumentation.ActivityResult intentResult = new Instrumentation.ActivityResult(Activity.RESULT_OK,intent);
         intending(anyIntent()).respondWith(intentResult);
 
         onView(withId(R.id.rateButton))
