@@ -190,10 +190,16 @@ public class MainHomeActivity extends AppCompatActivity {
 
             if (extras.containsKey("navToHelp")) {
                 navigationView.setCheckedItem(R.id.menuItem_help);
-                setContainerContent(R.id.fragContainer, NearbyHelpFragment.newInstance(
-                                extras.getString("sender"),
-                                extras.getString("ingredient")),
-                        false);
+                if (extras.containsKey("sender")) {
+                    setContainerContent(R.id.fragContainer, NearbyHelpFragment.newInstance(
+                                    extras.getString("sender"),
+                                    extras.getString("ingredient")),
+                            false);
+                } else if (extras.containsKey("askedIngredient")) {
+                    setContainerContent(R.id.fragContainer, NearbyHelpFragment.newInstance(
+                            extras.getParcelable("askedIngredient")),
+                            false);
+                }
             }
         }
     }

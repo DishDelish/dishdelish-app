@@ -29,7 +29,9 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentContainerView;
 
+import com.github.siela1915.bootcamp.AutocompleteApi.IngredientAutocomplete;
 import com.github.siela1915.bootcamp.Recipes.Ingredient;
+import com.github.siela1915.bootcamp.UploadRecipe.RecipeStepAndIngredientManager;
 import com.github.siela1915.bootcamp.firebase.LocationDatabase;
 import com.github.siela1915.bootcamp.firebase.PushNotificationService;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -65,6 +67,9 @@ public class NearbyHelpFragment extends Fragment implements OnMapReadyCallback, 
     public static final String ARG_ASKED_INGREDIENT = "asked-ingredient";
     private String mReplyOfferUid = null;
     private String mReplyIngredient = null;
+    private final IngredientAutocomplete apiService = new IngredientAutocomplete();
+    private final Map<String, Integer> idMap = new HashMap<>();
+    private RecipeStepAndIngredientManager ingredientManager;
 
     private final ActivityResultLauncher<String> requestPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
@@ -133,12 +138,19 @@ public class NearbyHelpFragment extends Fragment implements OnMapReadyCallback, 
         Group askGroup = view.findViewById(R.id.askHelpGroup);
         Group offerGroup = view.findViewById(R.id.offerHelpGroup);
         Group replyGroup = view.findViewById(R.id.replyHelpGroup);
+        LinearLayout ingredientLayout = view.findViewById(R.id.ingredientEditLayout);
         FragmentContainerView map = view.findViewById(R.id.map);
         selectionGroup.setVisibility(View.VISIBLE);
         askGroup.setVisibility(View.INVISIBLE);
         offerGroup.setVisibility(View.INVISIBLE);
         map.setVisibility(View.INVISIBLE);
         replyGroup.setVisibility(View.INVISIBLE);
+        ingredientLayout.setVisibility(View.INVISIBLE);
+
+        ingredientManager = new RecipeStepAndIngredientManager(requireContext(), null, ingredientLayout);
+        ingredientManager.addIngredient(idMap, apiService);
+        view.findViewById(R.id.removeIngredient).setVisibility(View.GONE);
+
 
         if (mReplyOfferUid != null) {
             selectionGroup.setVisibility(View.INVISIBLE);
@@ -171,28 +183,31 @@ public class NearbyHelpFragment extends Fragment implements OnMapReadyCallback, 
 
         askSelectionButton.setOnClickListener(v -> {
             askGroup.setVisibility(View.VISIBLE);
+            ingredientLayout.setVisibility(View.VISIBLE);
             selectionGroup.setVisibility(View.INVISIBLE);
         });
 
         offerSelectionButton.setOnClickListener(v -> {
             offerGroup.setVisibility(View.VISIBLE);
+            ingredientLayout.setVisibility(View.VISIBLE);
             selectionGroup.setVisibility(View.INVISIBLE);
         });
 
         submitAskHelp.setOnClickListener(v -> {
-            EditText askedInput = view.findViewById(R.id.askedIngredient);
-            mAskedIngredient = new Ingredient();
-            mAskedIngredient.setIngredient(askedInput.getText().toString());
+            if (ingredientManager.isIngredientValid()) {
+                mAskedIngredient = ingredientManager.getIngredients().get(0);
 
-            getHelpForIngredient(view);
+                getHelpForIngredient(view);
+            }
         });
 
         submitOfferHelp.setOnClickListener(v -> {
-            EditText offeredInput = view.findViewById(R.id.offeredIngredient);
-            Ingredient offered = new Ingredient(offeredInput.getText().toString(), null);
-            fusedLocationClient.getLastLocation()
-                    .continueWithTask(locTask -> locDb.updateLocation(locTask.getResult()))
-                    .continueWithTask(task -> locDb.updateOffered(offered));
+            if (ingredientManager.isIngredientValid()) {
+                Ingredient offered = ingredientManager.getIngredients().get(0);
+                fusedLocationClient.getLastLocation()
+                        .continueWithTask(locTask -> locDb.updateLocation(locTask.getResult()))
+                        .continueWithTask(task -> locDb.updateOffered(offered));
+            }
         });
     }
 
