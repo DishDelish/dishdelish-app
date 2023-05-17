@@ -5,7 +5,6 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.pressBack;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.Visibility.VISIBLE;
-import static androidx.test.espresso.matcher.ViewMatchers.hasChildCount;
 import static androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
 import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
@@ -19,11 +18,9 @@ import static org.junit.Assert.assertNotNull;
 
 import android.Manifest;
 import android.content.Context;
-import android.location.Location;
 import android.os.Bundle;
 
 import androidx.fragment.app.testing.FragmentScenario;
-import androidx.test.espresso.IdlingResource;
 import androidx.test.espresso.action.ViewActions;
 import androidx.test.rule.GrantPermissionRule;
 
@@ -43,6 +40,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
 
@@ -224,6 +222,23 @@ public class NearbyHelpFragmentTest {
         ing.setIngredient("testIngredient");
         Bundle args = new Bundle();
         args.putParcelable(NearbyHelpFragment.ARG_ASKED_INGREDIENT, ing);
+        scenario = FragmentScenario.launchInContainer(NearbyHelpFragment.class, args);
+
+        onView(withId(R.id.replyHelpGroup)).check(matches(not(withEffectiveVisibility(VISIBLE))));
+        onView(withId(R.id.askHelpGroup)).check(matches(not(withEffectiveVisibility(VISIBLE))));
+        onView(withId(R.id.offerHelpGroup)).check(matches(not(withEffectiveVisibility(VISIBLE))));
+        onView(withId(R.id.chooseHelpGroup)).check(matches(not(withEffectiveVisibility(VISIBLE))));
+
+        onView(withContentDescription("Google Map")).check(matches(withEffectiveVisibility(VISIBLE)));
+    }
+
+    @Test
+    public void fragmentWithMultipleIngredientsArgumentShowsMapDirectly() {
+        ArrayList<Ingredient> ing = new ArrayList<>(Arrays.asList(
+                new Ingredient("testIngredient", new Unit()),
+                new Ingredient("testIngredient2", new Unit())));
+        Bundle args = new Bundle();
+        args.putParcelableArrayList(NearbyHelpFragment.ARG_ASKED_INGREDIENTS, ing);
         scenario = FragmentScenario.launchInContainer(NearbyHelpFragment.class, args);
 
         onView(withId(R.id.replyHelpGroup)).check(matches(not(withEffectiveVisibility(VISIBLE))));
