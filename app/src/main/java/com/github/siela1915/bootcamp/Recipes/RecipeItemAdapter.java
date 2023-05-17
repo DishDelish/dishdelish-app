@@ -20,7 +20,6 @@ import com.github.siela1915.bootcamp.DownloadImageTask;
 import com.github.siela1915.bootcamp.R;
 import com.github.siela1915.bootcamp.RecipeActivity;
 import com.github.siela1915.bootcamp.RecipeConverter;
-import com.github.siela1915.bootcamp.databinding.FragmentRecipeItemBinding;
 import com.github.siela1915.bootcamp.databinding.RecipeItemBinding;
 
 import java.util.ArrayList;
@@ -33,8 +32,8 @@ public class RecipeItemAdapter extends RecyclerView.Adapter<RecipeItemViewHolder
     public RecipeItemAdapter(List<Recipe> recipes, Context context) {
         this.recipes = recipes;
         this.context= context;
-    }
 
+    }
     @NonNull
     @Override
     public RecipeItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
