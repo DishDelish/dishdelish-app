@@ -155,9 +155,7 @@ public class NearbyHelpFragment extends Fragment implements OnMapReadyCallback, 
 
         if (mReplyOfferUid != null) {
             replyView(view);
-        }
-
-        if (mAskedIngredient != null) {
+        } else if (mAskedIngredient != null) {
             getHelpForIngredient(view);
         }
 
@@ -338,9 +336,11 @@ public class NearbyHelpFragment extends Fragment implements OnMapReadyCallback, 
     }
 
     private void getHelpForIngredient(View view) {
+        Group selectionGroup = view.findViewById(R.id.chooseHelpGroup);
         Group askGroup = view.findViewById(R.id.askHelpGroup);
         FragmentContainerView map = view.findViewById(R.id.map);
 
+        selectionGroup.setVisibility(View.INVISIBLE);
         askGroup.setVisibility(View.INVISIBLE);
         map.setVisibility(View.VISIBLE);
 
