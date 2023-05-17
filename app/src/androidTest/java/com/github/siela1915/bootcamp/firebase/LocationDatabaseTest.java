@@ -79,7 +79,7 @@ public class LocationDatabaseTest {
             Tasks.await(locDb.updateOffered(ing));
             List<Ingredient> res = Tasks.await(locDb.getOffered(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid()));
             assertNotNull(res);
-            assertThat(res, containsInAnyOrder(ing));
+            assertThat(res, containsInAnyOrder(ing.toArray(new Ingredient[0])));
         } catch (ExecutionException | InterruptedException e) {
             throw new RuntimeException(e);
         }
