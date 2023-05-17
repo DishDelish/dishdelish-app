@@ -5,6 +5,7 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.pressBack;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.Visibility.VISIBLE;
+import static androidx.test.espresso.matcher.ViewMatchers.hasChildCount;
 import static androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
 import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
@@ -17,13 +18,21 @@ import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertNotNull;
 
 import android.Manifest;
+import android.content.Context;
+import android.location.Location;
 import android.os.Bundle;
 
 import androidx.fragment.app.testing.FragmentScenario;
+import androidx.test.espresso.IdlingResource;
 import androidx.test.espresso.action.ViewActions;
 import androidx.test.rule.GrantPermissionRule;
 
 import com.github.siela1915.bootcamp.Recipes.Ingredient;
+import com.github.siela1915.bootcamp.Recipes.Unit;
+import com.github.siela1915.bootcamp.firebase.LocationDatabase;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -34,8 +43,14 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import java.util.Arrays;
+import java.util.concurrent.ExecutionException;
+
 public class NearbyHelpFragmentTest {
     FragmentScenario<NearbyHelpFragment> scenario;
+
+    private LocationDatabase locDb;
+    private FusedLocationProviderClient fusedLocationClient;
 
     @Rule
     public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(
@@ -49,6 +64,12 @@ public class NearbyHelpFragmentTest {
         FirebaseAuth.getInstance().useEmulator("10.0.2.2", 9099);
         FirebaseDatabase.getInstance().useEmulator("10.0.2.2", 9000);
 
+        if (locDb == null) {
+            locDb = new LocationDatabase();
+        }
+
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient((Context) getApplicationContext());
+
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             FirebaseAuthActivityTest.logoutSync();
         }
@@ -56,7 +77,9 @@ public class NearbyHelpFragmentTest {
 
     @After
     public void cleanUp() {
-        scenario.close();
+        if (scenario != null) {
+            scenario.close();
+        }
     }
 
     @Test
@@ -102,10 +125,30 @@ public class NearbyHelpFragmentTest {
     }
 
     @Test
+    public void showsCorrectOfferedIngredientsOnOfferHelpScreen() {
+        FirebaseAuthActivityTest.loginSync("showsCorrectOffered@test.com");
+
+        scenario = FragmentScenario.launchInContainer(NearbyHelpFragment.class);
+
+        fillOffersInDatabase();
+
+        onView(withId(R.id.offerHelpButton))
+                .perform(ViewActions.click());
+
+        onView(withId(R.id.chooseHelpGroup)).check(matches(not(withEffectiveVisibility(VISIBLE))));
+        onView(withId(R.id.askHelpGroup)).check(matches(not(withEffectiveVisibility(VISIBLE))));
+        onView(withId(R.id.offerHelpGroup)).check(matches(withEffectiveVisibility(VISIBLE)));
+
+        FirebaseAuthActivityTest.logoutSync();
+    }
+
+    @Test
     public void askHelpGetsNearbyOffers() {
         FirebaseAuthActivityTest.loginSync("test@example.com");
 
         scenario = FragmentScenario.launchInContainer(NearbyHelpFragment.class);
+
+        fillOffersInDatabase();
 
         onView(withId(R.id.askHelpButton)).perform(ViewActions.click());
 
@@ -246,5 +289,18 @@ public class NearbyHelpFragmentTest {
         onView(withId(R.id.sendReplyHelpButton)).perform(ViewActions.click());
 
         FirebaseAuthActivityTest.logoutSync();
+    }
+
+    public void fillOffersInDatabase() {
+        try {
+            Tasks.await(locDb.updateLocation(Tasks.await(fusedLocationClient.getLastLocation())));
+            Tasks.await(locDb.updateOffered(Arrays.asList(
+                    new Ingredient("testIngredient", new Unit(2, "g")),
+                    new Ingredient("testIngredient", new Unit(100, "g")),
+                    new Ingredient("testIngredient", new Unit(1, "kg")),
+                    new Ingredient("testIngredient2", new Unit(5, "cups")))));
+        } catch (ExecutionException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
