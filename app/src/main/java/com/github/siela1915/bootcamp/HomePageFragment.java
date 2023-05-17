@@ -2,7 +2,6 @@ package com.github.siela1915.bootcamp;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -22,12 +20,15 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.github.siela1915.bootcamp.Labelling.AllergyType;
+import com.github.siela1915.bootcamp.Labelling.CuisineType;
+import com.github.siela1915.bootcamp.Labelling.DietType;
 import com.github.siela1915.bootcamp.Recipes.ExampleRecipes;
+import com.github.siela1915.bootcamp.Recipes.PreparationTime;
 import com.github.siela1915.bootcamp.Recipes.Recipe;
 
 import com.github.siela1915.bootcamp.Recipes.RecipeItemAdapter;
 import com.github.siela1915.bootcamp.firebase.Database;
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
@@ -59,7 +60,7 @@ public class HomePageFragment extends Fragment {
     private TextView moreFilter;
     private LinearLayout filterLayout, recipeListLinearLayout;
     private SearchView searchView;
-    private Button pantryBtn,allergyBtn,cuisineBtn,prepTimeBtn;
+    private Button dietBtn,allergyBtn,cuisineBtn,prepTimeBtn;
     private List<Recipe> fetchedRecipes= new ArrayList<>();
     public HomePageFragment() {
         // Required empty public constructor
@@ -122,10 +123,42 @@ public class HomePageFragment extends Fragment {
         filterLayout = view.findViewById(R.id.filter);
         recipeListLinearLayout = view.findViewById(R.id.recipeListLinearLayout);
         searchView= view.findViewById(R.id.searchView);
-        pantryBtn= view.findViewById(R.id.btnPantry);
+        searchView.clearFocus();
+        dietBtn = view.findViewById(R.id.btnDiet);
         allergyBtn=view.findViewById(R.id.btnAllergy);
         cuisineBtn = view.findViewById(R.id.btnCuisine);
         prepTimeBtn= view.findViewById(R.id.btnPrpTime);
+
+        List<String> selectedCuisine = new ArrayList<>();
+        List<String> selectedDiet = new ArrayList<>();
+        List<String> selectedAllery= new ArrayList<>();
+        List<String> selectedPrepTime= new ArrayList<>();
+
+        cuisineBtn.setOnClickListener(v -> {
+            String [] cuisineTypes= CuisineType.getAll();
+            boolean[] checksum= new boolean[cuisineTypes.length];
+            String title = "Choose your preferred cuisine";
+            popUpDialogBuilder(cuisineTypes,checksum,title,selectedCuisine);
+        });
+
+        prepTimeBtn.setOnClickListener(v -> {
+            String [] prepTime= PreparationTime.getAll();
+            boolean[] checksum= new boolean[prepTime.length];
+            String title = "Choose the preparation time";
+            popUpDialogBuilder(prepTime,checksum,title,selectedPrepTime);
+        });
+        dietBtn.setOnClickListener(v -> {
+            String [] diets= DietType.getAll();
+            boolean[] checksum= new boolean[diets.length];
+            String title = "Choose your diet";
+            popUpDialogBuilder(diets,checksum,title,selectedDiet);
+        });
+        allergyBtn.setOnClickListener(v -> {
+            String [] allergies= AllergyType.getAll();
+            boolean[] checksum= new boolean[allergies.length];
+            String title = "what are you allergic to";
+            popUpDialogBuilder(allergies,checksum,title,selectedAllery);
+        });
         moreFilter.setOnClickListener(v->{
             if (filterLayout.getVisibility() == View.VISIBLE) {
                 filterLayout.animate()
@@ -220,7 +253,6 @@ public class HomePageFragment extends Fragment {
         AlertDialog.Builder builder= new AlertDialog.Builder(getContext(),R.style.AlertDialogTheme);
         builder.setTitle(title);
         builder.setCancelable(false);
-        //List<String> selected = new ArrayList<>();
 
         builder.setMultiChoiceItems(items,checksum,(dialog,which,isChecked)->{
             checksum[which]=isChecked;
