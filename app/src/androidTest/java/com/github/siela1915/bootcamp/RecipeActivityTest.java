@@ -51,6 +51,7 @@ import androidx.test.espresso.intent.Intents;
 import androidx.test.espresso.matcher.BoundedMatcher;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.github.siela1915.bootcamp.Recipes.Comment;
 import com.github.siela1915.bootcamp.Recipes.ExampleRecipes;
@@ -88,11 +89,13 @@ public class RecipeActivityTest {
 
     private static DatabaseIdlingResource databaseIdlingResource;
     private static boolean isDatabaseFetchComplete;
+    private static Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
+
 
     @BeforeClass
     public static void prepareEmulator() {
         FirebaseApp.clearInstancesForTest();
-        FirebaseApp.initializeApp(getApplicationContext());
+        FirebaseApp.initializeApp(appContext);
         FirebaseAuth.getInstance().useEmulator("10.0.2.2", 9099);
         fb = FirebaseDatabase.getInstance();
         fb.useEmulator("10.0.2.2", 9000);
