@@ -1,0 +1,646 @@
+[debug] [2023-05-04T13:55:58.760Z] ----------------------------------------------------------------------
+[debug] [2023-05-04T13:55:58.764Z] Command:       C:\Users\Eylul\DOWNLO~1\firebase-tools-instant-win.exe C:\Users\Eylul\.cache\firebase\tools\lib\node_modules\firebase-tools\lib\bin\firebase emulators:start --import emulator-export
+[debug] [2023-05-04T13:55:58.764Z] CLI Version:   11.29.1
+[debug] [2023-05-04T13:55:58.764Z] Platform:      win32
+[debug] [2023-05-04T13:55:58.765Z] Node Version:  v16.16.0
+[debug] [2023-05-04T13:55:58.803Z] Time:          Thu May 04 2023 15:55:58 GMT+0200 (GMT+02:00)
+[debug] [2023-05-04T13:55:58.803Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2023-05-04T13:55:58.825Z] >>> [apiv2][query] GET https://firebase-public.firebaseio.com/cli.json [none]
+[debug] [2023-05-04T13:55:59.071Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2023-05-04T13:55:59.071Z] > authorizing via signed-in user (eylulipci00@gmail.com)
+[debug] [2023-05-04T13:55:59.562Z] <<< [apiv2][status] GET https://firebase-public.firebaseio.com/cli.json 200
+[debug] [2023-05-04T13:55:59.563Z] <<< [apiv2][body] GET https://firebase-public.firebaseio.com/cli.json {"cloudBuildErrorAfter":1594252800000,"cloudBuildWarnAfter":1590019200000,"defaultNode10After":1594252800000,"minVersion":"3.0.5","node8DeploysDisabledAfter":1613390400000,"node8RuntimeDisabledAfter":1615809600000,"node8WarnAfter":1600128000000}
+[debug] [2023-05-04T13:55:59.868Z] java version "17.0.4.1" 2022-08-18 LTS
+Java(TM) SE Runtime Environment (build 17.0.4.1+1-LTS-2)
+Java HotSpot(TM) 64-Bit Server VM (build 17.0.4.1+1-LTS-2, mixed mode, sharing)
+
+[debug] [2023-05-04T13:55:59.902Z] Parsed Java major version: 17
+[info] i  emulators: Starting emulators: auth, database {"metadata":{"emulator":{"name":"hub"},"message":"Starting emulators: auth, database"}}
+[debug] [2023-05-04T13:55:59.923Z] [logging] Logging Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2023-05-04T13:55:59.923Z] [auth] Authentication Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2023-05-04T13:55:59.924Z] [database] Database Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2023-05-04T13:55:59.924Z] assigned listening specs for emulators {"user":{"hub":[{"address":"127.0.0.1","family":"IPv4","port":4400},{"address":"::1","family":"IPv6","port":4400}],"ui":[{"address":"127.0.0.1","family":"IPv4","port":4000},{"address":"::1","family":"IPv6","port":4000}],"logging":[{"address":"127.0.0.1","family":"IPv4","port":4500}],"auth":[{"address":"127.0.0.1","family":"IPv4","port":9099}],"database":[{"address":"127.0.0.1","family":"IPv4","port":9000}]},"metadata":{"message":"assigned listening specs for emulators"}}
+[debug] [2023-05-04T13:55:59.934Z] [hub] writing locator at C:\Users\Eylul\AppData\Local\Temp\hub-dish-delish-recipes.json
+[info] i  emulators: Shutting down emulators. {"metadata":{"emulator":{"name":"hub"},"message":"Shutting down emulators."}}
+[info] i  hub: Stopping emulator hub {"metadata":{"emulator":{"name":"hub"},"message":"Stopping emulator hub"}}
+[debug] [2023-05-04T13:55:59.972Z] Error: ENOENT: no such file or directory, lstat 'C:\Users\Eylul\OneDrive\Desktop\EPFL\IN BA6\sdp\dishdelish\dishdelish-app\emulator-export'
+    at Object.lstatSync (node:fs:1529:3)
+    at Object.lstatSync (pkg/prelude/bootstrap.js:1503:33)
+    at findExportMetadata (C:\Users\Eylul\.cache\firebase\tools\lib\node_modules\firebase-tools\lib\emulator\controller.js:119:32)
+    at Object.startAll (C:\Users\Eylul\.cache\firebase\tools\lib\node_modules\firebase-tools\lib\emulator\controller.js:269:31)
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)
+    at async C:\Users\Eylul\.cache\firebase\tools\lib\node_modules\firebase-tools\lib\commands\emulators-start.js:32:43
+[error] 
+[error] Error: An unexpected error has occurred.
+[debug] [2023-05-04T13:56:27.787Z] ----------------------------------------------------------------------
+[debug] [2023-05-04T13:56:27.804Z] Command:       C:\Users\Eylul\DOWNLO~1\firebase-tools-instant-win.exe C:\Users\Eylul\.cache\firebase\tools\lib\node_modules\firebase-tools\lib\bin\firebase emulators:start --import emulator-export
+[debug] [2023-05-04T13:56:27.807Z] CLI Version:   11.29.1
+[debug] [2023-05-04T13:56:27.808Z] Platform:      win32
+[debug] [2023-05-04T13:56:27.809Z] Node Version:  v16.16.0
+[debug] [2023-05-04T13:56:27.850Z] Time:          Thu May 04 2023 15:56:27 GMT+0200 (GMT+02:00)
+[debug] [2023-05-04T13:56:27.853Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2023-05-04T13:56:28.196Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2023-05-04T13:56:28.197Z] > authorizing via signed-in user (eylulipci00@gmail.com)
+[debug] [2023-05-04T13:56:28.335Z] java version "17.0.4.1" 2022-08-18 LTS
+Java(TM) SE Runtime Environment (build 17.0.4.1+1-LTS-2)
+
+[debug] [2023-05-04T13:56:28.337Z] Java HotSpot(TM) 64-Bit Server VM (build 17.0.4.1+1-LTS-2, mixed mode, sharing)
+
+[debug] [2023-05-04T13:56:28.357Z] Parsed Java major version: 17
+[info] i  emulators: Starting emulators: auth, database {"metadata":{"emulator":{"name":"hub"},"message":"Starting emulators: auth, database"}}
+[debug] [2023-05-04T13:56:28.396Z] [logging] Logging Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2023-05-04T13:56:28.396Z] [auth] Authentication Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2023-05-04T13:56:28.396Z] [database] Database Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2023-05-04T13:56:28.397Z] assigned listening specs for emulators {"user":{"hub":[{"address":"127.0.0.1","family":"IPv4","port":4400},{"address":"::1","family":"IPv6","port":4400}],"ui":[{"address":"127.0.0.1","family":"IPv4","port":4000},{"address":"::1","family":"IPv6","port":4000}],"logging":[{"address":"127.0.0.1","family":"IPv4","port":4500}],"auth":[{"address":"127.0.0.1","family":"IPv4","port":9099}],"database":[{"address":"127.0.0.1","family":"IPv4","port":9000}]},"metadata":{"message":"assigned listening specs for emulators"}}
+[debug] [2023-05-04T13:56:28.411Z] [hub] writing locator at C:\Users\Eylul\AppData\Local\Temp\hub-dish-delish-recipes.json
+[info] i  emulators: Shutting down emulators. {"metadata":{"emulator":{"name":"hub"},"message":"Shutting down emulators."}}
+[info] i  hub: Stopping emulator hub {"metadata":{"emulator":{"name":"hub"},"message":"Stopping emulator hub"}}
+[debug] [2023-05-04T13:56:28.441Z] Error: ENOENT: no such file or directory, lstat 'C:\Users\Eylul\OneDrive\Desktop\EPFL\IN BA6\sdp\dishdelish\dishdelish-app\emulator-export'
+    at Object.lstatSync (node:fs:1529:3)
+    at Object.lstatSync (pkg/prelude/bootstrap.js:1503:33)
+    at findExportMetadata (C:\Users\Eylul\.cache\firebase\tools\lib\node_modules\firebase-tools\lib\emulator\controller.js:119:32)
+    at Object.startAll (C:\Users\Eylul\.cache\firebase\tools\lib\node_modules\firebase-tools\lib\emulator\controller.js:269:31)
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)
+    at async C:\Users\Eylul\.cache\firebase\tools\lib\node_modules\firebase-tools\lib\commands\emulators-start.js:32:43
+[error] 
+[error] Error: An unexpected error has occurred.
+[debug] [2023-05-04T14:04:50.143Z] ----------------------------------------------------------------------
+[debug] [2023-05-04T14:04:50.144Z] Command:       C:\Users\Eylul\DOWNLO~1\firebase-tools-instant-win.exe C:\Users\Eylul\.cache\firebase\tools\lib\node_modules\firebase-tools\lib\bin\firebase emulators:start --import emulator-export
+[debug] [2023-05-04T14:04:50.145Z] CLI Version:   11.29.1
+[debug] [2023-05-04T14:04:50.145Z] Platform:      win32
+[debug] [2023-05-04T14:04:50.145Z] Node Version:  v16.16.0
+[debug] [2023-05-04T14:04:50.151Z] Time:          Thu May 04 2023 16:04:50 GMT+0200 (GMT+02:00)
+[debug] [2023-05-04T14:04:50.152Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2023-05-04T14:04:50.219Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2023-05-04T14:04:50.220Z] > authorizing via signed-in user (eylulipci00@gmail.com)
+[debug] [2023-05-04T14:04:50.354Z] java version "17.0.4.1" 2022-08-18 LTS
+Java(TM) SE Runtime Environment (build 17.0.4.1+1-LTS-2)
+
+[debug] [2023-05-04T14:04:50.355Z] Java HotSpot(TM) 64-Bit Server VM (build 17.0.4.1+1-LTS-2, mixed mode, sharing)
+
+[debug] [2023-05-04T14:04:50.371Z] Parsed Java major version: 17
+[info] i  emulators: Starting emulators: auth, database {"metadata":{"emulator":{"name":"hub"},"message":"Starting emulators: auth, database"}}
+[debug] [2023-05-04T14:04:50.387Z] [logging] Logging Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2023-05-04T14:04:50.387Z] [auth] Authentication Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2023-05-04T14:04:50.387Z] [database] Database Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2023-05-04T14:04:50.387Z] assigned listening specs for emulators {"user":{"hub":[{"address":"127.0.0.1","family":"IPv4","port":4400},{"address":"::1","family":"IPv6","port":4400}],"ui":[{"address":"127.0.0.1","family":"IPv4","port":4000},{"address":"::1","family":"IPv6","port":4000}],"logging":[{"address":"127.0.0.1","family":"IPv4","port":4500}],"auth":[{"address":"127.0.0.1","family":"IPv4","port":9099}],"database":[{"address":"127.0.0.1","family":"IPv4","port":9000}]},"metadata":{"message":"assigned listening specs for emulators"}}
+[debug] [2023-05-04T14:04:50.392Z] [hub] writing locator at C:\Users\Eylul\AppData\Local\Temp\hub-dish-delish-recipes.json
+[debug] [2023-05-04T14:04:50.410Z] > refreshing access token with scopes: []
+[debug] [2023-05-04T14:04:50.412Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2023-05-04T14:04:50.412Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2023-05-04T14:04:50.547Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2023-05-04T14:04:50.547Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2023-05-04T14:04:50.576Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/dish-delish-recipes [none]
+[debug] [2023-05-04T14:04:50.914Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/dish-delish-recipes 403
+[debug] [2023-05-04T14:04:50.915Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/dish-delish-recipes {"error":{"code":403,"message":"The caller does not have permission","status":"PERMISSION_DENIED"}}
+[debug] [2023-05-04T14:04:50.916Z] HTTP Error: 403, The caller does not have permission
+[debug] [2023-05-04T14:04:50.916Z] Failed to retrieve default database instance: {"name":"FirebaseError","children":[],"exit":2,"message":"Failed to get Firebase project dish-delish-recipes. Please make sure the project exists and your account has permission to access it.","original":{"name":"FirebaseError","children":[],"context":{"body":{"error":{"code":403,"message":"The caller does not have permission","status":"PERMISSION_DENIED"}},"response":{"statusCode":403}},"exit":1,"message":"HTTP Error: 403, The caller does not have permission","status":403},"status":500} {"metadata":{"emulator":{"name":"database"},"message":"Failed to retrieve default database instance: {\"name\":\"FirebaseError\",\"children\":[],\"exit\":2,\"message\":\"Failed to get Firebase project dish-delish-recipes. Please make sure the project exists and your account has permission to access it.\",\"original\":{\"name\":\"FirebaseError\",\"children\":[],\"context\":{\"body\":{\"error\":{\"code\":403,\"message\":\"The caller does not have permission\",\"status\":\"PERMISSION_DENIED\"}},\"response\":{\"statusCode\":403}},\"exit\":1,\"message\":\"HTTP Error: 403, The caller does not have permission\",\"status\":403},\"status\":500}"}}
+[debug] [2023-05-04T14:04:50.917Z] database rules config:  [{"instance":"dish-delish-recipes-default-rtdb","rules":"C:\\Users\\Eylul\\OneDrive\\Desktop\\EPFL\\IN BA6\\sdp\\dishdelish\\dishdelish-app\\database.rules.json"}]
+[debug] [2023-05-04T14:04:50.924Z] Ignoring unsupported arg: projectId {"metadata":{"emulator":{"name":"database"},"message":"Ignoring unsupported arg: projectId"}}
+[debug] [2023-05-04T14:04:50.925Z] Ignoring unsupported arg: auto_download {"metadata":{"emulator":{"name":"database"},"message":"Ignoring unsupported arg: auto_download"}}
+[debug] [2023-05-04T14:04:50.925Z] Ignoring unsupported arg: rules {"metadata":{"emulator":{"name":"database"},"message":"Ignoring unsupported arg: rules"}}
+[debug] [2023-05-04T14:04:50.925Z] Starting Database Emulator with command {"binary":"java","args":["-Duser.language=en","-jar","C:\\Users\\Eylul\\.cache\\firebase\\emulators\\firebase-database-emulator-v4.11.0.jar","--host","127.0.0.1","--port",9000,"--single_project_mode","Warning"],"optionalArgs":["port","host","functions_emulator_port","functions_emulator_host","single_project_mode"],"joinArgs":false} {"metadata":{"emulator":{"name":"database"},"message":"Starting Database Emulator with command {\"binary\":\"java\",\"args\":[\"-Duser.language=en\",\"-jar\",\"C:\\\\Users\\\\Eylul\\\\.cache\\\\firebase\\\\emulators\\\\firebase-database-emulator-v4.11.0.jar\",\"--host\",\"127.0.0.1\",\"--port\",9000,\"--single_project_mode\",\"Warning\"],\"optionalArgs\":[\"port\",\"host\",\"functions_emulator_port\",\"functions_emulator_host\",\"single_project_mode\"],\"joinArgs\":false}"}}
+[info] i  database: Database Emulator logging to database-debug.log {"metadata":{"emulator":{"name":"database"},"message":"Database Emulator logging to \u001b[1mdatabase-debug.log\u001b[22m"}}
+[info] i  database: Importing data from C:\Users\Eylul\OneDrive\Desktop\EPFL\IN BA6\sdp\dishdelish\dishdelish-app\emulator-export\database_export\dish-delish-recipes-default-rtdb.json {"metadata":{"emulator":{"name":"database"},"message":"Importing data from C:\\Users\\Eylul\\OneDrive\\Desktop\\EPFL\\IN BA6\\sdp\\dishdelish\\dishdelish-app\\emulator-export\\database_export\\dish-delish-recipes-default-rtdb.json"}}
+[info] i  auth: Importing config from C:\Users\Eylul\OneDrive\Desktop\EPFL\IN BA6\sdp\dishdelish\dishdelish-app\emulator-export\auth_export\config.json {"metadata":{"emulator":{"name":"auth"},"message":"Importing config from C:\\Users\\Eylul\\OneDrive\\Desktop\\EPFL\\IN BA6\\sdp\\dishdelish\\dishdelish-app\\emulator-export\\auth_export\\config.json"}}
+[info] i  auth: Importing accounts from C:\Users\Eylul\OneDrive\Desktop\EPFL\IN BA6\sdp\dishdelish\dishdelish-app\emulator-export\auth_export\accounts.json {"metadata":{"emulator":{"name":"auth"},"message":"Importing accounts from C:\\Users\\Eylul\\OneDrive\\Desktop\\EPFL\\IN BA6\\sdp\\dishdelish\\dishdelish-app\\emulator-export\\auth_export\\accounts.json"}}
+[debug] [2023-05-04T14:05:05.941Z] Ignoring unsupported arg: auto_download {"metadata":{"emulator":{"name":"ui"},"message":"Ignoring unsupported arg: auto_download"}}
+[debug] [2023-05-04T14:05:05.943Z] Ignoring unsupported arg: port {"metadata":{"emulator":{"name":"ui"},"message":"Ignoring unsupported arg: port"}}
+[debug] [2023-05-04T14:05:05.944Z] Starting Emulator UI with command {"binary":"node","args":["C:\\Users\\Eylul\\.cache\\firebase\\emulators\\ui-v1.11.5\\server\\server.js"],"optionalArgs":[],"joinArgs":false} {"metadata":{"emulator":{"name":"ui"},"message":"Starting Emulator UI with command {\"binary\":\"node\",\"args\":[\"C:\\\\Users\\\\Eylul\\\\.cache\\\\firebase\\\\emulators\\\\ui-v1.11.5\\\\server\\\\server.js\"],\"optionalArgs\":[],\"joinArgs\":false}"}}
+[info] i  ui: Emulator UI logging to ui-debug.log {"metadata":{"emulator":{"name":"ui"},"message":"Emulator UI logging to \u001b[1mui-debug.log\u001b[22m"}}
+[debug] [2023-05-04T14:05:07.067Z] Web / API server started at 127.0.0.1:4000
+ {"metadata":{"emulator":{"name":"ui"},"message":"Web / API server started at 127.0.0.1:4000\n"}}
+[debug] [2023-05-04T14:05:07.068Z] Web / API server started at ::1:4000
+ {"metadata":{"emulator":{"name":"ui"},"message":"Web / API server started at ::1:4000\n"}}
+[debug] [2023-05-04T14:05:07.298Z] >>> [apiv2][query] PUT http://127.0.0.1:9000/.settings/rules.json ns=dish-delish-recipes-default-rtdb
+[debug] [2023-05-04T14:05:07.299Z] >>> [apiv2][body] PUT http://127.0.0.1:9000/.settings/rules.json "{\r\n  \"rules\": {\r\n    \"recipes\": {\r\n      \".indexOn\": [\"recipeName\", \"userName\", \"cookTime\", \"prepTime\", \"likes\", \"numRatings\"]\r\n    },\r\n    \"favorites\": {\r\n      \"$user_id\": {\r\n        \".indexOn\": [\".value\"],\r\n        \".write\": \"$user_id === auth.uid\"\r\n      }\r\n    },\r\n    \"help\": {\r\n      // Allow anyone to read from this node\r\n      \".read\": true,\r\n      // Index each location's geohash for faster querying\r\n      \".indexOn\": [\r\n        \"g\"\r\n      ],\r\n      // Schema validation\r\n      \"$key\": {\r\n        // Allow anyone to add or update keys in the GeoFire index, but not remove them\r\n        \".write\": \"$key === auth.id && newData.exists()\",\r\n        // Key validation\r\n        \".validate\": \"(newData.hasChildren(['g', 'l']) || data.hasChildren(['g', 'l'])) && newData.getPriority().length <= 22 && newData.getPriority().length > 0\",\r\n        // Geohash validation\r\n        \"g\": {\r\n          \".validate\": \"newData.val() == newData.parent().getPriority()\"\r\n        },\r\n        // Location coordinates validation\r\n        \"l\": {\r\n          \"0\": {\r\n            \".validate\": \"newData.isNumber() && newData.val() >= -90 && newData.val() <= 90\"\r\n          },\r\n          \"1\": {\r\n            \".validate\": \"newData.isNumber() && newData.val() >= -180 && newData.val() <= 180\"\r\n          },\r\n          \"$other\": {\r\n            \".validate\": false\r\n          }\r\n        },\r\n        \"offered\": {\r\n          \".read\": true,\r\n          \".write\": \"$key === auth.id\"\r\n        }\r\n      }\r\n    },\r\n    \".read\": true,  //Allow read and write access to anyone \r\n    \".write\": true,  //Not recommended for release production \r\n  }\r\n}"
+[debug] [2023-05-04T14:05:07.805Z] <<< [apiv2][status] PUT http://127.0.0.1:9000/.settings/rules.json 200
+[debug] [2023-05-04T14:05:07.805Z] <<< [apiv2][body] PUT http://127.0.0.1:9000/.settings/rules.json {"status":"ok"}
+[info] 
+┌─────────────────────────────────────────────────────────────┐
+│ ✔  All emulators ready! It is now safe to connect your app. │
+│ i  View Emulator UI at http://127.0.0.1:4000/               │
+└─────────────────────────────────────────────────────────────┘
+
+┌────────────────┬────────────────┬────────────────────────────────┐
+│ Emulator       │ Host:Port      │ View in Emulator UI            │
+├────────────────┼────────────────┼────────────────────────────────┤
+│ Authentication │ 127.0.0.1:9099 │ http://127.0.0.1:4000/auth     │
+├────────────────┼────────────────┼────────────────────────────────┤
+│ Database       │ 127.0.0.1:9000 │ http://127.0.0.1:4000/database │
+└────────────────┴────────────────┴────────────────────────────────┘
+  Emulator Hub running at 127.0.0.1:4400
+  Other reserved ports: 4500
+
+Issues? Report them at https://github.com/firebase/firebase-tools/issues and attach the *-debug.log files.
+ 
+[debug] [2023-05-04T17:06:11.474Z] ----------------------------------------------------------------------
+[debug] [2023-05-04T17:06:11.476Z] Command:       C:\Users\Eylul\DOWNLO~1\firebase-tools-instant-win.exe C:\Users\Eylul\.cache\firebase\tools\lib\node_modules\firebase-tools\lib\bin\firebase emulators:start --import emulator-export
+[debug] [2023-05-04T17:06:11.477Z] CLI Version:   11.29.1
+[debug] [2023-05-04T17:06:11.477Z] Platform:      win32
+[debug] [2023-05-04T17:06:11.477Z] Node Version:  v16.16.0
+[debug] [2023-05-04T17:06:11.478Z] Time:          Thu May 04 2023 19:06:11 GMT+0200 (GMT+02:00)
+[debug] [2023-05-04T17:06:11.479Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2023-05-04T17:06:11.605Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2023-05-04T17:06:11.606Z] > authorizing via signed-in user (eylulipci00@gmail.com)
+[debug] [2023-05-04T17:06:11.807Z] java version "17.0.4.1" 2022-08-18 LTS
+
+[debug] [2023-05-04T17:06:11.808Z] Java(TM) SE Runtime Environment (build 17.0.4.1+1-LTS-2)
+Java HotSpot(TM) 64-Bit Server VM (build 17.0.4.1+1-LTS-2, mixed mode, sharing)
+
+[debug] [2023-05-04T17:06:11.830Z] Parsed Java major version: 17
+[info] i  emulators: Starting emulators: auth, database {"metadata":{"emulator":{"name":"hub"},"message":"Starting emulators: auth, database"}}
+[debug] [2023-05-04T17:06:11.849Z] [logging] Logging Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2023-05-04T17:06:11.850Z] [auth] Authentication Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2023-05-04T17:06:11.850Z] [database] Database Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2023-05-04T17:06:11.850Z] assigned listening specs for emulators {"user":{"hub":[{"address":"127.0.0.1","family":"IPv4","port":4400},{"address":"::1","family":"IPv6","port":4400}],"ui":[{"address":"127.0.0.1","family":"IPv4","port":4000},{"address":"::1","family":"IPv6","port":4000}],"logging":[{"address":"127.0.0.1","family":"IPv4","port":4500}],"auth":[{"address":"127.0.0.1","family":"IPv4","port":9099}],"database":[{"address":"127.0.0.1","family":"IPv4","port":9000}]},"metadata":{"message":"assigned listening specs for emulators"}}
+[warn] !  emulators: It seems that you are running multiple instances of the emulator suite for project dish-delish-recipes. This may result in unexpected behavior. 
+[debug] [2023-05-04T17:06:11.858Z] [hub] writing locator at C:\Users\Eylul\AppData\Local\Temp\hub-dish-delish-recipes.json
+[debug] [2023-05-04T17:06:11.882Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/dish-delish-recipes [none]
+[debug] [2023-05-04T17:06:12.140Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/dish-delish-recipes 403
+[debug] [2023-05-04T17:06:12.141Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/dish-delish-recipes {"error":{"code":403,"message":"The caller does not have permission","status":"PERMISSION_DENIED"}}
+[debug] [2023-05-04T17:06:12.141Z] HTTP Error: 403, The caller does not have permission
+[debug] [2023-05-04T17:06:12.142Z] Failed to retrieve default database instance: {"name":"FirebaseError","children":[],"exit":2,"message":"Failed to get Firebase project dish-delish-recipes. Please make sure the project exists and your account has permission to access it.","original":{"name":"FirebaseError","children":[],"context":{"body":{"error":{"code":403,"message":"The caller does not have permission","status":"PERMISSION_DENIED"}},"response":{"statusCode":403}},"exit":1,"message":"HTTP Error: 403, The caller does not have permission","status":403},"status":500} {"metadata":{"emulator":{"name":"database"},"message":"Failed to retrieve default database instance: {\"name\":\"FirebaseError\",\"children\":[],\"exit\":2,\"message\":\"Failed to get Firebase project dish-delish-recipes. Please make sure the project exists and your account has permission to access it.\",\"original\":{\"name\":\"FirebaseError\",\"children\":[],\"context\":{\"body\":{\"error\":{\"code\":403,\"message\":\"The caller does not have permission\",\"status\":\"PERMISSION_DENIED\"}},\"response\":{\"statusCode\":403}},\"exit\":1,\"message\":\"HTTP Error: 403, The caller does not have permission\",\"status\":403},\"status\":500}"}}
+[debug] [2023-05-04T17:06:12.142Z] database rules config:  [{"instance":"dish-delish-recipes-default-rtdb","rules":"C:\\Users\\Eylul\\OneDrive\\Desktop\\EPFL\\IN BA6\\sdp\\dishdelish\\dishdelish-app\\database.rules.json"}]
+[debug] [2023-05-04T17:06:12.148Z] Ignoring unsupported arg: projectId {"metadata":{"emulator":{"name":"database"},"message":"Ignoring unsupported arg: projectId"}}
+[debug] [2023-05-04T17:06:12.148Z] Ignoring unsupported arg: auto_download {"metadata":{"emulator":{"name":"database"},"message":"Ignoring unsupported arg: auto_download"}}
+[debug] [2023-05-04T17:06:12.148Z] Ignoring unsupported arg: rules {"metadata":{"emulator":{"name":"database"},"message":"Ignoring unsupported arg: rules"}}
+[debug] [2023-05-04T17:06:12.148Z] Starting Database Emulator with command {"binary":"java","args":["-Duser.language=en","-jar","C:\\Users\\Eylul\\.cache\\firebase\\emulators\\firebase-database-emulator-v4.11.0.jar","--host","127.0.0.1","--port",9000,"--single_project_mode","Warning"],"optionalArgs":["port","host","functions_emulator_port","functions_emulator_host","single_project_mode"],"joinArgs":false} {"metadata":{"emulator":{"name":"database"},"message":"Starting Database Emulator with command {\"binary\":\"java\",\"args\":[\"-Duser.language=en\",\"-jar\",\"C:\\\\Users\\\\Eylul\\\\.cache\\\\firebase\\\\emulators\\\\firebase-database-emulator-v4.11.0.jar\",\"--host\",\"127.0.0.1\",\"--port\",9000,\"--single_project_mode\",\"Warning\"],\"optionalArgs\":[\"port\",\"host\",\"functions_emulator_port\",\"functions_emulator_host\",\"single_project_mode\"],\"joinArgs\":false}"}}
+[info] i  database: Database Emulator logging to database-debug.log {"metadata":{"emulator":{"name":"database"},"message":"Database Emulator logging to \u001b[1mdatabase-debug.log\u001b[22m"}}
+[info] i  database: Importing data from C:\Users\Eylul\OneDrive\Desktop\EPFL\IN BA6\sdp\dishdelish\dishdelish-app\emulator-export\database_export\dish-delish-recipes-default-rtdb.json {"metadata":{"emulator":{"name":"database"},"message":"Importing data from C:\\Users\\Eylul\\OneDrive\\Desktop\\EPFL\\IN BA6\\sdp\\dishdelish\\dishdelish-app\\emulator-export\\database_export\\dish-delish-recipes-default-rtdb.json"}}
+[info] i  auth: Importing config from C:\Users\Eylul\OneDrive\Desktop\EPFL\IN BA6\sdp\dishdelish\dishdelish-app\emulator-export\auth_export\config.json {"metadata":{"emulator":{"name":"auth"},"message":"Importing config from C:\\Users\\Eylul\\OneDrive\\Desktop\\EPFL\\IN BA6\\sdp\\dishdelish\\dishdelish-app\\emulator-export\\auth_export\\config.json"}}
+[info] i  auth: Importing accounts from C:\Users\Eylul\OneDrive\Desktop\EPFL\IN BA6\sdp\dishdelish\dishdelish-app\emulator-export\auth_export\accounts.json {"metadata":{"emulator":{"name":"auth"},"message":"Importing accounts from C:\\Users\\Eylul\\OneDrive\\Desktop\\EPFL\\IN BA6\\sdp\\dishdelish\\dishdelish-app\\emulator-export\\auth_export\\accounts.json"}}
+[debug] [2023-05-04T17:06:33.806Z] Ignoring unsupported arg: auto_download {"metadata":{"emulator":{"name":"ui"},"message":"Ignoring unsupported arg: auto_download"}}
+[debug] [2023-05-04T17:06:33.806Z] Ignoring unsupported arg: port {"metadata":{"emulator":{"name":"ui"},"message":"Ignoring unsupported arg: port"}}
+[debug] [2023-05-04T17:06:33.807Z] Starting Emulator UI with command {"binary":"node","args":["C:\\Users\\Eylul\\.cache\\firebase\\emulators\\ui-v1.11.5\\server\\server.js"],"optionalArgs":[],"joinArgs":false} {"metadata":{"emulator":{"name":"ui"},"message":"Starting Emulator UI with command {\"binary\":\"node\",\"args\":[\"C:\\\\Users\\\\Eylul\\\\.cache\\\\firebase\\\\emulators\\\\ui-v1.11.5\\\\server\\\\server.js\"],\"optionalArgs\":[],\"joinArgs\":false}"}}
+[info] i  ui: Emulator UI logging to ui-debug.log {"metadata":{"emulator":{"name":"ui"},"message":"Emulator UI logging to \u001b[1mui-debug.log\u001b[22m"}}
+[debug] [2023-05-04T17:06:34.904Z] Web / API server started at 127.0.0.1:4000
+ {"metadata":{"emulator":{"name":"ui"},"message":"Web / API server started at 127.0.0.1:4000\n"}}
+[debug] [2023-05-04T17:06:34.905Z] Web / API server started at ::1:4000
+ {"metadata":{"emulator":{"name":"ui"},"message":"Web / API server started at ::1:4000\n"}}
+[debug] [2023-05-04T17:06:35.135Z] >>> [apiv2][query] PUT http://127.0.0.1:9000/.settings/rules.json ns=dish-delish-recipes-default-rtdb
+[debug] [2023-05-04T17:06:35.135Z] >>> [apiv2][body] PUT http://127.0.0.1:9000/.settings/rules.json "{\r\n  \"rules\": {\r\n    \"recipes\": {\r\n      \".indexOn\": [\"recipeName\", \"userName\", \"cookTime\", \"prepTime\", \"likes\", \"numRatings\"]\r\n    },\r\n    \"favorites\": {\r\n      \"$user_id\": {\r\n        \".indexOn\": [\".value\"],\r\n        \".write\": \"$user_id === auth.uid\"\r\n      }\r\n    },\r\n    \"help\": {\r\n      // Allow anyone to read from this node\r\n      \".read\": true,\r\n      // Index each location's geohash for faster querying\r\n      \".indexOn\": [\r\n        \"g\"\r\n      ],\r\n      // Schema validation\r\n      \"$key\": {\r\n        // Allow anyone to add or update keys in the GeoFire index, but not remove them\r\n        \".write\": \"$key === auth.id && newData.exists()\",\r\n        // Key validation\r\n        \".validate\": \"(newData.hasChildren(['g', 'l']) || data.hasChildren(['g', 'l'])) && newData.getPriority().length <= 22 && newData.getPriority().length > 0\",\r\n        // Geohash validation\r\n        \"g\": {\r\n          \".validate\": \"newData.val() == newData.parent().getPriority()\"\r\n        },\r\n        // Location coordinates validation\r\n        \"l\": {\r\n          \"0\": {\r\n            \".validate\": \"newData.isNumber() && newData.val() >= -90 && newData.val() <= 90\"\r\n          },\r\n          \"1\": {\r\n            \".validate\": \"newData.isNumber() && newData.val() >= -180 && newData.val() <= 180\"\r\n          },\r\n          \"$other\": {\r\n            \".validate\": false\r\n          }\r\n        },\r\n        \"offered\": {\r\n          \".read\": true,\r\n          \".write\": \"$key === auth.id\"\r\n        }\r\n      }\r\n    },\r\n    \".read\": true,  //Allow read and write access to anyone \r\n    \".write\": true,  //Not recommended for release production \r\n  }\r\n}"
+[debug] [2023-05-04T17:06:35.476Z] <<< [apiv2][status] PUT http://127.0.0.1:9000/.settings/rules.json 200
+[debug] [2023-05-04T17:06:35.476Z] <<< [apiv2][body] PUT http://127.0.0.1:9000/.settings/rules.json {"status":"ok"}
+[info] 
+┌─────────────────────────────────────────────────────────────┐
+│ ✔  All emulators ready! It is now safe to connect your app. │
+│ i  View Emulator UI at http://127.0.0.1:4000/               │
+└─────────────────────────────────────────────────────────────┘
+
+┌────────────────┬────────────────┬────────────────────────────────┐
+│ Emulator       │ Host:Port      │ View in Emulator UI            │
+├────────────────┼────────────────┼────────────────────────────────┤
+│ Authentication │ 127.0.0.1:9099 │ http://127.0.0.1:4000/auth     │
+├────────────────┼────────────────┼────────────────────────────────┤
+│ Database       │ 127.0.0.1:9000 │ http://127.0.0.1:4000/database │
+└────────────────┴────────────────┴────────────────────────────────┘
+  Emulator Hub running at 127.0.0.1:4400
+  Other reserved ports: 4500
+
+Issues? Report them at https://github.com/firebase/firebase-tools/issues and attach the *-debug.log files.
+ 
+[info] i  database: Change detected, updating rules for dish-delish-recipes-default-rtdb... {"metadata":{"emulator":{"name":"database"},"message":"Change detected, updating rules for dish-delish-recipes-default-rtdb..."}}
+[debug] [2023-05-04T19:45:24.520Z] >>> [apiv2][query] PUT http://127.0.0.1:9000/.settings/rules.json ns=dish-delish-recipes-default-rtdb
+[debug] [2023-05-04T19:45:24.521Z] >>> [apiv2][body] PUT http://127.0.0.1:9000/.settings/rules.json "{\r\n  \"rules\": {\r\n    \"recipes\": {\r\n      \".indexOn\": [\"recipeName\", \"userName\", \"cookTime\", \"prepTime\", \"likes\"]\r\n    },\r\n    \"favorites\": {\r\n      \"$user_id\": {\r\n      \t\".indexOn\": [\".value\"],\r\n          \".write\": \"$user_id === auth.uid\"\r\n      }\r\n    },\r\n    \".read\": true,  //Allow read and write access to anyone \r\n    \".write\": true,  //Not recommended for release production \r\n  }\r\n}\r\n"
+[debug] [2023-05-04T19:45:24.652Z] <<< [apiv2][status] PUT http://127.0.0.1:9000/.settings/rules.json 200
+[debug] [2023-05-04T19:45:24.653Z] <<< [apiv2][body] PUT http://127.0.0.1:9000/.settings/rules.json {"status":"ok"}
+[info] +  database: Rules updated. {"metadata":{"emulator":{"name":"database"},"message":"Rules updated."}}
+[info] i  database: Change detected, updating rules for dish-delish-recipes-default-rtdb... {"metadata":{"emulator":{"name":"database"},"message":"Change detected, updating rules for dish-delish-recipes-default-rtdb..."}}
+[debug] [2023-05-04T20:06:50.516Z] >>> [apiv2][query] PUT http://127.0.0.1:9000/.settings/rules.json ns=dish-delish-recipes-default-rtdb
+[debug] [2023-05-04T20:06:50.516Z] >>> [apiv2][body] PUT http://127.0.0.1:9000/.settings/rules.json "{\r\n  \"rules\": {\r\n    \"recipes\": {\r\n      \".indexOn\": [\"recipeName\", \"userName\", \"cookTime\", \"prepTime\", \"likes\", \"numRatings\"]\r\n    },\r\n    \"favorites\": {\r\n      \"$user_id\": {\r\n        \".indexOn\": [\".value\"],\r\n        \".write\": \"$user_id === auth.uid\"\r\n      }\r\n    },\r\n    \"help\": {\r\n      // Allow anyone to read from this node\r\n      \".read\": true,\r\n      // Index each location's geohash for faster querying\r\n      \".indexOn\": [\r\n        \"g\"\r\n      ],\r\n      // Schema validation\r\n      \"$key\": {\r\n        // Allow anyone to add or update keys in the GeoFire index, but not remove them\r\n        \".write\": \"$key === auth.id && newData.exists()\",\r\n        // Key validation\r\n        \".validate\": \"(newData.hasChildren(['g', 'l']) || data.hasChildren(['g', 'l'])) && newData.getPriority().length <= 22 && newData.getPriority().length > 0\",\r\n        // Geohash validation\r\n        \"g\": {\r\n          \".validate\": \"newData.val() == newData.parent().getPriority()\"\r\n        },\r\n        // Location coordinates validation\r\n        \"l\": {\r\n          \"0\": {\r\n            \".validate\": \"newData.isNumber() && newData.val() >= -90 && newData.val() <= 90\"\r\n          },\r\n          \"1\": {\r\n            \".validate\": \"newData.isNumber() && newData.val() >= -180 && newData.val() <= 180\"\r\n          },\r\n          \"$other\": {\r\n            \".validate\": false\r\n          }\r\n        },\r\n        \"offered\": {\r\n          \".read\": true,\r\n          \".write\": \"$key === auth.id\"\r\n        }\r\n      }\r\n    },\r\n    \".read\": true,  //Allow read and write access to anyone \r\n    \".write\": true,  //Not recommended for release production \r\n  }\r\n}"
+[debug] [2023-05-04T20:06:50.575Z] <<< [apiv2][status] PUT http://127.0.0.1:9000/.settings/rules.json 200
+[debug] [2023-05-04T20:06:50.575Z] <<< [apiv2][body] PUT http://127.0.0.1:9000/.settings/rules.json {"status":"ok"}
+[info] +  database: Rules updated. {"metadata":{"emulator":{"name":"database"},"message":"Rules updated."}}
+[debug] [2023-05-14T19:00:38.123Z] ----------------------------------------------------------------------
+[debug] [2023-05-14T19:00:38.125Z] Command:       C:\Users\Eylul\DOWNLO~1\firebase-tools-instant-win.exe C:\Users\Eylul\.cache\firebase\tools\lib\node_modules\firebase-tools\lib\bin\firebase emulators:start --import emulator-export
+[debug] [2023-05-14T19:00:38.125Z] CLI Version:   11.29.1
+[debug] [2023-05-14T19:00:38.125Z] Platform:      win32
+[debug] [2023-05-14T19:00:38.125Z] Node Version:  v16.16.0
+[debug] [2023-05-14T19:00:38.132Z] Time:          Sun May 14 2023 21:00:38 GMT+0200 (GMT+02:00)
+[debug] [2023-05-14T19:00:38.132Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2023-05-14T19:00:38.219Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2023-05-14T19:00:38.220Z] > authorizing via signed-in user (eylulipci00@gmail.com)
+[debug] [2023-05-14T19:00:38.511Z] java version "17.0.4.1" 2022-08-18 LTS
+Java(TM) SE Runtime Environment (build 17.0.4.1+1-LTS-2)
+
+[debug] [2023-05-14T19:00:38.512Z] Java HotSpot(TM) 64-Bit Server VM (build 17.0.4.1+1-LTS-2, mixed mode, sharing)
+
+[debug] [2023-05-14T19:00:38.528Z] Parsed Java major version: 17
+[info] i  emulators: Starting emulators: auth, functions, database {"metadata":{"emulator":{"name":"hub"},"message":"Starting emulators: auth, functions, database"}}
+[debug] [2023-05-14T19:00:38.542Z] [logging] Logging Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2023-05-14T19:00:38.542Z] [auth] Authentication Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2023-05-14T19:00:38.543Z] [database] Database Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2023-05-14T19:00:38.543Z] assigned listening specs for emulators {"user":{"hub":[{"address":"127.0.0.1","family":"IPv4","port":4400},{"address":"::1","family":"IPv6","port":4400}],"ui":[{"address":"127.0.0.1","family":"IPv4","port":4000},{"address":"::1","family":"IPv6","port":4000}],"logging":[{"address":"127.0.0.1","family":"IPv4","port":4500}],"auth":[{"address":"127.0.0.1","family":"IPv4","port":9099}],"database":[{"address":"127.0.0.1","family":"IPv4","port":9000}]},"metadata":{"message":"assigned listening specs for emulators"}}
+[debug] [2023-05-14T19:00:38.548Z] [hub] writing locator at C:\Users\Eylul\AppData\Local\Temp\hub-dish-delish-recipes.json
+[debug] [2023-05-14T19:00:38.564Z] [functions] Functions Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2023-05-14T19:00:38.564Z] [eventarc] Eventarc Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2023-05-14T19:00:38.564Z] late-assigned ports for functions and eventarc emulators {"user":{"hub":[{"address":"127.0.0.1","family":"IPv4","port":4400},{"address":"::1","family":"IPv6","port":4400}],"ui":[{"address":"127.0.0.1","family":"IPv4","port":4000},{"address":"::1","family":"IPv6","port":4000}],"logging":[{"address":"127.0.0.1","family":"IPv4","port":4500}],"auth":[{"address":"127.0.0.1","family":"IPv4","port":9099}],"database":[{"address":"127.0.0.1","family":"IPv4","port":9000}],"functions":[{"address":"127.0.0.1","family":"IPv4","port":5001}],"eventarc":[{"address":"127.0.0.1","family":"IPv4","port":9299}]},"metadata":{"message":"late-assigned ports for functions and eventarc emulators"}}
+[warn] !  functions: The following emulators are not running, calls to these services from the Functions emulator will affect production: firestore, hosting, pubsub, storage {"metadata":{"emulator":{"name":"functions"},"message":"The following emulators are not running, calls to these services from the Functions emulator will affect production: \u001b[1mfirestore, hosting, pubsub, storage\u001b[22m"}}
+[debug] [2023-05-14T19:00:38.567Z] defaultcredentials: writing to file C:\Users\Eylul\AppData\Roaming\firebase\eylulipci00_gmail_com_application_default_credentials.json
+[debug] [2023-05-14T19:00:38.570Z] Setting GAC to C:\Users\Eylul\AppData\Roaming\firebase\eylulipci00_gmail_com_application_default_credentials.json {"metadata":{"emulator":{"name":"functions"},"message":"Setting GAC to C:\\Users\\Eylul\\AppData\\Roaming\\firebase\\eylulipci00_gmail_com_application_default_credentials.json"}}
+[debug] [2023-05-14T19:00:38.574Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/dish-delish-recipes/adminSdkConfig [none]
+[debug] [2023-05-14T19:00:38.988Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/dish-delish-recipes/adminSdkConfig 403
+[debug] [2023-05-14T19:00:38.988Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/dish-delish-recipes/adminSdkConfig {"error":{"code":403,"message":"The caller does not have permission","status":"PERMISSION_DENIED"}}
+[debug] [2023-05-14T19:00:38.988Z] Failed to get Admin SDK config for dish-delish-recipes, falling back to cacheFailed to get Admin SDK for Firebase project dish-delish-recipes. Please make sure the project exists and your account has permission to access it. {"name":"FirebaseError","children":[],"exit":2,"message":"Failed to get Admin SDK for Firebase project dish-delish-recipes. Please make sure the project exists and your account has permission to access it.","original":{"name":"FirebaseError","children":[],"context":{"body":{"error":{"code":403,"message":"The caller does not have permission","status":"PERMISSION_DENIED"}},"response":{"statusCode":403}},"exit":1,"message":"HTTP Error: 403, The caller does not have permission","status":403},"status":500}
+[warn] !  functions: Unable to fetch project Admin SDK configuration, Admin SDK behavior in Cloud Functions emulator may be incorrect. {"metadata":{"emulator":{"name":"functions"},"message":"Unable to fetch project Admin SDK configuration, Admin SDK behavior in Cloud Functions emulator may be incorrect."}}
+[debug] [2023-05-14T19:00:38.995Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/dish-delish-recipes [none]
+[debug] [2023-05-14T19:00:39.288Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/dish-delish-recipes 403
+[debug] [2023-05-14T19:00:39.288Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/dish-delish-recipes {"error":{"code":403,"message":"The caller does not have permission","status":"PERMISSION_DENIED"}}
+[debug] [2023-05-14T19:00:39.289Z] HTTP Error: 403, The caller does not have permission
+[debug] [2023-05-14T19:00:39.289Z] Failed to retrieve default database instance: {"name":"FirebaseError","children":[],"exit":2,"message":"Failed to get Firebase project dish-delish-recipes. Please make sure the project exists and your account has permission to access it.","original":{"name":"FirebaseError","children":[],"context":{"body":{"error":{"code":403,"message":"The caller does not have permission","status":"PERMISSION_DENIED"}},"response":{"statusCode":403}},"exit":1,"message":"HTTP Error: 403, The caller does not have permission","status":403},"status":500} {"metadata":{"emulator":{"name":"database"},"message":"Failed to retrieve default database instance: {\"name\":\"FirebaseError\",\"children\":[],\"exit\":2,\"message\":\"Failed to get Firebase project dish-delish-recipes. Please make sure the project exists and your account has permission to access it.\",\"original\":{\"name\":\"FirebaseError\",\"children\":[],\"context\":{\"body\":{\"error\":{\"code\":403,\"message\":\"The caller does not have permission\",\"status\":\"PERMISSION_DENIED\"}},\"response\":{\"statusCode\":403}},\"exit\":1,\"message\":\"HTTP Error: 403, The caller does not have permission\",\"status\":403},\"status\":500}"}}
+[debug] [2023-05-14T19:00:39.289Z] database rules config:  [{"instance":"dish-delish-recipes-default-rtdb","rules":"C:\\Users\\Eylul\\OneDrive\\Desktop\\EPFL\\IN BA6\\sdp\\dishdelish\\dishdelish-app\\database.rules.json"}]
+[debug] [2023-05-14T19:00:39.302Z] Ignoring unsupported arg: projectId {"metadata":{"emulator":{"name":"database"},"message":"Ignoring unsupported arg: projectId"}}
+[debug] [2023-05-14T19:00:39.302Z] Ignoring unsupported arg: auto_download {"metadata":{"emulator":{"name":"database"},"message":"Ignoring unsupported arg: auto_download"}}
+[debug] [2023-05-14T19:00:39.302Z] Ignoring unsupported arg: rules {"metadata":{"emulator":{"name":"database"},"message":"Ignoring unsupported arg: rules"}}
+[debug] [2023-05-14T19:00:39.302Z] Starting Database Emulator with command {"binary":"java","args":["-Duser.language=en","-jar","C:\\Users\\Eylul\\.cache\\firebase\\emulators\\firebase-database-emulator-v4.11.0.jar","--host","127.0.0.1","--port",9000,"--single_project_mode","Warning","--functions_emulator_host","127.0.0.1","--functions_emulator_port",5001],"optionalArgs":["port","host","functions_emulator_port","functions_emulator_host","single_project_mode"],"joinArgs":false} {"metadata":{"emulator":{"name":"database"},"message":"Starting Database Emulator with command {\"binary\":\"java\",\"args\":[\"-Duser.language=en\",\"-jar\",\"C:\\\\Users\\\\Eylul\\\\.cache\\\\firebase\\\\emulators\\\\firebase-database-emulator-v4.11.0.jar\",\"--host\",\"127.0.0.1\",\"--port\",9000,\"--single_project_mode\",\"Warning\",\"--functions_emulator_host\",\"127.0.0.1\",\"--functions_emulator_port\",5001],\"optionalArgs\":[\"port\",\"host\",\"functions_emulator_port\",\"functions_emulator_host\",\"single_project_mode\"],\"joinArgs\":false}"}}
+[info] i  database: Database Emulator logging to database-debug.log {"metadata":{"emulator":{"name":"database"},"message":"Database Emulator logging to \u001b[1mdatabase-debug.log\u001b[22m"}}
+[info] i  database: Importing data from C:\Users\Eylul\OneDrive\Desktop\EPFL\IN BA6\sdp\dishdelish\dishdelish-app\emulator-export\database_export\dish-delish-recipes-default-rtdb.json {"metadata":{"emulator":{"name":"database"},"message":"Importing data from C:\\Users\\Eylul\\OneDrive\\Desktop\\EPFL\\IN BA6\\sdp\\dishdelish\\dishdelish-app\\emulator-export\\database_export\\dish-delish-recipes-default-rtdb.json"}}
+[info] i  auth: Importing config from C:\Users\Eylul\OneDrive\Desktop\EPFL\IN BA6\sdp\dishdelish\dishdelish-app\emulator-export\auth_export\config.json {"metadata":{"emulator":{"name":"auth"},"message":"Importing config from C:\\Users\\Eylul\\OneDrive\\Desktop\\EPFL\\IN BA6\\sdp\\dishdelish\\dishdelish-app\\emulator-export\\auth_export\\config.json"}}
+[info] i  auth: Importing accounts from C:\Users\Eylul\OneDrive\Desktop\EPFL\IN BA6\sdp\dishdelish\dishdelish-app\emulator-export\auth_export\accounts.json {"metadata":{"emulator":{"name":"auth"},"message":"Importing accounts from C:\\Users\\Eylul\\OneDrive\\Desktop\\EPFL\\IN BA6\\sdp\\dishdelish\\dishdelish-app\\emulator-export\\auth_export\\accounts.json"}}
+[debug] [2023-05-14T19:00:48.231Z] Ignoring unsupported arg: auto_download {"metadata":{"emulator":{"name":"ui"},"message":"Ignoring unsupported arg: auto_download"}}
+[debug] [2023-05-14T19:00:48.231Z] Ignoring unsupported arg: port {"metadata":{"emulator":{"name":"ui"},"message":"Ignoring unsupported arg: port"}}
+[debug] [2023-05-14T19:00:48.231Z] Starting Emulator UI with command {"binary":"node","args":["C:\\Users\\Eylul\\.cache\\firebase\\emulators\\ui-v1.11.5\\server\\server.js"],"optionalArgs":[],"joinArgs":false} {"metadata":{"emulator":{"name":"ui"},"message":"Starting Emulator UI with command {\"binary\":\"node\",\"args\":[\"C:\\\\Users\\\\Eylul\\\\.cache\\\\firebase\\\\emulators\\\\ui-v1.11.5\\\\server\\\\server.js\"],\"optionalArgs\":[],\"joinArgs\":false}"}}
+[info] i  ui: Emulator UI logging to ui-debug.log {"metadata":{"emulator":{"name":"ui"},"message":"Emulator UI logging to \u001b[1mui-debug.log\u001b[22m"}}
+[debug] [2023-05-14T19:00:48.682Z] Web / API server started at 127.0.0.1:4000
+ {"metadata":{"emulator":{"name":"ui"},"message":"Web / API server started at 127.0.0.1:4000\n"}}
+[debug] [2023-05-14T19:00:48.682Z] Web / API server started at ::1:4000
+ {"metadata":{"emulator":{"name":"ui"},"message":"Web / API server started at ::1:4000\n"}}
+[info] i  functions: Watching "C:\Users\Eylul\OneDrive\Desktop\EPFL\IN BA6\sdp\dishdelish\dishdelish-app\functions" for Cloud Functions... {"metadata":{"emulator":{"name":"functions"},"message":"Watching \"C:\\Users\\Eylul\\OneDrive\\Desktop\\EPFL\\IN BA6\\sdp\\dishdelish\\dishdelish-app\\functions\" for Cloud Functions..."}}
+[debug] [2023-05-14T19:00:48.775Z] Validating nodejs source
+[warn] !  functions: Couldn't find firebase-functions package in your source code. Have you run 'npm install'? 
+[debug] [2023-05-14T19:00:48.777Z] getFunctionsSDKVersion encountered error:Cannot find module 'firebase-functions'
+Require stack:
+- C:\Users\Eylul\.cache\firebase\tools\lib\node_modules\firebase-tools\lib\deploy\functions\runtimes\node\versioning.js
+- C:\Users\Eylul\.cache\firebase\tools\lib\node_modules\firebase-tools\lib\deploy\functions\runtimes\node\index.js
+- C:\Users\Eylul\.cache\firebase\tools\lib\node_modules\firebase-tools\lib\deploy\functions\runtimes\index.js
+- C:\Users\Eylul\.cache\firebase\tools\lib\node_modules\firebase-tools\lib\gcp\cloudfunctions.js
+- C:\Users\Eylul\.cache\firebase\tools\lib\node_modules\firebase-tools\lib\deploy\functions\backend.js
+- C:\Users\Eylul\.cache\firebase\tools\lib\node_modules\firebase-tools\lib\emulator\functionsEmulatorShared.js
+- C:\Users\Eylul\.cache\firebase\tools\lib\node_modules\firebase-tools\lib\emulator\functionsEmulator.js
+- C:\Users\Eylul\.cache\firebase\tools\lib\node_modules\firebase-tools\lib\emulator\controller.js
+- C:\Users\Eylul\.cache\firebase\tools\lib\node_modules\firebase-tools\lib\emulator\commandUtils.js
+- C:\Users\Eylul\.cache\firebase\tools\lib\node_modules\firebase-tools\lib\commands\database-get.js
+- C:\Users\Eylul\.cache\firebase\tools\lib\node_modules\firebase-tools\lib\commands\index.js
+- C:\Users\Eylul\.cache\firebase\tools\lib\node_modules\firebase-tools\lib\index.js
+- C:\Users\Eylul\.cache\firebase\tools\lib\node_modules\firebase-tools\lib\bin\firebase.js {"code":"MODULE_NOT_FOUND","requireStack":["C:\\Users\\Eylul\\.cache\\firebase\\tools\\lib\\node_modules\\firebase-tools\\lib\\deploy\\functions\\runtimes\\node\\versioning.js","C:\\Users\\Eylul\\.cache\\firebase\\tools\\lib\\node_modules\\firebase-tools\\lib\\deploy\\functions\\runtimes\\node\\index.js","C:\\Users\\Eylul\\.cache\\firebase\\tools\\lib\\node_modules\\firebase-tools\\lib\\deploy\\functions\\runtimes\\index.js","C:\\Users\\Eylul\\.cache\\firebase\\tools\\lib\\node_modules\\firebase-tools\\lib\\gcp\\cloudfunctions.js","C:\\Users\\Eylul\\.cache\\firebase\\tools\\lib\\node_modules\\firebase-tools\\lib\\deploy\\functions\\backend.js","C:\\Users\\Eylul\\.cache\\firebase\\tools\\lib\\node_modules\\firebase-tools\\lib\\emulator\\functionsEmulatorShared.js","C:\\Users\\Eylul\\.cache\\firebase\\tools\\lib\\node_modules\\firebase-tools\\lib\\emulator\\functionsEmulator.js","C:\\Users\\Eylul\\.cache\\firebase\\tools\\lib\\node_modules\\firebase-tools\\lib\\emulator\\controller.js","C:\\Users\\Eylul\\.cache\\firebase\\tools\\lib\\node_modules\\firebase-tools\\lib\\emulator\\commandUtils.js","C:\\Users\\Eylul\\.cache\\firebase\\tools\\lib\\node_modules\\firebase-tools\\lib\\commands\\database-get.js","C:\\Users\\Eylul\\.cache\\firebase\\tools\\lib\\node_modules\\firebase-tools\\lib\\commands\\index.js","C:\\Users\\Eylul\\.cache\\firebase\\tools\\lib\\node_modules\\firebase-tools\\lib\\index.js","C:\\Users\\Eylul\\.cache\\firebase\\tools\\lib\\node_modules\\firebase-tools\\lib\\bin\\firebase.js"]}
+[debug] [2023-05-14T19:00:48.777Z] checkFunctionsSDKVersion encountered error:Invalid Version:  {}
+[debug] [2023-05-14T19:00:48.778Z] > [functions] package.json contents: {
+  "name": "functions",
+  "scripts": {
+    "lint": "eslint --ext .js,.ts .",
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "serve": "npm run build && firebase emulators:start --only functions",
+    "shell": "npm run build && firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "engines": {
+    "node": "16"
+  },
+  "main": "lib/index.js",
+  "dependencies": {
+    "firebase-admin": "^11.5.0",
+    "firebase-functions": "^4.2.0"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.12.0",
+    "@typescript-eslint/parser": "^5.12.0",
+    "eslint": "^8.9.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-plugin-import": "^2.25.4",
+    "firebase-functions-test": "^3.0.0",
+    "typescript": "^4.9.0"
+  },
+  "private": true
+}
+[error] !!  functions: Failed to load function definition from source: FirebaseError: There was an error reading functions\package.json:
+
+ functions\lib\index.js does not exist, can't deploy Cloud Functions {"metadata":{"emulator":{"name":"functions"},"message":"Failed to load function definition from source: FirebaseError: There was an error reading functions\\package.json:\n\n functions\\lib\\index.js does not exist, can't deploy Cloud Functions"}}
+[debug] [2023-05-14T19:00:48.789Z] >>> [apiv2][query] PUT http://127.0.0.1:9000/.settings/rules.json ns=dish-delish-recipes-default-rtdb
+[debug] [2023-05-14T19:00:48.790Z] >>> [apiv2][body] PUT http://127.0.0.1:9000/.settings/rules.json "{\r\n  \"rules\": {\r\n    \"recipes\": {\r\n      \".indexOn\": [\"recipeName\", \"userName\", \"cookTime\", \"prepTime\", \"likes\", \"numRatings\"]\r\n    },\r\n    \"favorites\": {\r\n      \"$user_id\": {\r\n        \".indexOn\": [\".value\"],\r\n        \".write\": \"$user_id === auth.uid\"\r\n      }\r\n    },\r\n    \"help\": {\r\n      // Allow anyone to read from this node\r\n      \".read\": true,\r\n      // Index each location's geohash for faster querying\r\n      \".indexOn\": [\r\n        \"g\"\r\n      ],\r\n      // Schema validation\r\n      \"$key\": {\r\n        // Allow anyone to add or update keys in the GeoFire index, but not remove them\r\n        \".write\": \"$key === auth.id && newData.exists()\",\r\n        // Key validation\r\n        \".validate\": \"(newData.hasChildren(['g', 'l']) || data.hasChildren(['g', 'l'])) && newData.getPriority().length <= 22 && newData.getPriority().length > 0\",\r\n        // Geohash validation\r\n        \"g\": {\r\n          \".validate\": \"newData.val() == newData.parent().getPriority()\"\r\n        },\r\n        // Location coordinates validation\r\n        \"l\": {\r\n          \"0\": {\r\n            \".validate\": \"newData.isNumber() && newData.val() >= -90 && newData.val() <= 90\"\r\n          },\r\n          \"1\": {\r\n            \".validate\": \"newData.isNumber() && newData.val() >= -180 && newData.val() <= 180\"\r\n          },\r\n          \"$other\": {\r\n            \".validate\": false\r\n          }\r\n        },\r\n        \"offered\": {\r\n          \".read\": true,\r\n          \".write\": \"$key === auth.id\"\r\n        }\r\n      }\r\n    },\r\n    \".read\": true,  //Allow read and write access to anyone \r\n    \".write\": true,  //Not recommended for release production \r\n  }\r\n}"
+[debug] [2023-05-14T19:00:48.915Z] <<< [apiv2][status] PUT http://127.0.0.1:9000/.settings/rules.json 200
+[debug] [2023-05-14T19:00:48.916Z] <<< [apiv2][body] PUT http://127.0.0.1:9000/.settings/rules.json {"status":"ok"}
+[info] 
+┌─────────────────────────────────────────────────────────────┐
+│ ✔  All emulators ready! It is now safe to connect your app. │
+│ i  View Emulator UI at http://127.0.0.1:4000/               │
+└─────────────────────────────────────────────────────────────┘
+
+┌────────────────┬────────────────┬─────────────────────────────────┐
+│ Emulator       │ Host:Port      │ View in Emulator UI             │
+├────────────────┼────────────────┼─────────────────────────────────┤
+│ Authentication │ 127.0.0.1:9099 │ http://127.0.0.1:4000/auth      │
+├────────────────┼────────────────┼─────────────────────────────────┤
+│ Functions      │ 127.0.0.1:5001 │ http://127.0.0.1:4000/functions │
+├────────────────┼────────────────┼─────────────────────────────────┤
+│ Database       │ 127.0.0.1:9000 │ http://127.0.0.1:4000/database  │
+└────────────────┴────────────────┴─────────────────────────────────┘
+  Emulator Hub running at 127.0.0.1:4400
+  Other reserved ports: 4500
+
+Issues? Report them at https://github.com/firebase/firebase-tools/issues and attach the *-debug.log files.
+ 
+[debug] [2023-05-14T19:03:53.392Z] >>> [apiv2][query] POST http://127.0.0.1:5001/functions/projects/dish-delish-recipes/trigger_multicast [none]
+[debug] [2023-05-14T19:03:53.392Z] >>> [apiv2][body] POST http://127.0.0.1:5001/functions/projects/dish-delish-recipes/trigger_multicast {"eventId":"57dbb584-91e8-4b2c-9d6d-5bc5500c1812","eventType":"providers/firebase.auth/eventTypes/user.create","resource":{"name":"projects/dish-delish-recipes","service":"firebaseauth.googleapis.com"},"params":{},"timestamp":"2023-05-14T19:03:53.391Z","data":{"uid":"ONJQoDJxi80MUPfqhZvx3qkAPbpG","email":"eylulipci00@gmail.com","emailVerified":true,"metadata":{"creationTime":"2023-05-14T19:03:53.389Z","lastSignInTime":"2023-05-14T19:03:53.389Z"},"customClaims":{},"providerData":[{"providerId":"google.com","rawId":"eylulipci00@gmail.com","federatedId":"eylulipci00@gmail.com","email":"eylulipci00@gmail.com"}]}}
+[debug] [2023-05-14T19:03:53.407Z] <<< [apiv2][status] POST http://127.0.0.1:5001/functions/projects/dish-delish-recipes/trigger_multicast 200
+[debug] [2023-05-14T19:03:53.407Z] <<< [apiv2][body] POST http://127.0.0.1:5001/functions/projects/dish-delish-recipes/trigger_multicast {"status":"multicast_acknowledged"}
+[debug] [2023-05-15T08:10:53.932Z] ----------------------------------------------------------------------
+[debug] [2023-05-15T08:10:53.934Z] Command:       C:\Users\Eylul\DOWNLO~1\firebase-tools-instant-win.exe C:\Users\Eylul\.cache\firebase\tools\lib\node_modules\firebase-tools\lib\bin\firebase emulators:start --import emulator-export
+[debug] [2023-05-15T08:10:53.934Z] CLI Version:   11.29.1
+[debug] [2023-05-15T08:10:53.934Z] Platform:      win32
+[debug] [2023-05-15T08:10:53.934Z] Node Version:  v16.16.0
+[debug] [2023-05-15T08:10:53.935Z] Time:          Mon May 15 2023 10:10:53 GMT+0200 (GMT+02:00)
+[debug] [2023-05-15T08:10:53.935Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2023-05-15T08:10:54.009Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2023-05-15T08:10:54.009Z] > authorizing via signed-in user (eylulipci00@gmail.com)
+[debug] [2023-05-15T08:10:54.139Z] java version "17.0.4.1" 2022-08-18 LTS
+Java(TM) SE Runtime Environment (build 17.0.4.1+1-LTS-2)
+Java HotSpot(TM) 64-Bit Server VM (build 17.0.4.1+1-LTS-2, mixed mode, sharing)
+
+[debug] [2023-05-15T08:10:54.156Z] Parsed Java major version: 17
+[info] i  emulators: Starting emulators: auth, functions, database {"metadata":{"emulator":{"name":"hub"},"message":"Starting emulators: auth, functions, database"}}
+[debug] [2023-05-15T08:10:54.168Z] [logging] Logging Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2023-05-15T08:10:54.168Z] [auth] Authentication Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2023-05-15T08:10:54.168Z] [database] Database Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2023-05-15T08:10:54.168Z] assigned listening specs for emulators {"user":{"hub":[{"address":"127.0.0.1","family":"IPv4","port":4400},{"address":"::1","family":"IPv6","port":4400}],"ui":[{"address":"127.0.0.1","family":"IPv4","port":4000},{"address":"::1","family":"IPv6","port":4000}],"logging":[{"address":"127.0.0.1","family":"IPv4","port":4500}],"auth":[{"address":"127.0.0.1","family":"IPv4","port":9099}],"database":[{"address":"127.0.0.1","family":"IPv4","port":9000}]},"metadata":{"message":"assigned listening specs for emulators"}}
+[warn] !  emulators: It seems that you are running multiple instances of the emulator suite for project dish-delish-recipes. This may result in unexpected behavior. 
+[debug] [2023-05-15T08:10:54.173Z] [hub] writing locator at C:\Users\Eylul\AppData\Local\Temp\hub-dish-delish-recipes.json
+[debug] [2023-05-15T08:10:54.188Z] [functions] Functions Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2023-05-15T08:10:54.188Z] [eventarc] Eventarc Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2023-05-15T08:10:54.188Z] late-assigned ports for functions and eventarc emulators {"user":{"hub":[{"address":"127.0.0.1","family":"IPv4","port":4400},{"address":"::1","family":"IPv6","port":4400}],"ui":[{"address":"127.0.0.1","family":"IPv4","port":4000},{"address":"::1","family":"IPv6","port":4000}],"logging":[{"address":"127.0.0.1","family":"IPv4","port":4500}],"auth":[{"address":"127.0.0.1","family":"IPv4","port":9099}],"database":[{"address":"127.0.0.1","family":"IPv4","port":9000}],"functions":[{"address":"127.0.0.1","family":"IPv4","port":5001}],"eventarc":[{"address":"127.0.0.1","family":"IPv4","port":9299}]},"metadata":{"message":"late-assigned ports for functions and eventarc emulators"}}
+[warn] !  functions: The following emulators are not running, calls to these services from the Functions emulator will affect production: firestore, hosting, pubsub, storage {"metadata":{"emulator":{"name":"functions"},"message":"The following emulators are not running, calls to these services from the Functions emulator will affect production: \u001b[1mfirestore, hosting, pubsub, storage\u001b[22m"}}
+[debug] [2023-05-15T08:10:54.191Z] defaultcredentials: writing to file C:\Users\Eylul\AppData\Roaming\firebase\eylulipci00_gmail_com_application_default_credentials.json
+[debug] [2023-05-15T08:10:54.192Z] Setting GAC to C:\Users\Eylul\AppData\Roaming\firebase\eylulipci00_gmail_com_application_default_credentials.json {"metadata":{"emulator":{"name":"functions"},"message":"Setting GAC to C:\\Users\\Eylul\\AppData\\Roaming\\firebase\\eylulipci00_gmail_com_application_default_credentials.json"}}
+[debug] [2023-05-15T08:10:54.194Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/dish-delish-recipes/adminSdkConfig [none]
+[debug] [2023-05-15T08:10:54.437Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/dish-delish-recipes/adminSdkConfig 403
+[debug] [2023-05-15T08:10:54.438Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/dish-delish-recipes/adminSdkConfig {"error":{"code":403,"message":"The caller does not have permission","status":"PERMISSION_DENIED"}}
+[debug] [2023-05-15T08:10:54.438Z] Failed to get Admin SDK config for dish-delish-recipes, falling back to cacheFailed to get Admin SDK for Firebase project dish-delish-recipes. Please make sure the project exists and your account has permission to access it. {"name":"FirebaseError","children":[],"exit":2,"message":"Failed to get Admin SDK for Firebase project dish-delish-recipes. Please make sure the project exists and your account has permission to access it.","original":{"name":"FirebaseError","children":[],"context":{"body":{"error":{"code":403,"message":"The caller does not have permission","status":"PERMISSION_DENIED"}},"response":{"statusCode":403}},"exit":1,"message":"HTTP Error: 403, The caller does not have permission","status":403},"status":500}
+[warn] !  functions: Unable to fetch project Admin SDK configuration, Admin SDK behavior in Cloud Functions emulator may be incorrect. {"metadata":{"emulator":{"name":"functions"},"message":"Unable to fetch project Admin SDK configuration, Admin SDK behavior in Cloud Functions emulator may be incorrect."}}
+[debug] [2023-05-15T08:10:54.444Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/dish-delish-recipes [none]
+[debug] [2023-05-15T08:10:54.641Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/dish-delish-recipes 403
+[debug] [2023-05-15T08:10:54.641Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/dish-delish-recipes {"error":{"code":403,"message":"The caller does not have permission","status":"PERMISSION_DENIED"}}
+[debug] [2023-05-15T08:10:54.641Z] HTTP Error: 403, The caller does not have permission
+[debug] [2023-05-15T08:10:54.641Z] Failed to retrieve default database instance: {"name":"FirebaseError","children":[],"exit":2,"message":"Failed to get Firebase project dish-delish-recipes. Please make sure the project exists and your account has permission to access it.","original":{"name":"FirebaseError","children":[],"context":{"body":{"error":{"code":403,"message":"The caller does not have permission","status":"PERMISSION_DENIED"}},"response":{"statusCode":403}},"exit":1,"message":"HTTP Error: 403, The caller does not have permission","status":403},"status":500} {"metadata":{"emulator":{"name":"database"},"message":"Failed to retrieve default database instance: {\"name\":\"FirebaseError\",\"children\":[],\"exit\":2,\"message\":\"Failed to get Firebase project dish-delish-recipes. Please make sure the project exists and your account has permission to access it.\",\"original\":{\"name\":\"FirebaseError\",\"children\":[],\"context\":{\"body\":{\"error\":{\"code\":403,\"message\":\"The caller does not have permission\",\"status\":\"PERMISSION_DENIED\"}},\"response\":{\"statusCode\":403}},\"exit\":1,\"message\":\"HTTP Error: 403, The caller does not have permission\",\"status\":403},\"status\":500}"}}
+[debug] [2023-05-15T08:10:54.642Z] database rules config:  [{"instance":"dish-delish-recipes-default-rtdb","rules":"C:\\Users\\Eylul\\OneDrive\\Desktop\\EPFL\\IN BA6\\sdp\\dishdelish\\dishdelish-app\\database.rules.json"}]
+[debug] [2023-05-15T08:10:54.644Z] Ignoring unsupported arg: projectId {"metadata":{"emulator":{"name":"database"},"message":"Ignoring unsupported arg: projectId"}}
+[debug] [2023-05-15T08:10:54.644Z] Ignoring unsupported arg: auto_download {"metadata":{"emulator":{"name":"database"},"message":"Ignoring unsupported arg: auto_download"}}
+[debug] [2023-05-15T08:10:54.644Z] Ignoring unsupported arg: rules {"metadata":{"emulator":{"name":"database"},"message":"Ignoring unsupported arg: rules"}}
+[debug] [2023-05-15T08:10:54.644Z] Starting Database Emulator with command {"binary":"java","args":["-Duser.language=en","-jar","C:\\Users\\Eylul\\.cache\\firebase\\emulators\\firebase-database-emulator-v4.11.0.jar","--host","127.0.0.1","--port",9000,"--single_project_mode","Warning","--functions_emulator_host","127.0.0.1","--functions_emulator_port",5001],"optionalArgs":["port","host","functions_emulator_port","functions_emulator_host","single_project_mode"],"joinArgs":false} {"metadata":{"emulator":{"name":"database"},"message":"Starting Database Emulator with command {\"binary\":\"java\",\"args\":[\"-Duser.language=en\",\"-jar\",\"C:\\\\Users\\\\Eylul\\\\.cache\\\\firebase\\\\emulators\\\\firebase-database-emulator-v4.11.0.jar\",\"--host\",\"127.0.0.1\",\"--port\",9000,\"--single_project_mode\",\"Warning\",\"--functions_emulator_host\",\"127.0.0.1\",\"--functions_emulator_port\",5001],\"optionalArgs\":[\"port\",\"host\",\"functions_emulator_port\",\"functions_emulator_host\",\"single_project_mode\"],\"joinArgs\":false}"}}
+[info] i  database: Database Emulator logging to database-debug.log {"metadata":{"emulator":{"name":"database"},"message":"Database Emulator logging to \u001b[1mdatabase-debug.log\u001b[22m"}}
+[info] i  database: Importing data from C:\Users\Eylul\OneDrive\Desktop\EPFL\IN BA6\sdp\dishdelish\dishdelish-app\emulator-export\database_export\dish-delish-recipes-default-rtdb.json {"metadata":{"emulator":{"name":"database"},"message":"Importing data from C:\\Users\\Eylul\\OneDrive\\Desktop\\EPFL\\IN BA6\\sdp\\dishdelish\\dishdelish-app\\emulator-export\\database_export\\dish-delish-recipes-default-rtdb.json"}}
+[info] i  auth: Importing config from C:\Users\Eylul\OneDrive\Desktop\EPFL\IN BA6\sdp\dishdelish\dishdelish-app\emulator-export\auth_export\config.json {"metadata":{"emulator":{"name":"auth"},"message":"Importing config from C:\\Users\\Eylul\\OneDrive\\Desktop\\EPFL\\IN BA6\\sdp\\dishdelish\\dishdelish-app\\emulator-export\\auth_export\\config.json"}}
+[info] i  auth: Importing accounts from C:\Users\Eylul\OneDrive\Desktop\EPFL\IN BA6\sdp\dishdelish\dishdelish-app\emulator-export\auth_export\accounts.json {"metadata":{"emulator":{"name":"auth"},"message":"Importing accounts from C:\\Users\\Eylul\\OneDrive\\Desktop\\EPFL\\IN BA6\\sdp\\dishdelish\\dishdelish-app\\emulator-export\\auth_export\\accounts.json"}}
+[debug] [2023-05-15T08:11:02.030Z] Ignoring unsupported arg: auto_download {"metadata":{"emulator":{"name":"ui"},"message":"Ignoring unsupported arg: auto_download"}}
+[debug] [2023-05-15T08:11:02.030Z] Ignoring unsupported arg: port {"metadata":{"emulator":{"name":"ui"},"message":"Ignoring unsupported arg: port"}}
+[debug] [2023-05-15T08:11:02.030Z] Starting Emulator UI with command {"binary":"node","args":["C:\\Users\\Eylul\\.cache\\firebase\\emulators\\ui-v1.11.5\\server\\server.js"],"optionalArgs":[],"joinArgs":false} {"metadata":{"emulator":{"name":"ui"},"message":"Starting Emulator UI with command {\"binary\":\"node\",\"args\":[\"C:\\\\Users\\\\Eylul\\\\.cache\\\\firebase\\\\emulators\\\\ui-v1.11.5\\\\server\\\\server.js\"],\"optionalArgs\":[],\"joinArgs\":false}"}}
+[info] i  ui: Emulator UI logging to ui-debug.log {"metadata":{"emulator":{"name":"ui"},"message":"Emulator UI logging to \u001b[1mui-debug.log\u001b[22m"}}
+[debug] [2023-05-15T08:11:02.383Z] Web / API server started at 127.0.0.1:4000
+ {"metadata":{"emulator":{"name":"ui"},"message":"Web / API server started at 127.0.0.1:4000\n"}}
+[debug] [2023-05-15T08:11:02.383Z] Web / API server started at ::1:4000
+ {"metadata":{"emulator":{"name":"ui"},"message":"Web / API server started at ::1:4000\n"}}
+[info] i  functions: Watching "C:\Users\Eylul\OneDrive\Desktop\EPFL\IN BA6\sdp\dishdelish\dishdelish-app\functions" for Cloud Functions... {"metadata":{"emulator":{"name":"functions"},"message":"Watching \"C:\\Users\\Eylul\\OneDrive\\Desktop\\EPFL\\IN BA6\\sdp\\dishdelish\\dishdelish-app\\functions\" for Cloud Functions..."}}
+[debug] [2023-05-15T08:11:02.561Z] Validating nodejs source
+[warn] !  functions: Couldn't find firebase-functions package in your source code. Have you run 'npm install'? 
+[debug] [2023-05-15T08:11:02.562Z] getFunctionsSDKVersion encountered error:Cannot find module 'firebase-functions'
+Require stack:
+- C:\Users\Eylul\.cache\firebase\tools\lib\node_modules\firebase-tools\lib\deploy\functions\runtimes\node\versioning.js
+- C:\Users\Eylul\.cache\firebase\tools\lib\node_modules\firebase-tools\lib\deploy\functions\runtimes\node\index.js
+- C:\Users\Eylul\.cache\firebase\tools\lib\node_modules\firebase-tools\lib\deploy\functions\runtimes\index.js
+- C:\Users\Eylul\.cache\firebase\tools\lib\node_modules\firebase-tools\lib\gcp\cloudfunctions.js
+- C:\Users\Eylul\.cache\firebase\tools\lib\node_modules\firebase-tools\lib\deploy\functions\backend.js
+- C:\Users\Eylul\.cache\firebase\tools\lib\node_modules\firebase-tools\lib\emulator\functionsEmulatorShared.js
+- C:\Users\Eylul\.cache\firebase\tools\lib\node_modules\firebase-tools\lib\emulator\functionsEmulator.js
+- C:\Users\Eylul\.cache\firebase\tools\lib\node_modules\firebase-tools\lib\emulator\controller.js
+- C:\Users\Eylul\.cache\firebase\tools\lib\node_modules\firebase-tools\lib\emulator\commandUtils.js
+- C:\Users\Eylul\.cache\firebase\tools\lib\node_modules\firebase-tools\lib\commands\database-get.js
+- C:\Users\Eylul\.cache\firebase\tools\lib\node_modules\firebase-tools\lib\commands\index.js
+- C:\Users\Eylul\.cache\firebase\tools\lib\node_modules\firebase-tools\lib\index.js
+- C:\Users\Eylul\.cache\firebase\tools\lib\node_modules\firebase-tools\lib\bin\firebase.js {"code":"MODULE_NOT_FOUND","requireStack":["C:\\Users\\Eylul\\.cache\\firebase\\tools\\lib\\node_modules\\firebase-tools\\lib\\deploy\\functions\\runtimes\\node\\versioning.js","C:\\Users\\Eylul\\.cache\\firebase\\tools\\lib\\node_modules\\firebase-tools\\lib\\deploy\\functions\\runtimes\\node\\index.js","C:\\Users\\Eylul\\.cache\\firebase\\tools\\lib\\node_modules\\firebase-tools\\lib\\deploy\\functions\\runtimes\\index.js","C:\\Users\\Eylul\\.cache\\firebase\\tools\\lib\\node_modules\\firebase-tools\\lib\\gcp\\cloudfunctions.js","C:\\Users\\Eylul\\.cache\\firebase\\tools\\lib\\node_modules\\firebase-tools\\lib\\deploy\\functions\\backend.js","C:\\Users\\Eylul\\.cache\\firebase\\tools\\lib\\node_modules\\firebase-tools\\lib\\emulator\\functionsEmulatorShared.js","C:\\Users\\Eylul\\.cache\\firebase\\tools\\lib\\node_modules\\firebase-tools\\lib\\emulator\\functionsEmulator.js","C:\\Users\\Eylul\\.cache\\firebase\\tools\\lib\\node_modules\\firebase-tools\\lib\\emulator\\controller.js","C:\\Users\\Eylul\\.cache\\firebase\\tools\\lib\\node_modules\\firebase-tools\\lib\\emulator\\commandUtils.js","C:\\Users\\Eylul\\.cache\\firebase\\tools\\lib\\node_modules\\firebase-tools\\lib\\commands\\database-get.js","C:\\Users\\Eylul\\.cache\\firebase\\tools\\lib\\node_modules\\firebase-tools\\lib\\commands\\index.js","C:\\Users\\Eylul\\.cache\\firebase\\tools\\lib\\node_modules\\firebase-tools\\lib\\index.js","C:\\Users\\Eylul\\.cache\\firebase\\tools\\lib\\node_modules\\firebase-tools\\lib\\bin\\firebase.js"]}
+[debug] [2023-05-15T08:11:02.563Z] checkFunctionsSDKVersion encountered error:Invalid Version:  {}
+[debug] [2023-05-15T08:11:02.563Z] > [functions] package.json contents: {
+  "name": "functions",
+  "scripts": {
+    "lint": "eslint --ext .js,.ts .",
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "serve": "npm run build && firebase emulators:start --only functions",
+    "shell": "npm run build && firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "engines": {
+    "node": "16"
+  },
+  "main": "lib/index.js",
+  "dependencies": {
+    "firebase-admin": "^11.5.0",
+    "firebase-functions": "^4.2.0"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.12.0",
+    "@typescript-eslint/parser": "^5.12.0",
+    "eslint": "^8.9.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-plugin-import": "^2.25.4",
+    "firebase-functions-test": "^3.0.0",
+    "typescript": "^4.9.0"
+  },
+  "private": true
+}
+[error] !!  functions: Failed to load function definition from source: FirebaseError: There was an error reading functions\package.json:
+
+ functions\lib\index.js does not exist, can't deploy Cloud Functions {"metadata":{"emulator":{"name":"functions"},"message":"Failed to load function definition from source: FirebaseError: There was an error reading functions\\package.json:\n\n functions\\lib\\index.js does not exist, can't deploy Cloud Functions"}}
+[debug] [2023-05-15T08:11:02.572Z] >>> [apiv2][query] PUT http://127.0.0.1:9000/.settings/rules.json ns=dish-delish-recipes-default-rtdb
+[debug] [2023-05-15T08:11:02.572Z] >>> [apiv2][body] PUT http://127.0.0.1:9000/.settings/rules.json "{\r\n  \"rules\": {\r\n    \"recipes\": {\r\n      \".indexOn\": [\"recipeName\", \"userName\", \"cookTime\", \"prepTime\", \"likes\", \"numRatings\"]\r\n    },\r\n    \"favorites\": {\r\n      \"$user_id\": {\r\n        \".indexOn\": [\".value\"],\r\n        \".write\": \"$user_id === auth.uid\"\r\n      }\r\n    },\r\n    \"help\": {\r\n      // Allow anyone to read from this node\r\n      \".read\": true,\r\n      // Index each location's geohash for faster querying\r\n      \".indexOn\": [\r\n        \"g\"\r\n      ],\r\n      // Schema validation\r\n      \"$key\": {\r\n        // Allow anyone to add or update keys in the GeoFire index, but not remove them\r\n        \".write\": \"$key === auth.id && newData.exists()\",\r\n        // Key validation\r\n        \".validate\": \"(newData.hasChildren(['g', 'l']) || data.hasChildren(['g', 'l'])) && newData.getPriority().length <= 22 && newData.getPriority().length > 0\",\r\n        // Geohash validation\r\n        \"g\": {\r\n          \".validate\": \"newData.val() == newData.parent().getPriority()\"\r\n        },\r\n        // Location coordinates validation\r\n        \"l\": {\r\n          \"0\": {\r\n            \".validate\": \"newData.isNumber() && newData.val() >= -90 && newData.val() <= 90\"\r\n          },\r\n          \"1\": {\r\n            \".validate\": \"newData.isNumber() && newData.val() >= -180 && newData.val() <= 180\"\r\n          },\r\n          \"$other\": {\r\n            \".validate\": false\r\n          }\r\n        },\r\n        \"offered\": {\r\n          \".read\": true,\r\n          \".write\": \"$key === auth.id\"\r\n        }\r\n      }\r\n    },\r\n    \".read\": true,  //Allow read and write access to anyone \r\n    \".write\": true,  //Not recommended for release production \r\n  }\r\n}"
+[debug] [2023-05-15T08:11:02.682Z] <<< [apiv2][status] PUT http://127.0.0.1:9000/.settings/rules.json 200
+[debug] [2023-05-15T08:11:02.682Z] <<< [apiv2][body] PUT http://127.0.0.1:9000/.settings/rules.json {"status":"ok"}
+[info] 
+┌─────────────────────────────────────────────────────────────┐
+│ ✔  All emulators ready! It is now safe to connect your app. │
+│ i  View Emulator UI at http://127.0.0.1:4000/               │
+└─────────────────────────────────────────────────────────────┘
+
+┌────────────────┬────────────────┬─────────────────────────────────┐
+│ Emulator       │ Host:Port      │ View in Emulator UI             │
+├────────────────┼────────────────┼─────────────────────────────────┤
+│ Authentication │ 127.0.0.1:9099 │ http://127.0.0.1:4000/auth      │
+├────────────────┼────────────────┼─────────────────────────────────┤
+│ Functions      │ 127.0.0.1:5001 │ http://127.0.0.1:4000/functions │
+├────────────────┼────────────────┼─────────────────────────────────┤
+│ Database       │ 127.0.0.1:9000 │ http://127.0.0.1:4000/database  │
+└────────────────┴────────────────┴─────────────────────────────────┘
+  Emulator Hub running at 127.0.0.1:4400
+  Other reserved ports: 4500
+
+Issues? Report them at https://github.com/firebase/firebase-tools/issues and attach the *-debug.log files.
+ 
+[debug] [2023-05-15T08:20:56.595Z] >>> [apiv2][query] POST http://127.0.0.1:5001/functions/projects/dish-delish-recipes/trigger_multicast [none]
+[debug] [2023-05-15T08:20:56.596Z] >>> [apiv2][body] POST http://127.0.0.1:5001/functions/projects/dish-delish-recipes/trigger_multicast {"eventId":"778b8ff2-4290-4049-a83e-d66eb088872c","eventType":"providers/firebase.auth/eventTypes/user.create","resource":{"name":"projects/dish-delish-recipes","service":"firebaseauth.googleapis.com"},"params":{},"timestamp":"2023-05-15T08:20:56.595Z","data":{"uid":"RAVAEqluWk78ZiyEcfBO4FNteFMO","email":"example@email.com","emailVerified":true,"metadata":{"creationTime":"2023-05-15T08:20:56.591Z","lastSignInTime":"2023-05-15T08:20:56.591Z"},"customClaims":{},"providerData":[{"providerId":"google.com","rawId":"example@email.com","federatedId":"example@email.com","email":"example@email.com"}]}}
+[debug] [2023-05-15T08:20:56.616Z] <<< [apiv2][status] POST http://127.0.0.1:5001/functions/projects/dish-delish-recipes/trigger_multicast 200
+[debug] [2023-05-15T08:20:56.616Z] <<< [apiv2][body] POST http://127.0.0.1:5001/functions/projects/dish-delish-recipes/trigger_multicast {"status":"multicast_acknowledged"}
+[debug] [2023-05-15T08:37:06.701Z] >>> [apiv2][query] POST http://127.0.0.1:5001/functions/projects/dish-delish-recipes/trigger_multicast [none]
+[debug] [2023-05-15T08:37:06.701Z] >>> [apiv2][body] POST http://127.0.0.1:5001/functions/projects/dish-delish-recipes/trigger_multicast {"eventId":"ead9e1ee-1dfb-4f20-8860-4a7b46a92dd1","eventType":"providers/firebase.auth/eventTypes/user.create","resource":{"name":"projects/dish-delish-recipes","service":"firebaseauth.googleapis.com"},"params":{},"timestamp":"2023-05-15T08:37:06.700Z","data":{"uid":"okwGg7IInbX1gxqNEL5CtvXtMPvv","email":"eylulipci00@gmail.com","emailVerified":true,"metadata":{"creationTime":"2023-05-15T08:37:06.700Z","lastSignInTime":"2023-05-15T08:37:06.700Z"},"customClaims":{},"providerData":[{"providerId":"google.com","rawId":"eylulipci00@gmail.com","federatedId":"eylulipci00@gmail.com","email":"eylulipci00@gmail.com"}]}}
+[debug] [2023-05-15T08:37:06.708Z] <<< [apiv2][status] POST http://127.0.0.1:5001/functions/projects/dish-delish-recipes/trigger_multicast 200
+[debug] [2023-05-15T08:37:06.708Z] <<< [apiv2][body] POST http://127.0.0.1:5001/functions/projects/dish-delish-recipes/trigger_multicast {"status":"multicast_acknowledged"}
+[debug] [2023-05-16T20:31:15.543Z] >>> [apiv2][query] POST http://127.0.0.1:5001/functions/projects/dish-delish-recipes/trigger_multicast [none]
+[debug] [2023-05-16T20:31:15.625Z] >>> [apiv2][body] POST http://127.0.0.1:5001/functions/projects/dish-delish-recipes/trigger_multicast {"eventId":"3dc366ec-0b9e-43c4-a0cb-09ddf845d4b7","eventType":"providers/firebase.auth/eventTypes/user.create","resource":{"name":"projects/dish-delish-recipes","service":"firebaseauth.googleapis.com"},"params":{},"timestamp":"2023-05-16T20:31:15.503Z","data":{"uid":"CWQ7gJOeCq2h13HMOOqrRYkma0Yd","email":"example@gmail.com","emailVerified":true,"metadata":{"creationTime":"2023-05-16T20:31:15.472Z","lastSignInTime":"2023-05-16T20:31:15.472Z"},"customClaims":{},"providerData":[{"providerId":"google.com","rawId":"example@gmail.com","federatedId":"example@gmail.com","email":"example@gmail.com"}]}}
+[debug] [2023-05-16T20:31:15.707Z] <<< [apiv2][status] POST http://127.0.0.1:5001/functions/projects/dish-delish-recipes/trigger_multicast 200
+[debug] [2023-05-16T20:31:15.707Z] <<< [apiv2][body] POST http://127.0.0.1:5001/functions/projects/dish-delish-recipes/trigger_multicast {"status":"multicast_acknowledged"}
+[debug] [2023-05-16T21:06:29.439Z] >>> [apiv2][query] POST http://127.0.0.1:5001/functions/projects/dish-delish-recipes/trigger_multicast [none]
+[debug] [2023-05-16T21:06:29.462Z] >>> [apiv2][body] POST http://127.0.0.1:5001/functions/projects/dish-delish-recipes/trigger_multicast {"eventId":"5d6372cf-8994-4579-93ac-a417f64f3477","eventType":"providers/firebase.auth/eventTypes/user.create","resource":{"name":"projects/dish-delish-recipes","service":"firebaseauth.googleapis.com"},"params":{},"timestamp":"2023-05-16T21:06:29.412Z","data":{"uid":"MhNDArdX5rNUMEzFcXZ0Zln8jcIA","email":"example@mail.com","emailVerified":true,"metadata":{"creationTime":"2023-05-16T21:06:29.399Z","lastSignInTime":"2023-05-16T21:06:29.399Z"},"customClaims":{},"providerData":[{"providerId":"google.com","rawId":"example@mail.com","federatedId":"example@mail.com","email":"example@mail.com"}]}}
+[debug] [2023-05-16T21:06:29.506Z] <<< [apiv2][status] POST http://127.0.0.1:5001/functions/projects/dish-delish-recipes/trigger_multicast 200
+[debug] [2023-05-16T21:06:29.507Z] <<< [apiv2][body] POST http://127.0.0.1:5001/functions/projects/dish-delish-recipes/trigger_multicast {"status":"multicast_acknowledged"}
+[debug] [2023-05-17T08:53:28.175Z] ----------------------------------------------------------------------
+[debug] [2023-05-17T08:53:28.178Z] Command:       C:\Users\Eylul\DOWNLO~1\firebase-tools-instant-win.exe C:\Users\Eylul\.cache\firebase\tools\lib\node_modules\firebase-tools\lib\bin\firebase emulators:start --import emulator-export
+[debug] [2023-05-17T08:53:28.179Z] CLI Version:   11.29.1
+[debug] [2023-05-17T08:53:28.179Z] Platform:      win32
+[debug] [2023-05-17T08:53:28.179Z] Node Version:  v16.16.0
+[debug] [2023-05-17T08:53:28.188Z] Time:          Wed May 17 2023 10:53:28 GMT+0200 (GMT+02:00)
+[debug] [2023-05-17T08:53:28.188Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2023-05-17T08:53:28.339Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2023-05-17T08:53:28.340Z] > authorizing via signed-in user (eylulipci00@gmail.com)
+[debug] [2023-05-17T08:53:28.808Z] java version "17.0.4.1" 2022-08-18 LTS
+Java(TM) SE Runtime Environment (build 17.0.4.1+1-LTS-2)
+Java HotSpot(TM) 64-Bit Server VM (build 17.0.4.1+1-LTS-2, mixed mode, sharing)
+
+[debug] [2023-05-17T08:53:28.834Z] Parsed Java major version: 17
+[info] i  emulators: Starting emulators: auth, functions, database {"metadata":{"emulator":{"name":"hub"},"message":"Starting emulators: auth, functions, database"}}
+[debug] [2023-05-17T08:53:28.859Z] [logging] Logging Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2023-05-17T08:53:28.860Z] [auth] Authentication Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2023-05-17T08:53:28.860Z] [database] Database Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2023-05-17T08:53:28.860Z] assigned listening specs for emulators {"user":{"hub":[{"address":"127.0.0.1","family":"IPv4","port":4400},{"address":"::1","family":"IPv6","port":4400}],"ui":[{"address":"127.0.0.1","family":"IPv4","port":4000},{"address":"::1","family":"IPv6","port":4000}],"logging":[{"address":"127.0.0.1","family":"IPv4","port":4500}],"auth":[{"address":"127.0.0.1","family":"IPv4","port":9099}],"database":[{"address":"127.0.0.1","family":"IPv4","port":9000}]},"metadata":{"message":"assigned listening specs for emulators"}}
+[warn] !  emulators: It seems that you are running multiple instances of the emulator suite for project dish-delish-recipes. This may result in unexpected behavior. 
+[debug] [2023-05-17T08:53:28.871Z] [hub] writing locator at C:\Users\Eylul\AppData\Local\Temp\hub-dish-delish-recipes.json
+[debug] [2023-05-17T08:53:28.902Z] [functions] Functions Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2023-05-17T08:53:28.902Z] [eventarc] Eventarc Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2023-05-17T08:53:28.903Z] late-assigned ports for functions and eventarc emulators {"user":{"hub":[{"address":"127.0.0.1","family":"IPv4","port":4400},{"address":"::1","family":"IPv6","port":4400}],"ui":[{"address":"127.0.0.1","family":"IPv4","port":4000},{"address":"::1","family":"IPv6","port":4000}],"logging":[{"address":"127.0.0.1","family":"IPv4","port":4500}],"auth":[{"address":"127.0.0.1","family":"IPv4","port":9099}],"database":[{"address":"127.0.0.1","family":"IPv4","port":9000}],"functions":[{"address":"127.0.0.1","family":"IPv4","port":5001}],"eventarc":[{"address":"127.0.0.1","family":"IPv4","port":9299}]},"metadata":{"message":"late-assigned ports for functions and eventarc emulators"}}
+[warn] !  functions: The following emulators are not running, calls to these services from the Functions emulator will affect production: firestore, hosting, pubsub, storage {"metadata":{"emulator":{"name":"functions"},"message":"The following emulators are not running, calls to these services from the Functions emulator will affect production: \u001b[1mfirestore, hosting, pubsub, storage\u001b[22m"}}
+[debug] [2023-05-17T08:53:28.909Z] defaultcredentials: writing to file C:\Users\Eylul\AppData\Roaming\firebase\eylulipci00_gmail_com_application_default_credentials.json
+[debug] [2023-05-17T08:53:28.913Z] Setting GAC to C:\Users\Eylul\AppData\Roaming\firebase\eylulipci00_gmail_com_application_default_credentials.json {"metadata":{"emulator":{"name":"functions"},"message":"Setting GAC to C:\\Users\\Eylul\\AppData\\Roaming\\firebase\\eylulipci00_gmail_com_application_default_credentials.json"}}
+[debug] [2023-05-17T08:53:28.921Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/dish-delish-recipes/adminSdkConfig [none]
+[debug] [2023-05-17T08:53:29.261Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/dish-delish-recipes/adminSdkConfig 403
+[debug] [2023-05-17T08:53:29.261Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/dish-delish-recipes/adminSdkConfig {"error":{"code":403,"message":"The caller does not have permission","status":"PERMISSION_DENIED"}}
+[debug] [2023-05-17T08:53:29.262Z] Failed to get Admin SDK config for dish-delish-recipes, falling back to cacheFailed to get Admin SDK for Firebase project dish-delish-recipes. Please make sure the project exists and your account has permission to access it. {"name":"FirebaseError","children":[],"exit":2,"message":"Failed to get Admin SDK for Firebase project dish-delish-recipes. Please make sure the project exists and your account has permission to access it.","original":{"name":"FirebaseError","children":[],"context":{"body":{"error":{"code":403,"message":"The caller does not have permission","status":"PERMISSION_DENIED"}},"response":{"statusCode":403}},"exit":1,"message":"HTTP Error: 403, The caller does not have permission","status":403},"status":500}
+[warn] !  functions: Unable to fetch project Admin SDK configuration, Admin SDK behavior in Cloud Functions emulator may be incorrect. {"metadata":{"emulator":{"name":"functions"},"message":"Unable to fetch project Admin SDK configuration, Admin SDK behavior in Cloud Functions emulator may be incorrect."}}
+[debug] [2023-05-17T08:53:29.277Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/dish-delish-recipes [none]
+[debug] [2023-05-17T08:53:29.555Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/dish-delish-recipes 403
+[debug] [2023-05-17T08:53:29.555Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/dish-delish-recipes {"error":{"code":403,"message":"The caller does not have permission","status":"PERMISSION_DENIED"}}
+[debug] [2023-05-17T08:53:29.555Z] HTTP Error: 403, The caller does not have permission
+[debug] [2023-05-17T08:53:29.556Z] Failed to retrieve default database instance: {"name":"FirebaseError","children":[],"exit":2,"message":"Failed to get Firebase project dish-delish-recipes. Please make sure the project exists and your account has permission to access it.","original":{"name":"FirebaseError","children":[],"context":{"body":{"error":{"code":403,"message":"The caller does not have permission","status":"PERMISSION_DENIED"}},"response":{"statusCode":403}},"exit":1,"message":"HTTP Error: 403, The caller does not have permission","status":403},"status":500} {"metadata":{"emulator":{"name":"database"},"message":"Failed to retrieve default database instance: {\"name\":\"FirebaseError\",\"children\":[],\"exit\":2,\"message\":\"Failed to get Firebase project dish-delish-recipes. Please make sure the project exists and your account has permission to access it.\",\"original\":{\"name\":\"FirebaseError\",\"children\":[],\"context\":{\"body\":{\"error\":{\"code\":403,\"message\":\"The caller does not have permission\",\"status\":\"PERMISSION_DENIED\"}},\"response\":{\"statusCode\":403}},\"exit\":1,\"message\":\"HTTP Error: 403, The caller does not have permission\",\"status\":403},\"status\":500}"}}
+[debug] [2023-05-17T08:53:29.556Z] database rules config:  [{"instance":"dish-delish-recipes-default-rtdb","rules":"C:\\Users\\Eylul\\OneDrive\\Desktop\\EPFL\\IN BA6\\sdp\\dishdelish\\dishdelish-app\\database.rules.json"}]
+[debug] [2023-05-17T08:53:29.563Z] Ignoring unsupported arg: projectId {"metadata":{"emulator":{"name":"database"},"message":"Ignoring unsupported arg: projectId"}}
+[debug] [2023-05-17T08:53:29.563Z] Ignoring unsupported arg: auto_download {"metadata":{"emulator":{"name":"database"},"message":"Ignoring unsupported arg: auto_download"}}
+[debug] [2023-05-17T08:53:29.563Z] Ignoring unsupported arg: rules {"metadata":{"emulator":{"name":"database"},"message":"Ignoring unsupported arg: rules"}}
+[debug] [2023-05-17T08:53:29.563Z] Starting Database Emulator with command {"binary":"java","args":["-Duser.language=en","-jar","C:\\Users\\Eylul\\.cache\\firebase\\emulators\\firebase-database-emulator-v4.11.0.jar","--host","127.0.0.1","--port",9000,"--single_project_mode","Warning","--functions_emulator_host","127.0.0.1","--functions_emulator_port",5001],"optionalArgs":["port","host","functions_emulator_port","functions_emulator_host","single_project_mode"],"joinArgs":false} {"metadata":{"emulator":{"name":"database"},"message":"Starting Database Emulator with command {\"binary\":\"java\",\"args\":[\"-Duser.language=en\",\"-jar\",\"C:\\\\Users\\\\Eylul\\\\.cache\\\\firebase\\\\emulators\\\\firebase-database-emulator-v4.11.0.jar\",\"--host\",\"127.0.0.1\",\"--port\",9000,\"--single_project_mode\",\"Warning\",\"--functions_emulator_host\",\"127.0.0.1\",\"--functions_emulator_port\",5001],\"optionalArgs\":[\"port\",\"host\",\"functions_emulator_port\",\"functions_emulator_host\",\"single_project_mode\"],\"joinArgs\":false}"}}
+[info] i  database: Database Emulator logging to database-debug.log {"metadata":{"emulator":{"name":"database"},"message":"Database Emulator logging to \u001b[1mdatabase-debug.log\u001b[22m"}}
+[info] i  database: Importing data from C:\Users\Eylul\OneDrive\Desktop\EPFL\IN BA6\sdp\dishdelish\dishdelish-app\emulator-export\database_export\dish-delish-recipes-default-rtdb.json {"metadata":{"emulator":{"name":"database"},"message":"Importing data from C:\\Users\\Eylul\\OneDrive\\Desktop\\EPFL\\IN BA6\\sdp\\dishdelish\\dishdelish-app\\emulator-export\\database_export\\dish-delish-recipes-default-rtdb.json"}}
+[info] i  auth: Importing config from C:\Users\Eylul\OneDrive\Desktop\EPFL\IN BA6\sdp\dishdelish\dishdelish-app\emulator-export\auth_export\config.json {"metadata":{"emulator":{"name":"auth"},"message":"Importing config from C:\\Users\\Eylul\\OneDrive\\Desktop\\EPFL\\IN BA6\\sdp\\dishdelish\\dishdelish-app\\emulator-export\\auth_export\\config.json"}}
+[info] i  auth: Importing accounts from C:\Users\Eylul\OneDrive\Desktop\EPFL\IN BA6\sdp\dishdelish\dishdelish-app\emulator-export\auth_export\accounts.json {"metadata":{"emulator":{"name":"auth"},"message":"Importing accounts from C:\\Users\\Eylul\\OneDrive\\Desktop\\EPFL\\IN BA6\\sdp\\dishdelish\\dishdelish-app\\emulator-export\\auth_export\\accounts.json"}}
+[debug] [2023-05-17T08:53:45.463Z] Ignoring unsupported arg: auto_download {"metadata":{"emulator":{"name":"ui"},"message":"Ignoring unsupported arg: auto_download"}}
+[debug] [2023-05-17T08:53:45.464Z] Ignoring unsupported arg: port {"metadata":{"emulator":{"name":"ui"},"message":"Ignoring unsupported arg: port"}}
+[debug] [2023-05-17T08:53:45.464Z] Starting Emulator UI with command {"binary":"node","args":["C:\\Users\\Eylul\\.cache\\firebase\\emulators\\ui-v1.11.5\\server\\server.js"],"optionalArgs":[],"joinArgs":false} {"metadata":{"emulator":{"name":"ui"},"message":"Starting Emulator UI with command {\"binary\":\"node\",\"args\":[\"C:\\\\Users\\\\Eylul\\\\.cache\\\\firebase\\\\emulators\\\\ui-v1.11.5\\\\server\\\\server.js\"],\"optionalArgs\":[],\"joinArgs\":false}"}}
+[info] i  ui: Emulator UI logging to ui-debug.log {"metadata":{"emulator":{"name":"ui"},"message":"Emulator UI logging to \u001b[1mui-debug.log\u001b[22m"}}
+[debug] [2023-05-17T08:53:46.302Z] Web / API server started at 127.0.0.1:4000
+ {"metadata":{"emulator":{"name":"ui"},"message":"Web / API server started at 127.0.0.1:4000\n"}}
+[debug] [2023-05-17T08:53:46.302Z] Web / API server started at ::1:4000
+ {"metadata":{"emulator":{"name":"ui"},"message":"Web / API server started at ::1:4000\n"}}
+[info] i  functions: Watching "C:\Users\Eylul\OneDrive\Desktop\EPFL\IN BA6\sdp\dishdelish\dishdelish-app\functions" for Cloud Functions... {"metadata":{"emulator":{"name":"functions"},"message":"Watching \"C:\\Users\\Eylul\\OneDrive\\Desktop\\EPFL\\IN BA6\\sdp\\dishdelish\\dishdelish-app\\functions\" for Cloud Functions..."}}
+[debug] [2023-05-17T08:53:46.517Z] Validating nodejs source
+[warn] !  functions: Couldn't find firebase-functions package in your source code. Have you run 'npm install'? 
+[debug] [2023-05-17T08:53:46.520Z] getFunctionsSDKVersion encountered error:Cannot find module 'firebase-functions'
+Require stack:
+- C:\Users\Eylul\.cache\firebase\tools\lib\node_modules\firebase-tools\lib\deploy\functions\runtimes\node\versioning.js
+- C:\Users\Eylul\.cache\firebase\tools\lib\node_modules\firebase-tools\lib\deploy\functions\runtimes\node\index.js
+- C:\Users\Eylul\.cache\firebase\tools\lib\node_modules\firebase-tools\lib\deploy\functions\runtimes\index.js
+- C:\Users\Eylul\.cache\firebase\tools\lib\node_modules\firebase-tools\lib\gcp\cloudfunctions.js
+- C:\Users\Eylul\.cache\firebase\tools\lib\node_modules\firebase-tools\lib\deploy\functions\backend.js
+- C:\Users\Eylul\.cache\firebase\tools\lib\node_modules\firebase-tools\lib\emulator\functionsEmulatorShared.js
+- C:\Users\Eylul\.cache\firebase\tools\lib\node_modules\firebase-tools\lib\emulator\functionsEmulator.js
+- C:\Users\Eylul\.cache\firebase\tools\lib\node_modules\firebase-tools\lib\emulator\controller.js
+- C:\Users\Eylul\.cache\firebase\tools\lib\node_modules\firebase-tools\lib\emulator\commandUtils.js
+- C:\Users\Eylul\.cache\firebase\tools\lib\node_modules\firebase-tools\lib\commands\database-get.js
+- C:\Users\Eylul\.cache\firebase\tools\lib\node_modules\firebase-tools\lib\commands\index.js
+- C:\Users\Eylul\.cache\firebase\tools\lib\node_modules\firebase-tools\lib\index.js
+- C:\Users\Eylul\.cache\firebase\tools\lib\node_modules\firebase-tools\lib\bin\firebase.js {"code":"MODULE_NOT_FOUND","requireStack":["C:\\Users\\Eylul\\.cache\\firebase\\tools\\lib\\node_modules\\firebase-tools\\lib\\deploy\\functions\\runtimes\\node\\versioning.js","C:\\Users\\Eylul\\.cache\\firebase\\tools\\lib\\node_modules\\firebase-tools\\lib\\deploy\\functions\\runtimes\\node\\index.js","C:\\Users\\Eylul\\.cache\\firebase\\tools\\lib\\node_modules\\firebase-tools\\lib\\deploy\\functions\\runtimes\\index.js","C:\\Users\\Eylul\\.cache\\firebase\\tools\\lib\\node_modules\\firebase-tools\\lib\\gcp\\cloudfunctions.js","C:\\Users\\Eylul\\.cache\\firebase\\tools\\lib\\node_modules\\firebase-tools\\lib\\deploy\\functions\\backend.js","C:\\Users\\Eylul\\.cache\\firebase\\tools\\lib\\node_modules\\firebase-tools\\lib\\emulator\\functionsEmulatorShared.js","C:\\Users\\Eylul\\.cache\\firebase\\tools\\lib\\node_modules\\firebase-tools\\lib\\emulator\\functionsEmulator.js","C:\\Users\\Eylul\\.cache\\firebase\\tools\\lib\\node_modules\\firebase-tools\\lib\\emulator\\controller.js","C:\\Users\\Eylul\\.cache\\firebase\\tools\\lib\\node_modules\\firebase-tools\\lib\\emulator\\commandUtils.js","C:\\Users\\Eylul\\.cache\\firebase\\tools\\lib\\node_modules\\firebase-tools\\lib\\commands\\database-get.js","C:\\Users\\Eylul\\.cache\\firebase\\tools\\lib\\node_modules\\firebase-tools\\lib\\commands\\index.js","C:\\Users\\Eylul\\.cache\\firebase\\tools\\lib\\node_modules\\firebase-tools\\lib\\index.js","C:\\Users\\Eylul\\.cache\\firebase\\tools\\lib\\node_modules\\firebase-tools\\lib\\bin\\firebase.js"]}
+[debug] [2023-05-17T08:53:46.521Z] checkFunctionsSDKVersion encountered error:Invalid Version:  {}
+[debug] [2023-05-17T08:53:46.522Z] > [functions] package.json contents: {
+  "name": "functions",
+  "scripts": {
+    "lint": "eslint --ext .js,.ts .",
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "serve": "npm run build && firebase emulators:start --only functions",
+    "shell": "npm run build && firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "engines": {
+    "node": "16"
+  },
+  "main": "lib/index.js",
+  "dependencies": {
+    "firebase-admin": "^11.5.0",
+    "firebase-functions": "^4.2.0"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.12.0",
+    "@typescript-eslint/parser": "^5.12.0",
+    "eslint": "^8.9.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-plugin-import": "^2.25.4",
+    "firebase-functions-test": "^3.0.0",
+    "typescript": "^4.9.0"
+  },
+  "private": true
+}
+[error] !!  functions: Failed to load function definition from source: FirebaseError: There was an error reading functions\package.json:
+
+ functions\lib\index.js does not exist, can't deploy Cloud Functions {"metadata":{"emulator":{"name":"functions"},"message":"Failed to load function definition from source: FirebaseError: There was an error reading functions\\package.json:\n\n functions\\lib\\index.js does not exist, can't deploy Cloud Functions"}}
+[debug] [2023-05-17T08:53:46.542Z] >>> [apiv2][query] PUT http://127.0.0.1:9000/.settings/rules.json ns=dish-delish-recipes-default-rtdb
+[debug] [2023-05-17T08:53:46.543Z] >>> [apiv2][body] PUT http://127.0.0.1:9000/.settings/rules.json "{\r\n  \"rules\": {\r\n    \"recipes\": {\r\n      \".indexOn\": [\"recipeName\", \"userName\", \"cookTime\", \"prepTime\", \"likes\", \"numRatings\"]\r\n    },\r\n    \"favorites\": {\r\n      \"$user_id\": {\r\n        \".indexOn\": [\".value\"],\r\n        \".write\": \"$user_id === auth.uid\"\r\n      }\r\n    },\r\n    \"help\": {\r\n      // Allow anyone to read from this node\r\n      \".read\": true,\r\n      // Index each location's geohash for faster querying\r\n      \".indexOn\": [\r\n        \"g\"\r\n      ],\r\n      // Schema validation\r\n      \"$key\": {\r\n        // Allow anyone to add or update keys in the GeoFire index, but not remove them\r\n        \".write\": \"$key === auth.id && newData.exists()\",\r\n        // Key validation\r\n        \".validate\": \"(newData.hasChildren(['g', 'l']) || data.hasChildren(['g', 'l'])) && newData.getPriority().length <= 22 && newData.getPriority().length > 0\",\r\n        // Geohash validation\r\n        \"g\": {\r\n          \".validate\": \"newData.val() == newData.parent().getPriority()\"\r\n        },\r\n        // Location coordinates validation\r\n        \"l\": {\r\n          \"0\": {\r\n            \".validate\": \"newData.isNumber() && newData.val() >= -90 && newData.val() <= 90\"\r\n          },\r\n          \"1\": {\r\n            \".validate\": \"newData.isNumber() && newData.val() >= -180 && newData.val() <= 180\"\r\n          },\r\n          \"$other\": {\r\n            \".validate\": false\r\n          }\r\n        },\r\n        \"offered\": {\r\n          \".read\": true,\r\n          \".write\": \"$key === auth.id\"\r\n        }\r\n      }\r\n    },\r\n    \".read\": true,  //Allow read and write access to anyone \r\n    \".write\": true,  //Not recommended for release production \r\n  }\r\n}"
+[debug] [2023-05-17T08:53:46.770Z] <<< [apiv2][status] PUT http://127.0.0.1:9000/.settings/rules.json 200
+[debug] [2023-05-17T08:53:46.770Z] <<< [apiv2][body] PUT http://127.0.0.1:9000/.settings/rules.json {"status":"ok"}
+[info] 
+┌─────────────────────────────────────────────────────────────┐
+│ ✔  All emulators ready! It is now safe to connect your app. │
+│ i  View Emulator UI at http://127.0.0.1:4000/               │
+└─────────────────────────────────────────────────────────────┘
+
+┌────────────────┬────────────────┬─────────────────────────────────┐
+│ Emulator       │ Host:Port      │ View in Emulator UI             │
+├────────────────┼────────────────┼─────────────────────────────────┤
+│ Authentication │ 127.0.0.1:9099 │ http://127.0.0.1:4000/auth      │
+├────────────────┼────────────────┼─────────────────────────────────┤
+│ Functions      │ 127.0.0.1:5001 │ http://127.0.0.1:4000/functions │
+├────────────────┼────────────────┼─────────────────────────────────┤
+│ Database       │ 127.0.0.1:9000 │ http://127.0.0.1:4000/database  │
+└────────────────┴────────────────┴─────────────────────────────────┘
+  Emulator Hub running at 127.0.0.1:4400
+  Other reserved ports: 4500
+
+Issues? Report them at https://github.com/firebase/firebase-tools/issues and attach the *-debug.log files.
+ 
+[debug] [2023-05-17T08:55:39.257Z] >>> [apiv2][query] POST http://127.0.0.1:5001/functions/projects/dish-delish-recipes/trigger_multicast [none]
+[debug] [2023-05-17T08:55:39.258Z] >>> [apiv2][body] POST http://127.0.0.1:5001/functions/projects/dish-delish-recipes/trigger_multicast {"eventId":"ceb83d62-aae2-4aa4-8164-b71ff02a48ab","eventType":"providers/firebase.auth/eventTypes/user.create","resource":{"name":"projects/dish-delish-recipes","service":"firebaseauth.googleapis.com"},"params":{},"timestamp":"2023-05-17T08:55:39.256Z","data":{"uid":"vPdcFQBXUzaJxZUyuIrz86IAzSVm","email":"example@email.com","emailVerified":true,"metadata":{"creationTime":"2023-05-17T08:55:39.250Z","lastSignInTime":"2023-05-17T08:55:39.250Z"},"customClaims":{},"providerData":[{"providerId":"google.com","rawId":"example@email.com","federatedId":"example@email.com","email":"example@email.com"}]}}
+[debug] [2023-05-17T08:55:39.296Z] <<< [apiv2][status] POST http://127.0.0.1:5001/functions/projects/dish-delish-recipes/trigger_multicast 200
+[debug] [2023-05-17T08:55:39.297Z] <<< [apiv2][body] POST http://127.0.0.1:5001/functions/projects/dish-delish-recipes/trigger_multicast {"status":"multicast_acknowledged"}
+[debug] [2023-05-17T08:57:14.885Z] >>> [apiv2][query] POST http://127.0.0.1:5001/functions/projects/dish-delish-recipes/trigger_multicast [none]
+[debug] [2023-05-17T08:57:14.886Z] >>> [apiv2][body] POST http://127.0.0.1:5001/functions/projects/dish-delish-recipes/trigger_multicast {"eventId":"636504d5-0914-4652-bd7a-bd9690747e28","eventType":"providers/firebase.auth/eventTypes/user.create","resource":{"name":"projects/dish-delish-recipes","service":"firebaseauth.googleapis.com"},"params":{},"timestamp":"2023-05-17T08:57:14.884Z","data":{"uid":"tKPZ0cJ4TyxJ3Xetrk5YvyXoWku3","email":"example@mail.com","emailVerified":true,"metadata":{"creationTime":"2023-05-17T08:57:14.884Z","lastSignInTime":"2023-05-17T08:57:14.884Z"},"customClaims":{},"providerData":[{"providerId":"google.com","rawId":"example@mail.com","federatedId":"example@mail.com","email":"example@mail.com"}]}}
+[debug] [2023-05-17T08:57:14.901Z] <<< [apiv2][status] POST http://127.0.0.1:5001/functions/projects/dish-delish-recipes/trigger_multicast 200
+[debug] [2023-05-17T08:57:14.901Z] <<< [apiv2][body] POST http://127.0.0.1:5001/functions/projects/dish-delish-recipes/trigger_multicast {"status":"multicast_acknowledged"}
+[debug] [2023-05-17T08:58:53.393Z] >>> [apiv2][query] POST http://127.0.0.1:5001/functions/projects/dish-delish-recipes/trigger_multicast [none]
+[debug] [2023-05-17T08:58:53.394Z] >>> [apiv2][body] POST http://127.0.0.1:5001/functions/projects/dish-delish-recipes/trigger_multicast {"eventId":"bed14c04-8eb2-4a74-8938-565bb34b0c77","eventType":"providers/firebase.auth/eventTypes/user.create","resource":{"name":"projects/dish-delish-recipes","service":"firebaseauth.googleapis.com"},"params":{},"timestamp":"2023-05-17T08:58:53.393Z","data":{"uid":"c26NXTeqJKPiGJycvTWrrj1UCV5C","email":"example@gmail.com","emailVerified":true,"metadata":{"creationTime":"2023-05-17T08:58:53.393Z","lastSignInTime":"2023-05-17T08:58:53.393Z"},"customClaims":{},"providerData":[{"providerId":"google.com","rawId":"example@gmail.com","federatedId":"example@gmail.com","email":"example@gmail.com"}]}}
+[debug] [2023-05-17T08:58:53.405Z] <<< [apiv2][status] POST http://127.0.0.1:5001/functions/projects/dish-delish-recipes/trigger_multicast 200
+[debug] [2023-05-17T08:58:53.406Z] <<< [apiv2][body] POST http://127.0.0.1:5001/functions/projects/dish-delish-recipes/trigger_multicast {"status":"multicast_acknowledged"}

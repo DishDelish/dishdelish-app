@@ -59,6 +59,7 @@ public class MainHomeActivity extends AppCompatActivity {
         filterView.setVisibility(View.GONE);
         if(savedInstanceState== null){
             setContainerContent(R.id.fragContainer,HomePageFragment.class,true);
+            //setContainerContent(R.id.fragContainer,FragmentIngredientCheckContainer.class,true);
         }
 
         drawerLayout= findViewById(R.id.drawer_layout);
