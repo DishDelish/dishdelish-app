@@ -1,5 +1,6 @@
 package com.github.siela1915.bootcamp;
 
+import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -18,6 +19,8 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 
 import org.junit.After;
@@ -39,6 +42,9 @@ public class SuggestionsTest {
 
     @Before
     public void useEmulator() {
+        FirebaseApp.clearInstancesForTest();
+        FirebaseApp.initializeApp(getApplicationContext());
+        FirebaseAuth.getInstance().useEmulator("10.0.2.2", 9099);
         firebaseInstance = FirebaseDatabase.getInstance();
         firebaseInstance.useEmulator("10.0.2.2", 9000);
     }
@@ -63,6 +69,25 @@ public class SuggestionsTest {
             }
             List<Recipe> ls = Tasks.await(SuggestionCalculator.getSuggestions(db));
             assertEquals(SIZE, ls.size());
+            assertTrue(ls.stream().allMatch(r -> r.getLikes() == 1000));
+        } catch (ExecutionException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Test
+    public void testGetSuggestionsUserLoggedIn() {
+        FirebaseAuthActivityTest.loginSync("testGetSuggestionsUserLoggedIn@example.com");
+        Database db = new Database(firebaseInstance);
+        try {
+            for (Recipe r : favourites()) {
+                db.set(r);
+            }
+            for (Recipe r : popular()) {
+                db.set(r);
+            }
+            List<Recipe> ls = Tasks.await(SuggestionCalculator.getSuggestions(db));
+            assertEquals(2*SIZE, ls.size());
             assertTrue(ls.stream().filter(r -> !r.getDietTypes().isEmpty())
                     .allMatch(r -> r.getDietTypes().contains(DietType.VEGETARIAN.ordinal())));
             assertTrue(ls.stream().filter(r -> !r.getAllergyTypes().isEmpty())
@@ -72,11 +97,6 @@ public class SuggestionsTest {
         } catch (ExecutionException | InterruptedException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    @Test
-    public void testGetSuggestionsUserLoggedIn() {
-
     }
 
     private List<Recipe> favourites() {

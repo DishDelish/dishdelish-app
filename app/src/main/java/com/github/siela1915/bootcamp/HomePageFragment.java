@@ -112,7 +112,7 @@ public class HomePageFragment extends Fragment {
                 });
         button.setOnClickListener(v -> {
             //Recipe recipe = ExampleRecipes.recipes.get((int)(Math.random()*2.999));
-            database.getByNameAsync("omelettte1")
+            database.getByNameAsync("omelette1")
                     .addOnSuccessListener(recipes -> startActivity(RecipeConverter.convertToIntent(recipes.get(0), getContext())))
                     .addOnFailureListener(e -> {
                         e.printStackTrace();
