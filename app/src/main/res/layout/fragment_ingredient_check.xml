@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/ingCheck"
+    android:orientation="vertical"
+    tools:context=".FragmentIngredientCheck">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.1"
+        android:layout_margin="10dp"
+        android:textSize="15sp"
+        android:textColor="@color/black"
+        android:text="@string/ingCheckTitle"
+        tools:ignore="VisualLintLongText" />
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.7"
+        android:id="@+id/neededIngredientsRV"
+        android:layout_margin="10dp"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.2"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_margin="10dp">
+
+        <Button
+            android:id="@+id/addToShoppingListBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="@string/addToShoppingList"
+            tools:ignore="ButtonStyle,TextContrastCheck" />
+        <Button
+            android:id="@+id/nearByBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="@string/askNearby"
+            tools:ignore="ButtonStyle,TextContrastCheck" />
+    </LinearLayout>
+
+</LinearLayout>
