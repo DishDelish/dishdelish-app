@@ -782,7 +782,7 @@ public class RecipeActivityTest {
             }
 
         });
-        
+
         onView(withId(R.id.enterComment)).perform(scrollTo()).check(matches(isDisplayed()));
         scenario.close();
 
@@ -933,6 +933,32 @@ public class RecipeActivityTest {
 
         FirebaseAuthActivityTest.logoutSync();
     }
+
+    // Cook now activity
+    /*
+    @Test
+    public void cookNowActivityStarted() {
+
+        waitForDatabaseFetchCompletion(300, TimeUnit.SECONDS);
+        Intent i = RecipeConverter.convertToIntent(omelette, ApplicationProvider.getApplicationContext());
+
+        ActivityScenario scenario = ActivityScenario.launch(i);
+
+        //Intents.release();
+        Intents.init();
+        Intent intent = new Intent();
+        Instrumentation.ActivityResult intentResult = new Instrumentation.ActivityResult(Activity.RESULT_OK,intent);
+        intending(anyIntent()).respondWith(intentResult);
+
+        onView(withId(R.id.cookNowButton))
+                .perform(scrollTo(), click());
+
+        intended(allOf(hasComponent(CookNowActivity.class.getName())));
+
+        Intents.release();
+        scenario.close();
+
+    } */
 
 
 

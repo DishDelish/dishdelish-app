@@ -74,6 +74,14 @@ public class RecipeActivity extends AppCompatActivity implements CompoundButton.
             }
         });
 
+        Button cookNow = findViewById(R.id.cookNowButton);
+        cookNow.setOnClickListener(v -> {
+            // Intent cookNowIntent = new Intent(v.getContext(), CookNowActivity.class);
+            // cookNowIntent.putExtra("Recipe", recipe);
+
+            // v.getContext().startActivity(cookNowIntent);
+        });
+
 
         setNutritionalValueOnClickListener();
     }

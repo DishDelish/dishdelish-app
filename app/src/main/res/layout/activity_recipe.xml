@@ -497,8 +497,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="45dp"
             android:text="Rate  Now !"
-            app:layout_constraintEnd_toEndOf="@+id/recipePicture"
-            app:layout_constraintHorizontal_bias="0.492"
             app:layout_constraintStart_toStartOf="@+id/recipePicture"
             app:layout_constraintTop_toBottomOf="@+id/stepsText" />
 
@@ -592,6 +590,16 @@
             app:layout_constraintBottom_toBottomOf="@+id/minusButton"
             app:layout_constraintStart_toEndOf="@+id/servings"
             app:layout_constraintTop_toTopOf="@+id/minusButton" />
+
+        <Button
+            android:id="@+id/cookNowButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="45dp"
+            android:text="Cook Now !"
+            app:layout_constraintEnd_toEndOf="@+id/stepsText"
+            app:layout_constraintStart_toEndOf="@+id/rateButton"
+            app:layout_constraintTop_toBottomOf="@+id/stepsText" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
