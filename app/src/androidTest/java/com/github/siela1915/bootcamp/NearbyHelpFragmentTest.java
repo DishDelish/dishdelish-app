@@ -18,6 +18,7 @@ import static org.junit.Assert.assertNotNull;
 
 import android.Manifest;
 import android.content.Context;
+import android.location.Location;
 import android.os.Bundle;
 
 import androidx.fragment.app.testing.FragmentScenario;
@@ -48,7 +49,6 @@ public class NearbyHelpFragmentTest {
     FragmentScenario<NearbyHelpFragment> scenario;
 
     private LocationDatabase locDb;
-    private FusedLocationProviderClient fusedLocationClient;
 
     @Rule
     public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(
@@ -65,8 +65,6 @@ public class NearbyHelpFragmentTest {
         if (locDb == null) {
             locDb = new LocationDatabase();
         }
-
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient((Context) getApplicationContext());
 
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             FirebaseAuthActivityTest.logoutSync();
@@ -308,7 +306,10 @@ public class NearbyHelpFragmentTest {
 
     public void fillOffersInDatabase() {
         try {
-            Tasks.await(locDb.updateLocation(Tasks.await(fusedLocationClient.getLastLocation())));
+            Location loc = new Location("LocationDatabase");
+            loc.setLatitude(37.4226711);
+            loc.setLongitude(-122.0849872);
+            Tasks.await(locDb.updateLocation(loc));
             Tasks.await(locDb.updateOffered(Arrays.asList(
                     new Ingredient("testIngredient", new Unit(2, "g")),
                     new Ingredient("testIngredient", new Unit(100, "g")),
