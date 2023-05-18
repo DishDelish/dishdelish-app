@@ -17,7 +17,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidx.test.runner.lifecycle.Stage.RESUMED;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.endsWithIgnoringCase;
 import static org.hamcrest.Matchers.is;
 
 import android.Manifest;
