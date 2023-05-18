@@ -5,7 +5,10 @@ import static androidx.appcompat.content.res.AppCompatResources.getDrawable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.view.View;
+import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -22,6 +25,10 @@ import com.google.firebase.database.FirebaseDatabase;
 public class CommentViewHolder extends RecyclerView.ViewHolder implements CompoundButton.OnCheckedChangeListener {
     TextView comment;
     TextView likes;
+    TextView userName;
+    ImageView photo;
+
+    RecyclerView replies;
 
     Recipe recipe;
 
@@ -30,18 +37,60 @@ public class CommentViewHolder extends RecyclerView.ViewHolder implements Compou
     private final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
 
     private final Database database = new Database(firebaseDatabase);
+    private final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+
 
     public CommentViewHolder(@NonNull View itemView, Recipe recipe, CommentAdapter adapter) {
         super(itemView);
         comment = itemView.findViewById(R.id.commentText);
         likes = itemView.findViewById(R.id.likeCount);
+        userName = itemView.findViewById(R.id.userName);
+        photo = itemView.findViewById(R.id.profilePhoto);
         this.recipe = recipe;
         this.adapter = adapter;
+
+        replies = itemView.findViewById(R.id.repliesRecyclerView);
 
         ToggleButton thumb = itemView.findViewById(R.id.thumbButton);
         thumb.setTag("unliked");
         thumb.setOnCheckedChangeListener(this);
 
+        Button replyButton = itemView.findViewById(R.id.replyButton);
+        Button sendReply = itemView.findViewById(R.id.sendReplyButton);
+        EditText enterReply = itemView.findViewById(R.id.enterReply);
+
+        replyButton.setOnClickListener(v -> {
+            if (enterReply.getVisibility() == View.VISIBLE) {
+                enterReply.setVisibility(View.GONE);
+                sendReply.setVisibility(View.GONE);
+            } else {
+                enterReply.setVisibility(View.VISIBLE);
+                sendReply.setVisibility(View.VISIBLE);
+            }
+        });
+
+        sendReply.setOnClickListener(view -> {
+            String input = enterReply.getText().toString();
+            if (!input.isEmpty()) {
+                enterReply.setText("");
+                // authentication check
+                if (firebaseAuth.getCurrentUser() == null) {
+                    Toast.makeText(view.getContext(), "Sign in to reply", Toast.LENGTH_SHORT).show();
+                } else {
+                    int position = getAdapterPosition();
+                    Comment currentComment = adapter.getData().get(position);
+
+                    currentComment.addReply(input, firebaseAuth.getCurrentUser().getUid());
+                    database.updateAsync(recipe).addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            adapter.notifyItemChanged(position);
+                        } else {
+                            Toast.makeText(view.getContext(), "Error adding new reply", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+                }
+            });
     }
 
     /**
@@ -51,7 +100,6 @@ public class CommentViewHolder extends RecyclerView.ViewHolder implements Compou
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         int position = getAdapterPosition();
-        if (position != RecyclerView.NO_POSITION) {
             Comment currentComment = adapter.getData().get(position);
             if (isChecked) {
                 if(FirebaseAuth.getInstance().getCurrentUser()==null){
@@ -101,6 +149,6 @@ public class CommentViewHolder extends RecyclerView.ViewHolder implements Compou
                             buttonView.setOnCheckedChangeListener(this);
                         });
             }
-        }
+
     }
 }

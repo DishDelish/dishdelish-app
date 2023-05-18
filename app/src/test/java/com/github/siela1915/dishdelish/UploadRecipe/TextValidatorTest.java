@@ -1,7 +1,10 @@
-package com.github.siela1915.bootcamp.UploadRecipe;
+package com.github.siela1915.dishdelish.UploadRecipe;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+
+import com.github.siela1915.bootcamp.UploadRecipe.TextValidator;
+
 import org.junit.Test;
 
 public class TextValidatorTest {

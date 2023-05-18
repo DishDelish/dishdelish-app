@@ -13,16 +13,14 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class LocationDatabase {
     private final String HELP = "help";
@@ -53,7 +51,7 @@ public class LocationDatabase {
         return tcs.getTask();
     }
 
-    public Task<Void> updateOffered(Ingredient ing) {
+    public Task<Void> updateOffered(List<Ingredient> ing) {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user == null) {
             return Tasks.forException(new UserNotAuthenticatedException("User needs to be authenticated to store location"));
@@ -62,9 +60,16 @@ public class LocationDatabase {
         return db.child(user.getUid() + "/offered").setValue(ing, "ff");
     }
 
-    public Task<Ingredient> getOffered(String userId) {
+    public Task<List<Ingredient>> getOffered(String userId) {
         return db.child(userId + "/offered").get()
-                .continueWith(dataTask -> dataTask.getResult().getValue(Ingredient.class));
+                .continueWith(dataTask -> {
+                    List<Ingredient> list = new ArrayList<>();
+                    for (DataSnapshot ds : dataTask.getResult().getChildren()) {
+                        list.add(ds.getValue(Ingredient.class));
+                    }
+
+                    return list;
+                });
     }
 
     public Task<List<Pair<String, Location>>> getNearby(Location location) {

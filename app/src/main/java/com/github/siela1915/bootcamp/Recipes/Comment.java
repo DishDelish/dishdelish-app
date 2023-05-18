@@ -5,7 +5,7 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Comment implements Parcelable {
@@ -14,13 +14,20 @@ public class Comment implements Parcelable {
 
     private String userId = "";
 
-    private LinkedList<Comment> replies;
+    private List<Comment> replies;
+
+    public Comment(String content, String userId) {
+        this.likes = 0;
+        this.content = content;
+        this.replies = new ArrayList<>();
+        this.userId = userId;
+    }
 
     /**
      * Creates a new Comment. Replies are implemented as a doubly linked list as a notion of
      * temporal order of the replies is required. Replies must therefore be kept ordered.
      */
-    public Comment(int likes, String content, LinkedList<Comment> replies) {
+    public Comment(int likes, String content, List<Comment> replies) {
         this.likes = likes;
         this.content = content;
         this.replies = replies;
@@ -29,19 +36,19 @@ public class Comment implements Parcelable {
     public Comment(int likes, String content) {
         this.likes = likes;
         this.content = content;
-        this.replies = new LinkedList<>();
+        this.replies = new ArrayList<>();
     }
 
     public Comment(String content) {
         this.likes = 0;
         this.content = content;
-        this.replies = new LinkedList<>();
+        this.replies = new ArrayList<>();
     }
 
     public Comment() {
         this.likes = 0;
         this.content = "";
-        this.replies = new LinkedList<>();
+        this.replies = new ArrayList<>();
     }
 
 
@@ -65,9 +72,13 @@ public class Comment implements Parcelable {
         return replies;
     }
 
-    public void setReplies(LinkedList<Comment> replies) {
+    public void setReplies(List<Comment> replies) {
         this.replies = replies;
     }
+
+    public String getUserId(){ return userId; }
+
+    public void setUserId(String userId){ this.userId = userId; }
 
     public void increaseLikes() {
         ++likes;
@@ -86,6 +97,8 @@ public class Comment implements Parcelable {
     public void addReply(String reply) {
         replies.add(new Comment(reply));
     }
+
+    public void addReply(String reply, String userId){ replies.add(new Comment(reply, userId));}
 
     public void removeReply(Comment comment) {
         replies.remove(comment);
@@ -120,6 +133,9 @@ public class Comment implements Parcelable {
     protected Comment(Parcel in) {
         likes = in.readInt();
         content = in.readString();
+        replies = new ArrayList<>();
+        in.readList(replies, Comment.class.getClassLoader());
+        userId = in.readString();
     }
 
     public static final Parcelable.Creator<Comment> CREATOR = new Parcelable.Creator<Comment>() {
@@ -143,6 +159,8 @@ public class Comment implements Parcelable {
     public void writeToParcel(@NonNull Parcel dest, int flags) {
         dest.writeInt(likes);
         dest.writeString(content);
+        dest.writeList(replies);
+        dest.writeString(userId);
     }
 
 }

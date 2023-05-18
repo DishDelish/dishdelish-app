@@ -11,14 +11,14 @@
         android:id="@+id/offerHelpGroup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:constraint_referenced_ids="submitOfferHelpButton,offeredIngredient"
-        tools:visibility="gone" />
+        app:constraint_referenced_ids="submitOfferHelpButton,offerAddIngredient,offerIngredientScroll" />
 
     <androidx.constraintlayout.widget.Group
         android:id="@+id/askHelpGroup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:constraint_referenced_ids="askedIngredient,submitAskHelpButton" />
+        app:constraint_referenced_ids="submitAskHelpButton,askIngredientLayout"
+        tools:visibility="gone" />
 
     <androidx.constraintlayout.widget.Group
         android:id="@+id/replyHelpGroup"
@@ -48,6 +48,18 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
+    <LinearLayout
+        android:id="@+id/askIngredientLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/verticalCenterGuideline"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <Button
         android:id="@+id/offerHelpButton"
         android:layout_width="wrap_content"
@@ -56,7 +68,40 @@
         android:text="Offer help"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/verticalCenterGuideline" />
+        app:layout_constraintTop_toTopOf="@+id/verticalCenterGuideline"
+        tools:visibility="gone" />
+
+    <Button
+        android:id="@+id/offerAddIngredient"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="16dp"
+        android:text="Add ingredient"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ScrollView
+        android:id="@+id/offerIngredientScroll"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/submitOfferHelpButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:id="@+id/offerIngredientLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="8dp"
+            android:clipToPadding="false" />
+    </ScrollView>
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/verticalCenterGuideline"
@@ -64,19 +109,6 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.500684" />
-
-    <EditText
-        android:id="@+id/askedIngredient"
-        android:layout_width="0dp"
-        android:layout_height="53dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="8dp"
-        android:hint="Ingredient you're looking for"
-        android:inputType="text"
-        app:layout_constraintBottom_toTopOf="@+id/verticalCenterGuideline"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/submitAskHelpButton"
@@ -86,30 +118,18 @@
         android:text="Send out request"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/verticalCenterGuideline" />
+        app:layout_constraintTop_toBottomOf="@+id/verticalCenterGuideline"
+        tools:visibility="gone" />
 
     <Button
         android:id="@+id/submitOfferHelpButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="Offer ingredient"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/verticalCenterGuideline" />
-
-    <EditText
-        android:id="@+id/offeredIngredient"
-        android:layout_width="0dp"
-        android:layout_height="53dp"
-        android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="8dp"
-        android:hint="Ingredient you're offering"
-        android:inputType="text"
-        app:layout_constraintBottom_toTopOf="@+id/verticalCenterGuideline"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:layout_marginBottom="16dp"
+        android:text="Update offered"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <Button
         android:id="@+id/sendReplyHelpButton"
@@ -119,7 +139,8 @@
         android:text="Reply"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/verticalCenterGuideline" />
+        app:layout_constraintTop_toBottomOf="@+id/verticalCenterGuideline"
+        tools:visibility="gone" />
 
     <EditText
         android:id="@+id/replyInputHelp"
