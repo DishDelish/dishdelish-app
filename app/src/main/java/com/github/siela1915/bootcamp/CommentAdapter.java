@@ -52,7 +52,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentViewHolder> {
 
 
         holder.replies.setLayoutManager(new LinearLayoutManager(context));
-        ReplyAdapter replyAdapter = new ReplyAdapter(context.getApplicationContext(), comments.get(position).getReplies(), comments.get(position));
+        ReplyAdapter replyAdapter = new ReplyAdapter(context.getApplicationContext(),  comments.get(position).getReplies(), comments.get(position), recipe);
         holder.replies.setAdapter(replyAdapter);
 
     }
