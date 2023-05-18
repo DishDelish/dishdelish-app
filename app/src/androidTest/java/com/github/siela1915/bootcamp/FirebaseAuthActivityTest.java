@@ -4,10 +4,12 @@ import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.intent.Intents.intending;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
 import android.app.Activity;
+import android.app.Instrumentation;
 import android.content.Intent;
 
 import androidx.test.core.app.ActivityScenario;
@@ -164,13 +166,16 @@ public class FirebaseAuthActivityTest {
     @Test
     public void testPromptLoginDoNow() {
         Intents.init();
+
         try (ActivityScenario<Activity> activityScenario = ActivityScenario.launch(new Intent(ApplicationProvider.getApplicationContext(), MainActivity.class))) {
             activityScenario.onActivity(activity -> FirebaseAuthActivity.promptLogin(ApplicationProvider.getApplicationContext(), activity, new Intent(ApplicationProvider.getApplicationContext(), GreetingActivity.class)));
 
+            Intent intent = new Intent();
+            Instrumentation.ActivityResult intentResult = new Instrumentation.ActivityResult(Activity.RESULT_OK,intent);
+            intending(IntentMatchers.hasComponent(FirebaseAuthActivity.class.getName())).respondWith(intentResult);
+
             ViewInteraction loginButton = onView(ViewMatchers.withId(R.id.loginPromptLoginButton));
             loginButton.check(matches(ViewMatchers.isDisplayed()));
-
-            loginSync("test@example.com");
 
             loginButton.perform(ViewActions.click());
 
@@ -178,7 +183,6 @@ public class FirebaseAuthActivityTest {
             Intents.intended(IntentMatchers.hasComponent(FirebaseAuthActivity.class.getName()));
         }
         Intents.release();
-        logoutSync();
     }
 
     @Test

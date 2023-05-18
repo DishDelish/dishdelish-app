@@ -18,6 +18,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseException;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -45,7 +46,14 @@ public class DatabaseTest {
     @After
     public void clearDatabase() {
         if (firebaseInstance != null) {
-            firebaseInstance.getReference().setValue(null);
+            try {
+                for (DataSnapshot recipe : Tasks.await(firebaseInstance.getReference("recipes").orderByChild("recipeName")
+                        .startAt("testRecipe").endAt("testRecipeNew").get()).getChildren()) {
+                    Tasks.await(recipe.getRef().removeValue());
+                }
+            } catch (ExecutionException | InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -285,18 +293,14 @@ public class DatabaseTest {
     @Test
     public void getByUpperLimitReturnsNoValuesAboveLimit() {
         Database db = new Database(firebaseInstance);
-        List<Recipe> recipes = createRecipesDifferentIntegers();
         try {
-            for (Recipe r : recipes) {
-                db.set(r);
-            }
-            List<Recipe> cook = db.getByUpperLimitOnCookTime(25);
-            List<Recipe> prep = db.getByUpperLimitOnPrepTime(45);
-            assertEquals(cook.size(), 4);
-            assertEquals(prep.size(), 7);
+            List<Recipe> cook = db.getByUpperLimitOnCookTime(20);
+            List<Recipe> prep = db.getByUpperLimitOnPrepTime(20);
+            assertEquals(8, cook.size());
+            assertEquals(10, prep.size());
             boolean check1 = true;
             for (Recipe r : cook) {
-                if (r.getCookTime() > 25) {
+                if (r.getCookTime() > 20) {
                     check1 = false;
                     break;
                 }
@@ -304,7 +308,7 @@ public class DatabaseTest {
             assertTrue(check1);
             boolean check2 = true;
             for (Recipe r : prep) {
-                if (r.getPrepTime() > 45) {
+                if (r.getPrepTime() > 20) {
                     check2 = false;
                     break;
                 }
@@ -318,18 +322,14 @@ public class DatabaseTest {
     @Test
     public void getByUpperLimitAsyncReturnsNoValuesAboveLimit() {
         Database db = new Database(firebaseInstance);
-        List<Recipe> recipes = createRecipesDifferentIntegers();
         try {
-            for (Recipe r : recipes) {
-                db.set(r);
-            }
-            List<Recipe> cook = Tasks.await(db.getByUpperLimitOnCookTimeAsync(25));
-            List<Recipe> prep = Tasks.await(db.getByUpperLimitOnPrepTimeAsync(45));
-            assertEquals(cook.size(), 4);
-            assertEquals(prep.size(), 7);
+            List<Recipe> cook = Tasks.await(db.getByUpperLimitOnCookTimeAsync(20));
+            List<Recipe> prep = Tasks.await(db.getByUpperLimitOnPrepTimeAsync(20));
+            assertEquals(8, cook.size());
+            assertEquals(10, prep.size());
             boolean check1 = true;
             for (Recipe r : cook) {
-                if (r.getCookTime() > 25) {
+                if (r.getCookTime() > 20) {
                     check1 = false;
                     break;
                 }
@@ -337,7 +337,7 @@ public class DatabaseTest {
             assertTrue(check1);
             boolean check2 = true;
             for (Recipe r : prep) {
-                if (r.getPrepTime() > 45) {
+                if (r.getPrepTime() > 20) {
                     check2 = false;
                     break;
                 }
@@ -351,18 +351,14 @@ public class DatabaseTest {
     @Test
     public void getByLowerLimitReturnsNoValuesUnderLimit() {
         Database db = new Database(firebaseInstance);
-        List<Recipe> recipes = createRecipesDifferentIntegers();
         try {
-            for (Recipe r : recipes) {
-                db.set(r);
-            }
-            List<Recipe> cook = db.getByLowerLimitOnCookTime(25);
-            List<Recipe> prep = db.getByLowerLimitOnPrepTime(45);
-            assertEquals(cook.size(), 4);
-            assertEquals(prep.size(), 2);
+            List<Recipe> cook = db.getByLowerLimitOnCookTime(20);
+            List<Recipe> prep = db.getByLowerLimitOnPrepTime(20);
+            assertEquals(8, cook.size());
+            assertEquals(8, prep.size());
             boolean check1 = true;
             for (Recipe r : cook) {
-                if (r.getCookTime() < 25) {
+                if (r.getCookTime() < 20) {
                     check1 = false;
                     break;
                 }
@@ -370,7 +366,7 @@ public class DatabaseTest {
             assertTrue(check1);
             boolean check2 = true;
             for (Recipe r : prep) {
-                if (r.getPrepTime() < 45) {
+                if (r.getPrepTime() < 20) {
                     check2 = false;
                     break;
                 }
@@ -384,18 +380,14 @@ public class DatabaseTest {
     @Test
     public void getByLowerLimitAsyncReturnsNoValuesUnderLimit() {
         Database db = new Database(firebaseInstance);
-        List<Recipe> recipes = createRecipesDifferentIntegers();
         try {
-            for (Recipe r : recipes) {
-                db.set(r);
-            }
-            List<Recipe> cook = Tasks.await(db.getByLowerLimitOnCookTimeAsync(25));
-            List<Recipe> prep = Tasks.await(db.getByLowerLimitOnPrepTimeAsync(45));
-            assertEquals(cook.size(), 4);
-            assertEquals(prep.size(), 2);
+            List<Recipe> cook = Tasks.await(db.getByLowerLimitOnCookTimeAsync(20));
+            List<Recipe> prep = Tasks.await(db.getByLowerLimitOnPrepTimeAsync(20));
+            assertEquals(8, cook.size());
+            assertEquals(8, prep.size());
             boolean check1 = true;
             for (Recipe r : cook) {
-                if (r.getCookTime() < 25) {
+                if (r.getCookTime() < 20) {
                     check1 = false;
                     break;
                 }
@@ -403,7 +395,7 @@ public class DatabaseTest {
             assertTrue(check1);
             boolean check2 = true;
             for (Recipe r : prep) {
-                if (r.getPrepTime() < 45) {
+                if (r.getPrepTime() < 20) {
                     check2 = false;
                     break;
                 }
@@ -538,13 +530,9 @@ public class DatabaseTest {
     @Test
     public void getNRandomArgumentCanOverflow() {
         Database db = new Database(firebaseInstance);
-        List<Recipe> recipes = createRecipesDifferentIntegers();
         try {
-            for (Recipe r : recipes) {
-                db.set(r);
-            }
-            List<Recipe> ls = db.getNRandom(12);
-            assertEquals(8, ls.size());
+            List<Recipe> ls = db.getNRandom(20);
+            assertEquals(12, ls.size());
         } catch (ExecutionException | InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -556,10 +544,10 @@ public class DatabaseTest {
         Recipe recipe = createRecipeEggs();
         try {
             db.set(recipe);
-            recipe.setRecipeName("newName");
+            recipe.setRecipeName("testRecipeNew");
             db.update(recipe);
             Recipe r = db.get(recipe.getUniqueKey());
-            assertEquals("newName", r.getRecipeName());
+            assertEquals("testRecipeNew", r.getRecipeName());
         } catch (ExecutionException | InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -603,6 +591,7 @@ public class DatabaseTest {
             r.setPrepTime(i);
             r.setNumRatings(i);
             r.setLikes(i);
+            r.setRecipeName("testRecipe");
             recipes.add(r);
         }
         return recipes;
