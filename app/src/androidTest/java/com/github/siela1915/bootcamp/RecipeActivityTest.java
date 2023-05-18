@@ -659,7 +659,7 @@ public class RecipeActivityTest {
         onView(allOf(withId(R.id.sendReplyButton), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
                 .perform(scrollTo(), click());
 
-        Thread.sleep(5000);
+        Thread.sleep(3000);
 
         onView(withId(R.id.enterComment)).perform(scrollTo()).check(matches(isDisplayed()));
 
@@ -723,7 +723,7 @@ public class RecipeActivityTest {
         onView(withId(R.id.sendCommentButton))
                 .perform(scrollTo(), click());
 
-        Thread.sleep(10000);
+        Thread.sleep(3000);
 
         onView(withId(R.id.enterComment)).check(matches(isDisplayed()));
 
@@ -753,7 +753,7 @@ public class RecipeActivityTest {
             ToggleButton thumb = viewHolder.itemView.findViewById(R.id.thumbButton);
             thumb.performClick();
             try {
-                Thread.sleep(5000);
+                Thread.sleep(3000);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
@@ -782,7 +782,7 @@ public class RecipeActivityTest {
             heart.performClick();
 
             try {
-                Thread.sleep(5000); // Delay the check for 5000 milliseconds
+                Thread.sleep(3000); // Delay the check for 5000 milliseconds
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
@@ -796,7 +796,7 @@ public class RecipeActivityTest {
             ToggleButton heart = activity.findViewById(R.id.favoriteButton);
             heart.performClick();
             try {
-                Thread.sleep(5000); // Delay the check for 5000 milliseconds
+                Thread.sleep(3000); // Delay the check for 5000 milliseconds
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
@@ -842,7 +842,7 @@ public class RecipeActivityTest {
         onView(allOf(withId(R.id.sendReplyButton), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
                 .perform(scrollTo(), click());
 
-        Thread.sleep(5000);
+        Thread.sleep(3000);
 
         onView(withId(R.id.enterComment)).perform(scrollTo()).check(matches(isDisplayed()));
 
