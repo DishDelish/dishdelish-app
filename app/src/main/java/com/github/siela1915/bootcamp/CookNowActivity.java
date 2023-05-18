@@ -1,5 +1,6 @@
 package com.github.siela1915.bootcamp;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
@@ -8,9 +9,13 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.os.Bundle;
+import android.widget.Toolbar;
 
 import com.github.siela1915.bootcamp.Recipes.ExampleRecipes;
+import com.github.siela1915.bootcamp.Recipes.Ingredient;
 import com.github.siela1915.bootcamp.Recipes.Recipe;
+
+import java.util.ArrayList;
 
 public class CookNowActivity extends AppCompatActivity {
 
@@ -34,9 +39,16 @@ public class CookNowActivity extends AppCompatActivity {
     private FragmentStateAdapter pagerAdapterStep;
     private FragmentStateAdapter pagerAdapterTimer;
 
+    //override the back button to go back to the previous activity
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return true;
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
 
         //TODO temp testing
         recipe = getIntent().getParcelableExtra("recipe");
@@ -99,8 +111,9 @@ public class CookNowActivity extends AppCompatActivity {
         @Override
         public Fragment createFragment(int position) {
             if(position == 0){
-                //TODO placeholder
-                return CookNowStepFragment.newInstance(position, recipe.steps.get(0));
+                //Arrays.asList doesn't return an actual array list, have to add this so its parcelable
+                ArrayList<Ingredient> list = new ArrayList<>(recipe.getIngredientList());
+                return FragmentIngredientCheck.newInstance(list);
             }
             return CookNowStepFragment.newInstance(position-1, recipe.steps.get(position-1));
         }
@@ -124,7 +137,7 @@ public class CookNowActivity extends AppCompatActivity {
 
         @Override
         public int getItemCount() {
-            return recipe.steps.size();
+            return recipe.steps.size()+1;
         }
     }
 
