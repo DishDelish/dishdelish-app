@@ -344,6 +344,7 @@ public class UploadingRecipeFragment extends Fragment {
         recipe.setAllergyTypes(getTypes(allergyTypeGroup, allergyTypeValues));
         recipe.setDietTypes(getTypes(dietTypeGroup, dietTypeValues));
         recipe.setSteps(recipeStepAndIngredientManager.getSteps());
+        recipe.setUserId(userId);
 
         return recipe;
     }
