@@ -24,10 +24,12 @@ import android.widget.Toast;
 import com.github.siela1915.bootcamp.Recipes.ExampleRecipes;
 import com.github.siela1915.bootcamp.Recipes.Ingredient;
 import com.github.siela1915.bootcamp.Recipes.Recipe;
+import com.github.siela1915.bootcamp.Recipes.Unit;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -107,8 +109,10 @@ public class FragmentIngredientCheck extends Fragment {
                     .commit();
         });
         nearbyBtn.setOnClickListener(v->{
-            NearbyHelpFragment fragment= new NearbyHelpFragment();
-            getActivity().getSupportFragmentManager().beginTransaction()
+            NearbyHelpFragment fragment= NearbyHelpFragment.newInstance(
+                    adapter.getSelectedItems().stream().map(name ->
+                            new Ingredient(name, new Unit())).collect(Collectors.toList()));
+            getParentFragmentManager().beginTransaction()
                     .replace(R.id.ingredientContainer,fragment)
                     .addToBackStack(null)
                     .commit();

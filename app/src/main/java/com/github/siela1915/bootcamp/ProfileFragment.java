@@ -38,16 +38,6 @@ import java.util.concurrent.CompletableFuture;
  * create an instance of this fragment.
  */
 public class ProfileFragment extends Fragment {
-    // Declare the launcher at the top of your Activity/Fragment:
-    private final ActivityResultLauncher<String> requestPermissionLauncher =
-            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
-                if (isGranted) {
-                    // FCM SDK (and your app) can post notifications.
-                } else {
-                    // TODO: Inform user that that your app will not show notifications.
-                }
-            });
-    
     public ProfileFragment() {
         // Required empty public constructor
     }
