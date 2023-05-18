@@ -133,7 +133,7 @@
             android:layout_height="41dp"
             android:layout_marginTop="50dp"
             app:layout_constraintStart_toStartOf="@+id/recipePicture"
-            app:layout_constraintTop_toBottomOf="@+id/infoBoxes"
+            app:layout_constraintTop_toBottomOf="@+id/cookNowButton"
             app:srcCompat="@drawable/ingredients_image" />
 
         <TextView
@@ -147,7 +147,7 @@
             android:textColor="#171616"
             android:textSize="22sp"
             app:layout_constraintStart_toEndOf="@+id/ingredientsIcon"
-            app:layout_constraintTop_toBottomOf="@+id/infoBoxes" />
+            app:layout_constraintTop_toBottomOf="@+id/cookNowButton" />
 
         <ImageView
             android:id="@+id/servingsIcon"
@@ -497,8 +497,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="45dp"
             android:text="Rate  Now !"
-            app:layout_constraintEnd_toEndOf="@+id/recipePicture"
-            app:layout_constraintHorizontal_bias="0.492"
+            app:layout_constraintEnd_toStartOf="@+id/cookNowButton"
             app:layout_constraintStart_toStartOf="@+id/recipePicture"
             app:layout_constraintTop_toBottomOf="@+id/stepsText" />
 
@@ -592,6 +591,16 @@
             app:layout_constraintBottom_toBottomOf="@+id/minusButton"
             app:layout_constraintStart_toEndOf="@+id/servings"
             app:layout_constraintTop_toTopOf="@+id/minusButton" />
+
+        <Button
+            android:id="@+id/cookNowButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="45dp"
+            android:text="Cook Now !"
+            app:layout_constraintEnd_toEndOf="@+id/infoBoxes"
+            app:layout_constraintStart_toStartOf="@+id/infoBoxes"
+            app:layout_constraintTop_toBottomOf="@+id/infoBoxes" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
