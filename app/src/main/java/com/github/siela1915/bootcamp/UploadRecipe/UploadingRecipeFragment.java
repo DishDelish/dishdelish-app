@@ -58,12 +58,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class UploadingRecipeFragment extends Fragment {
     private final String storagePath = "gs://dish-delish-recipes.appspot.com";
-    private final String[] timeUnits = new String[]{"mins", "hours", "days"};
     private static final int CHOOSE_IMAGE_FROM_GALLERY_REQUEST = 111;
     private static final int TAKE_PHOTO_REQUEST = 222;
     private View view;
@@ -126,7 +126,7 @@ public class UploadingRecipeFragment extends Fragment {
         AutoCompleteTextView cookTimeUnitAutoComplete = (AutoCompleteTextView) view.findViewById(R.id.cookTimeUnitAutoComplete);
 
         // set up dropdown content for the unit of prepTime and cookTime
-        ArrayAdapter<String> recipeTimeAdapter = new ArrayAdapter<>(getActivity(), R.layout.dropdown_item, timeUnits);
+        ArrayAdapter<String> recipeTimeAdapter = new ArrayAdapter<>(getActivity(), R.layout.dropdown_item, TimeUnit.getAll());
         prepTimeUnitAutoComplete.setAdapter(recipeTimeAdapter);
         prepTimeUnitAutoComplete.setText(recipeTimeAdapter.getItem(0), false); // select default time unit
         cookTimeUnitAutoComplete.setAdapter(recipeTimeAdapter);
@@ -224,11 +224,11 @@ public class UploadingRecipeFragment extends Fragment {
         recipeStepAndIngredientManager.addIngredientValidators(ingredientsAmount, ingredientsUnit, ingredientsName);
         recipeStepAndIngredientManager.addStepValidators(stepContent);
 
-        addCuisineType.setOnClickListener(v -> addTypeListener(view, R.id.cuisineTypesAutoComplete, R.id.cuisineTypeGroup));
+        addCuisineType.setOnClickListener(v -> addTypeListener(view, R.id.cuisineTypesAutoComplete, R.id.cuisineTypeGroup, cuisineTypeValues));
 
-        addAllergyType.setOnClickListener(v -> addTypeListener(view, R.id.allergyTypesAutoComplete, R.id.allergyTypeGroup));
+        addAllergyType.setOnClickListener(v -> addTypeListener(view, R.id.allergyTypesAutoComplete, R.id.allergyTypeGroup, allergyTypeValues));
 
-        addDietType.setOnClickListener(v -> addTypeListener(view, R.id.dietTypesAutoComplete, R.id.dietTypeGroup));
+        addDietType.setOnClickListener(v -> addTypeListener(view, R.id.dietTypesAutoComplete, R.id.dietTypeGroup, dietTypeValues));
     }
 
     private void setValidator(TextView textView, String emptyErrorMessage, String invalidErrorMessage) {
@@ -243,13 +243,16 @@ public class UploadingRecipeFragment extends Fragment {
     }
 
 
-    private void addTypeListener(View view, int autoCompleteTextViewId, int linearLayoutId) {
+    private <T extends Enum<T>> void addTypeListener(View view, int autoCompleteTextViewId, int linearLayoutId, T[] enumValues) {
         AutoCompleteTextView autoCompleteTextView = view.findViewById(autoCompleteTextViewId);
         String text = autoCompleteTextView.getText().toString();
         autoCompleteTextView.getText().clear();
-        if (TextValidator.isTextValid(text)) {
+        // only provided types can be added
+        if (TextValidator.isTextValid(text) && Stream.of(enumValues).map(Enum::name).collect(Collectors.toList()).contains(text.toUpperCase())) {
             LinearLayout linearLayout = view.findViewById(linearLayoutId);
             addType(linearLayout, text);
+        } else {
+            Toast.makeText(getActivity(), R.string.invalid_type_popup_message, Toast.LENGTH_LONG).show();
         }
     }
 
@@ -297,7 +300,7 @@ public class UploadingRecipeFragment extends Fragment {
 
     private void uploadRecipeToDatabase(Uri downloadUri, OnSuccessListener<String> onSuccessListener, OnFailureListener onFailureListener) {
         // set image uri to its location in database
-        recipe.setImage(downloadUri.toString());
+        if (downloadUri != null) recipe.setImage(downloadUri.toString());
         database.setAsync(recipe)
                 .addOnSuccessListener(onSuccessListener)
                 .addOnFailureListener(onFailureListener);
