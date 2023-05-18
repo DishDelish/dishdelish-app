@@ -48,7 +48,6 @@ public class ReplyAdapter extends RecyclerView.Adapter<ReplyViewHolder> {
         holder.reply.setText(replies.get(position).getContent());
         holder.likes.setText(Integer.toString(replies.get(position).getLikes()));
         userDb.getUser(replies.get(position).getUserId()).addOnSuccessListener(user -> {
-            String name = user.getDisplayName();
             holder.userName.setText(user.getDisplayName());
             new DownloadImageTask(holder.photo).execute(user.getPhotoUrl());
         });
