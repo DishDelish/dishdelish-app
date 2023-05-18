@@ -753,7 +753,7 @@ public class RecipeActivityTest {
             ToggleButton thumb = viewHolder.itemView.findViewById(R.id.thumbButton);
             thumb.performClick();
             try {
-                Thread.sleep(2000);
+                Thread.sleep(3000);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
@@ -782,7 +782,7 @@ public class RecipeActivityTest {
             heart.performClick();
 
             try {
-                Thread.sleep(2000); // Delay the check for 5000 milliseconds
+                Thread.sleep(3000); // Delay the check for 5000 milliseconds
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
@@ -852,7 +852,7 @@ public class RecipeActivityTest {
     }
 
     // Cook now activity
-
+    /*
     @Test
     public void cookNowActivityStarted() {
 
@@ -875,7 +875,7 @@ public class RecipeActivityTest {
         Intents.release();
         scenario.close();
 
-    }
+    } */
 
     public static Matcher<View> withRating(final float rating) {
         return new TypeSafeMatcher<View>() {

@@ -219,11 +219,11 @@ public class RecipeActivity extends AppCompatActivity implements CompoundButton.
     private void setCommentContents(RecyclerView commentsList) {
 
         commentsList.setLayoutManager(new LinearLayoutManager(this));
+        for(Comment c : recipe.comments){
+            c.setContent(LanguageFilter.filterLanguage(c.getContent()));
+        }
         CommentAdapter commentAdapter = new CommentAdapter(getApplicationContext(),
-                recipe.comments.stream()
-                        .peek(c -> c.setContent(LanguageFilter.filterLanguage(c.getContent())))
-                        .collect(Collectors.toList()),
-                recipe);
+                recipe.comments, recipe);
         commentsList.setAdapter(commentAdapter);
 
         EditText commentBox = (EditText) findViewById(R.id.enterComment);
