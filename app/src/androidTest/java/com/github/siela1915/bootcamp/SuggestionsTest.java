@@ -21,6 +21,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.FirebaseDatabase;
 
 import org.junit.After;
@@ -52,7 +53,14 @@ public class SuggestionsTest {
     @After
     public void clearDatabase() {
         if (firebaseInstance != null) {
-            firebaseInstance.getReference().setValue(null);
+            try {
+                for (DataSnapshot recipe : Tasks.await(firebaseInstance.getReference("recipes").orderByChild("recipeName")
+                        .startAt("testRecipe").endAt("testRecipeNew").get()).getChildren()) {
+                    Tasks.await(recipe.getRef().removeValue());
+                }
+            } catch (ExecutionException | InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -103,6 +111,7 @@ public class SuggestionsTest {
         List<Recipe> ls = new ArrayList<>();
         for (int i = 0; i < SIZE; ++i) {
             Recipe r = new Recipe();
+            r.setRecipeName("testRecipe");
             r.setAllergyTypes(Collections.singletonList(AllergyType.EGGS.ordinal()));
             r.setCuisineTypes(Collections.singletonList(CuisineType.CHINESE.ordinal()));
             r.setDietTypes(Collections.singletonList(DietType.VEGETARIAN.ordinal()));
@@ -115,6 +124,7 @@ public class SuggestionsTest {
         List<Recipe> ls = new ArrayList<>();
         for (int i = 0; i < SIZE; ++i) {
             Recipe r = new Recipe();
+            r.setRecipeName("testRecipe");
             r.setLikes(1000);
             ls.add(r);
         }
