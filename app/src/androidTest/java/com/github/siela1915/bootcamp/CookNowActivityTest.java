@@ -30,6 +30,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.Visibility.VISIBLE;
 import static androidx.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
@@ -70,34 +71,24 @@ public class CookNowActivityTest {
     @Test
     public void viewPagerSwipeShouldNavigateToNextStepFragment() throws InterruptedException {
         // Click the next button on the ViewPager2
-        onView(anyOf(withId(R.id.container_step)))
-                .perform(ViewActions.swipeLeft());
 
-        ViewInteraction interaction = onView(
-                allOf(withId(R.id.container_step), isCompletelyDisplayed()));
-        boolean objectIsVisible = isVisible(interaction);
-        assertTrue(objectIsVisible);
+        onView(withId(R.id.btnForward))
+                .perform(click());
+
 
         //testing swiping and content of the fragments
         onView(withId(R.id.cookNowStepContent))
                 .check(matches(withText(getExpectedStringFromStep(recipe.steps.get(0)))));
-        onView(allOf(withId(R.id.container_step), isCompletelyDisplayed()))
-                .perform(ViewActions.swipeLeft());
+        onView(withId(R.id.btnForward))
+                .perform(click());
 
-        interaction = onView(
-                allOf(withId(R.id.container_step), isCompletelyDisplayed()));
-        objectIsVisible = isVisible(interaction);
-        assertTrue(objectIsVisible);
+
 
         onView(withId(R.id.cookNowStepContent))
                 .check(matches(withText(getExpectedStringFromStep(recipe.steps.get(1)))));
-        onView(allOf(withId(R.id.container_step), isCompletelyDisplayed()))
-                .perform(ViewActions.swipeRight());
+        onView(withId(R.id.btnBackward))
+                .perform(click());
 
-        interaction = onView(
-                allOf(withId(R.id.container_step), isCompletelyDisplayed()));
-        objectIsVisible = isVisible(interaction);
-        assertTrue(objectIsVisible);
 
         onView(withId(R.id.cookNowStepContent))
                 .check(matches(withText(getExpectedStringFromStep(recipe.steps.get(0)))));
@@ -139,10 +130,7 @@ public class CookNowActivityTest {
 
     @Test
     public void displayTest(){
-        onView(withId(R.id.container_step))
-                .check(matches(instanceOf(ViewPager2.class)));
-        onView(withId(R.id.container_timer))
-                .check(matches(instanceOf(ViewPager2.class)));
+
         onView(withId(R.id.container_step))
                 .check(matches(withEffectiveVisibility(VISIBLE)));
         onView(withId(R.id.container_timer))

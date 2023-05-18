@@ -852,7 +852,7 @@ public class RecipeActivityTest {
     }
 
     // Cook now activity
-    /*
+
     @Test
     public void cookNowActivityStarted() {
 
@@ -875,7 +875,7 @@ public class RecipeActivityTest {
         Intents.release();
         scenario.close();
 
-    } */
+    }
 
     public static Matcher<View> withRating(final float rating) {
         return new TypeSafeMatcher<View>() {

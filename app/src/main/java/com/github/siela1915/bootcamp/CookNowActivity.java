@@ -9,6 +9,8 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toolbar;
 
 import com.github.siela1915.bootcamp.Recipes.ExampleRecipes;
@@ -16,140 +18,100 @@ import com.github.siela1915.bootcamp.Recipes.Ingredient;
 import com.github.siela1915.bootcamp.Recipes.Recipe;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class CookNowActivity extends AppCompatActivity {
 
     //index for keeping track which fragments to show
     private int index = 0;
     private Recipe recipe;
-    private CookNowStepFragment stepFrag;
-    private CookNowTimerFragment timerFrag;
-    private FragmentManager manager;
-    private ViewPager2 viewPager;
-    private ViewPager2 viewPagerTimer;
 
-    private FragmentStateAdapter pagerAdapterStep;
-    private FragmentStateAdapter pagerAdapterTimer;
+
+    private FragmentManager fragmentManager;
+    private int currentIndex = 0;
+    private List<Fragment> stepFragments;
+    private List<Fragment> timerFragments;
+
     private int numSteps;
 
     //override the back button to go back to the previous activity
     @Override
     public boolean onSupportNavigateUp() {
-        if(viewPager.getCurrentItem() == numSteps-1) {
-            viewPager.setCurrentItem(0);
-        }else{
-
-            finish();
-        }
+        finish();
         return true;
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
         recipe = getIntent().getParcelableExtra("recipe");
-        if(recipe==null)
+        if (recipe == null)
             recipe = ExampleRecipes.recipes.get(0);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cook_now);
 
-        numSteps = recipe.steps.size()+2;
+        numSteps = recipe.steps.size() + 1;
 
-        //page sliding
-        viewPager = findViewById(R.id.container_step);
-        pagerAdapterStep = new ScreenSlidePagerAdapterStep(this);
-        viewPager.setAdapter(pagerAdapterStep);
-        viewPager.setPageTransformer(new ZoomOutPageTransformer());
-        viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-            @Override
-            public void onPageSelected(int position) {
-                super.onPageSelected(position);
-                if(position != 0){
-                    index=position;
-                }
+
+
+// Initialize member variables and set initial fragments
+        fragmentManager = getSupportFragmentManager();
+        stepFragments = new ArrayList<>();
+        timerFragments = new ArrayList<>();
+        Bundle bundle = new Bundle();
+        ArrayList<Ingredient> l = new ArrayList<>(recipe.getIngredientList());
+        bundle.putParcelableArrayList("ingredients", l);
+        FragmentIngredientCheck f = new FragmentIngredientCheck();
+        f.setArguments(bundle);
+        stepFragments.add(f);
+        int index = 0;
+        for (String step : recipe.getSteps()) {
+            CookNowStepFragment s = CookNowStepFragment.newInstance(index, step);
+            stepFragments.add(s);
+            CookNowTimerFragment t = CookNowTimerFragment.newInstance(index);
+            timerFragments.add(t);
+            index+=1;
+        }
+        // Set initial fragments
+        fragmentManager.beginTransaction()
+                .replace(R.id.container_step, stepFragments.get(currentIndex))
+                .commit();
+//        fragmentManager.beginTransaction()
+//                .replace(R.id.container_timer, timerFragments.get(currentIndex))
+//                .commit();
+
+        // Button click listeners
+        Button btnBackward = findViewById(R.id.btnBackward);
+        btnBackward.setOnClickListener(v -> {
+            if (currentIndex > 0) {
+                currentIndex--;
+                fragmentManager.beginTransaction()
+                        .replace(R.id.container_step, stepFragments.get(currentIndex))
+                        .commit();
+                if(currentIndex!=0)
+                    fragmentManager.beginTransaction()
+                            .replace(R.id.container_timer, timerFragments.get(currentIndex))
+                            .commit();
             }
-
         });
 
-        viewPagerTimer = findViewById(R.id.container_timer);
-        pagerAdapterTimer = new ScreenSlidePagerAdapterTimer(this);
-        viewPagerTimer.setAdapter(pagerAdapterTimer);
-
-        viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-            @Override
-            public void onPageSelected(int position) {
-                super.onPageSelected(position);
-                viewPagerTimer.setCurrentItem(position, false);
+        Button btnForward = findViewById(R.id.btnForward);
+        btnForward.setOnClickListener(v -> {
+            if (currentIndex < stepFragments.size()-1 ) {
+                currentIndex++;
+                fragmentManager.beginTransaction()
+                        .replace(R.id.container_step, stepFragments.get(currentIndex))
+                        .commit();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.container_timer, timerFragments.get(currentIndex-1))
+                        .commit();
             }
-
         });
 
-        manager = getSupportFragmentManager();
+
     }
-
-    @Override
-    public void onBackPressed() {
-        if (viewPager.getCurrentItem() == 0) {
-            // If the user is currently looking at the first step, allow the system to handle the
-            // Back button. This calls finish() on this activity and pops the back stack.
-            super.onBackPressed();
-
-        } else if(viewPager.getCurrentItem() == numSteps-1){
-            viewPager.setCurrentItem(0);
-        }
-        else {
-            // Otherwise, select the previous step.
-            viewPager.setCurrentItem(viewPager.getCurrentItem() - 1);
-        }
-    }
-
-
-    public class ScreenSlidePagerAdapterStep extends FragmentStateAdapter {
-        public ScreenSlidePagerAdapterStep(FragmentActivity fa) {
-            super(fa);
-        }
-
-        @Override
-        public Fragment createFragment(int position) {
-            if(position == numSteps-1){
-                return new ShoppingCartFragment();
-            }
-            if(position == 0){
-                //Arrays.asList doesn't return an actual array list, have to add this so its parcelable
-                ArrayList<Ingredient> list = new ArrayList<>(recipe.getIngredientList());
-                return FragmentIngredientCheck.newInstance(list);
-            }
-            return CookNowStepFragment.newInstance(position-1, recipe.steps.get(position-1));
-        }
-
-        @Override
-        public int getItemCount() {
-            return numSteps;
-        }
-    }
-
-    public class ScreenSlidePagerAdapterTimer extends FragmentStateAdapter {
-        public ScreenSlidePagerAdapterTimer(FragmentActivity fa) {
-            super(fa);
-        }
-
-        @Override
-        public Fragment createFragment(int position) {
-            CookNowTimerFragment frag = CookNowTimerFragment.newInstance(position-1);
-            return frag;
-        }
-
-        @Override
-        public int getItemCount() {
-            return numSteps;
-        }
-    }
-
-    public void goToShoppingCart(){
-        viewPager.setCurrentItem(numSteps);
-    }
-
-
 }
