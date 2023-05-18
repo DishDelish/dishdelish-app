@@ -14,7 +14,7 @@ public class Comment implements Parcelable {
 
     private String userId = "";
 
-    private List<Comment> replies;
+    private List<Comment> replies = new ArrayList<>();
 
     public Comment(String content, String userId) {
         this.likes = 0;

@@ -22,8 +22,8 @@ public class ReplyViewHolder extends RecyclerView.ViewHolder {
 
         reply = itemView.findViewById(R.id.replyText);
         likes = itemView.findViewById(R.id.likeCount);
-        likes = itemView.findViewById(R.id.userName);
-        photo = itemView.findViewById(R.id.profilePhoto);
+        userName = itemView.findViewById(R.id.userName);
+        photo = itemView.findViewById(R.id.replyProfilePhoto);
         //parent = comment;
     }
 }
