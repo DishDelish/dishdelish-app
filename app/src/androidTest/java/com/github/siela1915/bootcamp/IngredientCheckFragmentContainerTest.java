@@ -61,7 +61,10 @@ public class IngredientCheckFragmentContainerTest {
 
     @Test
     public void onClickOnNearbyBtnNavigatesToNearbyHelpFragmentTest(){
-        scenario =FragmentScenario.launchInContainer(FragmentIngredientCheckContainer.class);
+        Bundle args = new Bundle();
+        ArrayList<Ingredient> l = new ArrayList<>(recipe.getIngredientList());
+        args.putParcelableArrayList("ingredients", l);
+        scenario =FragmentScenario.launchInContainer(FragmentIngredientCheckContainer.class, args);
         onView(withId(R.id.nearByBtn)).perform(click());
         onView(withContentDescription("Google Map")).check(matches(withEffectiveVisibility(VISIBLE)));
     }
