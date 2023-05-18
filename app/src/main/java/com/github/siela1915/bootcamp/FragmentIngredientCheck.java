@@ -99,9 +99,11 @@ public class FragmentIngredientCheck extends Fragment {
             for(String item: adapter.getSelectedItems()){
                 shoppingManager.addIngredient(item);
             }
+            CookNowActivity activity = (CookNowActivity) getActivity();
+            //activity.goToShoppingCart();
             ShoppingCartFragment fragment = new ShoppingCartFragment();
-            getParentFragmentManager().beginTransaction()
-                    .replace(R.id.ingredientContainer,fragment)
+            getActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.container_step,fragment)
                     .addToBackStack(null)
                     .commit();
         });

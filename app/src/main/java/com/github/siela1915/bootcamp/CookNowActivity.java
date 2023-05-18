@@ -28,21 +28,19 @@ public class CookNowActivity extends AppCompatActivity {
     private ViewPager2 viewPager;
     private ViewPager2 viewPagerTimer;
 
-    public FragmentStateAdapter getPagerAdapterStep() {
-        return pagerAdapterStep;
-    }
-
-    public FragmentStateAdapter getPagerAdapterTimer() {
-        return pagerAdapterTimer;
-    }
-
     private FragmentStateAdapter pagerAdapterStep;
     private FragmentStateAdapter pagerAdapterTimer;
+    private int numSteps;
 
     //override the back button to go back to the previous activity
     @Override
     public boolean onSupportNavigateUp() {
-        finish();
+        if(viewPager.getCurrentItem() == numSteps-1) {
+            viewPager.setCurrentItem(0);
+        }else{
+
+            finish();
+        }
         return true;
     }
     @Override
@@ -50,13 +48,14 @@ public class CookNowActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
-        //TODO temp testing
         recipe = getIntent().getParcelableExtra("recipe");
         if(recipe==null)
             recipe = ExampleRecipes.recipes.get(0);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cook_now);
+
+        numSteps = recipe.steps.size()+2;
 
         //page sliding
         viewPager = findViewById(R.id.container_step);
@@ -96,7 +95,11 @@ public class CookNowActivity extends AppCompatActivity {
             // If the user is currently looking at the first step, allow the system to handle the
             // Back button. This calls finish() on this activity and pops the back stack.
             super.onBackPressed();
-        } else {
+
+        } else if(viewPager.getCurrentItem() == numSteps-1){
+            viewPager.setCurrentItem(0);
+        }
+        else {
             // Otherwise, select the previous step.
             viewPager.setCurrentItem(viewPager.getCurrentItem() - 1);
         }
@@ -110,6 +113,9 @@ public class CookNowActivity extends AppCompatActivity {
 
         @Override
         public Fragment createFragment(int position) {
+            if(position == numSteps-1){
+                return new ShoppingCartFragment();
+            }
             if(position == 0){
                 //Arrays.asList doesn't return an actual array list, have to add this so its parcelable
                 ArrayList<Ingredient> list = new ArrayList<>(recipe.getIngredientList());
@@ -120,7 +126,7 @@ public class CookNowActivity extends AppCompatActivity {
 
         @Override
         public int getItemCount() {
-            return recipe.steps.size()+1;
+            return numSteps;
         }
     }
 
@@ -137,8 +143,12 @@ public class CookNowActivity extends AppCompatActivity {
 
         @Override
         public int getItemCount() {
-            return recipe.steps.size()+1;
+            return numSteps;
         }
+    }
+
+    public void goToShoppingCart(){
+        viewPager.setCurrentItem(numSteps);
     }
 
 
