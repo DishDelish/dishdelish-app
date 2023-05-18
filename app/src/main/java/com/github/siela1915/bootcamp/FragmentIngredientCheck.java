@@ -102,14 +102,14 @@ public class FragmentIngredientCheck extends Fragment {
             }
             ShoppingCartFragment fragment = new ShoppingCartFragment();
             getActivity().getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.container_step,fragment)
+                    .replace(R.id.ingredientContainer,fragment)
                     .addToBackStack(null)
                     .commit();
         });
         nearbyBtn.setOnClickListener(v->{
             NearbyHelpFragment fragment= new NearbyHelpFragment();
             getActivity().getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.container_step,fragment)
+                    .replace(R.id.ingredientContainer,fragment)
                     .addToBackStack(null)
                     .commit();
         });

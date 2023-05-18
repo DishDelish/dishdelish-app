@@ -65,7 +65,7 @@ public class CookNowActivity extends AppCompatActivity {
         Bundle bundle = new Bundle();
         ArrayList<Ingredient> l = new ArrayList<>(recipe.getIngredientList());
         bundle.putParcelableArrayList("ingredients", l);
-        FragmentIngredientCheck f = new FragmentIngredientCheck();
+        FragmentIngredientCheckContainer f = new FragmentIngredientCheckContainer();
         f.setArguments(bundle);
         stepFragments.add(f);
         int index = 0;
