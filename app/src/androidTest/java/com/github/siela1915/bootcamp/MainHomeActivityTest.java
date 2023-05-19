@@ -324,19 +324,20 @@ public class MainHomeActivityTest {
     }
 
     @Test
-    public void tttt(){
+    public void isCorrectListOfRecipesDisplayed(){
+        Intents.release();
         scenario= ActivityScenario.launch(MainHomeActivity.class);
         Intents.init();
+        onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
+        onView(withId(R.id.navView)).perform(navigateTo(R.id.menuItem_home));
         onView(withId(R.id.homeFragment)).check(matches(isDisplayed()));
-
         onView(withId(R.id.rand_recipe_recyclerView)).check(matches(isDisplayed()));
-
-        IdlingRegistry.getInstance().register(new RecyclerViewIdlingResource());
-
         //onView(withId(R.id.rand_recipe_recyclerView)).check(new RecyclerViewItemCountAssertion(12));
         onView(withId(R.id.rand_recipe_recyclerView)).perform(actionOnItemAtPosition(0, click()));
         Intents.intended(hasComponent(RecipeActivity.class.getName()));
         Intents.release();
+        scenario.close();
+
     }
     @Test
     public void searchViewTest(){
