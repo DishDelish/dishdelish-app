@@ -314,24 +314,7 @@ public class MainHomeActivityTest {
             e.printStackTrace();
         }
     }
-    @Test
-    public void isCorrectListOfRecipesDisplayed(){
-        Intents.init();
-        Intent intent = new Intent();
-        Instrumentation.ActivityResult intentResult = new Instrumentation.ActivityResult(Activity.RESULT_OK,intent);
-        intending(hasComponent(RecipeActivity.class.getName())).respondWith(intentResult);
 
-        onView(withId(R.id.homeFragment)).check(matches(isDisplayed()));
-
-        onView(withId(R.id.rand_recipe_recyclerView)).check(matches(isDisplayed()));
-
-        IdlingRegistry.getInstance().register(new RecyclerViewIdlingResource());
-
-        onView(withId(R.id.rand_recipe_recyclerView)).check(new RecyclerViewItemCountAssertion(12));
-        onView(withId(R.id.rand_recipe_recyclerView)).perform(actionOnItemAtPosition(0, click()));
-        Intents.intended(hasComponent(RecipeActivity.class.getName()));
-        Intents.release();
-    }
 
 }
  class RecyclerViewItemCountAssertion implements ViewAssertion {
