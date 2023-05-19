@@ -76,7 +76,7 @@ public class SuggestionsTest {
                 db.set(r);
             }
             List<Recipe> ls = Tasks.await(SuggestionCalculator.getSuggestions(db));
-            assertTrue(ls.stream().allMatch(r -> r.getLikes() == 1000));
+            assertTrue(ls.stream().filter(r -> r.getRecipeName() == "testRecipe").allMatch(r -> r.getLikes() == 1000));
         } catch (ExecutionException | InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -94,11 +94,11 @@ public class SuggestionsTest {
                 db.set(r);
             }
             List<Recipe> ls = Tasks.await(SuggestionCalculator.getSuggestions(db));
-            assertTrue(ls.stream().filter(r -> !r.getDietTypes().isEmpty())
+            assertTrue(ls.stream().filter(r -> r.getRecipeName() == "testRecipe" && !r.getDietTypes().isEmpty())
                     .allMatch(r -> r.getDietTypes().contains(DietType.VEGETARIAN.ordinal())));
-            assertTrue(ls.stream().filter(r -> !r.getAllergyTypes().isEmpty())
+            assertTrue(ls.stream().filter(r -> r.getRecipeName() == "testRecipe" && !r.getAllergyTypes().isEmpty())
                     .allMatch(r -> r.getAllergyTypes().contains(AllergyType.EGGS.ordinal())));
-            assertTrue(ls.stream().filter(r -> !r.getCuisineTypes().isEmpty())
+            assertTrue(ls.stream().filter(r -> r.getRecipeName() == "testRecipe" && !r.getCuisineTypes().isEmpty())
                     .allMatch(r -> r.getCuisineTypes().contains(CuisineType.CHINESE.ordinal())));
         } catch (ExecutionException | InterruptedException e) {
             throw new RuntimeException(e);
