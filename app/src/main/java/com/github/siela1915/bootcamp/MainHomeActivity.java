@@ -131,6 +131,7 @@ public class MainHomeActivity extends AppCompatActivity {
                 cuisineType.add(ct.ordinal());
             }
 
+            /*
             RecipeFetcher recipeFetcher = new RecipeFetcher(allergy,cuisineType,dietType);
             List<String> filteredRecipes= recipeFetcher.fetchRecipeList();
             List<Recipe> recipeList = new ArrayList<>();
@@ -142,7 +143,9 @@ public class MainHomeActivity extends AppCompatActivity {
                 }
 
             }
-            setContainerContent(R.id.fragContainer,RecipeListFragment.newInstance(recipeList),false);
+
+             */
+           // setContainerContent(R.id.fragContainer,RecipeListFragment.newInstance(recipeList),false);
 
         });
         toggle= new ActionBarDrawerToggle(this,drawerLayout,R.string.open,R.string.close);

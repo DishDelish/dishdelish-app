@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.github.siela1915.bootcamp.Labelling.AllergyType;
 import com.github.siela1915.bootcamp.Labelling.CuisineType;
 import com.github.siela1915.bootcamp.Labelling.DietType;
+import com.github.siela1915.bootcamp.Labelling.RecipeFetcher;
 import com.github.siela1915.bootcamp.Recipes.ExampleRecipes;
 import com.github.siela1915.bootcamp.Recipes.PreparationTime;
 import com.github.siela1915.bootcamp.Recipes.Recipe;
@@ -49,6 +50,10 @@ public class HomePageFragment extends Fragment {
 
     // TODO: Rename and change types of parameters
     private String mParam1;
+    public static final int DIET = 1;
+    public static final int CUISINE = 2;
+    public static final int ALLERGY = 3;
+    public static final int PREP_TIME = 4;
     private String mParam2;
     private  String cuis= "";
     private TextView homeTextView;
@@ -62,6 +67,10 @@ public class HomePageFragment extends Fragment {
     private SearchView searchView;
     private Button dietBtn,allergyBtn,cuisineBtn,prepTimeBtn;
     private List<Recipe> fetchedRecipes= new ArrayList<>();
+    List<Integer> selectedCuisine = new ArrayList<>();
+    List<Integer> selectedDiet = new ArrayList<>();
+    List<Integer> selectedAllery= new ArrayList<>();
+    List<Integer> selectedPrepTime= new ArrayList<>();
     public HomePageFragment() {
         // Required empty public constructor
     }
@@ -103,8 +112,6 @@ public class HomePageFragment extends Fragment {
         if(data != null){
             cuis+= data.getString("selected cuisine");
         }
-        //homeTextView.setText(cuis);
-        //homeTextView.setTextSize(30);
         TextView underlinedText = view.findViewById(R.id.moreFilterTextView);
         underlinedText.setPaintFlags(underlinedText.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
@@ -130,35 +137,30 @@ public class HomePageFragment extends Fragment {
         prepTimeBtn= view.findViewById(R.id.btnPrpTime);
 
 
-        List<String> selectedCuisine = new ArrayList<>();
-        List<String> selectedDiet = new ArrayList<>();
-        List<String> selectedAllery= new ArrayList<>();
-        List<String> selectedPrepTime= new ArrayList<>();
-
         cuisineBtn.setOnClickListener(v -> {
             String [] cuisineTypes= CuisineType.getAll();
             boolean[] checksum= new boolean[cuisineTypes.length];
             String title = "Choose your preferred cuisine";
-            popUpDialogBuilder(cuisineTypes,checksum,title,selectedCuisine);
+            popUpDialogBuilder(cuisineTypes,checksum,title,selectedCuisine,CUISINE);
         });
 
         prepTimeBtn.setOnClickListener(v -> {
             String [] prepTime= PreparationTime.getAll();
             boolean[] checksum= new boolean[prepTime.length];
             String title = "Choose the preparation time";
-            popUpDialogBuilder(prepTime,checksum,title,selectedPrepTime);
+            popUpDialogBuilder(prepTime,checksum,title,selectedPrepTime,PREP_TIME);
         });
         dietBtn.setOnClickListener(v -> {
             String [] diets= DietType.getAll();
             boolean[] checksum= new boolean[diets.length];
             String title = "Choose your diet";
-            popUpDialogBuilder(diets,checksum,title,selectedDiet);
+            popUpDialogBuilder(diets,checksum,title,selectedDiet,DIET);
         });
         allergyBtn.setOnClickListener(v -> {
             String [] allergies= AllergyType.getAll();
             boolean[] checksum= new boolean[allergies.length];
             String title = "what are you allergic to";
-            popUpDialogBuilder(allergies,checksum,title,selectedAllery);
+            popUpDialogBuilder(allergies,checksum,title,selectedAllery,ALLERGY);
         });
         moreFilter.setOnClickListener(v->{
             if (filterLayout.getVisibility() == View.VISIBLE) {
@@ -196,6 +198,9 @@ public class HomePageFragment extends Fragment {
             }
             @Override
             public boolean onQueryTextChange(String newText) {
+                if(newText.isEmpty()){
+                    recipeAdapter.setRecipes(fetchedRecipes);
+                }
                 filterRecipesByName(newText);
                 return false;
             }
@@ -204,7 +209,7 @@ public class HomePageFragment extends Fragment {
          //           fetchedRecipes = new ArrayList<>(list);
 
         SuggestionCalculator.getSuggestions(database).addOnSuccessListener(list->{
-
+                    fetchedRecipes = list;
                     recipeAdapter =new RecipeItemAdapter(list, view.getContext());
                     recipeListRecyclerView.setAdapter(this.recipeAdapter/*new RecipeItemAdapter(list, view.getContext())*/);
         })
@@ -214,7 +219,7 @@ public class HomePageFragment extends Fragment {
                 });
         button.setOnClickListener(v -> {
             //Recipe recipe = ExampleRecipes.recipes.get((int)(Math.random()*2.999));
-            database.getByNameAsync("omelette1")
+            database.getByNameAsync("Burger")
                     .addOnSuccessListener(recipes -> startActivity(RecipeConverter.convertToIntent(recipes.get(0), getContext())))
                     .addOnFailureListener(e -> {
                         e.printStackTrace();
@@ -253,7 +258,7 @@ public class HomePageFragment extends Fragment {
         recipeListLinearLayout.setLayoutParams(layoutParams);
     }
     @SuppressLint("ResourceAsColor")
-    private void popUpDialogBuilder(String[] items, boolean[] checksum, String title, List<String> selected){
+    private void popUpDialogBuilder(String[] items, boolean[] checksum, String title, List<Integer> selected, int filter){
         AlertDialog.Builder builder= new AlertDialog.Builder(getContext(),R.style.AlertDialogTheme);
         builder.setTitle(title);
         builder.setCancelable(false);
@@ -264,9 +269,35 @@ public class HomePageFragment extends Fragment {
         builder.setPositiveButton("Ok", (dialog, which) -> {
             for(int i=0; i< checksum.length; i++){
                 if(checksum[i]){
-                    selected.add(items[i]);
+                    switch (filter){
+                        case ALLERGY:
+                            AllergyType at= AllergyType.fromString(items[i]);
+                            selected.add(at.ordinal());
+                            break;
+                        case DIET:
+                            DietType dt= DietType.fromString(items[i]);
+                            selected.add(dt.ordinal());
+                            break;
+                        case CUISINE:
+                            CuisineType ct= CuisineType.fromString(items[i]);
+                            selected.add(ct.ordinal());
+                            break;
+                        default:
+                    }
                 }
             }
+            RecipeFetcher recipeFetcher = new RecipeFetcher(selectedAllery,selectedCuisine,selectedDiet,recipeAdapter.getRecipes());
+            List<String> filteredRecipes= recipeFetcher.fetchRecipeList();
+            List<Recipe> recipeList = new ArrayList<>();
+            for (String recipeName: filteredRecipes){
+                for(int i=0; i<ExampleRecipes.recipes.size();i++){
+                    if(recipeAdapter.getRecipes().get(i).recipeName.equalsIgnoreCase(recipeName)){
+                        recipeList.add(ExampleRecipes.recipes.get(i));
+                    }
+                }
+
+            }
+            recipeAdapter.setRecipes(recipeList);
         });
 
         builder.setNegativeButton("Cancel", (dialog, which) -> {
