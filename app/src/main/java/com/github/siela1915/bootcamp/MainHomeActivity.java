@@ -34,6 +34,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 public class MainHomeActivity extends AppCompatActivity {
@@ -49,6 +50,20 @@ public class MainHomeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        FirebaseDatabase firebaseDb = FirebaseDatabase.getInstance();
+        if (!isRunningTest()) {
+            try {
+                firebaseDb.setPersistenceEnabled(true);
+            } catch (RuntimeException exc) {
+                if (!exc.toString().contains("Calls to setPersistenceEnabled")) {
+                    throw exc;
+                }
+            }
+            Database db = new Database(firebaseDb);
+            db.syncFavorites();
+        }
+
         setContentView(R.layout.activity_main_home2);
         fragmentManager= getSupportFragmentManager();
         filterView = findViewById(R.id.scrollview);
@@ -207,6 +222,24 @@ public class MainHomeActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private AtomicBoolean isRunningTest;
+    public synchronized boolean isRunningTest () {
+        if (null == isRunningTest) {
+            boolean istest;
+
+            try {
+                Class.forName ("org.mockito.Mock");
+                istest = true;
+            } catch (ClassNotFoundException e) {
+                istest = false;
+            }
+
+            isRunningTest = new AtomicBoolean(istest);
+        }
+
+        return isRunningTest.get ();
     }
 
     private void loadAndOpenFavorites() {

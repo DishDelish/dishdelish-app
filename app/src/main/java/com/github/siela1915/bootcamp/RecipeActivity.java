@@ -30,6 +30,7 @@ import com.github.siela1915.bootcamp.firebase.UserDatabase;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -44,6 +45,7 @@ public class RecipeActivity extends AppCompatActivity implements CompoundButton.
     private final Database database = new Database(firebaseDatabase);
 
     private final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+    private static final DecimalFormat nutritionalValueFormat = new DecimalFormat("0.00");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,10 +76,10 @@ public class RecipeActivity extends AppCompatActivity implements CompoundButton.
 
         Button cookNow = findViewById(R.id.cookNowButton);
         cookNow.setOnClickListener(v -> {
-            // Intent cookNowIntent = new Intent(v.getContext(), CookNowActivity.class);
-            // cookNowIntent.putExtra("Recipe", recipe);
+             Intent cookNowIntent = new Intent(v.getContext(), CookNowActivity.class);
+             cookNowIntent.putExtra("Recipe", recipe);
 
-            // v.getContext().startActivity(cookNowIntent);
+             v.getContext().startActivity(cookNowIntent);
         });
 
 
@@ -175,11 +177,11 @@ public class RecipeActivity extends AppCompatActivity implements CompoundButton.
         setIngredientListContents(ingredientsList);
 
         // Set Nutritional Values
-        calories.setText(Double.toString(recipe.calories));
-        fat.setText(Double.toString(recipe.fat));
-        carbohydrates.setText(Double.toString(recipe.carbohydrates));
-        sugar.setText(Double.toString(recipe.sugar));
-        protein.setText(Double.toString(recipe.protein));
+        calories.setText(nutritionalValueFormat.format(recipe.calories));
+        fat.setText(nutritionalValueFormat.format(recipe.fat));
+        carbohydrates.setText(nutritionalValueFormat.format(recipe.carbohydrates));
+        sugar.setText(nutritionalValueFormat.format(recipe.sugar));
+        protein.setText(nutritionalValueFormat.format(recipe.protein));
 
         // Set servings info
         setServingInfo(nbServings, servings, ingredientsList);
@@ -217,11 +219,11 @@ public class RecipeActivity extends AppCompatActivity implements CompoundButton.
     private void setCommentContents(RecyclerView commentsList) {
 
         commentsList.setLayoutManager(new LinearLayoutManager(this));
+        for(Comment c : recipe.comments){
+            c.setContent(LanguageFilter.filterLanguage(c.getContent()));
+        }
         CommentAdapter commentAdapter = new CommentAdapter(getApplicationContext(),
-                recipe.comments.stream()
-                        .peek(c -> c.setContent(LanguageFilter.filterLanguage(c.getContent())))
-                        .collect(Collectors.toList()),
-                recipe);
+                recipe.comments, recipe);
         commentsList.setAdapter(commentAdapter);
 
         EditText commentBox = (EditText) findViewById(R.id.enterComment);

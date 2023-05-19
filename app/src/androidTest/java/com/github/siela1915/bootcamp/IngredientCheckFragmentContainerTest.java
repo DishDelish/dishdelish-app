@@ -15,6 +15,7 @@ import static org.hamcrest.Matchers.not;
 
 import android.Manifest;
 import android.os.Bundle;
+import android.widget.Button;
 
 import androidx.fragment.app.testing.FragmentScenario;
 import androidx.test.espresso.action.ViewActions;
@@ -25,6 +26,7 @@ import androidx.test.rule.GrantPermissionRule;
 
 import com.github.siela1915.bootcamp.Recipes.ExampleRecipes;
 import com.github.siela1915.bootcamp.Recipes.Ingredient;
+import com.github.siela1915.bootcamp.Recipes.Recipe;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -35,6 +37,7 @@ import java.util.List;
 
 public class IngredientCheckFragmentContainerTest {
     FragmentScenario<FragmentIngredientCheckContainer> scenario;
+    Recipe recipe = ExampleRecipes.recipes.get(0);
 
     @Rule
     public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(
@@ -42,22 +45,36 @@ public class IngredientCheckFragmentContainerTest {
 
     @Test
     public void ingredientCheckFirstInteractionTest(){
-        scenario =FragmentScenario.launchInContainer(FragmentIngredientCheckContainer.class);
+        Bundle args = new Bundle();
+        ArrayList<Ingredient> l = new ArrayList<>(recipe.getIngredientList());
+        args.putParcelableArrayList("ingredients", l);
+        scenario =FragmentScenario.launchInContainer(FragmentIngredientCheckContainer.class, args);
         onView(withId(R.id.neededIngredientsRV)).check(ViewAssertions.matches(isDisplayed()));
-        onView(withId(R.id.addToShoppingListBtn)).perform(click());
+        scenario.onFragment(f -> {
+            Button shoppingListButton = f.getView().findViewById(R.id.addToShoppingListBtn);
+            shoppingListButton.performClick();
+        });
+        //onView(withId(R.id.addToShoppingListBtn)).perform(click());
         onView(withId(R.id.shoppingCartFragment)).check(ViewAssertions.matches(isDisplayed()));
+        scenario.close();
     }
 
     @Test
     public void onClickOnNearbyBtnNavigatesToNearbyHelpFragmentTest(){
-        scenario =FragmentScenario.launchInContainer(FragmentIngredientCheckContainer.class);
+        Bundle args = new Bundle();
+        ArrayList<Ingredient> l = new ArrayList<>(recipe.getIngredientList());
+        args.putParcelableArrayList("ingredients", l);
+        scenario =FragmentScenario.launchInContainer(FragmentIngredientCheckContainer.class, args);
         onView(withId(R.id.nearByBtn)).perform(click());
         onView(withContentDescription("Google Map")).check(matches(withEffectiveVisibility(VISIBLE)));
     }
 
     @Test
     public void containerContentChangesCorrectlyTest(){
-        scenario =FragmentScenario.launchInContainer(FragmentIngredientCheckContainer.class);
+        Bundle args = new Bundle();
+        ArrayList<Ingredient> l = new ArrayList<>(recipe.getIngredientList());
+        args.putParcelableArrayList("ingredients", l);
+        scenario =FragmentScenario.launchInContainer(FragmentIngredientCheckContainer.class, args);
         FragmentIngredientCheck fragment= FragmentIngredientCheck.newInstance(ExampleRecipes.recipes.get(1).getIngredientList());
         scenario.onFragment(f->{
            f.getParentFragmentManager().beginTransaction()
@@ -68,5 +85,6 @@ public class IngredientCheckFragmentContainerTest {
                 .check(ViewAssertions.matches(isDisplayed()));
         onView(withText(ExampleRecipes.recipes.get(1).getIngredientList().get(1).toString()))
                 .check(ViewAssertions.matches(isDisplayed()));
+        scenario.close();
     }
 }

@@ -348,6 +348,7 @@ public class Database {
         }
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         Task<DataSnapshot> existing = db.child(FAVORITES + "/" + userId + "/" + recipeId).get();
+        db.child(RECIPES + "/" + recipeId).keepSynced(true);
         return existing.continueWithTask(t -> {
             if (t.getResult().getValue() != null) {
                 return Tasks.forResult(null);
@@ -361,6 +362,7 @@ public class Database {
             return Tasks.forException(new FirebaseNoSignedInUserException("Sign in to remove favorites"));
         }
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        db.child(RECIPES + "/" + recipeId).keepSynced(false);
         return db.child(FAVORITES + "/" + userId + "/" + recipeId).removeValue();
     }
 
@@ -377,6 +379,14 @@ public class Database {
                 favs.add(recipe.getKey());
             }
             return favs;
+        });
+    }
+
+    public void syncFavorites() {
+        getFavorites().addOnSuccessListener(favorites -> {
+            favorites.forEach(fav -> {
+                db.child(RECIPES + "/" + fav).keepSynced(true);
+            });
         });
     }
 }
