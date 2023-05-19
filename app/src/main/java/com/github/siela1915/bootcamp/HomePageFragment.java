@@ -14,15 +14,10 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.siela1915.bootcamp.Recipes.ExampleRecipes;
-import com.github.siela1915.bootcamp.Recipes.Recipe;
-
 import com.github.siela1915.bootcamp.Recipes.RecipeItemAdapter;
+import com.github.siela1915.bootcamp.Tools.SuggestionCalculator;
 import com.github.siela1915.bootcamp.firebase.Database;
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.FirebaseDatabase;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 /**
@@ -107,7 +102,7 @@ public class HomePageFragment extends Fragment {
         recipeListRecyclerView.setHasFixedSize(true);
         recipeListRecyclerView.setLayoutManager(new GridLayoutManager(getContext(),2));
 
-        database.getNRandomAsync(20).addOnSuccessListener(list->{
+        SuggestionCalculator.getSuggestions(database).addOnSuccessListener(list->{
                     recipeAdapter =new RecipeItemAdapter(list, view.getContext());
                     recipeListRecyclerView.setAdapter(this.recipeAdapter/*new RecipeItemAdapter(list, view.getContext())*/);
         })
@@ -117,7 +112,7 @@ public class HomePageFragment extends Fragment {
                 });
         button.setOnClickListener(v -> {
             //Recipe recipe = ExampleRecipes.recipes.get((int)(Math.random()*2.999));
-            database.getByNameAsync("omelettte1")
+            database.getByNameAsync("omelette1")
                     .addOnSuccessListener(recipes -> startActivity(RecipeConverter.convertToIntent(recipes.get(0), getContext())))
                     .addOnFailureListener(e -> {
                         e.printStackTrace();

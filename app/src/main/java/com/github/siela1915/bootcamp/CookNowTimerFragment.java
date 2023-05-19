@@ -19,6 +19,14 @@ public class CookNowTimerFragment extends Fragment {
         super(R.layout.fragment_cook_now_timer_trigger);
     }
 
+    public static CookNowTimerFragment newInstance(int index) {
+        CookNowTimerFragment fragment = new CookNowTimerFragment();
+        Bundle args = new Bundle();
+        args.putInt("index", index);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         timerViewModel = new ViewModelProvider(requireActivity()).get(TimerViewModel.class);

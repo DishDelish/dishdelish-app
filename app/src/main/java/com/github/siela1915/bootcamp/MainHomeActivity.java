@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,6 +22,7 @@ import com.github.siela1915.bootcamp.Labelling.CuisineType;
 import com.github.siela1915.bootcamp.Labelling.DietType;
 import com.github.siela1915.bootcamp.Labelling.RecipeFetcher;
 import com.github.siela1915.bootcamp.Recipes.ExampleRecipes;
+import com.github.siela1915.bootcamp.Recipes.Ingredient;
 import com.github.siela1915.bootcamp.Recipes.PreparationTime;
 import com.github.siela1915.bootcamp.Recipes.Recipe;
 import com.github.siela1915.bootcamp.UploadRecipe.UploadingRecipeFragment;
@@ -32,6 +34,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 public class MainHomeActivity extends AppCompatActivity {
@@ -47,6 +50,20 @@ public class MainHomeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        FirebaseDatabase firebaseDb = FirebaseDatabase.getInstance();
+        if (!isRunningTest()) {
+            try {
+                firebaseDb.setPersistenceEnabled(true);
+            } catch (RuntimeException exc) {
+                if (!exc.toString().contains("Calls to setPersistenceEnabled")) {
+                    throw exc;
+                }
+            }
+            Database db = new Database(firebaseDb);
+            db.syncFavorites();
+        }
+
         setContentView(R.layout.activity_main_home2);
         fragmentManager= getSupportFragmentManager();
         filterView = findViewById(R.id.scrollview);
@@ -55,6 +72,8 @@ public class MainHomeActivity extends AppCompatActivity {
             setContainerContent(R.id.fragContainer,HomePageFragment.class,true);
             //setContainerContent(R.id.fragContainer,FragmentIngredientCheckContainer.class,true);
         }
+
+        handleBackPress();
 
         drawerLayout= findViewById(R.id.drawer_layout);
         navigationView= findViewById(R.id.navView);
@@ -167,7 +186,7 @@ public class MainHomeActivity extends AppCompatActivity {
                     loadAndOpenFavorites();
                     break;
                 case R.id.menuItem_help:
-                    setContainerContent(R.id.fragContainer, NearbyHelpFragment.class, false);
+                    openHelp();
                     break;
                 case R.id.menuItem_soppingCart:
                     filterView.setVisibility(View.GONE);
@@ -192,11 +211,7 @@ public class MainHomeActivity extends AppCompatActivity {
             }
 
             if (extras.containsKey("navToHelp")) {
-                navigationView.setCheckedItem(R.id.menuItem_help);
-                setContainerContent(R.id.fragContainer, NearbyHelpFragment.newInstance(
-                                extras.getString("sender"),
-                                extras.getString("ingredient")),
-                        false);
+                openHelp();
             }
         }
     }
@@ -209,6 +224,24 @@ public class MainHomeActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    private AtomicBoolean isRunningTest;
+    public synchronized boolean isRunningTest () {
+        if (null == isRunningTest) {
+            boolean istest;
+
+            try {
+                Class.forName ("org.mockito.Mock");
+                istest = true;
+            } catch (ClassNotFoundException e) {
+                istest = false;
+            }
+
+            isRunningTest = new AtomicBoolean(istest);
+        }
+
+        return isRunningTest.get ();
+    }
+
     private void loadAndOpenFavorites() {
         Intent intent = new Intent(this, MainHomeActivity.class);
         intent.putExtra("com.github.siela1915.bootcamp.navToFavorites", true);
@@ -217,22 +250,45 @@ public class MainHomeActivity extends AppCompatActivity {
         setContainerContent(R.id.fragContainer, RecipeListFragment.newInstance(new ArrayList<>()), false);
 
         Database db = new Database(FirebaseDatabase.getInstance());
-        db.getFavorites().continueWith(favTask -> {
-            List<String> favorites = favTask.getResult();
+        db.getFavorites().addOnSuccessListener(favorites -> {
             List<Task<Recipe>> favListTasks = favorites.stream().map(db::getAsync).collect(Collectors.toList());
             Tasks.whenAll(favListTasks).addOnSuccessListener(voidRes -> {
                 Fragment currentFrag = fragmentManager.findFragmentById(R.id.fragContainer);
                 if (currentFrag == null || currentFrag.getClass() != RecipeListFragment.class) {
                     return;
                 }
+                fragmentManager.popBackStack();
                 List<Recipe> favRecipes = favListTasks
                         .stream().map(Task::getResult).collect(Collectors.toList());
                 setContainerContent(R.id.fragContainer, RecipeListFragment.newInstance(
                         favRecipes
                 ), false);
             });
-            return null;
         });
+    }
+
+    private void openHelp() {
+        Bundle extras = getIntent().getExtras();
+        navigationView.setCheckedItem(R.id.menuItem_help);
+        Intent intent = new Intent(this, MainHomeActivity.class);
+        if (extras != null) {
+            intent.putExtras(extras);
+        }
+        intent.putExtra("navToHelp", true);
+        FirebaseAuthActivity.promptLogin(this, this, intent);
+
+        if (extras != null && extras.containsKey("sender")) {
+            setContainerContent(R.id.fragContainer, NearbyHelpFragment.newInstance(
+                            extras.getString("sender"),
+                            extras.getString("ingredient")),
+                    false);
+        } else if (extras != null && extras.containsKey("askedIngredient")) {
+            setContainerContent(R.id.fragContainer, NearbyHelpFragment.newInstance(
+                    (Ingredient)extras.getParcelable("askedIngredient")),
+                    false);
+        } else {
+            setContainerContent(R.id.fragContainer, NearbyHelpFragment.class, false);
+        }
     }
 
     private void setContainerContent(int containerId, @NonNull Class<? extends Fragment> fragmentClass, boolean setOrReplace){
@@ -240,13 +296,13 @@ public class MainHomeActivity extends AppCompatActivity {
             fragmentManager.beginTransaction()
                     .setReorderingAllowed(true)
                     .add(containerId,fragmentClass,null)
-                    .addToBackStack("fragment")
+                    .addToBackStack(fragmentClass.getName())
                     .commit();
         }else{
             fragmentManager.beginTransaction()
                     .setReorderingAllowed(true)
                     .replace(containerId,fragmentClass,null)
-                    .addToBackStack("fragment")
+                    .addToBackStack(fragmentClass.getName())
                     .commit();
         }
     }
@@ -288,12 +344,29 @@ public class MainHomeActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction()
                     .setReorderingAllowed(true)
                     .add(containerId,fragment,null)
+                    .addToBackStack(fragment.getClass().getName())
                     .commit();
         }else{
             getSupportFragmentManager().beginTransaction()
                     .setReorderingAllowed(true)
                     .replace(containerId,fragment,null)
+                    .addToBackStack(fragment.getClass().getName())
                     .commit();
         }
+    }
+
+    private void handleBackPress() {
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                    FragmentManager fragmentManager = getSupportFragmentManager();
+                    if (fragmentManager.getBackStackEntryCount() == 1) {
+                        moveTaskToBack(true);
+                    } else {
+                        fragmentManager.popBackStackImmediate();
+                    }
+                }
+        };
+        getOnBackPressedDispatcher().addCallback(this, callback);
     }
 }

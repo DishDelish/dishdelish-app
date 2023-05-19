@@ -18,6 +18,7 @@ import org.junit.Test;
 public class CookNowStepFragmentTest {
     FragmentScenario<CookNowStepFragment> scenario;
     private String testStep = "test-step";
+    private String stringBeginning = "\u25CF ";
     private int testIndex = 1;
 
     private Bundle createStepBundle() {
@@ -43,7 +44,8 @@ public class CookNowStepFragmentTest {
     public void displayTest() {
         onView(withId(R.id.cookNowStepTitle)).check(matches(withEffectiveVisibility(VISIBLE)));
         onView(withId(R.id.cookNowStepTitle)).check(matches(ViewMatchers.withText("Step " + (testIndex + 1))));
+        onView(withId(R.id.cookNowStepContentContainer)).check(matches(withEffectiveVisibility(VISIBLE)));
         onView(withId(R.id.cookNowStepContent)).check(matches(withEffectiveVisibility(VISIBLE)));
-        onView(withId(R.id.cookNowStepContent)).check(matches(ViewMatchers.withText(testStep)));
+        onView(withId(R.id.cookNowStepContent)).check(matches(ViewMatchers.withText(stringBeginning + testStep)));
     }
 }
