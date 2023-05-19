@@ -74,7 +74,7 @@ public class ShoppingCartFragment extends Fragment {
         RecyclerView recyclerView = view.findViewById(R.id.shoppingList);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         List<String> list= manager.getShoppingList();
-        ShoppingListAdapter adapter= new ShoppingListAdapter(list,getContext());
+        IngredientCheckAdapter adapter= new IngredientCheckAdapter(list);
         recyclerView.setAdapter(adapter);
         return view;
     }

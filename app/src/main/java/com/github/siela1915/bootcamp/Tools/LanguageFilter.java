@@ -117,6 +117,8 @@ public class LanguageFilter {
             "deep throat",
             "deepthroat",
             "dendrophilia",
+            "dick",
+            "dickhead",
             "dildo",
             "dingleberry",
             "dingleberries",

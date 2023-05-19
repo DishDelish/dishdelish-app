@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Parcelable;
 import android.text.Selection;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -23,10 +24,12 @@ import android.widget.Toast;
 import com.github.siela1915.bootcamp.Recipes.ExampleRecipes;
 import com.github.siela1915.bootcamp.Recipes.Ingredient;
 import com.github.siela1915.bootcamp.Recipes.Recipe;
+import com.github.siela1915.bootcamp.Recipes.Unit;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -68,7 +71,8 @@ public class FragmentIngredientCheck extends Fragment {
         Bundle args = new Bundle();
         //args.putString(ARG_PARAM1, param1);
         //args.putString(ARG_PARAM2, param2);
-        args.putParcelableArrayList(ARG_INGREDIENT_LIST, new ArrayList<>(ingredients));
+        ArrayList<Ingredient> l = new ArrayList<>(ingredients);
+        args.putParcelableArrayList(ARG_INGREDIENT_LIST, l);
         fragment.setArguments(args);
         return fragment;
     }
@@ -99,13 +103,15 @@ public class FragmentIngredientCheck extends Fragment {
                 shoppingManager.addIngredient(item);
             }
             ShoppingCartFragment fragment = new ShoppingCartFragment();
-            getParentFragmentManager().beginTransaction()
+            getActivity().getSupportFragmentManager().beginTransaction()
                     .replace(R.id.ingredientContainer,fragment)
                     .addToBackStack(null)
                     .commit();
         });
         nearbyBtn.setOnClickListener(v->{
-            NearbyHelpFragment fragment= new NearbyHelpFragment();
+            NearbyHelpFragment fragment= NearbyHelpFragment.newInstance(
+                    adapter.getSelectedItems().stream().map(name ->
+                            new Ingredient(name, new Unit())).collect(Collectors.toList()));
             getParentFragmentManager().beginTransaction()
                     .replace(R.id.ingredientContainer,fragment)
                     .addToBackStack(null)

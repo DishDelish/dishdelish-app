@@ -26,8 +26,8 @@ import com.github.siela1915.bootcamp.Labelling.DietType;
 import com.github.siela1915.bootcamp.Recipes.ExampleRecipes;
 import com.github.siela1915.bootcamp.Recipes.PreparationTime;
 import com.github.siela1915.bootcamp.Recipes.Recipe;
-
 import com.github.siela1915.bootcamp.Recipes.RecipeItemAdapter;
+import com.github.siela1915.bootcamp.Tools.SuggestionCalculator;
 import com.github.siela1915.bootcamp.firebase.Database;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -129,6 +129,7 @@ public class HomePageFragment extends Fragment {
         cuisineBtn = view.findViewById(R.id.btnCuisine);
         prepTimeBtn= view.findViewById(R.id.btnPrpTime);
 
+
         List<String> selectedCuisine = new ArrayList<>();
         List<String> selectedDiet = new ArrayList<>();
         List<String> selectedAllery= new ArrayList<>();
@@ -199,8 +200,11 @@ public class HomePageFragment extends Fragment {
                 return false;
             }
         });
-        database.getNRandomAsync(100).addOnSuccessListener(list->{
-                    fetchedRecipes = new ArrayList<>(list);
+       // database.getNRandomAsync(100).addOnSuccessListener(list->{
+         //           fetchedRecipes = new ArrayList<>(list);
+
+        SuggestionCalculator.getSuggestions(database).addOnSuccessListener(list->{
+
                     recipeAdapter =new RecipeItemAdapter(list, view.getContext());
                     recipeListRecyclerView.setAdapter(this.recipeAdapter/*new RecipeItemAdapter(list, view.getContext())*/);
         })
@@ -210,7 +214,7 @@ public class HomePageFragment extends Fragment {
                 });
         button.setOnClickListener(v -> {
             //Recipe recipe = ExampleRecipes.recipes.get((int)(Math.random()*2.999));
-            database.getByNameAsync("omelettte1")
+            database.getByNameAsync("omelette1")
                     .addOnSuccessListener(recipes -> startActivity(RecipeConverter.convertToIntent(recipes.get(0), getContext())))
                     .addOnFailureListener(e -> {
                         e.printStackTrace();

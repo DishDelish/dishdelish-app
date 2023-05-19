@@ -1,5 +1,6 @@
 package com.github.siela1915.bootcamp;
 
+import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.Visibility.VISIBLE;
@@ -11,7 +12,9 @@ import androidx.fragment.app.testing.FragmentScenario;
 import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.matcher.ViewMatchers;
 
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
 
 import org.junit.After;
 import org.junit.Before;
@@ -22,12 +25,13 @@ public class ProfileFragmentTest {
 
     @Before
     public void prepare() {
-        FirebaseAuth auth = FirebaseAuth.getInstance();
+        FirebaseApp.clearInstancesForTest();
+        FirebaseApp.initializeApp(getApplicationContext());
+        FirebaseAuth.getInstance().useEmulator("10.0.2.2", 9099);
+        FirebaseDatabase.getInstance().useEmulator("10.0.2.2", 9000);
 
-        auth.useEmulator("10.0.2.2", 9099);
-
-        if (auth.getCurrentUser() != null) {
-            auth.signOut();
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            FirebaseAuthActivityTest.logoutSync();
         }
     }
 
@@ -56,6 +60,8 @@ public class ProfileFragmentTest {
         onView(withId(R.id.profileLoggedOut)).check(matches(not(withEffectiveVisibility(VISIBLE))));
         onView(withId(R.id.profileTextFixed)).check(matches(withEffectiveVisibility(VISIBLE)));
         onView(withId(R.id.profileTextEdit)).check(matches(not(withEffectiveVisibility(VISIBLE))));
+
+        FirebaseAuthActivityTest.logoutSync();
     }
 
     @Test
@@ -72,6 +78,8 @@ public class ProfileFragmentTest {
         onView(withId(R.id.profileDisplayNameEdit)).perform(ViewActions.replaceText("Modified NewTest"));
 
         onView(withId(R.id.profileDisplayNameEdit)).check(matches(ViewMatchers.withText("Modified NewTest")));
+
+        FirebaseAuthActivityTest.logoutSync();
     }
 
     @Test
@@ -80,8 +88,7 @@ public class ProfileFragmentTest {
 
         scenario = FragmentScenario.launchInContainer(ProfileFragment.class);
 
-        onView(withId(R.id.profileLoggedIn)).check(matches(withEffectiveVisibility(VISIBLE)))
-        ;
+        onView(withId(R.id.profileLoggedIn)).check(matches(withEffectiveVisibility(VISIBLE)));
         onView(withId(R.id.profileEdit)).perform(ViewActions.click());
         onView(withId(R.id.profileDisplayNameEdit)).perform(ViewActions.replaceText("Modified NewTest"));
         onView(withId(R.id.profileSubmit)).perform(ViewActions.click());
@@ -89,5 +96,7 @@ public class ProfileFragmentTest {
         onView(withId(R.id.profileTextFixed)).check(matches(withEffectiveVisibility(VISIBLE)));
         onView(withId(R.id.profileTextEdit)).check(matches(not(withEffectiveVisibility(VISIBLE))));
         onView(withId(R.id.profileDisplayName)).check(matches(ViewMatchers.withText("Modified NewTest")));
+
+        FirebaseAuthActivityTest.logoutSync();
     }
 }

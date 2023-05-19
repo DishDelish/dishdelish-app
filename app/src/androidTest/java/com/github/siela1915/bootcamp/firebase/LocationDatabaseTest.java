@@ -2,6 +2,7 @@ package com.github.siela1915.bootcamp.firebase;
 
 import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.lessThan;
 import static org.junit.Assert.assertNotNull;
@@ -22,6 +23,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
@@ -67,7 +69,7 @@ public class LocationDatabaseTest {
     @Test
     public void setThenGetOfferedReturnsCorrectIngredient() {
         FirebaseAuthActivityTest.loginSync("test@example.com");
-        Ingredient ing = new Ingredient("Test", new Unit(3, "pieces"));
+        List<Ingredient> ing = Collections.singletonList(new Ingredient("Test", new Unit(3, "pieces")));
 
         Location loc = new Location("LocationDatabase");
         loc.setLongitude(15.0);
@@ -75,9 +77,9 @@ public class LocationDatabaseTest {
         try {
             Tasks.await(locDb.updateLocation(loc));
             Tasks.await(locDb.updateOffered(ing));
-            Ingredient res = Tasks.await(locDb.getOffered(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid()));
+            List<Ingredient> res = Tasks.await(locDb.getOffered(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid()));
             assertNotNull(res);
-            assertThat(res.toString(), is(ing.toString()));
+            assertThat(res, containsInAnyOrder(ing.toArray(new Ingredient[0])));
         } catch (ExecutionException | InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -104,7 +106,7 @@ public class LocationDatabaseTest {
 
     @Test
     public void updateOfferedLoggedOutReturnsExceptionTask() {
-        Ingredient ing = ExampleRecipes.recipes.get(0).getIngredientList().get(0);
+        List<Ingredient> ing = Collections.singletonList(ExampleRecipes.recipes.get(0).getIngredientList().get(0));
 
         assertThrows(ExecutionException.class, () -> Tasks.await(locDb.updateOffered(ing)));
     }
