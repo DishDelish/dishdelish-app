@@ -30,6 +30,7 @@ import com.github.siela1915.bootcamp.firebase.Database;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
@@ -153,6 +154,7 @@ public class MainHomeActivity extends AppCompatActivity {
 
         navigationView.setNavigationItemSelectedListener(item ->{
             filterView.setVisibility(View.GONE);
+            Intent intent = new Intent(this, MainHomeActivity.class);
             switch (item.getItemId()){
                 case R.id.menuItem_home:
                     setContainerContent(R.id.fragContainer,HomePageFragment.class,false);
@@ -163,10 +165,16 @@ public class MainHomeActivity extends AppCompatActivity {
                     setContainerContent(R.id.fragContainer,AboutPageFragment.class,false);
                     break;
                 case R.id.menuItem_login:
-                    setContainerContent(R.id.fragContainer,ProfileFragment.class,false);
+                    intent.putExtra("com.github.siela1915.bootcamp.navToProfile", true);
+                    if (FirebaseAuthActivity.promptLogin(this, this, intent)) {
+                        setContainerContent(R.id.fragContainer, ProfileFragment.class, false);
+                    }
                     break;
                 case R.id.menuItem_upload:
-                    setContainerContent(R.id.fragContainer, UploadingRecipeFragment.class, false);
+                    intent.putExtra("navToUpload", true);
+                    if (FirebaseAuthActivity.promptLogin(this, this, intent)) {
+                        setContainerContent(R.id.fragContainer, UploadingRecipeFragment.class, false);
+                    }
                     break;
                 case R.id.menuItem_filter:
                     if(item.isChecked()){
@@ -200,6 +208,11 @@ public class MainHomeActivity extends AppCompatActivity {
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
+            if (extras.containsKey("navToUpload")) {
+                navigationView.setCheckedItem(R.id.menuItem_upload);
+                setContainerContent(R.id.fragContainer, UploadingRecipeFragment.class, false);
+            }
+
             if (extras.containsKey("com.github.siela1915.bootcamp.navToProfile")) {
                 navigationView.setCheckedItem(R.id.menuItem_login);
                 setContainerContent(R.id.fragContainer, ProfileFragment.class, false);
@@ -245,26 +258,27 @@ public class MainHomeActivity extends AppCompatActivity {
     private void loadAndOpenFavorites() {
         Intent intent = new Intent(this, MainHomeActivity.class);
         intent.putExtra("com.github.siela1915.bootcamp.navToFavorites", true);
-        FirebaseAuthActivity.promptLogin(this, this, intent);
+        if (FirebaseAuthActivity.promptLogin(this, this, intent)) {
 
-        setContainerContent(R.id.fragContainer, RecipeListFragment.newInstance(new ArrayList<>()), false);
+            setContainerContent(R.id.fragContainer, RecipeListFragment.newInstance(new ArrayList<>()), false);
 
-        Database db = new Database(FirebaseDatabase.getInstance());
-        db.getFavorites().addOnSuccessListener(favorites -> {
-            List<Task<Recipe>> favListTasks = favorites.stream().map(db::getAsync).collect(Collectors.toList());
-            Tasks.whenAll(favListTasks).addOnSuccessListener(voidRes -> {
-                Fragment currentFrag = fragmentManager.findFragmentById(R.id.fragContainer);
-                if (currentFrag == null || currentFrag.getClass() != RecipeListFragment.class) {
-                    return;
-                }
-                fragmentManager.popBackStack();
-                List<Recipe> favRecipes = favListTasks
-                        .stream().map(Task::getResult).collect(Collectors.toList());
-                setContainerContent(R.id.fragContainer, RecipeListFragment.newInstance(
-                        favRecipes
-                ), false);
+            Database db = new Database(FirebaseDatabase.getInstance());
+            db.getFavorites().addOnSuccessListener(favorites -> {
+                List<Task<Recipe>> favListTasks = favorites.stream().map(db::getAsync).collect(Collectors.toList());
+                Tasks.whenAll(favListTasks).addOnSuccessListener(voidRes -> {
+                    Fragment currentFrag = fragmentManager.findFragmentById(R.id.fragContainer);
+                    if (currentFrag == null || currentFrag.getClass() != RecipeListFragment.class) {
+                        return;
+                    }
+                    fragmentManager.popBackStack();
+                    List<Recipe> favRecipes = favListTasks
+                            .stream().map(Task::getResult).collect(Collectors.toList());
+                    setContainerContent(R.id.fragContainer, RecipeListFragment.newInstance(
+                            favRecipes
+                    ), false);
+                });
             });
-        });
+        }
     }
 
     private void openHelp() {
@@ -275,19 +289,20 @@ public class MainHomeActivity extends AppCompatActivity {
             intent.putExtras(extras);
         }
         intent.putExtra("navToHelp", true);
-        FirebaseAuthActivity.promptLogin(this, this, intent);
+        if (FirebaseAuthActivity.promptLogin(this, this, intent)) {
 
-        if (extras != null && extras.containsKey("sender")) {
-            setContainerContent(R.id.fragContainer, NearbyHelpFragment.newInstance(
-                            extras.getString("sender"),
-                            extras.getString("ingredient")),
-                    false);
-        } else if (extras != null && extras.containsKey("askedIngredient")) {
-            setContainerContent(R.id.fragContainer, NearbyHelpFragment.newInstance(
-                    (Ingredient)extras.getParcelable("askedIngredient")),
-                    false);
-        } else {
-            setContainerContent(R.id.fragContainer, NearbyHelpFragment.class, false);
+            if (extras != null && extras.containsKey("sender")) {
+                setContainerContent(R.id.fragContainer, NearbyHelpFragment.newInstance(
+                                extras.getString("sender"),
+                                extras.getString("ingredient")),
+                        false);
+            } else if (extras != null && extras.containsKey("askedIngredient")) {
+                setContainerContent(R.id.fragContainer, NearbyHelpFragment.newInstance(
+                                (Ingredient) extras.getParcelable("askedIngredient")),
+                        false);
+            } else {
+                setContainerContent(R.id.fragContainer, NearbyHelpFragment.class, false);
+            }
         }
     }
 

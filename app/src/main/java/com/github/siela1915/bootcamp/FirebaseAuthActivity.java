@@ -195,10 +195,10 @@ public class FirebaseAuthActivity extends AppCompatActivity {
         return Tasks.forException(new UserNotAuthenticatedException("User needs to be authenticated to update profile"));
     }
 
-    public static void promptLogin(Context context, Activity activity, Intent postLoginIntent) {
+    public static boolean promptLogin(Context context, Activity activity, Intent postLoginIntent) {
         FirebaseAuth auth = FirebaseAuth.getInstance();
         if (auth.getCurrentUser() != null) {
-            return;
+            return true;
         }
 
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(LAYOUT_INFLATER_SERVICE);
@@ -218,5 +218,7 @@ public class FirebaseAuthActivity extends AppCompatActivity {
         cancelButton.setOnClickListener(view -> popupWindow.dismiss());
 
         popupWindow.showAtLocation(activity.findViewById(android.R.id.content).getRootView(), Gravity.CENTER, 0, 0);
+
+        return false;
     }
 }
