@@ -137,7 +137,7 @@ public class MainHomeActivityTest {
     }
     @Test
     public void intentWithNavToFavoritesNavigatesToFavoritesTest() {
-        FirebaseAuthActivityTest.loginSync("clickingOnFavoritesMenuNavigatesToProfileFragment@test.com");
+        FirebaseAuthActivityTest.loginSync("intentWithNavToFavoritesNavigatesToFavorites@test.com");
         Intent intent = new Intent(getApplicationContext(), MainHomeActivity.class);
         intent.putExtra("com.github.siela1915.bootcamp.navToFavorites", "true");
 
@@ -149,12 +149,26 @@ public class MainHomeActivityTest {
 
     @Test
     public void intentWithNavToProfileNavigatesToProfileTest() {
+        FirebaseAuthActivityTest.loginSync("intentWithNavToProfileNavigatesToProfile@test.com");
         Intent intent = new Intent(getApplicationContext(), MainHomeActivity.class);
         intent.putExtra("com.github.siela1915.bootcamp.navToProfile", "true");
 
         try (ActivityScenario<MainHomeActivity> activityScenario = ActivityScenario.launch(intent)) {
             onView(ViewMatchers.withId(R.id.profileFragment)).check(matches(isDisplayed()));
         }
+        FirebaseAuthActivityTest.logoutSync();
+    }
+
+    @Test
+    public void intentWithNavToUploadNavigatesToUploadTest() {
+        FirebaseAuthActivityTest.loginSync("intentWithNavToUploadNavigatesToUpload@test.com");
+        Intent intent = new Intent(getApplicationContext(), MainHomeActivity.class);
+        intent.putExtra("navToUpload", "true");
+
+        try (ActivityScenario<MainHomeActivity> activityScenario = ActivityScenario.launch(intent)) {
+            onView(ViewMatchers.withId(R.id.profileFragment)).check(matches(isDisplayed()));
+        }
+        FirebaseAuthActivityTest.logoutSync();
     }
 
     @Test
