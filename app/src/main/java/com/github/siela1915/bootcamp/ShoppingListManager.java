@@ -43,6 +43,11 @@ public class ShoppingListManager {
         db.delete(ShoppingListContract.ShoppingListEntry.TABLE_NAME, selection, selectionArgs);
     }
 
+    public void clearShoppingList() {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        db.delete(ShoppingListContract.ShoppingListEntry.TABLE_NAME, null, null);
+    }
+
     public List<String> getShoppingList() {
         List<String> shoppingList = new ArrayList<>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();

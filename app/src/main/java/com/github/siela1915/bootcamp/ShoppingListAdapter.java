@@ -9,10 +9,13 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ShoppingListAdapter  extends RecyclerView.Adapter<ShoppingListViewHolder>{
     List<String> shoppingList;
+
+    List<String> selectedItems = new ArrayList<>();
     Context context;
     ShoppingListManager manager;
 
@@ -24,16 +27,16 @@ public class ShoppingListAdapter  extends RecyclerView.Adapter<ShoppingListViewH
     @NonNull
     @Override
     public ShoppingListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new ShoppingListViewHolder(LayoutInflater.from(context).inflate(R.layout.shopping_items, parent, false));
+        return new ShoppingListViewHolder(LayoutInflater.from(context).inflate(R.layout.shopping_items, parent, false), this);
     }
 
     @SuppressLint("ResourceAsColor")
     @Override
     public void onBindViewHolder(@NonNull ShoppingListViewHolder holder, int position) {
-        manager=new ShoppingListManager(context);
+        manager = new ShoppingListManager(context);
         String item = shoppingList.get(position);
-        holder.shopping_items.setText(item);
-        holder.itemView.setOnClickListener(view ->{
+        holder.ingredientName.setText(item);
+        /*holder.itemView.setOnClickListener(view ->{
             AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext(),R.style.AlertDialogTheme);
             builder.setTitle("Are you sure you want to delete this item?");
             builder.setCancelable(false);
@@ -53,7 +56,7 @@ public class ShoppingListAdapter  extends RecyclerView.Adapter<ShoppingListViewH
             });
             dialog.show();
 
-        });
+        });*/
     }
 
     @Override
@@ -61,4 +64,34 @@ public class ShoppingListAdapter  extends RecyclerView.Adapter<ShoppingListViewH
         return shoppingList.size();
     }
 
+    public void itemSelectionChanged(int position, boolean selected) {
+        if(selectedItems.contains(shoppingList.get(position)) && !selected){
+            selectedItems.remove(shoppingList.get(position));
+        } else if(!selectedItems.contains(shoppingList.get(position)) && selected){
+            selectedItems.add(shoppingList.get(position));
+        }
+    }
+
+
+    public void removeSelectedItems() {
+        for (String selectedItem : selectedItems) {
+            manager.removeIngredient(selectedItem);
+            shoppingList.remove(selectedItem);
+        }
+        clearSelectedItems();
+        notifyDataSetChanged();
+    }
+
+    public void clearSelectedItems() {
+        selectedItems.clear();
+    }
+
+    public List<String> getShoppingList() {
+        return shoppingList;
+    }
+
+    public void addItem(String item) {
+        shoppingList.add(item);
+        notifyDataSetChanged();
+    }
 }

@@ -6,9 +6,12 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 
 import com.github.siela1915.bootcamp.Recipes.Ingredient;
 import com.github.siela1915.bootcamp.Recipes.Unit;
@@ -69,13 +72,51 @@ public class ShoppingCartFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        manager=new ShoppingListManager(getContext());
-        View view =inflater.inflate(R.layout.fragment_shopping_cart, container, false);
+        manager = new ShoppingListManager(getContext());
+        View view = inflater.inflate(R.layout.fragment_shopping_cart, container, false);
+
+        // RecyclerView setup
         RecyclerView recyclerView = view.findViewById(R.id.shoppingList);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        List<String> list= manager.getShoppingList();
-        ShoppingListAdapter adapter= new ShoppingListAdapter(list,getContext());
+        List<String> list = manager.getShoppingList();
+        ShoppingListAdapter adapter = new ShoppingListAdapter(list, getContext());
         recyclerView.setAdapter(adapter);
+
+        // Button setup
+        Button clearAllButton = view.findViewById(R.id.buttonClearAll);
+        Button deleteSelectedButton = view.findViewById(R.id.buttonDeleteSelected);
+
+        clearAllButton.setOnClickListener(v -> {
+            clearAllItems(adapter);
+        });
+
+        deleteSelectedButton.setOnClickListener(v -> {
+            deleteSelectedItems(adapter);
+        });
+
+        EditText editTextItem = view.findViewById(R.id.editTextItem);
+        Button buttonAdd = view.findViewById(R.id.buttonAdd);
+        buttonAdd.setOnClickListener(v -> {
+            String newItem = editTextItem.getText().toString().trim();
+            if (!newItem.isEmpty()) {
+                manager.addIngredient(newItem);
+                adapter.addItem(newItem);
+                editTextItem.setText("");
+            }
+        });
+
         return view;
     }
+
+    private void clearAllItems(ShoppingListAdapter adapter) {
+        List<String> shoppingList = adapter.getShoppingList();
+        manager.clearShoppingList();
+        shoppingList.clear();
+        adapter.notifyDataSetChanged();
+    }
+
+    private void deleteSelectedItems(ShoppingListAdapter adapter) {
+        adapter.removeSelectedItems();
+    }
+
 }
