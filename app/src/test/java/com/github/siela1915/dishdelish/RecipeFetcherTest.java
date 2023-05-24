@@ -113,10 +113,14 @@ public class RecipeFetcherTest {
         List<Integer> allergies = new ArrayList<>();
         List<Integer> cuisines = new ArrayList<>();
         List<Integer> diets = new ArrayList<>();
+
+        for (int i = 0; i < ExampleRecipes.recipes.size(); i++) {
+            ExampleRecipes.recipes.get(i).setUniqueKey(String.valueOf(i));
+        }
         fetcher = new RecipeFetcher(allergies, cuisines, diets,ExampleRecipes.recipes);
 
-        List<String> expectedList = Arrays.asList(ExampleRecipes.recipes.get(2).recipeName);
-        List<String> actualList = fetcher.filterByIngredients(ExampleRecipes.recipes, Arrays.asList(new Ingredient("lemon", new Unit(1, ""))));
+        List<String> expectedList = Arrays.asList(String.valueOf(1));
+        List<String> actualList = fetcher.filterByIngredients(Arrays.asList(new Ingredient("Cauliflower", new Unit(1, "")), new Ingredient("Coriander", new Unit(1, ""))));
 
         assertEquals(expectedList, actualList);
     }
@@ -126,10 +130,14 @@ public class RecipeFetcherTest {
         List<Integer> allergies = new ArrayList<>();
         List<Integer> cuisines = new ArrayList<>();
         List<Integer> diets = new ArrayList<>();
+
+        for (int i = 0; i < ExampleRecipes.recipes.size(); i++) {
+            ExampleRecipes.recipes.get(i).setUniqueKey(String.valueOf(i));
+        }
         fetcher = new RecipeFetcher(allergies, cuisines, diets,ExampleRecipes.recipes);
 
-        List<String> expectedList = Arrays.asList(ExampleRecipes.recipes.get(2).recipeName);
-        List<String> actualList = fetcher.filterByIngredients(ExampleRecipes.recipes, Arrays.asList(new Ingredient("LeMON", new Unit(1, ""))));
+        List<String> expectedList = Arrays.asList(String.valueOf(1));
+        List<String> actualList = fetcher.filterByIngredients(Arrays.asList(new Ingredient("CaUlIfLoWer", new Unit(1, "")), new Ingredient("CoRIAnder", new Unit(1, ""))));
 
         assertEquals(expectedList, actualList);
     }

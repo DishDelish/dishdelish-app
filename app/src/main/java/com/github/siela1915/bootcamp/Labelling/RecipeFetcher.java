@@ -108,19 +108,27 @@ public class RecipeFetcher{
 
     /**
      * Filters recipes to only contain recipes using all ingredients in the ingredients list
-     * @param recipes to be filtered
      * @param ingredients to consider for filtering
      * @return filtered recipe names
      */
-    public List<String> filterByIngredients(List<Recipe> recipes, List<Ingredient> ingredients){
-        Objects.requireNonNull(recipes);
-        List<Recipe> ret = new ArrayList<>(recipes);
-        return ret.stream()
-                .filter(r ->
-                        new HashSet<>(r.ingredientList.stream().map(Ingredient::getIngredient).collect(Collectors.toList()))
-                        .containsAll(ingredients.stream().map(Ingredient::getIngredient).collect(Collectors.toList())))
-                .map(r -> r.recipeName)
-                .collect(Collectors.toList());
+    public List<String> filterByIngredients(List<Ingredient> ingredients){
+        Objects.requireNonNull(allRecipes);
+        List<String> filteredRecipes = new ArrayList<>();
+
+        for (Recipe recipe : allRecipes) {
+            boolean containsOnlyIngredients = recipe.getIngredientList().stream()
+                    .map(i -> i.getIngredient())
+                    .allMatch(ingredient ->
+                            ingredients.stream()
+                                    .map(i -> i.getIngredient()).collect(Collectors.toList())
+                            .contains(ingredient));
+
+            if (containsOnlyIngredients) {
+                filteredRecipes.add(recipe.uniqueKey);
+            }
+        }
+
+        return filteredRecipes;
     }
 
 
