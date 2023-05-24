@@ -69,10 +69,10 @@ public class HomePageFragment extends Fragment {
     private SearchView searchView;
     private Button dietBtn,allergyBtn,cuisineBtn,prepTimeBtn;
     private List<Recipe> fetchedRecipes= new ArrayList<>();
-    List<Integer> selectedCuisine = new ArrayList<>();
-    List<Integer> selectedDiet = new ArrayList<>();
-    List<Integer> selectedAllery= new ArrayList<>();
-    List<Integer> selectedPrepTime= new ArrayList<>();
+    private List<Integer> selectedCuisine = new ArrayList<>();
+    private List<Integer> selectedDiet = new ArrayList<>();
+    private List<Integer> selectedAllery= new ArrayList<>();
+    private List<Integer> selectedPrepTime= new ArrayList<>();
     public HomePageFragment() {
         // Required empty public constructor
     }
@@ -227,9 +227,9 @@ public class HomePageFragment extends Fragment {
         })
                 .addOnFailureListener(e->{
                     e.printStackTrace();
-                    recipeAdapter = new RecipeItemAdapter(ExampleRecipes.recipes,view.getContext());
-                    recipeListRecyclerView.setAdapter(recipeAdapter);
-                    fetchedRecipes= ExampleRecipes.recipes;
+                    //recipeAdapter = new RecipeItemAdapter(ExampleRecipes.recipes,view.getContext());
+                    recipeListRecyclerView.setAdapter(new RecipeItemAdapter(ExampleRecipes.recipes,view.getContext()));
+                    //fetchedRecipes= ExampleRecipes.recipes;
                 });
     }
 
@@ -295,9 +295,9 @@ public class HomePageFragment extends Fragment {
             List<String> filteredRecipes= recipeFetcher.fetchRecipeList();
             List<Recipe> recipeList = new ArrayList<>();
             for (String recipeName: filteredRecipes){
-                for(int i=0; i<ExampleRecipes.recipes.size();i++){
-                    if(recipeAdapter.getRecipes().get(i).recipeName.equalsIgnoreCase(recipeName)){
-                        recipeList.add(ExampleRecipes.recipes.get(i));
+                for(int i=0; i<fetchedRecipes.size();i++){
+                    if(fetchedRecipes.get(i).recipeName.equalsIgnoreCase(recipeName)){
+                        recipeList.add(fetchedRecipes.get(i));
                     }
                 }
 
