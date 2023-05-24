@@ -22,6 +22,7 @@ import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.firebase.ui.auth.AuthUI;
+import com.github.siela1915.bootcamp.firebase.FirebaseInstanceManager;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.FirebaseApp;
@@ -56,7 +57,7 @@ public class FirebaseAuthActivityTest {
         }
 
         AuthCredential credential = GoogleAuthProvider.getCredential(userJson, null);
-        Task<AuthResult> result = FirebaseAuth.getInstance().signInWithCredential(credential);
+        Task<AuthResult> result = FirebaseInstanceManager.getAuth().signInWithCredential(credential);
 
         try {
             AuthResult authResult = Tasks.await(result);
@@ -89,12 +90,9 @@ public class FirebaseAuthActivityTest {
 
     @Before
     public void prepare() {
-        FirebaseApp.clearInstancesForTest();
-        FirebaseApp.initializeApp(getApplicationContext());
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        FirebaseDatabase.getInstance().useEmulator("10.0.2.2", 9000);
+        FirebaseInstanceManager.emulator = true;
 
-        auth.useEmulator("10.0.2.2", 9099);
+        FirebaseAuth auth = FirebaseInstanceManager.getAuth();
 
         if (auth.getCurrentUser() != null) {
             auth.signOut();
@@ -150,14 +148,14 @@ public class FirebaseAuthActivityTest {
     public void testUpdate() {
         loginSync("foo@example.com");
 
-        String initDisplayName = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getDisplayName();
+        String initDisplayName = Objects.requireNonNull(FirebaseInstanceManager.getAuth().getCurrentUser()).getDisplayName();
         Task<Void> result = FirebaseAuthActivity.update(new UserProfileChangeRequest.Builder()
                 .setDisplayName(initDisplayName + "updated")
                 .build());
         try {
             Tasks.await(result);
 
-            assertThat(FirebaseAuth.getInstance().getCurrentUser().getDisplayName(), is(initDisplayName + "updated"));
+            assertThat(FirebaseInstanceManager.getAuth().getCurrentUser().getDisplayName(), is(initDisplayName + "updated"));
         } catch (ExecutionException | InterruptedException e) {
             throw new RuntimeException(e);
         }

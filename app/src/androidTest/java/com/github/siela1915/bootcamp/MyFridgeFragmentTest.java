@@ -21,6 +21,7 @@ import androidx.test.rule.GrantPermissionRule;
 import com.github.siela1915.bootcamp.Recipes.Ingredient;
 import com.github.siela1915.bootcamp.Recipes.Unit;
 import com.github.siela1915.bootcamp.firebase.Database;
+import com.github.siela1915.bootcamp.firebase.FirebaseInstanceManager;
 import com.github.siela1915.bootcamp.firebase.LocationDatabase;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.FirebaseApp;
@@ -48,21 +49,17 @@ public class MyFridgeFragmentTest {
 
     @Before
     public void prepare() {
-        FirebaseApp.clearInstancesForTest();
-        FirebaseApp.initializeApp(getApplicationContext());
-        FirebaseAuth.getInstance().useEmulator("10.0.2.2", 9099);
-        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        firebaseDatabase.useEmulator("10.0.2.2", 9000);
+        FirebaseInstanceManager.emulator = true;
 
         if (locDb == null) {
             locDb = new LocationDatabase();
         }
 
         if (db == null) {
-            db = new Database(firebaseDatabase);
+            db = new Database(FirebaseInstanceManager.getDatabase());
         }
 
-        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+        if (FirebaseInstanceManager.getAuth().getCurrentUser() != null) {
             FirebaseAuthActivityTest.logoutSync();
         }
     }

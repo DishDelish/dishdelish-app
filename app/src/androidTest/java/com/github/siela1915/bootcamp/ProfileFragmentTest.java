@@ -12,6 +12,7 @@ import androidx.fragment.app.testing.FragmentScenario;
 import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.matcher.ViewMatchers;
 
+import com.github.siela1915.bootcamp.firebase.FirebaseInstanceManager;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
@@ -25,12 +26,9 @@ public class ProfileFragmentTest {
 
     @Before
     public void prepare() {
-        FirebaseApp.clearInstancesForTest();
-        FirebaseApp.initializeApp(getApplicationContext());
-        FirebaseAuth.getInstance().useEmulator("10.0.2.2", 9099);
-        FirebaseDatabase.getInstance().useEmulator("10.0.2.2", 9000);
+        FirebaseInstanceManager.emulator = true;
 
-        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+        if (FirebaseInstanceManager.getAuth().getCurrentUser() != null) {
             FirebaseAuthActivityTest.logoutSync();
         }
     }

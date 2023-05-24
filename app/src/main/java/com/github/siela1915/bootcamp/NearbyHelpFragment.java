@@ -34,6 +34,7 @@ import androidx.fragment.app.FragmentManager;
 import com.github.siela1915.bootcamp.AutocompleteApi.IngredientAutocomplete;
 import com.github.siela1915.bootcamp.Recipes.Ingredient;
 import com.github.siela1915.bootcamp.UploadRecipe.RecipeStepAndIngredientManager;
+import com.github.siela1915.bootcamp.firebase.FirebaseInstanceManager;
 import com.github.siela1915.bootcamp.firebase.LocationDatabase;
 import com.github.siela1915.bootcamp.firebase.PushNotificationService;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -230,7 +231,7 @@ public class NearbyHelpFragment extends Fragment implements OnMapReadyCallback, 
     @Override
     public void onInfoWindowClick(@NonNull Marker marker) {
         Pair<String, Ingredient> offer = offers.get(marker);
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseUser user = FirebaseInstanceManager.getAuth().getCurrentUser();
 
         if (offer != null && user != null) {
             Map<String, String> data = new HashMap<>();
@@ -277,7 +278,7 @@ public class NearbyHelpFragment extends Fragment implements OnMapReadyCallback, 
 
         sendReplyButton.setOnClickListener(v -> {
             EditText replyInput = view.findViewById(R.id.replyInputHelp);
-            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            FirebaseUser user = FirebaseInstanceManager.getAuth().getCurrentUser();
             if (user == null) {
                 replyInput.setText(R.string.nearbyNotAuthenticatedErrorMsg);
                 return;

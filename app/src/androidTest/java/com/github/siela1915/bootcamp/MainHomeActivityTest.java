@@ -44,6 +44,7 @@ import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
 
 import com.github.siela1915.bootcamp.Recipes.Ingredient;
 import com.github.siela1915.bootcamp.Recipes.Unit;
+import com.github.siela1915.bootcamp.firebase.FirebaseInstanceManager;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
@@ -65,14 +66,11 @@ public class MainHomeActivityTest {
 
     @Before
     public void setupEmulators() {
-        FirebaseApp.clearInstancesForTest();
-        FirebaseApp.initializeApp(getApplicationContext());
-        FirebaseAuth.getInstance().useEmulator("10.0.2.2", 9099);
-        FirebaseDatabase.getInstance().useEmulator("10.0.2.2", 9000);
+        FirebaseInstanceManager.emulator = true;
 
         scenario = ActivityScenario.launch(MainHomeActivity.class);
 
-        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+        if (FirebaseInstanceManager.getAuth().getCurrentUser() != null) {
             FirebaseAuthActivityTest.logoutSync();
         }
     }
@@ -191,7 +189,7 @@ public class MainHomeActivityTest {
         FirebaseAuthActivityTest.loginSync("intentWithNavToHelp@test");
         Intent intent = new Intent(getApplicationContext(), MainHomeActivity.class);
         intent.putExtra("navToHelp", "true");
-        intent.putExtra("sender", Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid());
+        intent.putExtra("sender", Objects.requireNonNull(FirebaseInstanceManager.getAuth().getCurrentUser()).getUid());
         intent.putExtra("ingredient", "testIngredient");
 
         try (ActivityScenario<MainHomeActivity> activityScenario = ActivityScenario.launch(intent)) {

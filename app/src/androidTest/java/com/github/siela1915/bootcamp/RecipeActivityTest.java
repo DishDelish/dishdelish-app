@@ -50,6 +50,7 @@ import com.github.siela1915.bootcamp.Recipes.ExampleRecipes;
 import com.github.siela1915.bootcamp.Recipes.Ingredient;
 import com.github.siela1915.bootcamp.Recipes.Recipe;
 import com.github.siela1915.bootcamp.firebase.Database;
+import com.github.siela1915.bootcamp.firebase.FirebaseInstanceManager;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
@@ -81,16 +82,13 @@ public class RecipeActivityTest {
 
     @BeforeClass
     public static void prepareEmulator() {
-        FirebaseApp.clearInstancesForTest();
-        FirebaseApp.initializeApp(appContext);
-        FirebaseAuth.getInstance().useEmulator("10.0.2.2", 9099);
-        fb = FirebaseDatabase.getInstance();
-        fb.useEmulator("10.0.2.2", 9000);
+        FirebaseInstanceManager.emulator = true;
+        fb = FirebaseInstanceManager.getDatabase();
 
         database = new Database(fb);
 
 
-        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+        if (FirebaseInstanceManager.getAuth().getCurrentUser() != null) {
             FirebaseAuthActivityTest.logoutSync();
         }
 
@@ -135,7 +133,7 @@ public class RecipeActivityTest {
 
     @After
     public void tearDown() {
-        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+        if (FirebaseInstanceManager.getAuth().getCurrentUser() != null) {
             FirebaseAuthActivityTest.logoutSync();
         }
     }

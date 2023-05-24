@@ -30,12 +30,12 @@ public class LocationDatabase {
     private final GeoFire geoFire;
 
     public LocationDatabase() {
-        this.db = FirebaseDatabase.getInstance().getReference(HELP);
+        this.db = FirebaseInstanceManager.getDatabase().getReference(HELP);
         this.geoFire = new GeoFire(db);
     }
 
     public Task<Void> updateLocation(Location location) {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseUser user = FirebaseInstanceManager.getAuth().getCurrentUser();
         if (user == null) {
             return Tasks.forException(new UserNotAuthenticatedException("User needs to be authenticated to store location"));
         }
@@ -54,7 +54,7 @@ public class LocationDatabase {
     }
 
     public Task<Void> updateOffered(List<Integer> indexes) {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseUser user = FirebaseInstanceManager.getAuth().getCurrentUser();
         if (user == null) {
             return Tasks.forException(new UserNotAuthenticatedException("User needs to be authenticated to store location"));
         }
@@ -69,7 +69,7 @@ public class LocationDatabase {
                     for (DataSnapshot ds : offersTask.getResult().getChildren()) {
                         indexes.add(ds.getValue(Integer.class));
                     }
-                    Database persDb = new Database(FirebaseDatabase.getInstance());
+                    Database persDb = new Database(FirebaseInstanceManager.getDatabase());
                     return persDb.getFridge().continueWith(fridgeTask -> {
                         List<Ingredient> list = new ArrayList<>();
                         for (int i = 0; i < fridgeTask.getResult().size(); ++i) {
@@ -94,7 +94,7 @@ public class LocationDatabase {
     }
 
     public Task<List<Pair<String, Location>>> getNearby(Location location) {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseUser user = FirebaseInstanceManager.getAuth().getCurrentUser();
         if (user == null) {
             return Tasks.forException(new UserNotAuthenticatedException("User needs to be authenticated to store location"));
         }

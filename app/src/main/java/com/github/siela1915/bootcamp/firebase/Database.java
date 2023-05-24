@@ -42,7 +42,7 @@ public class Database {
     /**
      * Constructor instantiates the connection to the database
      * @param database the database instance
-     * Pass FirebaseDatabase.getInstance() to get default database
+     * Pass FirebaseInstanceManager.getDatabase() to get default database
      */
     public Database(FirebaseDatabase database) {
         db = database.getReference();
@@ -348,10 +348,10 @@ public class Database {
     }
 
     public Task<Void> addFavorite(String recipeId) {
-        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+        if (FirebaseInstanceManager.getAuth().getCurrentUser() == null) {
             return Tasks.forException(new FirebaseNoSignedInUserException("Sign in to add favorites"));
         }
-        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        String userId = FirebaseInstanceManager.getAuth().getCurrentUser().getUid();
         Task<DataSnapshot> existing = db.child(FAVORITES + "/" + userId + "/" + recipeId).get();
         db.child(RECIPES + "/" + recipeId).keepSynced(true);
         return existing.continueWithTask(t -> {
@@ -363,19 +363,19 @@ public class Database {
     }
 
     public Task<Void> removeFavorite(String recipeId) {
-        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+        if (FirebaseInstanceManager.getAuth().getCurrentUser() == null) {
             return Tasks.forException(new FirebaseNoSignedInUserException("Sign in to remove favorites"));
         }
-        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        String userId = FirebaseInstanceManager.getAuth().getCurrentUser().getUid();
         db.child(RECIPES + "/" + recipeId).keepSynced(false);
         return db.child(FAVORITES + "/" + userId + "/" + recipeId).removeValue();
     }
 
     public Task<List<String>> getFavorites() {
-        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+        if (FirebaseInstanceManager.getAuth().getCurrentUser() == null) {
             return Tasks.forException(new FirebaseNoSignedInUserException("Sign in to get favorites"));
         }
-        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        String userId = FirebaseInstanceManager.getAuth().getCurrentUser().getUid();
         Query query = db.child(FAVORITES + "/" + userId).orderByValue();
         Task<DataSnapshot> task = query.get();
         return task.continueWith(snapshot -> {
@@ -394,7 +394,7 @@ public class Database {
     }
 
     public Task<Void> updateFridge(List<Ingredient> ing) {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseUser user = FirebaseInstanceManager.getAuth().getCurrentUser();
         if (user == null) {
             return Tasks.forException(new UserNotAuthenticatedException("User needs to be authenticated to access his fridge"));
         }
@@ -403,7 +403,7 @@ public class Database {
     }
 
     public Task<List<Ingredient>> getFridge() {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseUser user = FirebaseInstanceManager.getAuth().getCurrentUser();
         if (user == null) {
             return Tasks.forException(new UserNotAuthenticatedException("User needs to be authenticated to access his fridge"));
         }

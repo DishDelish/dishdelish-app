@@ -15,6 +15,7 @@ import com.github.siela1915.bootcamp.Labelling.DietType;
 import com.github.siela1915.bootcamp.Recipes.Recipe;
 import com.github.siela1915.bootcamp.Tools.SuggestionCalculator;
 import com.github.siela1915.bootcamp.firebase.Database;
+import com.github.siela1915.bootcamp.firebase.FirebaseInstanceManager;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -43,11 +44,8 @@ public class SuggestionsTest {
 
     @Before
     public void useEmulator() {
-        FirebaseApp.clearInstancesForTest();
-        FirebaseApp.initializeApp(getApplicationContext());
-        FirebaseAuth.getInstance().useEmulator("10.0.2.2", 9099);
-        firebaseInstance = FirebaseDatabase.getInstance();
-        firebaseInstance.useEmulator("10.0.2.2", 9000);
+        FirebaseInstanceManager.emulator = true;
+        firebaseInstance = FirebaseInstanceManager.getDatabase();
     }
 
     @After

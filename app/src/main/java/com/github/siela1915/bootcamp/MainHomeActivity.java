@@ -27,6 +27,7 @@ import com.github.siela1915.bootcamp.Recipes.PreparationTime;
 import com.github.siela1915.bootcamp.Recipes.Recipe;
 import com.github.siela1915.bootcamp.UploadRecipe.UploadingRecipeFragment;
 import com.github.siela1915.bootcamp.firebase.Database;
+import com.github.siela1915.bootcamp.firebase.FirebaseInstanceManager;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.android.material.navigation.NavigationView;
@@ -51,7 +52,7 @@ public class MainHomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        FirebaseDatabase firebaseDb = FirebaseDatabase.getInstance();
+        FirebaseDatabase firebaseDb = FirebaseInstanceManager.getDatabase();
         if (!isRunningTest()) {
             try {
                 firebaseDb.setPersistenceEnabled(true);
@@ -272,7 +273,7 @@ public class MainHomeActivity extends AppCompatActivity {
 
             setContainerContent(R.id.fragContainer, RecipeListFragment.newInstance(new ArrayList<>()), false);
 
-            Database db = new Database(FirebaseDatabase.getInstance());
+            Database db = new Database(FirebaseInstanceManager.getDatabase());
             db.getFavorites().addOnSuccessListener(favorites -> {
                 List<Task<Recipe>> favListTasks = favorites.stream().map(db::getAsync).collect(Collectors.toList());
                 Tasks.whenAll(favListTasks).addOnSuccessListener(voidRes -> {

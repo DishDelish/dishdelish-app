@@ -23,6 +23,7 @@ import com.github.siela1915.bootcamp.AutocompleteApi.IngredientAutocomplete;
 import com.github.siela1915.bootcamp.Recipes.Ingredient;
 import com.github.siela1915.bootcamp.UploadRecipe.RecipeStepAndIngredientManager;
 import com.github.siela1915.bootcamp.firebase.Database;
+import com.github.siela1915.bootcamp.firebase.FirebaseInstanceManager;
 import com.github.siela1915.bootcamp.firebase.LocationDatabase;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -63,7 +64,7 @@ public class MyFridgeFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        db = new Database(FirebaseDatabase.getInstance());
+        db = new Database(FirebaseInstanceManager.getDatabase());
 
         askLocationPermission();
 
@@ -91,7 +92,7 @@ public class MyFridgeFragment extends Fragment {
 
         addIngredient.setOnClickListener(v -> ingredientManager.addIngredient(idMap, apiService, true, null));
 
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseUser user = FirebaseInstanceManager.getAuth().getCurrentUser();
         if (user != null) {
             Task<List<Ingredient>> ingTask = db.getFridge();
             Task<List<Integer>> indexTask = locDb.getOffered(user.getUid());

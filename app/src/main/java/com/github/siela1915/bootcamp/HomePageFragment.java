@@ -17,6 +17,7 @@ import com.github.siela1915.bootcamp.Recipes.ExampleRecipes;
 import com.github.siela1915.bootcamp.Recipes.RecipeItemAdapter;
 import com.github.siela1915.bootcamp.Tools.SuggestionCalculator;
 import com.github.siela1915.bootcamp.firebase.Database;
+import com.github.siela1915.bootcamp.firebase.FirebaseInstanceManager;
 import com.google.firebase.database.FirebaseDatabase;
 
 
@@ -77,7 +78,7 @@ public class HomePageFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-        firebaseDatabase = FirebaseDatabase.getInstance();
+        firebaseDatabase = FirebaseInstanceManager.getDatabase();
         database = new Database(firebaseDatabase);
     }
 

@@ -33,20 +33,17 @@ public class LocationDatabaseTest {
 
     @Before
     public void prepareEmulator() {
-        FirebaseApp.clearInstancesForTest();
-        FirebaseApp.initializeApp(getApplicationContext());
-        FirebaseAuth.getInstance().useEmulator("10.0.2.2", 9099);
-        FirebaseDatabase.getInstance().useEmulator("10.0.2.2", 9000);
+        FirebaseInstanceManager.emulator = true;
 
         if (locDb == null) {
             locDb = new LocationDatabase();
         }
 
         if (db == null) {
-            db = new Database(FirebaseDatabase.getInstance());
+            db = new Database(FirebaseInstanceManager.getDatabase());
         }
 
-        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+        if (FirebaseInstanceManager.getAuth().getCurrentUser() != null) {
             FirebaseAuthActivityTest.logoutSync();
         }
     }
@@ -62,7 +59,7 @@ public class LocationDatabaseTest {
             Tasks.await(locDb.updateLocation(loc));
             List<Pair<String, Location>> list = Tasks.await(locDb.getNearby(loc));
             assertThat(list.size(), is(1));
-            assertThat(list.get(0).first, is(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid()));
+            assertThat(list.get(0).first, is(Objects.requireNonNull(FirebaseInstanceManager.getAuth().getCurrentUser()).getUid()));
             assertThat(list.get(0).second.distanceTo(loc), lessThan(0.001f));
         } catch (ExecutionException | InterruptedException e) {
             throw new RuntimeException(e);
@@ -82,7 +79,7 @@ public class LocationDatabaseTest {
             Tasks.await(locDb.updateLocation(loc));
             Tasks.await(db.updateFridge(ing));
             Tasks.await(locDb.updateOffered(Collections.singletonList(0)));
-            List<Ingredient> res = Tasks.await(locDb.getOfferedIngredients(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid()));
+            List<Ingredient> res = Tasks.await(locDb.getOfferedIngredients(Objects.requireNonNull(FirebaseInstanceManager.getAuth().getCurrentUser()).getUid()));
             assertNotNull(res);
             assertThat(res, containsInAnyOrder(ing.toArray(new Ingredient[0])));
         } catch (ExecutionException | InterruptedException e) {
