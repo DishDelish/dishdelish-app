@@ -57,7 +57,7 @@ public class RecipeFetcher{
             if((AllergyType.fromIntList(allergies)).stream()
                     .map(a -> a.toString())
                     .distinct()
-                    .filter(x -> (r.ingredientList).stream().anyMatch(y -> y.getIngredient().equalsIgnoreCase(x)))
+                    .filter(x -> (r.ingredientList).stream().anyMatch(y -> y.getIngredient().contains(x.toLowerCase())))
                     .toArray().length > 0
             || (AllergyType.fromIntList(allergies)).stream()
                     .distinct()
@@ -66,7 +66,12 @@ public class RecipeFetcher{
             || (DietType.fromIntList(diets)).stream()
                     .distinct()
                     .filter(x -> (DietType.fromIntList(r.dietTypes)).stream().anyMatch(y -> y.equals(x)))
-                    .toArray().length > 0){
+                    .toArray().length > 0
+            || (diets).stream()
+                    .map(d -> DietType.getViolatingIngredients(d))
+                    .filter(x -> (r.ingredientList).stream().anyMatch(y -> x.contains(y.getIngredient())))
+                    .toArray().length > 0
+            ){
 
                 weight=0;
             }

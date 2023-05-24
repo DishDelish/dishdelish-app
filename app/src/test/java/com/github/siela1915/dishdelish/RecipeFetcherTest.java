@@ -7,6 +7,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 import com.github.siela1915.bootcamp.Labelling.CuisineType;
+import com.github.siela1915.bootcamp.Labelling.DietType;
 import com.github.siela1915.bootcamp.Labelling.RecipeFetcher;
 import com.github.siela1915.bootcamp.Recipes.ExampleRecipes;
 import com.github.siela1915.bootcamp.Recipes.Ingredient;
@@ -157,6 +158,19 @@ public class RecipeFetcherTest {
         assertEquals(rangeDesc, fetcher.sortByProtein(recipes));
         assertEquals(rangeAsc, fetcher.sortByCalories(recipes));
         assertEquals(rangeDesc, fetcher.sortByCarbohydrates(recipes));
+    }
+
+    @Test
+    public void fetcherExcludesInducedDietOrAllergyViolatingRecipes(){
+        List<Integer> allergies = new ArrayList<>();
+        List<Integer> cuisines = new ArrayList<>();
+        List<Integer> diets = Arrays.asList(DietType.VEGAN.ordinal());
+        fetcher = new RecipeFetcher(allergies, cuisines, diets,ExampleRecipes.recipes);
+        //lemon pudding is marked as "DAIRY", but contains eggs so should be excluded if the user is vegan
+        assertFalse(fetcher.fetchRecipeList().contains(ExampleRecipes.recipes.get(2).recipeName));
+        //the only example recipe without eggs is Cauliflower Rice, Krabby Patty is marked with the EGGS allergy type as well
+        assertEquals(1, fetcher.fetchRecipeList().size());
+        assertTrue(fetcher.fetchRecipeList().contains(ExampleRecipes.recipes.get(1).recipeName));
     }
 
 

@@ -9,6 +9,10 @@ import junit.framework.TestCase;
 
 import org.junit.Test;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class AllergyTypeTest{
 
     @Test
@@ -25,11 +29,14 @@ public class AllergyTypeTest{
 
     @Test
     public void fromIntReturnsCorrectType(){
-
+        for(int i = 0; i < AllergyType.values().length; i++){
+            assertEquals(AllergyType.values()[i], AllergyType.fromInt(i));
+        }
     }
 
     @Test
     public void fromIntListReturnsCorrectTypes(){
-
+        List<Integer> l = Arrays.asList(0,1,2,3,4,5,6,7,8,9);
+        assertEquals(Arrays.stream(AllergyType.values()).collect(Collectors.toList()), AllergyType.fromIntList(l));
     }
 }
