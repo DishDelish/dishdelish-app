@@ -22,4 +22,14 @@ public class AllergyTypeTest{
         AllergyType allergyType= AllergyType.EGGS;
         assertEquals(allergyType,AllergyType.fromString("Eggs"));
     }
+
+    @Test
+    public void fromIntReturnsCorrectType(){
+
+    }
+
+    @Test
+    public void fromIntListReturnsCorrectTypes(){
+
+    }
 }

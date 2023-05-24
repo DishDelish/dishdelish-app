@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 //Might be better to implement using ingredients
 public enum AllergyType {
@@ -33,6 +34,14 @@ public enum AllergyType {
             }
         }
         return null;
+    }
+
+    public static AllergyType fromInt(Integer i){
+        return AllergyType.values()[i];
+    }
+
+    public static List<AllergyType> fromIntList(List<Integer> l){
+        return l.stream().map(i -> AllergyType.values()[i]).collect(Collectors.toList());
     }
 
 

@@ -2,6 +2,7 @@ package com.github.siela1915.bootcamp.Labelling;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 //Diet types, also includes food intolerances
 public enum DietType {
@@ -33,5 +34,13 @@ public enum DietType {
             }
         }
         return null;
+    }
+
+    public static DietType fromInt(Integer i){
+        return DietType.values()[i];
+    }
+
+    public static List<DietType> fromIntList(List<Integer> l){
+        return l.stream().map(i -> DietType.values()[i]).collect(Collectors.toList());
     }
 }
