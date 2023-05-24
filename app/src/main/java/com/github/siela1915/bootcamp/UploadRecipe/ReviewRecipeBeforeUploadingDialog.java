@@ -22,9 +22,7 @@ public class ReviewRecipeBeforeUploadingDialog extends DialogFragment
 {
     private OnMyDialogResult mDialogResult;
 
-    public ReviewRecipeBeforeUploadingDialog()
-    {
-    }
+    public ReviewRecipeBeforeUploadingDialog() {}
 
     public void setDialogResult(OnMyDialogResult dialogResult){
         mDialogResult = dialogResult;

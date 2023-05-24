@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center"
-    android:theme="@style/Theme.MaterialComponents.DayNight">
+    android:theme="@style/Theme.SDPBootcamp">
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/stepContent"
@@ -22,7 +22,7 @@
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="text" />
+            android:inputType="text|textMultiLine" />
 
     </com.google.android.material.textfield.TextInputLayout>
 

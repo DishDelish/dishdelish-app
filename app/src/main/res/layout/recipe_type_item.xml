@@ -7,16 +7,17 @@
     android:layout_height="wrap_content"
     android:maxWidth="200dp"
     android:gravity="center"
-    android:theme="@style/Theme.MaterialComponents.DayNight">
+    android:theme="@style/Theme.SDPBootcamp">
 
     <TextView
         android:id="@+id/typeContent"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:minHeight="50dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="10dp"
         android:layout_marginStart="20dp"
         android:textSize="18sp"
+        android:gravity="center"
         app:layout_constraintEnd_toStartOf="@id/removeType"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
@@ -26,7 +27,7 @@
         android:layout_width="25dp"
         android:layout_height="25dp"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="23dp"
         android:src="@drawable/close"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/typeContent"
