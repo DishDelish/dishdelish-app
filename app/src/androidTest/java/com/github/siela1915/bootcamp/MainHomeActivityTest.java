@@ -155,7 +155,7 @@ public class MainHomeActivityTest {
         intent.putExtra("com.github.siela1915.bootcamp.navToProfile", "true");
 
         try (ActivityScenario<MainHomeActivity> activityScenario = ActivityScenario.launch(intent)) {
-            onView(ViewMatchers.withId(R.id.profileFragment)).check(matches(isDisplayed()));
+            onView(ViewMatchers.withId(R.id.profileFragment)).check(matches(withEffectiveVisibility(VISIBLE)));
         }
         FirebaseAuthActivityTest.logoutSync();
     }
@@ -167,7 +167,7 @@ public class MainHomeActivityTest {
         intent.putExtra("navToUpload", "true");
 
         try (ActivityScenario<MainHomeActivity> activityScenario = ActivityScenario.launch(intent)) {
-            onView(ViewMatchers.withId(R.id.recipeUpload)).check(matches(isDisplayed()));
+            onView(ViewMatchers.withId(R.id.recipeUpload)).check(matches(withEffectiveVisibility(VISIBLE)));
         }
         FirebaseAuthActivityTest.logoutSync();
     }
