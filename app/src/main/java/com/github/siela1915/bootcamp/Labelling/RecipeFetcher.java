@@ -56,6 +56,11 @@ public class RecipeFetcher{
             //checking if the recipe violates allergy or diet constraint
             //List<Boolean> temp= allergies.stream().map(a -> r.allergyTypes.contains(a)).collect(Collectors.toList());
             if((allergies).stream()
+                    .map(a -> a.toString())
+                    .distinct()
+                    .filter(x -> (r.ingredientList).stream().anyMatch(y -> y.getIngredient().equals(x)))
+                    .toArray().length > 0
+            || (allergies).stream()
                     .distinct()
                     .filter(x -> (r.allergyTypes).stream().anyMatch(y -> y.equals(x)))
                     .toArray().length > 0

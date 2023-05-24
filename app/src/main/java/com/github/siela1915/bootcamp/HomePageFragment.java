@@ -295,13 +295,16 @@ public class HomePageFragment extends Fragment {
             List<String> filteredRecipes= recipeFetcher.fetchRecipeList();
             List<Recipe> recipeList = new ArrayList<>();
             for (String recipeName: filteredRecipes){
-                for(int i=0; i<fetchedRecipes.size();i++){
-                    if(fetchedRecipes.get(i).recipeName.equalsIgnoreCase(recipeName)){
-                        recipeList.add(fetchedRecipes.get(i));
+                for(int i=0; i<recipeAdapter.getRecipes().size();i++){
+                    if(recipeAdapter.getRecipes().get(i).recipeName.equalsIgnoreCase(recipeName)){
+                        recipeList.add(recipeAdapter.getRecipes().get(i));
                     }
                 }
 
             }
+            //fetchedRecipes= recipeList;
+            System.out.println("\n\n\n\n\n\n recipeList size "+recipeList.size());
+            System.out.println("\n\n\n\n\n\n fetechedone size "+fetchedRecipes.size());
             recipeAdapter.setRecipes(recipeList);
         });
 
