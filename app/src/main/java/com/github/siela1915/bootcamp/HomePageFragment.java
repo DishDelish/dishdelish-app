@@ -33,6 +33,8 @@ import com.github.siela1915.bootcamp.firebase.Database;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -122,7 +124,7 @@ public class HomePageFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        Button button = view.findViewById(R.id.homeFragButton);
+        //Button button = view.findViewById(R.id.homeFragButton);
         recipeListRecyclerView= view.findViewById(R.id.rand_recipe_recyclerView);
         recipeListRecyclerView.setHasFixedSize(true);
         recipeListRecyclerView.setLayoutManager(new GridLayoutManager(getContext(),2));
@@ -134,7 +136,7 @@ public class HomePageFragment extends Fragment {
         dietBtn = view.findViewById(R.id.btnDiet);
         allergyBtn=view.findViewById(R.id.btnAllergy);
         cuisineBtn = view.findViewById(R.id.btnCuisine);
-        prepTimeBtn= view.findViewById(R.id.btnPrpTime);
+        //prepTimeBtn= view.findViewById(R.id.btnPrpTime);
 
 
         cuisineBtn.setOnClickListener(v -> {
@@ -144,12 +146,14 @@ public class HomePageFragment extends Fragment {
             popUpDialogBuilder(cuisineTypes,checksum,title,selectedCuisine,CUISINE);
         });
 
-        prepTimeBtn.setOnClickListener(v -> {
+/*        prepTimeBtn.setOnClickListener(v -> {
             String [] prepTime= PreparationTime.getAll();
             boolean[] checksum= new boolean[prepTime.length];
             String title = "Choose the preparation time";
             popUpDialogBuilder(prepTime,checksum,title,selectedPrepTime,PREP_TIME);
         });
+
+ */
         dietBtn.setOnClickListener(v -> {
             String [] diets= DietType.getAll();
             boolean[] checksum= new boolean[diets.length];
@@ -175,7 +179,14 @@ public class HomePageFragment extends Fragment {
                             }
                         })
                         .start();
+                moreFilter.setText("more filters");
+                selectedAllery.clear();
+                selectedCuisine.clear();
+                selectedDiet.clear();
+                selectedPrepTime.clear();
+                recipeAdapter.setRecipes(fetchedRecipes);
             } else {
+                moreFilter.setText("Clear filters");
                 filterLayout.setVisibility(View.VISIBLE);
                 filterLayout.setAlpha(0f);
                 filterLayout.animate()
@@ -189,6 +200,7 @@ public class HomePageFragment extends Fragment {
                             }
                         })
                         .start();
+
             }
         });
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -215,17 +227,10 @@ public class HomePageFragment extends Fragment {
         })
                 .addOnFailureListener(e->{
                     e.printStackTrace();
-                    recipeListRecyclerView.setAdapter(new RecipeItemAdapter(ExampleRecipes.recipes, view.getContext()));
+                    recipeAdapter = new RecipeItemAdapter(ExampleRecipes.recipes,view.getContext());
+                    recipeListRecyclerView.setAdapter(recipeAdapter);
+                    fetchedRecipes= ExampleRecipes.recipes;
                 });
-        button.setOnClickListener(v -> {
-            //Recipe recipe = ExampleRecipes.recipes.get((int)(Math.random()*2.999));
-            database.getByNameAsync("Burger")
-                    .addOnSuccessListener(recipes -> startActivity(RecipeConverter.convertToIntent(recipes.get(0), getContext())))
-                    .addOnFailureListener(e -> {
-                        e.printStackTrace();
-                        throw new RuntimeException(e);
-                    });
-        });
     }
 
     private void filterRecipesByName(String text) {
@@ -249,10 +254,10 @@ public class HomePageFragment extends Fragment {
 
         if (filterLayoutGone) {
             layoutParams.height = 0;
-            layoutParams.weight = 0.84f;
+            layoutParams.weight = 0.90f;
         } else {
             layoutParams.height = 0;
-            layoutParams.weight = 0.71f;
+            layoutParams.weight = 0.75f;
         }
 
         recipeListLinearLayout.setLayoutParams(layoutParams);
@@ -286,7 +291,7 @@ public class HomePageFragment extends Fragment {
                     }
                 }
             }
-            RecipeFetcher recipeFetcher = new RecipeFetcher(selectedAllery,selectedCuisine,selectedDiet,recipeAdapter.getRecipes());
+            RecipeFetcher recipeFetcher = new RecipeFetcher(selectedAllery,selectedCuisine,selectedDiet,fetchedRecipes);
             List<String> filteredRecipes= recipeFetcher.fetchRecipeList();
             List<Recipe> recipeList = new ArrayList<>();
             for (String recipeName: filteredRecipes){
