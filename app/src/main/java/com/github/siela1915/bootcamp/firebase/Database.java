@@ -28,7 +28,7 @@ import java.util.concurrent.ExecutionException;
 public class Database {
 
     private final DatabaseReference db;
-    private final static String RECIPES = "recipes",
+    public final static String RECIPES = "recipes",
                                 FAVORITES = "favorites",
                                 FRIDGE = "fridge",
                                 NEW = "new",
@@ -399,7 +399,7 @@ public class Database {
             return Tasks.forException(new UserNotAuthenticatedException("User needs to be authenticated to access his fridge"));
         }
 
-        return db.child(FRIDGE + user.getUid()).setValue(ing);
+        return db.child(FRIDGE + "/" + user.getUid()).setValue(ing);
     }
 
     public Task<List<Ingredient>> getFridge() {
@@ -408,7 +408,7 @@ public class Database {
             return Tasks.forException(new UserNotAuthenticatedException("User needs to be authenticated to access his fridge"));
         }
 
-        return db.child(FRIDGE + user.getUid()).get()
+        return db.child(FRIDGE + "/" + user.getUid()).get()
                 .continueWith(dataTask -> {
                     List<Ingredient> list = new ArrayList<>();
                     for (DataSnapshot ds : dataTask.getResult().getChildren()) {

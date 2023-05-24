@@ -30,7 +30,6 @@ import com.github.siela1915.bootcamp.firebase.Database;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.android.material.navigation.NavigationView;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
@@ -176,6 +175,12 @@ public class MainHomeActivity extends AppCompatActivity {
                         setContainerContent(R.id.fragContainer, UploadingRecipeFragment.class, false);
                     }
                     break;
+                case R.id.menuItem_fridge:
+                    intent.putExtra("navToMyFridge", true);
+                    if (FirebaseAuthActivity.promptLogin(this, this, intent)) {
+                        setContainerContent(R.id.fragContainer, MyFridgeFragment.class, false);
+                    }
+                    break;
                 case R.id.menuItem_filter:
                     if(item.isChecked()){
                         item.setChecked(false);
@@ -185,7 +190,7 @@ public class MainHomeActivity extends AppCompatActivity {
                         filterView.setVisibility(View.VISIBLE);
                     }
                     fragmentContainerView= findViewById(R.id.fragContainer);
-                    boolean homeFragmentCheck=fragmentContainerView.getFragment().getId()==R.id.homeFragment;
+                    boolean homeFragmentCheck=fragmentContainerView.getFragment().getClass()==HomePageFragment.class;
                     if(!homeFragmentCheck) {
                         setContainerContent(R.id.fragContainer,HomePageFragment.class,false);
                     }
@@ -211,6 +216,11 @@ public class MainHomeActivity extends AppCompatActivity {
             if (extras.containsKey("navToUpload")) {
                 navigationView.setCheckedItem(R.id.menuItem_upload);
                 setContainerContent(R.id.fragContainer, UploadingRecipeFragment.class, false);
+            }
+
+            if (extras.containsKey("navToMyFridge")) {
+                navigationView.setCheckedItem(R.id.menuItem_fridge);
+                setContainerContent(R.id.fragContainer, MyFridgeFragment.class, false);
             }
 
             if (extras.containsKey("com.github.siela1915.bootcamp.navToProfile")) {

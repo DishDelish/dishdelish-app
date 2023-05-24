@@ -211,5 +211,13 @@
     <string name="myFridgeAddIngredient">Add ingredient</string>
     <string name="myFridgeUpdateFridge">Update fridge</string>
     <string name="myFridgeScrollContentDescription">Editable list of ingredients in your fridge</string>
+    <string name="myFrigeUpdateOffered">Update Offered</string>
+    <string name="nearbySendRequest">Send out request</string>
+    <string name="reply">Reply</string>
+    <string name="nearbyReplyHint">Enter message to send to the requester. Include any details needed to find your place, time you\'re available and potentially a way to contact you</string>
+    <string name="offerIngredientItemDescription">Set ingredient as offerable for nearby help</string>
+    <string name="removeIngredientDescription">Remove Ingredient</string>
+    <string name="nearbyRequestSent">Sent request!</string>
+    <string name="nearbyNotAuthenticatedErrorMsg">Can\'t reply without being authenticated</string>
 
 </resources>

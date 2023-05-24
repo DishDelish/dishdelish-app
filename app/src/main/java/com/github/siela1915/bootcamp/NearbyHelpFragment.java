@@ -25,7 +25,6 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.Group;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -49,7 +48,6 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -156,57 +154,26 @@ public class NearbyHelpFragment extends Fragment implements OnMapReadyCallback, 
 
         handleBackPress(view);
 
-        Group selectionGroup = view.findViewById(R.id.chooseHelpGroup);
-        Group askGroup = view.findViewById(R.id.askHelpGroup);
-        Group offerGroup = view.findViewById(R.id.offerHelpGroup);
-        Group replyGroup = view.findViewById(R.id.replyHelpGroup);
-        FragmentContainerView map = view.findViewById(R.id.map);
-        selectionGroup.setVisibility(View.VISIBLE);
-        askGroup.setVisibility(View.INVISIBLE);
-        offerGroup.setVisibility(View.INVISIBLE);
-        map.setVisibility(View.INVISIBLE);
-        replyGroup.setVisibility(View.INVISIBLE);
-
         if (mReplyOfferUid != null) {
             replyView(view);
         } else if (mAskedIngredients != null) {
             getHelpForIngredient(view);
-        }
-
-        Button askSelectionButton = view.findViewById(R.id.askHelpButton);
-        Button offerSelectionButton = view.findViewById(R.id.offerHelpButton);
-        Button submitAskHelp = view.findViewById(R.id.submitAskHelpButton);
-        Button submitOfferHelp = view.findViewById(R.id.submitOfferHelpButton);
-
-        askSelectionButton.setOnClickListener(v -> {
-            askGroup.setVisibility(View.VISIBLE);
-            selectionGroup.setVisibility(View.INVISIBLE);
-
+        } else {
             LinearLayout ingLayout = view.findViewById(R.id.askIngredientLayout);
+            Button submitAskHelp = view.findViewById(R.id.submitAskHelpButton);
+
+            submitAskHelp.setOnClickListener(v -> {
+                if (ingredientManager.isIngredientValid()) {
+                    mAskedIngredients = ingredientManager.getIngredients();
+
+                    getHelpForIngredient(view);
+                }
+            });
 
             ingredientManager = new RecipeStepAndIngredientManager(requireContext(), null, ingLayout);
-            ingredientManager.addIngredient(idMap, apiService);
+            ingredientManager.addIngredient(idMap, apiService, false, null);
             view.findViewById(R.id.removeIngredient).setVisibility(View.GONE);
-        });
-
-        offerSelectionButton.setOnClickListener(v -> offerView(view));
-
-        submitAskHelp.setOnClickListener(v -> {
-            if (ingredientManager.isIngredientValid()) {
-                mAskedIngredients = ingredientManager.getIngredients();
-
-                getHelpForIngredient(view);
-            }
-        });
-
-        submitOfferHelp.setOnClickListener(v -> {
-            if (ingredientManager.isIngredientValid()) {
-                List<Ingredient> offered = ingredientManager.getIngredients();
-                fusedLocationClient.getLastLocation()
-                        .continueWithTask(locTask -> locDb.updateLocation(locTask.getResult()))
-                        .continueWithTask(task -> locDb.updateOffered(offered));
-            }
-        });
+        }
     }
 
 
@@ -228,7 +195,7 @@ public class NearbyHelpFragment extends Fragment implements OnMapReadyCallback, 
                 .continueWith(nearbyTask -> {
                     List<Pair<String, Location>> nearby = nearbyTask.getResult();
 
-                    nearby.forEach(pair -> locDb.getOffered(pair.first).continueWith(offeredTask -> {
+                    nearby.forEach(pair -> locDb.getOfferedIngredients(pair.first).continueWith(offeredTask -> {
                         for (Ingredient offer : offeredTask.getResult()) {
                             for (Ingredient asked : askedIngredients) {
                                 if (offer.getIngredient().equals(asked.getIngredient().toLowerCase())) {
@@ -280,7 +247,7 @@ public class NearbyHelpFragment extends Fragment implements OnMapReadyCallback, 
                         @SuppressLint("InflateParams") View popupView = inflater.inflate(R.layout.error_popup, null);
 
                         TextView popupTextView = popupView.findViewById(R.id.popupText);
-                        popupTextView.setText("Sent request!");
+                        popupTextView.setText(R.string.nearbyRequestSent);
 
                         int width_height = LinearLayout.LayoutParams.WRAP_CONTENT;
                         boolean focusable = true; // lets taps outside the popup also dismiss it
@@ -299,45 +266,11 @@ public class NearbyHelpFragment extends Fragment implements OnMapReadyCallback, 
         }
     }
 
-    private void offerView(View view) {
-        Group selectionGroup = view.findViewById(R.id.chooseHelpGroup);
-        Group offerGroup = view.findViewById(R.id.offerHelpGroup);
-
-        offerGroup.setVisibility(View.VISIBLE);
-        selectionGroup.setVisibility(View.INVISIBLE);
-
-        LinearLayout ingLayout = view.findViewById(R.id.offerIngredientLayout);
-        Button addIngredient = view.findViewById(R.id.offerAddIngredient);
-
-        ingredientManager = new RecipeStepAndIngredientManager(requireContext(), null, ingLayout);
-
-        addIngredient.setOnClickListener(v -> ingredientManager.addIngredient(idMap, apiService));
-
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) {
-            locDb.getOffered(user.getUid())
-                    .addOnSuccessListener(list -> {
-                        for (Ingredient ing : list) {
-                            ingredientManager.addIngredient(idMap, apiService);
-                            int lastIndex = ingLayout.getChildCount() - 1;
-                            if (ingLayout.getChildAt(lastIndex) instanceof ConstraintLayout) {
-                                ConstraintLayout step = (ConstraintLayout) ingLayout.getChildAt(lastIndex);
-                                if (step.getChildAt(0) instanceof TextInputLayout && step.getChildAt(1) instanceof TextInputLayout && step.getChildAt(2) instanceof TextInputLayout) {
-                                    ((TextInputLayout) step.getChildAt(2)).getEditText().setText(ing.getIngredient());
-                                    ((TextInputLayout) step.getChildAt(1)).getEditText().setText(ing.getUnit().getInfo());
-                                    ((TextInputLayout) step.getChildAt(0)).getEditText().setText(Integer.toString(ing.getUnit().getValue()));
-                                }
-                            }
-                        }
-                    });
-        }
-    }
-
     private void replyView(View view) {
-        Group selectionGroup = view.findViewById(R.id.chooseHelpGroup);
+        Group askGroup = view.findViewById(R.id.askHelpGroup);
         Group replyGroup = view.findViewById(R.id.replyHelpGroup);
 
-        selectionGroup.setVisibility(View.INVISIBLE);
+        askGroup.setVisibility(View.INVISIBLE);
         replyGroup.setVisibility(View.VISIBLE);
 
         Button sendReplyButton = view.findViewById(R.id.sendReplyHelpButton);
@@ -346,7 +279,7 @@ public class NearbyHelpFragment extends Fragment implements OnMapReadyCallback, 
             EditText replyInput = view.findViewById(R.id.replyInputHelp);
             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
             if (user == null) {
-                replyInput.setText("Can't reply without being authenticated");
+                replyInput.setText(R.string.nearbyNotAuthenticatedErrorMsg);
                 return;
             }
             PushNotificationService.sendRemoteNotification(mReplyOfferUid,
@@ -357,11 +290,9 @@ public class NearbyHelpFragment extends Fragment implements OnMapReadyCallback, 
     }
 
     private void getHelpForIngredient(View view) {
-        Group selectionGroup = view.findViewById(R.id.chooseHelpGroup);
         Group askGroup = view.findViewById(R.id.askHelpGroup);
         FragmentContainerView map = view.findViewById(R.id.map);
 
-        selectionGroup.setVisibility(View.INVISIBLE);
         askGroup.setVisibility(View.INVISIBLE);
         map.setVisibility(View.VISIBLE);
 
@@ -377,24 +308,12 @@ public class NearbyHelpFragment extends Fragment implements OnMapReadyCallback, 
     }
 
     private void handleBackPress(View view) {
-        Group selectionGroup = view.findViewById(R.id.chooseHelpGroup);
-        Group askGroup = view.findViewById(R.id.askHelpGroup);
-        Group offerGroup = view.findViewById(R.id.offerHelpGroup);
-
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                if (offerGroup.getVisibility() == View.VISIBLE) {
-                    offerGroup.setVisibility(View.INVISIBLE);
-                    selectionGroup.setVisibility(View.VISIBLE);
-                } else if (askGroup.getVisibility() == View.VISIBLE) {
-                    askGroup.setVisibility(View.INVISIBLE);
-                    selectionGroup.setVisibility(View.VISIBLE);
-                } else {
-                    FragmentManager fragmentManager = getParentFragmentManager();
-                    fragmentManager.popBackStack(NearbyHelpFragment.class.getName(),
-                            FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                }
+                FragmentManager fragmentManager = getParentFragmentManager();
+                fragmentManager.popBackStack(NearbyHelpFragment.class.getName(),
+                        FragmentManager.POP_BACK_STACK_INCLUSIVE);
             }
         };
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);

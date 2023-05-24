@@ -70,11 +70,11 @@ public class MainHomeActivityTest {
         FirebaseAuth.getInstance().useEmulator("10.0.2.2", 9099);
         FirebaseDatabase.getInstance().useEmulator("10.0.2.2", 9000);
 
+        scenario = ActivityScenario.launch(MainHomeActivity.class);
+
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             FirebaseAuthActivityTest.logoutSync();
         }
-
-        scenario = ActivityScenario.launch(MainHomeActivity.class);
     }
 
     @After
@@ -132,7 +132,7 @@ public class MainHomeActivityTest {
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
         onView(withId(R.id.navView))
                 .perform(navigateTo(R.id.menuItem_help));
-        onView(withId(R.id.chooseHelpGroup)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+        onView(withId(R.id.askHelpGroup)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         FirebaseAuthActivityTest.logoutSync();
     }
     @Test
@@ -178,7 +178,7 @@ public class MainHomeActivityTest {
         intent.putExtra("navToHelp", "true");
 
         try (ActivityScenario<MainHomeActivity> activityScenario = ActivityScenario.launch(intent)) {
-            onView(ViewMatchers.withId(R.id.chooseHelpGroup))
+            onView(ViewMatchers.withId(R.id.askHelpGroup))
                     .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         }
 

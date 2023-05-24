@@ -12,7 +12,6 @@ import android.location.Location;
 import android.util.Pair;
 
 import com.github.siela1915.bootcamp.FirebaseAuthActivityTest;
-import com.github.siela1915.bootcamp.Recipes.ExampleRecipes;
 import com.github.siela1915.bootcamp.Recipes.Ingredient;
 import com.github.siela1915.bootcamp.Recipes.Unit;
 import com.google.android.gms.tasks.Tasks;
@@ -30,6 +29,7 @@ import java.util.concurrent.ExecutionException;
 
 public class LocationDatabaseTest {
     private LocationDatabase locDb;
+    private Database db;
 
     @Before
     public void prepareEmulator() {
@@ -40,6 +40,10 @@ public class LocationDatabaseTest {
 
         if (locDb == null) {
             locDb = new LocationDatabase();
+        }
+
+        if (db == null) {
+            db = new Database(FirebaseDatabase.getInstance());
         }
 
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
@@ -76,8 +80,9 @@ public class LocationDatabaseTest {
         loc.setLatitude(5.0);
         try {
             Tasks.await(locDb.updateLocation(loc));
-            Tasks.await(locDb.updateOffered(ing));
-            List<Ingredient> res = Tasks.await(locDb.getOffered(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid()));
+            Tasks.await(db.updateFridge(ing));
+            Tasks.await(locDb.updateOffered(Collections.singletonList(0)));
+            List<Ingredient> res = Tasks.await(locDb.getOfferedIngredients(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid()));
             assertNotNull(res);
             assertThat(res, containsInAnyOrder(ing.toArray(new Ingredient[0])));
         } catch (ExecutionException | InterruptedException e) {
@@ -106,7 +111,7 @@ public class LocationDatabaseTest {
 
     @Test
     public void updateOfferedLoggedOutReturnsExceptionTask() {
-        List<Ingredient> ing = Collections.singletonList(ExampleRecipes.recipes.get(0).getIngredientList().get(0));
+        List<Integer> ing = Collections.singletonList(0);
 
         assertThrows(ExecutionException.class, () -> Tasks.await(locDb.updateOffered(ing)));
     }

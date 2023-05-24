@@ -38,9 +38,9 @@ public class HomePageFragment extends Fragment {
     private  String cuis= "";
     private TextView homeTextView;
     private RecyclerView recipeListRecyclerView;
-    private final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+    private FirebaseDatabase firebaseDatabase;
 
-    private final Database database = new Database(firebaseDatabase);
+    private Database database;
     private RecipeItemAdapter recipeAdapter;
 
     public RecipeItemAdapter getRecipeAdapter() {
@@ -76,6 +76,9 @@ public class HomePageFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        database = new Database(firebaseDatabase);
     }
 
     @Override
