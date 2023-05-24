@@ -51,14 +51,15 @@ public class MyFridgeFragmentTest {
         FirebaseApp.clearInstancesForTest();
         FirebaseApp.initializeApp(getApplicationContext());
         FirebaseAuth.getInstance().useEmulator("10.0.2.2", 9099);
-        FirebaseDatabase.getInstance().useEmulator("10.0.2.2", 9000);
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        firebaseDatabase.useEmulator("10.0.2.2", 9000);
 
         if (locDb == null) {
             locDb = new LocationDatabase();
         }
 
         if (db == null) {
-            db = new Database(FirebaseDatabase.getInstance());
+            db = new Database(firebaseDatabase);
         }
 
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
@@ -96,6 +97,34 @@ public class MyFridgeFragmentTest {
         )).perform(ViewActions.typeText("g"), ViewActions.closeSoftKeyboard());
 
         onView(withId(R.id.updateOfferedFridge))
+                .perform(ViewActions.click());
+
+        FirebaseAuthActivityTest.logoutSync();
+    }
+
+    @Test
+    public void fridgeUploadsCorrectly() {
+        FirebaseAuthActivityTest.loginSync("fridgeUploadsCorrectly@myfridge.com");
+
+        scenario = FragmentScenario.launchInContainer(MyFridgeFragment.class);
+
+        onView(withId(R.id.myFridgeAddIngredient))
+                .perform(ViewActions.click());
+
+        onView(allOf(
+                isDescendantOfA(withId(R.id.ingredientsName)),
+                withClassName(endsWith("AutoCompleteTextView"))
+        )).perform(ViewActions.typeText("testIngredient"), ViewActions.closeSoftKeyboard());
+        onView(allOf(
+                isDescendantOfA(withId(R.id.ingredientsAmount)),
+                withClassName(endsWith("EditText"))
+        )).perform(ViewActions.typeText("3"), ViewActions.closeSoftKeyboard());
+        onView(allOf(
+                isDescendantOfA(withId(R.id.ingredientsUnit)),
+                withClassName(endsWith("EditText"))
+        )).perform(ViewActions.typeText("g"), ViewActions.closeSoftKeyboard());
+
+        onView(withId(R.id.submitMyFridgeButton))
                 .perform(ViewActions.click());
 
         FirebaseAuthActivityTest.logoutSync();
