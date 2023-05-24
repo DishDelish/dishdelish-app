@@ -7,13 +7,8 @@ import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.contrib.NavigationViewActions.navigateTo;
 import static androidx.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition;
-import static androidx.test.espresso.contrib.RecyclerViewActions.scrollToPosition;
-import static androidx.test.espresso.intent.Intents.intending;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
-
-import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.Visibility.VISIBLE;
-
 import static androidx.test.espresso.matcher.ViewMatchers.isClickable;
 import static androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -24,27 +19,22 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidx.test.runner.lifecycle.Stage.RESUMED;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.endsWithIgnoringCase;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.Instrumentation;
 import android.content.Intent;
 import android.view.View;
-import android.widget.SearchView;
 
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.test.core.app.ActivityScenario;
-import androidx.test.espresso.IdlingRegistry;
 import androidx.test.espresso.IdlingResource;
 import androidx.test.espresso.NoMatchingViewException;
 import androidx.test.espresso.ViewAssertion;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.contrib.DrawerActions;
-import androidx.test.espresso.contrib.RecyclerViewActions;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.rule.GrantPermissionRule;
@@ -350,15 +340,41 @@ public class MainHomeActivityTest {
         scenario.close();
     }
     @Test
-    public void moreFilters(){
+    public void moreFiltersTest(){
         scenario= ActivityScenario.launch(MainHomeActivity.class);
         onView(withId(R.id.moreFilterTextView)).check(matches(isDisplayed()));
         onView(withId(R.id.moreFilterTextView)).perform(click());
         onView(withId(R.id.filter)).check(matches(isDisplayed()));
         //onView(withId(R.id.btnPrpTime)).perform(click());
         //onView(withText("Choose the preparation time")).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+        onView(withId(R.id.btnDiet)).perform(click());
+        onView(withText("Choose your diet")).check(matches(withEffectiveVisibility(VISIBLE)));
+        scenario.close();
+    }
+    @Test
+    public void moreFilterByClickingOonAllergyBtnTest(){
+        scenario= ActivityScenario.launch(MainHomeActivity.class);
+        onView(withId(R.id.moreFilterTextView)).perform(click());
+        onView(withId(R.id.btnAllergy)).perform(click());
+        onView(withText("what are you allergic to")).check(matches(withEffectiveVisibility(VISIBLE)));
+        scenario.close();
+    }
+    @Test
+    public void moreFilterByClickingOnCuisineBtnTest(){
+        scenario= ActivityScenario.launch(MainHomeActivity.class);
+        onView(withId(R.id.moreFilterTextView)).perform(click());
         onView(withId(R.id.btnCuisine)).perform(click());
-
+        onView(withText("Choose your preferred cuisine")).check(matches(withEffectiveVisibility(VISIBLE)));
+        scenario.close();
+    }
+    @Test
+    public void moreFilterTextChangesToclearFilterTest(){
+        scenario= ActivityScenario.launch(MainHomeActivity.class);
+        onView(withId(R.id.moreFilterTextView)).perform(click());
+        onView(withId(R.id.moreFilterTextView)).check(matches(withText("clear filters")));
+        onView(withId(R.id.moreFilterTextView)).perform(click());
+        onView(withId(R.id.moreFilterTextView)).check(matches(withText("more filters")));
+        onView(withId(R.id.filter)).check(matches(not(isDisplayed())));
         scenario.close();
     }
 }

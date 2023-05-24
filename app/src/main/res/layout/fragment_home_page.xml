@@ -35,7 +35,7 @@
             android:gravity="center"
             android:textColor="@color/orange"
             android:autoLink="web"
-            android:text="more filters?"
+            android:text="more filters"
             android:textSize="20sp"
 
             tools:ignore="HardcodedText,KeyboardInaccessibleWidget,TouchTargetSizeCheck" />
@@ -57,7 +57,7 @@
             android:layout_weight="1"
             android:text="@string/allergy"
             android:textStyle="bold"
-            android:textSize="9sp"
+            android:textSize="12sp"
             tools:ignore="ButtonStyle,NestedWeights,SmallSp,TouchTargetSizeCheck" />
         <Button
             android:id="@+id/btnDiet"
@@ -66,7 +66,7 @@
             android:layout_margin="10dp"
             android:layout_weight="1"
             android:text="@string/diet"
-            android:textSize="10sp"
+            android:textSize="12sp"
             android:textStyle="bold"
             tools:ignore="ButtonStyle,SmallSp,TouchTargetSizeCheck" />
 
@@ -77,38 +77,12 @@
             android:layout_margin="10dp"
             android:layout_weight="1"
             android:text="@string/cuisineTypes"
-            android:textSize="10sp"
+            android:textSize="12sp"
             android:textStyle="bold"
             tools:ignore="ButtonStyle,SmallSp,TouchTargetSizeCheck" />
 
-        <Button
-            android:id="@+id/btnPrpTime"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:layout_weight="1"
-            android:text="@string/prepTime"
-            android:textStyle="bold"
-            android:textSize="9sp"
-            tools:ignore="ButtonStyle,SmallSp,TouchTargetSizeCheck" />
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:gravity="center"
-        android:layout_weight="0.08"
-        android:layout_margin="10dp">
-
-        <Button
-            android:id="@+id/homeFragButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/discover_recipe"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            tools:ignore="TouchTargetSizeCheck,TextContrastCheck,TextContrastCheck" />
-    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

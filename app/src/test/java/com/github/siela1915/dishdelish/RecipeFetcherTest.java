@@ -32,7 +32,7 @@ public class RecipeFetcherTest {
         List<Integer> cuisines = Arrays.asList(CuisineType.FRENCH.ordinal());
         List<Integer> diets = new ArrayList<>();
 
-        fetcher = new RecipeFetcher(allergies, cuisines, diets);
+        fetcher = new RecipeFetcher(allergies, cuisines, diets,ExampleRecipes.recipes);
         assertEquals(
                 Arrays.asList(ExampleRecipes.recipes.get(0).recipeName, ExampleRecipes.recipes.get(2).recipeName, ExampleRecipes.recipes.get(1).recipeName, ExampleRecipes.recipes.get(3).recipeName),
                 fetcher.fetchRecipeList()
@@ -46,7 +46,7 @@ public class RecipeFetcherTest {
         List<Integer> cuisines = Arrays.asList(CuisineType.FRENCH.ordinal());
         List<Integer> diets = new ArrayList<>();
 
-        fetcher = new RecipeFetcher(allergies, cuisines, diets);
+        fetcher = new RecipeFetcher(allergies, cuisines, diets,ExampleRecipes.recipes);
         assertEquals(
                 Arrays.asList(ExampleRecipes.recipes.get(1).recipeName),
                 fetcher.fetchRecipeList()
@@ -60,7 +60,7 @@ public class RecipeFetcherTest {
         List<Integer> cuisines = new ArrayList<>();
         List<Integer> diets = new ArrayList<>();
 
-        fetcher = new RecipeFetcher(allergies, cuisines, diets);
+        fetcher = new RecipeFetcher(allergies, cuisines, diets,ExampleRecipes.recipes);
 
 
         List<String> expectedList = ExampleRecipes.recipes.stream().map(r -> r.recipeName).collect(Collectors.toList());
@@ -77,7 +77,7 @@ public class RecipeFetcherTest {
         List<Integer> allergies = new ArrayList<>();
         List<Integer> cuisines = new ArrayList<>();
         List<Integer> diets = new ArrayList<>();
-        fetcher = new RecipeFetcher(allergies, cuisines, diets);
+        fetcher = new RecipeFetcher(allergies, cuisines, diets,ExampleRecipes.recipes);
 
         //The example recipes are already sorted by prep time
         List<String> expectedList = ExampleRecipes.recipes.stream().map(r -> r.recipeName).collect(Collectors.toList());
@@ -94,7 +94,7 @@ public class RecipeFetcherTest {
         List<Integer> allergies = new ArrayList<>();
         List<Integer> cuisines = new ArrayList<>();
         List<Integer> diets = new ArrayList<>();
-        fetcher = new RecipeFetcher(allergies, cuisines, diets);
+        fetcher = new RecipeFetcher(allergies, cuisines, diets,ExampleRecipes.recipes);
 
         //The example recipes are already sorted by prep time
         List<String> expectedList = ExampleRecipes.recipes.stream().map(r -> r.recipeName).collect(Collectors.toList());
@@ -112,7 +112,7 @@ public class RecipeFetcherTest {
         List<Integer> allergies = new ArrayList<>();
         List<Integer> cuisines = new ArrayList<>();
         List<Integer> diets = new ArrayList<>();
-        fetcher = new RecipeFetcher(allergies, cuisines, diets);
+        fetcher = new RecipeFetcher(allergies, cuisines, diets,ExampleRecipes.recipes);
 
         List<String> expectedList = Arrays.asList(ExampleRecipes.recipes.get(2).recipeName);
         List<String> actualList = fetcher.filterByIngredients(ExampleRecipes.recipes, Arrays.asList(new Ingredient("lemon", new Unit(1, ""))));
@@ -125,7 +125,7 @@ public class RecipeFetcherTest {
         List<Integer> allergies = new ArrayList<>();
         List<Integer> cuisines = new ArrayList<>();
         List<Integer> diets = new ArrayList<>();
-        fetcher = new RecipeFetcher(allergies, cuisines, diets);
+        fetcher = new RecipeFetcher(allergies, cuisines, diets,ExampleRecipes.recipes);
 
         List<String> expectedList = Arrays.asList(ExampleRecipes.recipes.get(2).recipeName);
         List<String> actualList = fetcher.filterByIngredients(ExampleRecipes.recipes, Arrays.asList(new Ingredient("LeMON", new Unit(1, ""))));
@@ -135,7 +135,7 @@ public class RecipeFetcherTest {
 
     @Test
     public void sortingByNutritionalValuesSortsCorrectly(){
-        RecipeFetcher fetcher = new RecipeFetcher(null, null, null);
+        RecipeFetcher fetcher = new RecipeFetcher(null, null, null,ExampleRecipes.recipes);
         List<Recipe> recipes = new ArrayList<>();
         for (int i = 1; i < 11; i++) {
             Recipe r = new Recipe();
