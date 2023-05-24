@@ -4,6 +4,7 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.RootMatchers.isDialog;
+import static androidx.test.espresso.matcher.ViewMatchers.Visibility.GONE;
 import static androidx.test.espresso.matcher.ViewMatchers.Visibility.VISIBLE;
 import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
@@ -76,8 +77,8 @@ public class TimerEditorDialogTest {
         onView(withId(R.id.timerCreateTitle)).check(matches(ViewMatchers.withText(R.string.cook_now_timer_create_title)));
         onView(withId(R.id.timerCreateTitleName)).check(matches(ViewMatchers.withText(context.getResources().getString(R.string.cook_now_timer_item_title) + " " + (stepIndex + 1))));
         onView(withId(R.id.startTimer)).check(matches(withEffectiveVisibility(VISIBLE)));
-        onView(withId(R.id.startTimer)).check(matches(ViewMatchers.withText(context.getResources().getString(R.string.cook_now_timer_create_button))));
-        onView(withId(R.id.timerList)).check(matches(withEffectiveVisibility(VISIBLE)));
+        onView(withId(R.id.startTimerText)).check(matches(ViewMatchers.withText(context.getResources().getString(R.string.cook_now_timer_create_button))));
+        onView(withId(R.id.timerList)).check(matches(withEffectiveVisibility(GONE)));
         onView(withId(R.id.timerListTitle)).check(matches(ViewMatchers.withText(context.getResources().getString(R.string.cook_now_timer_list_title))));
     }
 
@@ -89,11 +90,11 @@ public class TimerEditorDialogTest {
         onView(withId(R.id.timerEditTitle)).check(matches(ViewMatchers.withText(R.string.cook_now_timer_edit_title)));
         onView(withId(R.id.timerEditTitleName)).check(matches(ViewMatchers.withText(context.getResources().getString(R.string.cook_now_timer_item_title) + " " + (stepIndex + 1))));
         onView(withId(R.id.pauseTimer)).check(matches(withEffectiveVisibility(VISIBLE)));
-        onView(withId(R.id.pauseTimer)).check(matches(ViewMatchers.withText(context.getResources().getString(R.string.cook_now_timer_edit_pause_button))));
+        onView(withId(R.id.pauseTimerText)).check(matches(ViewMatchers.withText(context.getResources().getString(R.string.cook_now_timer_edit_pause_button))));
         onView(withId(R.id.resumeTimer)).check(matches(withEffectiveVisibility(VISIBLE)));
-        onView(withId(R.id.resumeTimer)).check(matches(ViewMatchers.withText(context.getResources().getString(R.string.cook_now_timer_edit_resume_button))));
+        onView(withId(R.id.resumeTimerText)).check(matches(ViewMatchers.withText(context.getResources().getString(R.string.cook_now_timer_edit_resume_button))));
         onView(withId(R.id.cancelTimer)).check(matches(withEffectiveVisibility(VISIBLE)));
-        onView(withId(R.id.cancelTimer)).check(matches(ViewMatchers.withText(context.getResources().getString(R.string.cook_now_timer_edit_cancel_button))));
+        onView(withId(R.id.cancelTimerText)).check(matches(ViewMatchers.withText(context.getResources().getString(R.string.cook_now_timer_edit_cancel_button))));
     }
 
     @Test
@@ -132,6 +133,6 @@ public class TimerEditorDialogTest {
         onView(withId(R.id.timerCreateTitle)).check(matches(ViewMatchers.withText(R.string.cook_now_timer_create_title)));
         onView(withId(R.id.timerCreateTitleName)).check(matches(ViewMatchers.withText(context.getResources().getString(R.string.cook_now_timer_item_title) + " " + (stepIndex + 1))));
         onView(withId(R.id.startTimer)).check(matches(withEffectiveVisibility(VISIBLE)));
-        onView(withId(R.id.startTimer)).check(matches(ViewMatchers.withText(context.getResources().getString(R.string.cook_now_timer_create_button))));
+        onView(withId(R.id.startTimerText)).check(matches(ViewMatchers.withText(context.getResources().getString(R.string.cook_now_timer_create_button))));
     }
 }

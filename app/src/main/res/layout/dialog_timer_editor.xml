@@ -156,6 +156,7 @@
                         android:src="@drawable/start" />
 
                     <TextView
+                        android:id="@+id/startTimerText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/cook_now_timer_create_button" />
@@ -288,6 +289,7 @@
                             android:src="@drawable/pause" />
 
                         <TextView
+                            android:id="@+id/pauseTimerText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/cook_now_timer_edit_pause_button" />
@@ -307,6 +309,7 @@
                             android:src="@drawable/resume" />
 
                         <TextView
+                            android:id="@+id/resumeTimerText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/cook_now_timer_edit_resume_button" />
@@ -326,6 +329,7 @@
                             android:src="@drawable/cancel" />
 
                         <TextView
+                            android:id="@+id/cancelTimerText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/cook_now_timer_edit_cancel_button" />
