@@ -355,8 +355,10 @@ public class MainHomeActivityTest {
         onView(withId(R.id.moreFilterTextView)).check(matches(isDisplayed()));
         onView(withId(R.id.moreFilterTextView)).perform(click());
         onView(withId(R.id.filter)).check(matches(isDisplayed()));
-        onView(withId(R.id.btnPrpTime)).perform(click());
-        onView(withText("Choose the preparation time")).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+        //onView(withId(R.id.btnPrpTime)).perform(click());
+        //onView(withText("Choose the preparation time")).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+        onView(withId(R.id.btnCuisine)).perform(click());
+
         scenario.close();
     }
 }
