@@ -315,8 +315,8 @@ public class MainHomeActivityTest {
 
     @Test
     public void isCorrectListOfRecipesDisplayed(){
-        Intents.release();
         scenario= ActivityScenario.launch(MainHomeActivity.class);
+        Intents.release();
         Intents.init();
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
         onView(withId(R.id.navView)).perform(navigateTo(R.id.menuItem_home));
