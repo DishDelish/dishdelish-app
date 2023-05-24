@@ -148,15 +148,15 @@ public class MainHomeActivity extends AppCompatActivity {
         toggle= new ActionBarDrawerToggle(this,drawerLayout,R.string.open,R.string.close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         navigationView.setNavigationItemSelectedListener(item ->{
             filterView.setVisibility(View.GONE);
             switch (item.getItemId()){
                 case R.id.menuItem_home:
                     setContainerContent(R.id.fragContainer,HomePageFragment.class,false);
-                    System.out.println("\n\n\n\n inside the switch "+fragmentManager.getBackStackEntryCount()+"\n\n\n\n\n");
                     break;
 
                 case R.id.menuItem_about:

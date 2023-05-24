@@ -1,9 +1,13 @@
 package com.github.siela1915.bootcamp.firebase;
 
+import android.security.keystore.UserNotAuthenticatedException;
+
+import com.github.siela1915.bootcamp.Recipes.Ingredient;
 import com.github.siela1915.bootcamp.Recipes.Recipe;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -26,6 +30,7 @@ public class Database {
     private final DatabaseReference db;
     private final static String RECIPES = "recipes",
                                 FAVORITES = "favorites",
+                                FRIDGE = "fridge",
                                 NEW = "new",
                                 USERNAME = "userName",
                                 RECIPE_NAME = "recipeName",
@@ -383,10 +388,34 @@ public class Database {
     }
 
     public void syncFavorites() {
-        getFavorites().addOnSuccessListener(favorites -> {
-            favorites.forEach(fav -> {
-                db.child(RECIPES + "/" + fav).keepSynced(true);
-            });
-        });
+        getFavorites().addOnSuccessListener(favorites ->
+                favorites.forEach(fav ->
+                        db.child(RECIPES + "/" + fav).keepSynced(true)));
+    }
+
+    public Task<Void> updateFridge(List<Ingredient> ing) {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user == null) {
+            return Tasks.forException(new UserNotAuthenticatedException("User needs to be authenticated to access his fridge"));
+        }
+
+        return db.child(FRIDGE + user.getUid()).setValue(ing);
+    }
+
+    public Task<List<Ingredient>> getFridge() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user == null) {
+            return Tasks.forException(new UserNotAuthenticatedException("User needs to be authenticated to access his fridge"));
+        }
+
+        return db.child(FRIDGE + user.getUid()).get()
+                .continueWith(dataTask -> {
+                    List<Ingredient> list = new ArrayList<>();
+                    for (DataSnapshot ds : dataTask.getResult().getChildren()) {
+                        list.add(ds.getValue(Ingredient.class));
+                    }
+
+                    return list;
+                });
     }
 }

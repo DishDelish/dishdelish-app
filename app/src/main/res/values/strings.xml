@@ -206,5 +206,10 @@
     <string name="timer_min_unit">min</string>
     <string name="timer_sec_hint">30</string>
     <string name="timer_sec_unit">sec</string>
+    <string name="nearbyHelpMenu">Nearby Help</string>
+    <string name="fridgeMenu">My Fridge</string>
+    <string name="myFridgeAddIngredient">Add ingredient</string>
+    <string name="myFridgeUpdateFridge">Update fridge</string>
+    <string name="myFridgeScrollContentDescription">Editable list of ingredients in your fridge</string>
 
 </resources>
