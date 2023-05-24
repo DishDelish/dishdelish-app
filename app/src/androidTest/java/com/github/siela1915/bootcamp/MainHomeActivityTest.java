@@ -284,7 +284,7 @@ public class MainHomeActivityTest {
         onView(withId(R.id.navView)).perform(navigateTo(R.id.menuItem_filter));
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.close());
         onView(allOf(withId(R.id.filterBtn), isDescendantOfA(withId(R.id.filterLayout)))).perform(ViewActions.scrollTo(),click());
-        onView((withId(R.id.recipeList))).check(matches(isDisplayed()));
+        onView((withId(R.id.rand_recipe_recyclerView))).check(matches(isDisplayed()));
     }
     @Test
     public void clickingOnShoppingCartMenuDisplaysAppropriateFragment(){
