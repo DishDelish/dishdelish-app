@@ -110,6 +110,7 @@ public class MainHomeActivityTest {
 
     @Test
     public void clickingOnProfileMenuNavigatesToProfileFragmentTest() {
+        FirebaseAuthActivityTest.loginSync("clickingOnProfileMenuNavigatesToProfileFragment@test.com");
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
         onView(withId(R.id.navView))
                 .perform(navigateTo(R.id.menuItem_login));
@@ -166,7 +167,7 @@ public class MainHomeActivityTest {
         intent.putExtra("navToUpload", "true");
 
         try (ActivityScenario<MainHomeActivity> activityScenario = ActivityScenario.launch(intent)) {
-            onView(ViewMatchers.withId(R.id.profileFragment)).check(matches(isDisplayed()));
+            onView(ViewMatchers.withId(R.id.recipeUpload)).check(matches(isDisplayed()));
         }
         FirebaseAuthActivityTest.logoutSync();
     }
