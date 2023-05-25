@@ -35,7 +35,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignStart="@id/textLayout"
-                android:layout_marginStart="10dp"
                 android:layout_marginTop="5dp"
                 android:fontFamily="@font/poppins"
                 android:text="User"
@@ -81,7 +80,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
                 android:fontFamily="@font/poppins"
-                android:text="5"
+                android:text="0"
                 android:textColor="#333333"
                 android:textSize="16sp"
                 app:layout_constraintStart_toEndOf="@+id/thumbButton" />
