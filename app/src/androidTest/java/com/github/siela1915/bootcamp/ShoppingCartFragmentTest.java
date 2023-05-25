@@ -68,15 +68,20 @@ public class ShoppingCartFragmentTest {
         Espresso.onView(ViewMatchers.withId(R.id.buttonAdd))
                 .perform(ViewActions.click());
 
-        Espresso.onView(ViewMatchers.withId(R.id.editTextItem))
-                .perform(ViewActions.typeText("item2"));
 
         // Click the Clear All button
         Espresso.onView(ViewMatchers.withId(R.id.buttonClearAll))
+                .perform(ViewActions.scrollTo())
                 .perform(ViewActions.click());
 
 
-        // Verify if all items are cleared from the shopping list RecyclerView
+        // need to add an item otherwise recyclerview is not visible
+        Espresso.onView(ViewMatchers.withId(R.id.editTextItem))
+                .perform(ViewActions.typeText("item2"));
+        Espresso.onView(ViewMatchers.withId(R.id.buttonAdd))
+                .perform(ViewActions.click());
+
+
         Espresso.onView(ViewMatchers.withId(R.id.shoppingList))
                 .check(matches(isDisplayed())); // Check if RecyclerView is still displayed
 
@@ -97,12 +102,21 @@ public class ShoppingCartFragmentTest {
         Espresso.onView(ViewMatchers.withId(R.id.buttonAdd))
                 .perform(ViewActions.click());
 
+        // Type a new item in the EditText
+        Espresso.onView(ViewMatchers.withId(R.id.editTextItem))
+                .perform(ViewActions.typeText("item2"));
+
+        // Click the Add button
+        Espresso.onView(ViewMatchers.withId(R.id.buttonAdd))
+                .perform(ViewActions.click());
+
         // Select an item by clicking on its checkbox in the RecyclerView
         Espresso.onView(ViewMatchers.withId(R.id.shoppingList))
                 .perform(RecyclerViewActions.actionOnItemAtPosition(0, ViewActions.click()));
 
         // Click the Delete Selected button
         Espresso.onView(ViewMatchers.withId(R.id.buttonDeleteSelected))
+                .perform(ViewActions.scrollTo())
                 .perform(ViewActions.click());
 
         // Verify if the selected item is deleted from the shopping list RecyclerView
