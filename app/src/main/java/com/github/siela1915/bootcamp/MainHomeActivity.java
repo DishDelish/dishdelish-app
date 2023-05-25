@@ -287,6 +287,7 @@ public class MainHomeActivity extends AppCompatActivity {
                         favRecipes
                 ), false);
             });
+        }
     }
 
     private void openHelp() {
