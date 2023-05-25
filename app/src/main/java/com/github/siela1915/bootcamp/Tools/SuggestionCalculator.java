@@ -37,18 +37,21 @@ public class SuggestionCalculator {
 
         // Create a list of tasks
         List<Task<List<Recipe>>> tasks = new ArrayList<>();
-        tasks.add(getFavouritesFromDatabase(db));
+        tasks.add(db.getFavoriteRecipes());
         tasks.add(db.getNRandomAsync(N));
         tasks.add(db.getByMaxLikesAsync(TOP));
 
-        return Tasks.whenAllSuccess(tasks)
+        return Tasks.whenAll(tasks)
                 .continueWith(task -> {
-                    List<Recipe> favourites = (List<Recipe>) task.getResult().get(0);
+                    List<Recipe> favourites = new ArrayList<>();
+                    if (tasks.get(0).isSuccessful()) {
+                        favourites = tasks.get(0).getResult();
+                    }
                     AllergyType allergy = Utilities.getDominantAllergy(favourites);
                     DietType diet = Utilities.getDominantDiet(favourites);
                     CuisineType cuisine = Utilities.getDominantCuisine(favourites);
 
-                    List<Recipe> random = (List<Recipe>) task.getResult().get(1);
+                    List<Recipe> random = tasks.get(1).getResult();
                     Set<Recipe> result = new HashSet<>(); //Use set to avoid duplicates
 
                     //Add all recipes with dominant cuisine/allergy/diet types
@@ -57,33 +60,16 @@ public class SuggestionCalculator {
                     result.addAll(Utilities.getDiet(diet, random));
 
                     //Add all top recipes
-                    result.addAll((Collection<? extends Recipe>) task.getResult().get(2));
+                    result.addAll(tasks.get(2).getResult());
 
                     //Add some different recipes too
                     result.addAll(random.stream().filter(r -> !result.contains(r)).limit(N/10).collect(Collectors.toList()));
-                    List<Recipe> ls = result.stream().collect(Collectors.toList());
+                    List<Recipe> ls = new ArrayList<>(result);
                     Collections.shuffle(ls);
 
                     return ls;
                 });
     }
-
-
-    private static Task<List<Recipe>> getFavouritesFromDatabase(Database db) {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) {
-            Task<List<String>> favourites = db.getFavorites();
-            return favourites.continueWith(ls -> {
-                List<Recipe> recipes = new ArrayList<>();
-                for (String key : ls.getResult()) {
-                    recipes.add(db.getAsync(key).getResult());
-                }
-                return recipes;
-            });
-        }
-        return Tasks.forResult(new ArrayList<>());
-    }
-
 
 }
 

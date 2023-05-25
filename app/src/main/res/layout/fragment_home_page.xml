@@ -11,22 +11,84 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:gravity="center"
         android:layout_weight="0.08"
+        android:orientation="horizontal"
         android:layout_margin="10dp">
-        <Button
-            android:id="@+id/homeFragButton"
-            android:layout_width="wrap_content"
+
+        <SearchView
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/discover_recipe"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            android:layout_weight="1"
+            android:id="@+id/searchView"
+            android:queryHint="Recipe name"
+            android:iconifiedByDefault="false"
+            style="@style/SearchViewStyle"
+            tools:ignore="NestedWeights" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:id="@+id/moreFilterTextView"
+            android:clickable="true"
+            android:gravity="center"
+            android:textColor="@color/orange"
+            android:autoLink="web"
+            android:text="more filters"
+            android:textSize="20sp"
+
+            tools:ignore="HardcodedText,KeyboardInaccessibleWidget,TouchTargetSizeCheck" />
     </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.12"
+        android:id="@+id/filter"
+        android:orientation="horizontal"
+        android:layout_margin="10dp"
+        android:visibility="gone">
+
+        <Button
+            android:id="@+id/btnAllergy"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:text="@string/allergy"
+            android:textStyle="bold"
+            android:textSize="12sp"
+            tools:ignore="ButtonStyle,NestedWeights,SmallSp,TouchTargetSizeCheck" />
+        <Button
+            android:id="@+id/btnDiet"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:text="@string/diet"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            tools:ignore="ButtonStyle,SmallSp,TouchTargetSizeCheck" />
+
+        <Button
+            android:id="@+id/btnCuisine"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:text="@string/cuisineTypes"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            tools:ignore="ButtonStyle,SmallSp,TouchTargetSizeCheck" />
+
+    </LinearLayout>
+
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.92"
+        android:id="@+id/recipeListLinearLayout"
         android:orientation="vertical"
         >
         <androidx.recyclerview.widget.RecyclerView

@@ -7,7 +7,7 @@
     <string name="uploadRecipePageRecipeNameHint">Give your recipe a name</string>
     <string name="uploadRecipePageChooseImg">Choose Image</string>
     <string name="uploadRecipePageButtonText">Upload Recipe</string>
-    <string name="prepTime">Prep Time *</string>
+    <string name="prepTime">Time</string>
     <string name="prepTimeHint">0</string>
     <string name="prepTimeEmptyErrorMessage">Preparation time is required!</string>
     <string name="prepTimeInvalidErrorMessage">Preparation time must be positive!</string>
@@ -39,11 +39,11 @@
     <string name="ingredientsUnitHint">cups</string>
     <string name="ingredientsNameHint">sugar</string>
     <string name="addIngredients">Add More Ingredient</string>
-    <string name="cuisineTypes">Cuisine Types</string>
+    <string name="cuisineTypes">Cuisine</string>
     <string name="addCuisineTypeButton">Add</string>
-    <string name="allergyTypes">Allergy Types</string>
+    <string name="allergyTypes">Allergy</string>
     <string name="addAllergyTypeButton">Add</string>
-    <string name="dietTypes">Diet Types</string>
+    <string name="dietTypes">Diet</string>
     <string name="addDietTypeButton">Add</string>
     <string name="step">Directions *</string>
     <string name="addSteps">Add More Step</string>

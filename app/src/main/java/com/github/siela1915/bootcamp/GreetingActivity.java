@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.widget.TextView;
 import com.github.siela1915.bootcamp.R;
 
+import com.github.siela1915.bootcamp.firebase.FirebaseInstanceManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -21,7 +22,7 @@ public class GreetingActivity extends AppCompatActivity {
         TextView message = findViewById(R.id.greetingMessage);
         String userName = "";
 
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseUser user = FirebaseInstanceManager.getAuth().getCurrentUser();
         if (intent.hasExtra("com.github.siela1915.bootcamp.userName")) {
             userName = intent.getStringExtra("com.github.siela1915.bootcamp.userName");
         } else if (user != null) {

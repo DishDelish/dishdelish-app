@@ -28,6 +28,7 @@ import androidx.test.rule.GrantPermissionRule;
 import com.github.siela1915.bootcamp.Recipes.Ingredient;
 import com.github.siela1915.bootcamp.Recipes.Unit;
 import com.github.siela1915.bootcamp.firebase.Database;
+import com.github.siela1915.bootcamp.firebase.FirebaseInstanceManager;
 import com.github.siela1915.bootcamp.firebase.LocationDatabase;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -59,21 +60,17 @@ public class NearbyHelpFragmentTest {
 
     @Before
     public void prepare() {
-        FirebaseApp.clearInstancesForTest();
-        FirebaseApp.initializeApp(getApplicationContext());
-        FirebaseAuth.getInstance().useEmulator("10.0.2.2", 9099);
-        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        firebaseDatabase.useEmulator("10.0.2.2", 9000);
+        FirebaseInstanceManager.emulator = true;
 
         if (locDb == null) {
-            locDb = new LocationDatabase();
+            locDb = new LocationDatabase(FirebaseInstanceManager.getDatabase(getApplicationContext()));
         }
 
         if (db == null) {
-            db = new Database(firebaseDatabase);
+            db = new Database(FirebaseInstanceManager.getDatabase(getApplicationContext()));
         }
 
-        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+        if (FirebaseInstanceManager.getAuth().getCurrentUser() != null) {
             FirebaseAuthActivityTest.logoutSync();
         }
     }
@@ -191,7 +188,7 @@ public class NearbyHelpFragmentTest {
     @Test
     public void replyPageCanSendReply() {
         FirebaseAuthActivityTest.loginSync("replyPagePutsReplyIntoDatabase@test.com");
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseUser user = FirebaseInstanceManager.getAuth().getCurrentUser();
         assertNotNull(user);
         Bundle args = new Bundle();
         args.putString(NearbyHelpFragment.ARG_REPLY_OFFER_UID, user.getUid());

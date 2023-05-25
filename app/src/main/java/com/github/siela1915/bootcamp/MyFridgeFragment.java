@@ -23,6 +23,7 @@ import com.github.siela1915.bootcamp.AutocompleteApi.IngredientAutocomplete;
 import com.github.siela1915.bootcamp.Recipes.Ingredient;
 import com.github.siela1915.bootcamp.UploadRecipe.RecipeStepAndIngredientManager;
 import com.github.siela1915.bootcamp.firebase.Database;
+import com.github.siela1915.bootcamp.firebase.FirebaseInstanceManager;
 import com.github.siela1915.bootcamp.firebase.LocationDatabase;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -42,7 +43,7 @@ import java.util.Map;
  */
 public class MyFridgeFragment extends Fragment {
     private Database db;
-    private final LocationDatabase locDb = new LocationDatabase();
+    private LocationDatabase locDb;
     private final IngredientAutocomplete apiService = new IngredientAutocomplete();
     private final Map<String, Integer> idMap = new HashMap<>();
     private RecipeStepAndIngredientManager ingredientManager;
@@ -63,8 +64,8 @@ public class MyFridgeFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        db = new Database(FirebaseDatabase.getInstance());
-
+        db = new Database(FirebaseInstanceManager.getDatabase(requireContext().getApplicationContext()));
+        locDb = new LocationDatabase(FirebaseInstanceManager.getDatabase(requireContext().getApplicationContext()));
         askLocationPermission();
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext());
@@ -91,7 +92,7 @@ public class MyFridgeFragment extends Fragment {
 
         addIngredient.setOnClickListener(v -> ingredientManager.addIngredient(idMap, apiService, true, null));
 
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseUser user = FirebaseInstanceManager.getAuth().getCurrentUser();
         if (user != null) {
             Task<List<Ingredient>> ingTask = db.getFridge();
             Task<List<Integer>> indexTask = locDb.getOffered(user.getUid());
