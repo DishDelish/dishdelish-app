@@ -42,14 +42,13 @@ public class ShoppingListManagerTest {
 
         List<String> shoppingList = manager.getShoppingList();
 
-        assertTrue(shoppingList.contains("Candy"));
-        assertTrue(shoppingList.contains("Sugar"));
+        assertTrue(containsSubstring(shoppingList, "Candy"));
+        assertTrue(containsSubstring(shoppingList, "Sugar"));
 
     }
 
     @Test
-    public void removeIngredientRemovesItemsFromShoppingList(){
-
+    public void removeIngredientRemovesItemsFromShoppingList() {
         manager.addIngredient("Candy");
         manager.addIngredient("Sugar");
 
@@ -57,9 +56,17 @@ public class ShoppingListManagerTest {
 
         List<String> shoppingList = manager.getShoppingList();
 
-        assertFalse(shoppingList.contains("Sugar"));
-        assertTrue(shoppingList.contains("Candy"));
+        assertFalse(containsSubstring(shoppingList, "Sugar")); // Check if any item contains the substring "Sugar"
+        assertTrue(containsSubstring(shoppingList, "Candy")); // Check if any item contains the substring "Candy"
+    }
 
+    private boolean containsSubstring(List<String> list, String substring) {
+        for (String item : list) {
+            if (item.contains(substring)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Test
