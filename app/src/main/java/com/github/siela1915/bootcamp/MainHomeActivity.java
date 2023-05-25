@@ -265,8 +265,8 @@ public class MainHomeActivity extends AppCompatActivity {
 
             setContainerContent(R.id.fragContainer, RecipeListFragment.newInstance(new ArrayList<>()), false);
 
-        Database db = new Database(FirebaseDatabase.getInstance());
-        db.getFavoriteRecipes().addOnSuccessListener(favRecipes -> {
+            Database db = new Database(FirebaseDatabase.getInstance());
+            db.getFavoriteRecipes().addOnSuccessListener(favRecipes -> {
                 Fragment currentFrag = fragmentManager.findFragmentById(R.id.fragContainer);
                 if (currentFrag == null || currentFrag.getClass() != RecipeListFragment.class) {
                     return;
@@ -276,6 +276,7 @@ public class MainHomeActivity extends AppCompatActivity {
                         favRecipes
                 ), false);
             });
+        }
     }
 
     private void openHelp() {
