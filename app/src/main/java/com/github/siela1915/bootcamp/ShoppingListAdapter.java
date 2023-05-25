@@ -76,8 +76,9 @@ public class ShoppingListAdapter  extends RecyclerView.Adapter<ShoppingListViewH
         return shoppingList;
     }
 
-    public void addItem(String item) {
-        shoppingList.add(item);
+    public void addItem(String ingredient, String date) {
+        String itemWithDate = ingredient + " - date: " + date;
+        shoppingList.add(itemWithDate);
         notifyDataSetChanged();
     }
 }

@@ -16,7 +16,9 @@ import android.widget.EditText;
 import com.github.siela1915.bootcamp.Recipes.Ingredient;
 import com.github.siela1915.bootcamp.Recipes.Unit;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -100,12 +102,19 @@ public class ShoppingCartFragment extends Fragment {
             String newItem = editTextItem.getText().toString().trim();
             if (!newItem.isEmpty()) {
                 manager.addIngredient(newItem);
-                adapter.addItem(newItem);
+                String currentDate = getCurrentDate();
+                adapter.addItem(newItem, currentDate);
                 editTextItem.setText("");
             }
         });
 
         return view;
+    }
+
+    private String getCurrentDate() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        Date currentDate = new Date();
+        return dateFormat.format(currentDate);
     }
 
     private void clearAllItems(ShoppingListAdapter adapter) {

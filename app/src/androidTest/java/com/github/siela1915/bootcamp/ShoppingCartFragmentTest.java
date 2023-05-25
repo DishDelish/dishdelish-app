@@ -82,6 +82,7 @@ public class ShoppingCartFragmentTest {
 
         // Click the Add button
         Espresso.onView(withId(R.id.buttonAdd))
+                .perform(ViewActions.scrollTo())
                 .perform(ViewActions.click());
 
 
@@ -96,6 +97,7 @@ public class ShoppingCartFragmentTest {
                 .perform(ViewActions.typeText("item2"))
                 .perform(ViewActions.closeSoftKeyboard());
         Espresso.onView(withId(R.id.buttonAdd))
+                .perform(ViewActions.scrollTo())
                 .perform(ViewActions.click());
 
 
