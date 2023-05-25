@@ -132,6 +132,7 @@ public class MainHomeActivity extends AppCompatActivity {
                 cuisineType.add(ct.ordinal());
             }
 
+            /*
             RecipeFetcher recipeFetcher = new RecipeFetcher(allergy,cuisineType,dietType);
             List<String> filteredRecipes= recipeFetcher.fetchRecipeList();
             List<Recipe> recipeList = new ArrayList<>();
@@ -143,7 +144,9 @@ public class MainHomeActivity extends AppCompatActivity {
                 }
 
             }
-            setContainerContent(R.id.fragContainer,RecipeListFragment.newInstance(recipeList),false);
+
+             */
+           // setContainerContent(R.id.fragContainer,RecipeListFragment.newInstance(recipeList),false);
 
         });
         toggle= new ActionBarDrawerToggle(this,drawerLayout,R.string.open,R.string.close);
@@ -262,23 +265,17 @@ public class MainHomeActivity extends AppCompatActivity {
 
             setContainerContent(R.id.fragContainer, RecipeListFragment.newInstance(new ArrayList<>()), false);
 
-            Database db = new Database(FirebaseDatabase.getInstance());
-            db.getFavorites().addOnSuccessListener(favorites -> {
-                List<Task<Recipe>> favListTasks = favorites.stream().map(db::getAsync).collect(Collectors.toList());
-                Tasks.whenAll(favListTasks).addOnSuccessListener(voidRes -> {
-                    Fragment currentFrag = fragmentManager.findFragmentById(R.id.fragContainer);
-                    if (currentFrag == null || currentFrag.getClass() != RecipeListFragment.class) {
-                        return;
-                    }
-                    fragmentManager.popBackStack();
-                    List<Recipe> favRecipes = favListTasks
-                            .stream().map(Task::getResult).collect(Collectors.toList());
-                    setContainerContent(R.id.fragContainer, RecipeListFragment.newInstance(
-                            favRecipes
-                    ), false);
-                });
+        Database db = new Database(FirebaseDatabase.getInstance());
+        db.getFavoriteRecipes().addOnSuccessListener(favRecipes -> {
+                Fragment currentFrag = fragmentManager.findFragmentById(R.id.fragContainer);
+                if (currentFrag == null || currentFrag.getClass() != RecipeListFragment.class) {
+                    return;
+                }
+                fragmentManager.popBackStack();
+                setContainerContent(R.id.fragContainer, RecipeListFragment.newInstance(
+                        favRecipes
+                ), false);
             });
-        }
     }
 
     private void openHelp() {

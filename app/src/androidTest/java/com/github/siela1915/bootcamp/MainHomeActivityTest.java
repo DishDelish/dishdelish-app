@@ -7,7 +7,6 @@ import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.contrib.NavigationViewActions.navigateTo;
 import static androidx.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition;
-import static androidx.test.espresso.intent.Intents.intending;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.ViewMatchers.Visibility.VISIBLE;
 import static androidx.test.espresso.matcher.ViewMatchers.isClickable;
@@ -21,16 +20,15 @@ import static androidx.test.runner.lifecycle.Stage.RESUMED;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.Instrumentation;
 import android.content.Intent;
 import android.view.View;
 
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.test.core.app.ActivityScenario;
-import androidx.test.espresso.IdlingRegistry;
 import androidx.test.espresso.IdlingResource;
 import androidx.test.espresso.NoMatchingViewException;
 import androidx.test.espresso.ViewAssertion;
@@ -301,7 +299,7 @@ public class MainHomeActivityTest {
         onView(withId(R.id.navView)).perform(navigateTo(R.id.menuItem_filter));
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.close());
         onView(allOf(withId(R.id.filterBtn), isDescendantOfA(withId(R.id.filterLayout)))).perform(ViewActions.scrollTo(),click());
-        onView((withId(R.id.recipeList))).check(matches(isDisplayed()));
+        onView((withId(R.id.rand_recipe_recyclerView))).check(matches(isDisplayed()));
     }
     @Test
     public void clickingOnShoppingCartMenuDisplaysAppropriateFragment(){
@@ -330,7 +328,71 @@ public class MainHomeActivityTest {
         }
     }
 
+    @Test
+    public void isCorrectListOfRecipesDisplayed(){
+        scenario= ActivityScenario.launch(MainHomeActivity.class);
+        //Intents.release();
 
+        Intents.init();
+        onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
+        onView(withId(R.id.navView)).perform(navigateTo(R.id.menuItem_home));
+        onView(withId(R.id.homeFragment)).check(matches(isDisplayed()));
+        onView(withId(R.id.rand_recipe_recyclerView)).check(matches(isDisplayed()));
+        //onView(withId(R.id.rand_recipe_recyclerView)).check(new RecyclerViewItemCountAssertion(12));
+        onView(withId(R.id.rand_recipe_recyclerView)).perform(actionOnItemAtPosition(0, click()));
+        Intents.intended(hasComponent(RecipeActivity.class.getName()));
+        Intents.release();
+        scenario.close();
+
+    }
+    @Test
+    public void searchViewTest(){
+        scenario= ActivityScenario.launch(MainHomeActivity.class);
+        onView(withId(R.id.searchView)).check(matches(isDisplayed()));
+        onView(withId(R.id.searchView)).perform(click());
+        onView(withId(R.id.searchView)).perform(ViewActions.typeText("pizza"));
+        ViewActions.closeSoftKeyboard();
+        onView(withText("pizza")).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+        scenario.close();
+    }
+    @Test
+    public void moreFiltersTest(){
+        scenario= ActivityScenario.launch(MainHomeActivity.class);
+        onView(withId(R.id.moreFilterTextView)).check(matches(isDisplayed()));
+        onView(withId(R.id.moreFilterTextView)).perform(click());
+        onView(withId(R.id.filter)).check(matches(isDisplayed()));
+        //onView(withId(R.id.btnPrpTime)).perform(click());
+        //onView(withText("Choose the preparation time")).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+        onView(withId(R.id.btnDiet)).perform(click());
+        onView(withText("Choose your diet")).check(matches(withEffectiveVisibility(VISIBLE)));
+        scenario.close();
+    }
+    @Test
+    public void moreFilterByClickingOonAllergyBtnTest(){
+        scenario= ActivityScenario.launch(MainHomeActivity.class);
+        onView(withId(R.id.moreFilterTextView)).perform(click());
+        onView(withId(R.id.btnAllergy)).perform(click());
+        onView(withText("what are you allergic to")).check(matches(withEffectiveVisibility(VISIBLE)));
+        scenario.close();
+    }
+    @Test
+    public void moreFilterByClickingOnCuisineBtnTest(){
+        scenario= ActivityScenario.launch(MainHomeActivity.class);
+        onView(withId(R.id.moreFilterTextView)).perform(click());
+        onView(withId(R.id.btnCuisine)).perform(click());
+        onView(withText("Choose your preferred cuisine")).check(matches(withEffectiveVisibility(VISIBLE)));
+        scenario.close();
+    }
+    @Test
+    public void moreFilterTextChangesToclearFilterTest(){
+        scenario= ActivityScenario.launch(MainHomeActivity.class);
+        onView(withId(R.id.moreFilterTextView)).perform(click());
+        onView(withId(R.id.moreFilterTextView)).check(matches(withText("clear filters")));
+        onView(withId(R.id.moreFilterTextView)).perform(click());
+        onView(withId(R.id.moreFilterTextView)).check(matches(withText("more filters")));
+        onView(withId(R.id.filter)).check(matches(not(isDisplayed())));
+        scenario.close();
+    }
 }
  class RecyclerViewItemCountAssertion implements ViewAssertion {
     private final int expectedCount;
@@ -391,3 +453,4 @@ class RecyclerViewIdlingResource implements IdlingResource {
         this.resourceCallback = resourceCallback;
     }
 }
+

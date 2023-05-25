@@ -561,36 +561,8 @@
             app:layout_constraintEnd_toEndOf="@+id/recipePicture"
             app:layout_constraintTop_toBottomOf="@+id/recipeNameText" />
 
-        <Button
-            android:id="@+id/minusButton"
-            android:layout_width="50dp"
-            android:layout_height="60dp"
-            android:text="-"
-            android:textSize="20sp"
-            app:layout_constraintBottom_toTopOf="@+id/ingredientsList"
-            app:layout_constraintStart_toEndOf="@+id/servingsText" />
 
-        <TextView
-            android:id="@+id/servings"
-            android:layout_width="30dp"
-            android:layout_height="40dp"
-            android:gravity="center_vertical"
-            android:text="000"
-            android:textColor="#000000"
-            android:textSize="16sp"
-            app:layout_constraintBottom_toBottomOf="@+id/minusButton"
-            app:layout_constraintStart_toEndOf="@+id/minusButton"
-            app:layout_constraintTop_toTopOf="@+id/minusButton" />
 
-        <Button
-            android:id="@+id/plusButton"
-            android:layout_width="50dp"
-            android:layout_height="60dp"
-            android:text="+"
-            android:textSize="20sp"
-            app:layout_constraintBottom_toBottomOf="@+id/minusButton"
-            app:layout_constraintStart_toEndOf="@+id/servings"
-            app:layout_constraintTop_toTopOf="@+id/minusButton" />
 
         <Button
             android:id="@+id/cookNowButton"
@@ -601,6 +573,59 @@
             app:layout_constraintEnd_toEndOf="@+id/infoBoxes"
             app:layout_constraintStart_toStartOf="@+id/infoBoxes"
             app:layout_constraintTop_toBottomOf="@+id/infoBoxes" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/servingsText"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/servingsText">
+
+            <Button
+                android:id="@+id/minusButton"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/custom_btn_remove"
+                android:backgroundTint="@color/black"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/plusButton"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="8dp"
+                android:background="@drawable/custom_btn_add"
+                android:backgroundTint="@color/black"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/servings"
+                android:layout_width="30dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:fontFamily="@font/inter"
+                android:inputType="number"
+                android:minEms="1"
+                android:text="1"
+                android:textAlignment="center"
+                android:textAllCaps="false"
+                android:textColor="@android:color/black"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/plusButton"
+                app:layout_constraintStart_toEndOf="@id/minusButton"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
