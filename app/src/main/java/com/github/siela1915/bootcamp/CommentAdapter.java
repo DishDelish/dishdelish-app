@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.siela1915.bootcamp.Recipes.Comment;
 import com.github.siela1915.bootcamp.Recipes.Recipe;
+import com.github.siela1915.bootcamp.firebase.FirebaseInstanceManager;
 import com.github.siela1915.bootcamp.firebase.UserDatabase;
 
 import java.util.List;
@@ -22,12 +23,14 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentViewHolder> {
     List<Comment> comments;
 
     Recipe recipe;
-    UserDatabase userDb = new UserDatabase();
+    UserDatabase userDb;
 
     public CommentAdapter(Context context, List<Comment> comments, Recipe recipe) {
         this.context = context;
         this.comments = comments;
         this.recipe = recipe;
+
+        userDb = new UserDatabase(FirebaseInstanceManager.getDatabase(context.getApplicationContext()));
     }
 
     @NonNull

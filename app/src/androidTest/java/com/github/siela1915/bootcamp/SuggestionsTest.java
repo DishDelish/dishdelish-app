@@ -45,7 +45,7 @@ public class SuggestionsTest {
     @Before
     public void useEmulator() {
         FirebaseInstanceManager.emulator = true;
-        firebaseInstance = FirebaseInstanceManager.getDatabase();
+        firebaseInstance = FirebaseInstanceManager.getDatabase(getApplicationContext());
     }
 
     @After

@@ -26,6 +26,7 @@ import com.github.siela1915.bootcamp.Recipes.Recipe;
 import com.github.siela1915.bootcamp.Recipes.Unit;
 import com.github.siela1915.bootcamp.Tools.LanguageFilter;
 import com.github.siela1915.bootcamp.firebase.Database;
+import com.github.siela1915.bootcamp.firebase.FirebaseInstanceManager;
 import com.github.siela1915.bootcamp.firebase.UserDatabase;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
@@ -155,7 +156,7 @@ public class RecipeActivity extends AppCompatActivity implements CompoundButton.
 
         new DownloadImageTask(recipePicture).execute(recipe.image);
 
-        UserDatabase userDb = new UserDatabase();
+        UserDatabase userDb = new UserDatabase(FirebaseInstanceManager.getDatabase(getApplicationContext()));
 
         userDb.getUser(recipe.getUserId()).addOnSuccessListener(user -> {
             userNameText.setText(user.getDisplayName());

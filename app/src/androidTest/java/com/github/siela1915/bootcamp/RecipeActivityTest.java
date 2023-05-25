@@ -83,7 +83,7 @@ public class RecipeActivityTest {
     @BeforeClass
     public static void prepareEmulator() {
         FirebaseInstanceManager.emulator = true;
-        fb = FirebaseInstanceManager.getDatabase();
+        fb = FirebaseInstanceManager.getDatabase(getApplicationContext());
 
         database = new Database(fb);
 

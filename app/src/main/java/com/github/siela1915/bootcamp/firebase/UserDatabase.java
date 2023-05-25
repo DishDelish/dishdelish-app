@@ -17,8 +17,8 @@ public class UserDatabase {
     private final String USERS = "users";
     private final DatabaseReference db;
 
-    public UserDatabase() {
-        this.db = FirebaseInstanceManager.getDatabase().getReference(USERS);
+    public UserDatabase(FirebaseDatabase db) {
+        this.db = db.getReference(USERS);
     }
 
 

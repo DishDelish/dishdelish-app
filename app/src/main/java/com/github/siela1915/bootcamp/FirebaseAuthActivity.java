@@ -95,7 +95,7 @@ public class FirebaseAuthActivity extends AppCompatActivity {
             // Successfully signed in
             FirebaseUser user = FirebaseInstanceManager.getAuth().getCurrentUser();
             if (user != null) {
-                UserDatabase userDb = new UserDatabase();
+                UserDatabase userDb = new UserDatabase(FirebaseInstanceManager.getDatabase(getApplicationContext()));
                 userDb.addDeviceToken().addOnCompleteListener(voidTask -> {
                     // Launch supplied intent with the user info
                     finish();
@@ -138,7 +138,7 @@ public class FirebaseAuthActivity extends AppCompatActivity {
     public void signIn() {
         FirebaseAuth auth = FirebaseInstanceManager.getAuth();
         if (auth.getCurrentUser() != null) {
-            UserDatabase userDb = new UserDatabase();
+            UserDatabase userDb = new UserDatabase(FirebaseInstanceManager.getDatabase(getApplicationContext()));
             userDb.addDeviceToken();
             finish();
             if (postAuthIntent == null) {
@@ -161,7 +161,7 @@ public class FirebaseAuthActivity extends AppCompatActivity {
     }
 
     public void signOut() {
-        UserDatabase userDb = new UserDatabase();
+        UserDatabase userDb = new UserDatabase(FirebaseInstanceManager.getDatabase(getApplicationContext()));
         userDb.removeDeviceToken().continueWithTask(voidTask -> AuthUI.getInstance()
                 .signOut(this))
                 .addOnCompleteListener(task -> {

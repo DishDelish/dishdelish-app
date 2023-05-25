@@ -21,11 +21,11 @@ public class FirebaseInstanceManagerTest {
 
     @Test
     public void withoutEmulatorGivesCorrectDatabase() {
-        FirebaseDatabase db = FirebaseInstanceManager.getDatabase();
+        FirebaseDatabase db = FirebaseInstanceManager.getDatabase(getApplicationContext());
 
         assertThat(db.getReference().toString(), is(not("http://10.0.2.2:9000")));
 
-        FirebaseDatabase db2 = FirebaseInstanceManager.getDatabase();
+        FirebaseDatabase db2 = FirebaseInstanceManager.getDatabase(getApplicationContext());
 
         assertThat(db2.getReference().toString(), is(not("http://10.0.2.2:9000")));
     }
@@ -34,11 +34,11 @@ public class FirebaseInstanceManagerTest {
     public void withEmulatorGivesCorrectDatabase() {
         FirebaseInstanceManager.emulator = true;
 
-        FirebaseDatabase db = FirebaseInstanceManager.getDatabase();
+        FirebaseDatabase db = FirebaseInstanceManager.getDatabase(getApplicationContext());
 
         assertThat(db.getReference().toString(), is("http://10.0.2.2:9000"));
 
-        FirebaseDatabase db2 = FirebaseInstanceManager.getDatabase();
+        FirebaseDatabase db2 = FirebaseInstanceManager.getDatabase(getApplicationContext());
 
         assertThat(db2.getReference().toString(), is("http://10.0.2.2:9000"));
     }

@@ -65,7 +65,7 @@ import java.util.Map;
  * create an instance of this fragment.
  */
 public class NearbyHelpFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener {
-    private final LocationDatabase locDb = new LocationDatabase();
+    private LocationDatabase locDb;
     private FusedLocationProviderClient fusedLocationClient;
     private List<Ingredient> mAskedIngredients = null;
     private final Map<Marker, Pair<String, Ingredient>> offers = new HashMap<>();
@@ -127,6 +127,7 @@ public class NearbyHelpFragment extends Fragment implements OnMapReadyCallback, 
         askLocationPermission();
         askNotificationPermission();
 
+        locDb = new LocationDatabase(FirebaseInstanceManager.getDatabase(requireContext().getApplicationContext()));
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext());
 
         if (getArguments() != null && getArguments().getString(ARG_REPLY_OFFER_UID) != null) {
@@ -236,7 +237,7 @@ public class NearbyHelpFragment extends Fragment implements OnMapReadyCallback, 
         if (offer != null && user != null) {
             Map<String, String> data = new HashMap<>();
             data.put("ingredient", offer.second.toString());
-            PushNotificationService.sendRemoteNotification(offer.first,
+            PushNotificationService.sendRemoteNotification(requireContext(), offer.first,
                             String.format(Locale.ENGLISH, "%s is interested in %s",
                                     user.getDisplayName(), offer.second.getIngredient()),
                             String.format(Locale.ENGLISH, "%s is interested in %s. Answer him now!",
@@ -283,7 +284,7 @@ public class NearbyHelpFragment extends Fragment implements OnMapReadyCallback, 
                 replyInput.setText(R.string.nearbyNotAuthenticatedErrorMsg);
                 return;
             }
-            PushNotificationService.sendRemoteNotification(mReplyOfferUid,
+            PushNotificationService.sendRemoteNotification(requireContext(), mReplyOfferUid,
                     String.format(Locale.ENGLISH, "Reply from %s for %s",
                             user.getDisplayName(), mReplyIngredient),
                     replyInput.getText().toString(), null);

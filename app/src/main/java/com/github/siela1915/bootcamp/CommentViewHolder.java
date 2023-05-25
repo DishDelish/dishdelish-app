@@ -35,9 +35,7 @@ public class CommentViewHolder extends RecyclerView.ViewHolder implements Compou
 
     CommentAdapter adapter;
 
-    private final FirebaseDatabase firebaseDatabase = FirebaseInstanceManager.getDatabase();
-
-    private final Database database = new Database(firebaseDatabase);
+    private final Database database;
     private final FirebaseAuth firebaseAuth = FirebaseInstanceManager.getAuth();
 
 
@@ -49,6 +47,9 @@ public class CommentViewHolder extends RecyclerView.ViewHolder implements Compou
         photo = itemView.findViewById(R.id.profilePhoto);
         this.recipe = recipe;
         this.adapter = adapter;
+
+        FirebaseDatabase firebaseDatabase = FirebaseInstanceManager.getDatabase(adapter.context);
+        database = new Database(firebaseDatabase);
 
         replies = itemView.findViewById(R.id.repliesRecyclerView);
 

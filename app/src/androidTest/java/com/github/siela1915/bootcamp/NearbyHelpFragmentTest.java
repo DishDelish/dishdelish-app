@@ -63,11 +63,11 @@ public class NearbyHelpFragmentTest {
         FirebaseInstanceManager.emulator = true;
 
         if (locDb == null) {
-            locDb = new LocationDatabase();
+            locDb = new LocationDatabase(FirebaseInstanceManager.getDatabase(getApplicationContext()));
         }
 
         if (db == null) {
-            db = new Database(FirebaseInstanceManager.getDatabase());
+            db = new Database(FirebaseInstanceManager.getDatabase(getApplicationContext()));
         }
 
         if (FirebaseInstanceManager.getAuth().getCurrentUser() != null) {

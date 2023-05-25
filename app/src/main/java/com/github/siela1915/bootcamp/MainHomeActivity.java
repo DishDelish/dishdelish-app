@@ -52,7 +52,7 @@ public class MainHomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        FirebaseDatabase firebaseDb = FirebaseInstanceManager.getDatabase();
+        FirebaseDatabase firebaseDb = FirebaseInstanceManager.getDatabase(getApplicationContext());
         if (!isRunningTest()) {
             try {
                 firebaseDb.setPersistenceEnabled(true);
@@ -273,7 +273,7 @@ public class MainHomeActivity extends AppCompatActivity {
 
             setContainerContent(R.id.fragContainer, RecipeListFragment.newInstance(new ArrayList<>()), false);
 
-            Database db = new Database(FirebaseInstanceManager.getDatabase());
+            Database db = new Database(FirebaseInstanceManager.getDatabase(getApplicationContext()));
             db.getFavorites().addOnSuccessListener(favorites -> {
                 List<Task<Recipe>> favListTasks = favorites.stream().map(db::getAsync).collect(Collectors.toList());
                 Tasks.whenAll(favListTasks).addOnSuccessListener(voidRes -> {

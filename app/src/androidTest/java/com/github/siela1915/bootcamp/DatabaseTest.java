@@ -38,7 +38,7 @@ public class DatabaseTest {
     @Before
     public void connectToEmulator() {
         FirebaseInstanceManager.emulator = true;
-        firebaseInstance = FirebaseInstanceManager.getDatabase();
+        firebaseInstance = FirebaseInstanceManager.getDatabase(getApplicationContext());
     }
 
     @After

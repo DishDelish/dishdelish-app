@@ -78,7 +78,7 @@ public class HomePageFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-        firebaseDatabase = FirebaseInstanceManager.getDatabase();
+        firebaseDatabase = FirebaseInstanceManager.getDatabase(requireContext().getApplicationContext());
         database = new Database(firebaseDatabase);
     }
 

@@ -12,7 +12,6 @@ import com.github.siela1915.bootcamp.Recipes.Ingredient;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.android.gms.tasks.Tasks;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -26,12 +25,14 @@ import java.util.Set;
 
 public class LocationDatabase {
     private final String HELP = "help";
-    private final DatabaseReference db;
+    private final DatabaseReference dbRef;
+    private final Database db;
     private final GeoFire geoFire;
 
-    public LocationDatabase() {
-        this.db = FirebaseInstanceManager.getDatabase().getReference(HELP);
-        this.geoFire = new GeoFire(db);
+    public LocationDatabase(FirebaseDatabase db) {
+        this.dbRef = db.getReference(HELP);
+        this.geoFire = new GeoFire(this.dbRef);
+        this.db = new Database(db);
     }
 
     public Task<Void> updateLocation(Location location) {
@@ -59,18 +60,17 @@ public class LocationDatabase {
             return Tasks.forException(new UserNotAuthenticatedException("User needs to be authenticated to store location"));
         }
 
-        return db.child(user.getUid() + "/offered").setValue(indexes, "ff");
+        return dbRef.child(user.getUid() + "/offered").setValue(indexes, "ff");
     }
 
     public Task<List<Ingredient>> getOfferedIngredients(String userId) {
-        return db.child(userId + "/offered").get()
+        return dbRef.child(userId + "/offered").get()
                 .continueWithTask(offersTask -> {
                     Set<Integer> indexes = new HashSet<>();
                     for (DataSnapshot ds : offersTask.getResult().getChildren()) {
                         indexes.add(ds.getValue(Integer.class));
                     }
-                    Database persDb = new Database(FirebaseInstanceManager.getDatabase());
-                    return persDb.getFridge().continueWith(fridgeTask -> {
+                    return db.getFridge().continueWith(fridgeTask -> {
                         List<Ingredient> list = new ArrayList<>();
                         for (int i = 0; i < fridgeTask.getResult().size(); ++i) {
                             if (indexes.contains(i)) {
@@ -83,7 +83,7 @@ public class LocationDatabase {
     }
 
     public Task<List<Integer>> getOffered(String userId) {
-        return db.child(userId + "/offered").get()
+        return dbRef.child(userId + "/offered").get()
                 .continueWith(offersTask -> {
                     List<Integer> indexes = new ArrayList<>();
                     for (DataSnapshot ds : offersTask.getResult().getChildren()) {

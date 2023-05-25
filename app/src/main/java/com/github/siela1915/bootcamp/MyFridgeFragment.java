@@ -43,7 +43,7 @@ import java.util.Map;
  */
 public class MyFridgeFragment extends Fragment {
     private Database db;
-    private final LocationDatabase locDb = new LocationDatabase();
+    private LocationDatabase locDb;
     private final IngredientAutocomplete apiService = new IngredientAutocomplete();
     private final Map<String, Integer> idMap = new HashMap<>();
     private RecipeStepAndIngredientManager ingredientManager;
@@ -64,8 +64,8 @@ public class MyFridgeFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        db = new Database(FirebaseInstanceManager.getDatabase());
-
+        db = new Database(FirebaseInstanceManager.getDatabase(requireContext().getApplicationContext()));
+        locDb = new LocationDatabase(FirebaseInstanceManager.getDatabase(requireContext().getApplicationContext()));
         askLocationPermission();
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext());

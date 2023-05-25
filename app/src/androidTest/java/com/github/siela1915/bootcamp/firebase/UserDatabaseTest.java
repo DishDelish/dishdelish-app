@@ -36,7 +36,7 @@ public class UserDatabaseTest {
         FirebaseInstanceManager.emulator = true;
 
         if (userDb == null) {
-            userDb = new UserDatabase();
+            userDb = new UserDatabase(FirebaseInstanceManager.getDatabase(getApplicationContext()));
         }
 
         if (FirebaseInstanceManager.getAuth().getCurrentUser() != null) {

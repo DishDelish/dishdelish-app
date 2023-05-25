@@ -26,6 +26,7 @@ import com.github.siela1915.bootcamp.firebase.LocationDatabase;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.FirebaseDatabase;
 
 import org.junit.After;
@@ -39,6 +40,7 @@ import java.util.concurrent.ExecutionException;
 public class MyFridgeFragmentTest {
     FragmentScenario<MyFridgeFragment> scenario;
 
+    private FirebaseDatabase firebaseDatabase;
     private LocationDatabase locDb;
     private Database db;
 
@@ -51,12 +53,16 @@ public class MyFridgeFragmentTest {
     public void prepare() {
         FirebaseInstanceManager.emulator = true;
 
+        if (firebaseDatabase == null) {
+            firebaseDatabase = FirebaseInstanceManager.getDatabase(getApplicationContext());
+        }
+
         if (locDb == null) {
-            locDb = new LocationDatabase();
+            locDb = new LocationDatabase(firebaseDatabase);
         }
 
         if (db == null) {
-            db = new Database(FirebaseInstanceManager.getDatabase());
+            db = new Database(firebaseDatabase);
         }
 
         if (FirebaseInstanceManager.getAuth().getCurrentUser() != null) {
@@ -68,6 +74,15 @@ public class MyFridgeFragmentTest {
     public void cleanUp() {
         if (scenario != null) {
             scenario.close();
+        }
+
+        if (firebaseDatabase != null) {
+            try {
+                Tasks.await(firebaseDatabase.getReference("help").removeValue());
+                Tasks.await(firebaseDatabase.getReference("fridge").removeValue());
+            } catch (ExecutionException | InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
