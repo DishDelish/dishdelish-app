@@ -35,7 +35,7 @@ public class RecipePageActivity extends AppCompatActivity {
         List<Integer> cuisines = Arrays.asList(CuisineType.FRENCH.ordinal());
         List<Integer> diets = new ArrayList<>();
 
-        fetcher = new RecipeFetcher(allergies, cuisines, diets);
+        fetcher = new RecipeFetcher(allergies, cuisines, diets, new ArrayList<>());
     }
 
     public void buttonClicked(View view) {
