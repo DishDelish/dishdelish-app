@@ -13,12 +13,14 @@ import java.util.List;
 public class ShoppingListViewHolder extends RecyclerView.ViewHolder implements CompoundButton.OnCheckedChangeListener {
     CheckBox checkBox;
     TextView ingredientName;
+    TextView date;
     ShoppingListAdapter adapter;
 
     public ShoppingListViewHolder(@NonNull View itemView, ShoppingListAdapter adapter) {
         super(itemView);
         checkBox = itemView.findViewById(R.id.check_box);
         ingredientName = itemView.findViewById(R.id.ingredientName);
+        date = itemView.findViewById(R.id.ingredientDate);
         checkBox.setOnCheckedChangeListener(this);
         this.adapter = adapter;
     }

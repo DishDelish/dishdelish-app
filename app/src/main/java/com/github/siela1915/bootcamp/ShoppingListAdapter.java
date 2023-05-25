@@ -35,7 +35,14 @@ public class ShoppingListAdapter  extends RecyclerView.Adapter<ShoppingListViewH
     public void onBindViewHolder(@NonNull ShoppingListViewHolder holder, int position) {
         manager = new ShoppingListManager(context);
         String item = shoppingList.get(position);
-        holder.ingredientName.setText(item);
+
+        // Split the item into ingredient and date
+        String[] itemParts = item.split(" - date: ");
+        String ingredient = itemParts[0];
+        String date = itemParts[1];
+
+        holder.ingredientName.setText(ingredient);
+        holder.date.setText(date);
     }
 
     @Override

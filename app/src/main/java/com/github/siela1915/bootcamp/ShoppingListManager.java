@@ -5,8 +5,11 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class ShoppingListManager {
 
@@ -16,18 +19,21 @@ public class ShoppingListManager {
         dbHelper = new ShoppingListHelper(context);
     }
 
-    public void addIngredient(String ingredient){
-
-        // Gets the data repository in write mode
+    public void addIngredient(String ingredient) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
+        String currentDate = getCurrentDate(); // Get the current date
 
-        // Create a new map of values, where column names are the keys
         ContentValues values = new ContentValues();
         values.put(ShoppingListContract.ShoppingListEntry.COLUMN_NAME_INGREDIENT, ingredient);
+        values.put(ShoppingListContract.ShoppingListEntry.COLUMN_NAME_DATE, currentDate);
 
-        // Insert the new row
         db.insert(ShoppingListContract.ShoppingListEntry.TABLE_NAME, null, values);
+    }
 
+    private String getCurrentDate() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
+        Date date = new Date();
+        return dateFormat.format(date);
     }
 
     public void removeIngredient(String ingredient){
@@ -51,9 +57,12 @@ public class ShoppingListManager {
     public List<String> getShoppingList() {
         List<String> shoppingList = new ArrayList<>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        String[] projection = { ShoppingListContract.ShoppingListEntry.COLUMN_NAME_INGREDIENT };
+        String[] projection = {
+                ShoppingListContract.ShoppingListEntry.COLUMN_NAME_INGREDIENT,
+                ShoppingListContract.ShoppingListEntry.COLUMN_NAME_DATE
+        };
         Cursor cursor = db.query(
-                ShoppingListContract.ShoppingListEntry.TABLE_NAME,  // The table to query
+                ShoppingListContract.ShoppingListEntry.TABLE_NAME,
                 projection,
                 null,
                 null,
@@ -63,7 +72,10 @@ public class ShoppingListManager {
         );
         while (cursor.moveToNext()) {
             String ingredient = cursor.getString(cursor.getColumnIndexOrThrow(ShoppingListContract.ShoppingListEntry.COLUMN_NAME_INGREDIENT));
-            shoppingList.add(ingredient);
+            String date = cursor.getString(cursor.getColumnIndexOrThrow(ShoppingListContract.ShoppingListEntry.COLUMN_NAME_DATE));
+
+            String itemWithDate = ingredient + " - date: " + date;
+            shoppingList.add(itemWithDate);
         }
         cursor.close();
         return shoppingList;

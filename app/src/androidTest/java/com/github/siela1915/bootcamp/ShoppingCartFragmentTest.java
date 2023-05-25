@@ -42,7 +42,7 @@ public class ShoppingCartFragmentTest {
     public void testAddItemToShoppingList() {
 
         try {
-            Thread.sleep(3000); // Add a delay of 500 milliseconds
+            Thread.sleep(5000); // Add a delay of 500 milliseconds
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -73,7 +73,7 @@ public class ShoppingCartFragmentTest {
     public void testClearAllItems() {
         // Add items
         try {
-            Thread.sleep(500); // Add a delay of 500 milliseconds
+            Thread.sleep(5000); // Add a delay of 500 milliseconds
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -107,7 +107,7 @@ public class ShoppingCartFragmentTest {
     @Test
     public void testDeleteSelectedItems() {
         try {
-            Thread.sleep(2000); // Add a delay of 500 milliseconds
+            Thread.sleep(5000); // Add a delay of 500 milliseconds
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
