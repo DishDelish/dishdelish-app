@@ -49,7 +49,8 @@ public class ShoppingCartFragmentTest {
         // Type a new item in the EditText
         Espresso.onView(withId(R.id.editTextItem))
                  // Add a delay of 500 milliseconds
-                .perform(ViewActions.typeText("New Item"));
+                .perform(ViewActions.typeText("New Item"))
+                .perform(ViewActions.closeSoftKeyboard());
 
         // Click the Add button
         Espresso.onView(withId(R.id.buttonAdd))
@@ -64,9 +65,6 @@ public class ShoppingCartFragmentTest {
                                 withText("New Item")
                         )
                 )));
-
-
-        // Additional assertions or verifications if needed
     }
 
     @Test
@@ -79,7 +77,8 @@ public class ShoppingCartFragmentTest {
         }
         // Type a new item in the EditText
         Espresso.onView(withId(R.id.editTextItem))
-                .perform(ViewActions.typeText("item1"));
+                .perform(ViewActions.typeText("item1"))
+                .perform(ViewActions.closeSoftKeyboard());
 
         // Click the Add button
         Espresso.onView(withId(R.id.buttonAdd))
@@ -94,7 +93,8 @@ public class ShoppingCartFragmentTest {
 
         // need to add an item otherwise recyclerview is not visible
         Espresso.onView(withId(R.id.editTextItem))
-                .perform(ViewActions.typeText("item2"));
+                .perform(ViewActions.typeText("item2"))
+                .perform(ViewActions.closeSoftKeyboard());
         Espresso.onView(withId(R.id.buttonAdd))
                 .perform(ViewActions.click());
 
@@ -113,7 +113,8 @@ public class ShoppingCartFragmentTest {
         }
         // Type a new item in the EditText
         Espresso.onView(withId(R.id.editTextItem))
-                .perform(ViewActions.typeText("item1"));
+                .perform(ViewActions.typeText("item1"))
+                .perform(ViewActions.closeSoftKeyboard());
 
         // Click the Add button
         Espresso.onView(withId(R.id.buttonAdd))
@@ -121,7 +122,8 @@ public class ShoppingCartFragmentTest {
 
         // Type a new item in the EditText
         Espresso.onView(withId(R.id.editTextItem))
-                .perform(ViewActions.typeText("item2"));
+                .perform(ViewActions.typeText("item2"))
+                .perform(ViewActions.closeSoftKeyboard());
 
         // Click the Add button
         Espresso.onView(withId(R.id.buttonAdd))
