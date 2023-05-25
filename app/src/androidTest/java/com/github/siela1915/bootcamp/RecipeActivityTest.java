@@ -51,6 +51,9 @@ import com.github.siela1915.bootcamp.Recipes.Ingredient;
 import com.github.siela1915.bootcamp.Recipes.Recipe;
 import com.github.siela1915.bootcamp.firebase.Database;
 import com.github.siela1915.bootcamp.firebase.FirebaseInstanceManager;
+import com.github.siela1915.bootcamp.firebase.User;
+import com.github.siela1915.bootcamp.firebase.UserDatabase;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.database.FirebaseDatabase;
 
 import org.hamcrest.Matcher;
@@ -62,6 +65,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 
@@ -817,6 +821,12 @@ public class RecipeActivityTest {
     @Test
     public void replyAuthenticated() throws InterruptedException {
         FirebaseAuthActivityTest.loginSync("example@email.com");
+        UserDatabase userDb = new UserDatabase(FirebaseInstanceManager.getDatabase(getApplicationContext()));
+        try {
+            Tasks.await(userDb.addDeviceToken());
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        }
         waitForDatabaseFetchCompletion(300, TimeUnit.SECONDS);
         Intent i = RecipeConverter.convertToIntent(omelette, ApplicationProvider.getApplicationContext());
 

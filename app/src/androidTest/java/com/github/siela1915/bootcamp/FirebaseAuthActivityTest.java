@@ -6,6 +6,8 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.intent.Intents.intending;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.nullValue;
 
 import android.app.Activity;
 import android.app.Instrumentation;
@@ -22,11 +24,13 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.firebase.ui.auth.AuthUI;
 import com.github.siela1915.bootcamp.firebase.FirebaseInstanceManager;
+import com.github.siela1915.bootcamp.firebase.UserDatabase;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.UserProfileChangeRequest;
 
@@ -59,6 +63,10 @@ public class FirebaseAuthActivityTest {
 
         try {
             AuthResult authResult = Tasks.await(result);
+            FirebaseUser user = FirebaseInstanceManager.getAuth().getCurrentUser();
+            assertThat(user, is(not(nullValue())));
+            user.updateProfile(new UserProfileChangeRequest.Builder().setDisplayName(email).build());
+            Tasks.await(FirebaseInstanceManager.getAuth().updateCurrentUser(user));
         } catch (ExecutionException | InterruptedException e) {
             throw new RuntimeException(e);
         }
