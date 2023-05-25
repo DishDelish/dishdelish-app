@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.siela1915.bootcamp.Recipes.Comment;
+import com.github.siela1915.bootcamp.firebase.FirebaseInstanceManager;
 import com.github.siela1915.bootcamp.firebase.UserDatabase;
 
 import java.util.List;
@@ -19,12 +20,14 @@ public class ReplyAdapter extends RecyclerView.Adapter<ReplyViewHolder> {
 
     Comment parent;
 
-    UserDatabase userDb = new UserDatabase();
+    UserDatabase userDb;
 
     public ReplyAdapter(Context context, List<Comment> replies, Comment parent){
         this.context = context;
         this.replies = replies;
         this.parent = parent;
+
+        userDb = new UserDatabase(FirebaseInstanceManager.getDatabase(context.getApplicationContext()));
     }
     /**
      * @param parent   The ViewGroup into which the new View will be added after it is bound to

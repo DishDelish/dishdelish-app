@@ -27,6 +27,7 @@ import com.github.siela1915.bootcamp.Recipes.PreparationTime;
 import com.github.siela1915.bootcamp.Recipes.Recipe;
 import com.github.siela1915.bootcamp.UploadRecipe.UploadingRecipeFragment;
 import com.github.siela1915.bootcamp.firebase.Database;
+import com.github.siela1915.bootcamp.firebase.FirebaseInstanceManager;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.android.material.navigation.NavigationView;
@@ -52,7 +53,7 @@ public class MainHomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        FirebaseDatabase firebaseDb = FirebaseDatabase.getInstance();
+        FirebaseDatabase firebaseDb = FirebaseInstanceManager.getDatabase(getApplicationContext());
         if (!isRunningTest()) {
             try {
                 firebaseDb.setPersistenceEnabled(true);
@@ -152,8 +153,9 @@ public class MainHomeActivity extends AppCompatActivity {
         toggle= new ActionBarDrawerToggle(this,drawerLayout,R.string.open,R.string.close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         navigationView.setNavigationItemSelectedListener(item ->{
             filterView.setVisibility(View.GONE);
@@ -161,7 +163,6 @@ public class MainHomeActivity extends AppCompatActivity {
             switch (item.getItemId()){
                 case R.id.menuItem_home:
                     setContainerContent(R.id.fragContainer,HomePageFragment.class,false);
-                    System.out.println("\n\n\n\n inside the switch "+fragmentManager.getBackStackEntryCount()+"\n\n\n\n\n");
                     break;
 
                 case R.id.menuItem_about:
@@ -179,6 +180,12 @@ public class MainHomeActivity extends AppCompatActivity {
                         setContainerContent(R.id.fragContainer, UploadingRecipeFragment.class, false);
                     }
                     break;
+                case R.id.menuItem_fridge:
+                    intent.putExtra("navToMyFridge", true);
+                    if (FirebaseAuthActivity.promptLogin(this, this, intent)) {
+                        setContainerContent(R.id.fragContainer, MyFridgeFragment.class, false);
+                    }
+                    break;
                 case R.id.menuItem_filter:
                     if(item.isChecked()){
                         item.setChecked(false);
@@ -188,7 +195,7 @@ public class MainHomeActivity extends AppCompatActivity {
                         filterView.setVisibility(View.VISIBLE);
                     }
                     fragmentContainerView= findViewById(R.id.fragContainer);
-                    boolean homeFragmentCheck=fragmentContainerView.getFragment().getId()==R.id.homeFragment;
+                    boolean homeFragmentCheck=fragmentContainerView.getFragment().getClass()==HomePageFragment.class;
                     if(!homeFragmentCheck) {
                         setContainerContent(R.id.fragContainer,HomePageFragment.class,false);
                     }
@@ -214,6 +221,11 @@ public class MainHomeActivity extends AppCompatActivity {
             if (extras.containsKey("navToUpload")) {
                 navigationView.setCheckedItem(R.id.menuItem_upload);
                 setContainerContent(R.id.fragContainer, UploadingRecipeFragment.class, false);
+            }
+
+            if (extras.containsKey("navToMyFridge")) {
+                navigationView.setCheckedItem(R.id.menuItem_fridge);
+                setContainerContent(R.id.fragContainer, MyFridgeFragment.class, false);
             }
 
             if (extras.containsKey("com.github.siela1915.bootcamp.navToProfile")) {
@@ -265,7 +277,7 @@ public class MainHomeActivity extends AppCompatActivity {
 
             setContainerContent(R.id.fragContainer, RecipeListFragment.newInstance(new ArrayList<>()), false);
 
-            Database db = new Database(FirebaseDatabase.getInstance());
+            Database db = new Database(FirebaseInstanceManager.getDatabase(getApplicationContext()));
             db.getFavoriteRecipes().addOnSuccessListener(favRecipes -> {
                 Fragment currentFrag = fragmentManager.findFragmentById(R.id.fragContainer);
                 if (currentFrag == null || currentFrag.getClass() != RecipeListFragment.class) {

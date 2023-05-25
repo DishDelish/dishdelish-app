@@ -17,12 +17,17 @@
         android:title="@string/filter_menu"
         android:icon="@drawable/baseline_filter_alt_24"/>
     <item
+        android:id="@+id/menuItem_fridge"
+        android:icon="@drawable/baseline_kitchen_24"
+        android:title="@string/fridgeMenu" />
+    <item
         android:id="@+id/menuItem_login"
         android:title="@string/login_menu"
         android:icon="@drawable/baseline_login_24"/>
     <item
         android:id="@+id/menuItem_help"
-        android:title="Nearby Help" />
+        android:icon="@drawable/baseline_map_24"
+        android:title="@string/nearbyHelpMenu" />
     <item
         android:id="@+id/menuItem_soppingCart"
         android:title="@string/shoppingCart"

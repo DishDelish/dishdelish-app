@@ -17,8 +17,8 @@ public class UserDatabase {
     private final String USERS = "users";
     private final DatabaseReference db;
 
-    public UserDatabase() {
-        this.db = FirebaseDatabase.getInstance().getReference(USERS);
+    public UserDatabase(FirebaseDatabase db) {
+        this.db = db.getReference(USERS);
     }
 
 
@@ -46,7 +46,7 @@ public class UserDatabase {
     }
 
     public Task<Void> addDeviceToken() {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseUser user = FirebaseInstanceManager.getAuth().getCurrentUser();
         if (user != null) {
             return getUser(user.getUid()).continueWithTask(userTask -> {
                 User fullUser = userTask.getResult();
@@ -72,7 +72,7 @@ public class UserDatabase {
     }
 
     public Task<Void> removeDeviceToken() {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseUser user = FirebaseInstanceManager.getAuth().getCurrentUser();
         if (user != null) {
             return getUser(user.getUid()).continueWithTask(userTask -> {
                 User fullUser = userTask.getResult();

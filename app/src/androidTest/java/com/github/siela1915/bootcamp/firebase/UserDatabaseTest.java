@@ -33,16 +33,13 @@ public class UserDatabaseTest {
 
     @Before
     public void prepareEmulator() {
-        FirebaseApp.clearInstancesForTest();
-        FirebaseApp.initializeApp(getApplicationContext());
-        FirebaseAuth.getInstance().useEmulator("10.0.2.2", 9099);
-        FirebaseDatabase.getInstance().useEmulator("10.0.2.2", 9000);
+        FirebaseInstanceManager.emulator = true;
 
         if (userDb == null) {
-            userDb = new UserDatabase();
+            userDb = new UserDatabase(FirebaseInstanceManager.getDatabase(getApplicationContext()));
         }
 
-        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+        if (FirebaseInstanceManager.getAuth().getCurrentUser() != null) {
             FirebaseAuthActivityTest.logoutSync();
         }
     }
@@ -80,7 +77,7 @@ public class UserDatabaseTest {
     public void updateProfileWithFirebaseUser() {
         FirebaseAuthActivityTest.loginSync("preUpdateProfile@example.com");
         User testUser = new User();
-        String userId = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
+        String userId = Objects.requireNonNull(FirebaseInstanceManager.getAuth().getCurrentUser()).getUid();
         testUser.setId(userId);
         testUser.setEmail("preUpdateProfile@example.com");
         testUser.setDisplayName("preUpdate Profile");
@@ -93,8 +90,8 @@ public class UserDatabaseTest {
         try {
             User dbUser = Tasks.await(userDb.updateUser(testUser)
                     .continueWithTask(task -> FirebaseAuthActivity.update(changeUser))
-                    .continueWithTask(task -> Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).updateEmail("postUpdateProfile@example.com"))
-                    .continueWithTask(task -> userDb.updateProfile(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser())))
+                    .continueWithTask(task -> Objects.requireNonNull(FirebaseInstanceManager.getAuth().getCurrentUser()).updateEmail("postUpdateProfile@example.com"))
+                    .continueWithTask(task -> userDb.updateProfile(Objects.requireNonNull(FirebaseInstanceManager.getAuth().getCurrentUser())))
                     .continueWithTask(task -> userDb.getUser(userId)));
             assertThat(dbUser.getEmail(), is("postUpdateProfile@example.com"));
             assertThat(dbUser.getPhotoUrl(), is(nullValue()));
@@ -110,7 +107,7 @@ public class UserDatabaseTest {
     public void addDeviceTokenToExistingUser() {
         FirebaseAuthActivityTest.loginSync("addDeviceTokenToExisting@example.com");
         User testUser = new User();
-        String userId = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
+        String userId = Objects.requireNonNull(FirebaseInstanceManager.getAuth().getCurrentUser()).getUid();
         testUser.setId(userId);
         testUser.setEmail("addDeviceTokenToExisting@example.com");
         testUser.setDisplayName("addDeviceToken ToExisting");
@@ -136,7 +133,7 @@ public class UserDatabaseTest {
     @Test
     public void addDeviceTokenToInexistentUser() {
         FirebaseAuthActivityTest.loginSync("addDeviceTokenToInexistent@example.com");
-        String userId = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
+        String userId = Objects.requireNonNull(FirebaseInstanceManager.getAuth().getCurrentUser()).getUid();
         try {
             User dbUser = Tasks.await(userDb.addDeviceToken()
                     .continueWithTask(task -> userDb.getUser(userId)));
@@ -154,7 +151,7 @@ public class UserDatabaseTest {
     public void removeExistentDeviceToken() {
         FirebaseAuthActivityTest.loginSync("removeExistentDeviceToken@example.com");
         User testUser = new User();
-        String userId = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
+        String userId = Objects.requireNonNull(FirebaseInstanceManager.getAuth().getCurrentUser()).getUid();
         testUser.setId(userId);
         testUser.setEmail("removeExistentDeviceToken@example.com");
         testUser.setDisplayName("removeExistent DeviceToken");
@@ -180,7 +177,7 @@ public class UserDatabaseTest {
     public void removeInexistentDeviceToken() {
         FirebaseAuthActivityTest.loginSync("removeInexistentDeviceToken@example.com");
         User testUser = new User();
-        String userId = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
+        String userId = Objects.requireNonNull(FirebaseInstanceManager.getAuth().getCurrentUser()).getUid();
         testUser.setId(userId);
         testUser.setEmail("removeInexistentDeviceToken@example.com");
         testUser.setDisplayName("removeInexistent DeviceToken");
@@ -204,7 +201,7 @@ public class UserDatabaseTest {
     @Test
     public void removeDeviceTokenFromInexistentUser() {
         FirebaseAuthActivityTest.loginSync("removeDeviceTokenFromInexistentUser@example.com");
-        String userId = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
+        String userId = Objects.requireNonNull(FirebaseInstanceManager.getAuth().getCurrentUser()).getUid();
 
         try {
             User dbUser = Tasks.await(userDb.removeDeviceToken()

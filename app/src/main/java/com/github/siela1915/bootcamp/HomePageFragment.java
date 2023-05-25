@@ -30,6 +30,7 @@ import com.github.siela1915.bootcamp.Recipes.Recipe;
 import com.github.siela1915.bootcamp.Recipes.RecipeItemAdapter;
 import com.github.siela1915.bootcamp.Tools.SuggestionCalculator;
 import com.github.siela1915.bootcamp.firebase.Database;
+import com.github.siela1915.bootcamp.firebase.FirebaseInstanceManager;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
@@ -60,9 +61,9 @@ public class HomePageFragment extends Fragment {
     private  String cuis= "";
     private TextView homeTextView;
     private RecyclerView recipeListRecyclerView;
-    private final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+    private FirebaseDatabase firebaseDatabase;
 
-    private final Database database = new Database(firebaseDatabase);
+    private Database database;
     private RecipeItemAdapter recipeAdapter;
     private TextView moreFilter;
     private LinearLayout filterLayout, recipeListLinearLayout;
@@ -102,6 +103,9 @@ public class HomePageFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        firebaseDatabase = FirebaseInstanceManager.getDatabase(requireContext().getApplicationContext());
+        database = new Database(firebaseDatabase);
     }
 
     @Override

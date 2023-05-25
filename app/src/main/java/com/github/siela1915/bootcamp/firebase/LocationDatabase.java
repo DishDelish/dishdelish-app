@@ -12,7 +12,6 @@ import com.github.siela1915.bootcamp.Recipes.Ingredient;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.android.gms.tasks.Tasks;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -20,20 +19,24 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class LocationDatabase {
     private final String HELP = "help";
-    private final DatabaseReference db;
+    private final DatabaseReference dbRef;
+    private final Database db;
     private final GeoFire geoFire;
 
-    public LocationDatabase() {
-        this.db = FirebaseDatabase.getInstance().getReference(HELP);
-        this.geoFire = new GeoFire(db);
+    public LocationDatabase(FirebaseDatabase db) {
+        this.dbRef = db.getReference(HELP);
+        this.geoFire = new GeoFire(this.dbRef);
+        this.db = new Database(db);
     }
 
     public Task<Void> updateLocation(Location location) {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseUser user = FirebaseInstanceManager.getAuth().getCurrentUser();
         if (user == null) {
             return Tasks.forException(new UserNotAuthenticatedException("User needs to be authenticated to store location"));
         }
@@ -51,29 +54,47 @@ public class LocationDatabase {
         return tcs.getTask();
     }
 
-    public Task<Void> updateOffered(List<Ingredient> ing) {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    public Task<Void> updateOffered(List<Integer> indexes) {
+        FirebaseUser user = FirebaseInstanceManager.getAuth().getCurrentUser();
         if (user == null) {
             return Tasks.forException(new UserNotAuthenticatedException("User needs to be authenticated to store location"));
         }
 
-        return db.child(user.getUid() + "/offered").setValue(ing, "ff");
+        return dbRef.child(user.getUid() + "/offered").setValue(indexes, "ff");
     }
 
-    public Task<List<Ingredient>> getOffered(String userId) {
-        return db.child(userId + "/offered").get()
-                .continueWith(dataTask -> {
-                    List<Ingredient> list = new ArrayList<>();
-                    for (DataSnapshot ds : dataTask.getResult().getChildren()) {
-                        list.add(ds.getValue(Ingredient.class));
+    public Task<List<Ingredient>> getOfferedIngredients(String userId) {
+        return dbRef.child(userId + "/offered").get()
+                .continueWithTask(offersTask -> {
+                    Set<Integer> indexes = new HashSet<>();
+                    for (DataSnapshot ds : offersTask.getResult().getChildren()) {
+                        indexes.add(ds.getValue(Integer.class));
                     }
+                    return db.getFridge().continueWith(fridgeTask -> {
+                        List<Ingredient> list = new ArrayList<>();
+                        for (int i = 0; i < fridgeTask.getResult().size(); ++i) {
+                            if (indexes.contains(i)) {
+                                list.add(fridgeTask.getResult().get(i));
+                            }
+                        }
+                        return list;
+                    });
+                });
+    }
 
-                    return list;
+    public Task<List<Integer>> getOffered(String userId) {
+        return dbRef.child(userId + "/offered").get()
+                .continueWith(offersTask -> {
+                    List<Integer> indexes = new ArrayList<>();
+                    for (DataSnapshot ds : offersTask.getResult().getChildren()) {
+                        indexes.add(ds.getValue(Integer.class));
+                    }
+                    return indexes;
                 });
     }
 
     public Task<List<Pair<String, Location>>> getNearby(Location location) {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseUser user = FirebaseInstanceManager.getAuth().getCurrentUser();
         if (user == null) {
             return Tasks.forException(new UserNotAuthenticatedException("User needs to be authenticated to store location"));
         }

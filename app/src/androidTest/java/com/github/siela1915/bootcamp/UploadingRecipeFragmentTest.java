@@ -36,6 +36,7 @@ import com.github.siela1915.bootcamp.Labelling.AllergyType;
 import com.github.siela1915.bootcamp.Labelling.CuisineType;
 import com.github.siela1915.bootcamp.Labelling.DietType;
 import com.github.siela1915.bootcamp.UploadRecipe.UploadingRecipeFragment;
+import com.github.siela1915.bootcamp.firebase.FirebaseInstanceManager;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
@@ -60,13 +61,10 @@ public class UploadingRecipeFragmentTest {
         mockWebServer.enqueue(new MockResponse().setBody("apple"));
         mockWebServer.start(8080);
 
-        // login by default
-        FirebaseApp.clearInstancesForTest();
-        FirebaseApp.initializeApp(getApplicationContext());
-        FirebaseAuth.getInstance().useEmulator("10.0.2.2", 9099);
-        FirebaseDatabase.getInstance().useEmulator("10.0.2.2", 9000);
+        FirebaseInstanceManager.emulator = true;
 
-        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+        // login by default
+        if (FirebaseInstanceManager.getAuth().getCurrentUser() == null) {
             String email = "email-test@example.com";
             FirebaseAuthActivityTest.loginSync(email);
         }
@@ -749,7 +747,7 @@ public class UploadingRecipeFragmentTest {
     @Test
     public void authGuardTestWhenNotLoggedIn() {
         // log out user if logged in
-        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+        if (FirebaseInstanceManager.getAuth().getCurrentUser() != null) {
             FirebaseAuthActivityTest.logoutSync();
         }
 

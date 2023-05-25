@@ -23,6 +23,7 @@ import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract;
 import com.firebase.ui.auth.IdpResponse;
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult;
+import com.github.siela1915.bootcamp.firebase.FirebaseInstanceManager;
 import com.github.siela1915.bootcamp.firebase.UserDatabase;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
@@ -92,9 +93,9 @@ public class FirebaseAuthActivity extends AppCompatActivity {
         IdpResponse response = result.getIdpResponse();
         if (result.getResultCode() == RESULT_OK) {
             // Successfully signed in
-            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            FirebaseUser user = FirebaseInstanceManager.getAuth().getCurrentUser();
             if (user != null) {
-                UserDatabase userDb = new UserDatabase();
+                UserDatabase userDb = new UserDatabase(FirebaseInstanceManager.getDatabase(getApplicationContext()));
                 userDb.addDeviceToken().addOnCompleteListener(voidTask -> {
                     // Launch supplied intent with the user info
                     finish();
@@ -135,9 +136,9 @@ public class FirebaseAuthActivity extends AppCompatActivity {
     }
 
     public void signIn() {
-        FirebaseAuth auth = FirebaseAuth.getInstance();
+        FirebaseAuth auth = FirebaseInstanceManager.getAuth();
         if (auth.getCurrentUser() != null) {
-            UserDatabase userDb = new UserDatabase();
+            UserDatabase userDb = new UserDatabase(FirebaseInstanceManager.getDatabase(getApplicationContext()));
             userDb.addDeviceToken();
             finish();
             if (postAuthIntent == null) {
@@ -160,7 +161,7 @@ public class FirebaseAuthActivity extends AppCompatActivity {
     }
 
     public void signOut() {
-        UserDatabase userDb = new UserDatabase();
+        UserDatabase userDb = new UserDatabase(FirebaseInstanceManager.getDatabase(getApplicationContext()));
         userDb.removeDeviceToken().continueWithTask(voidTask -> AuthUI.getInstance()
                 .signOut(this))
                 .addOnCompleteListener(task -> {
@@ -187,7 +188,7 @@ public class FirebaseAuthActivity extends AppCompatActivity {
     }
 
     public static Task<Void> update(UserProfileChangeRequest changeRequest) {
-        FirebaseAuth auth = FirebaseAuth.getInstance();
+        FirebaseAuth auth = FirebaseInstanceManager.getAuth();
         if (auth.getCurrentUser() != null) {
             FirebaseUser user = auth.getCurrentUser();
             return user.updateProfile(changeRequest);
@@ -196,7 +197,7 @@ public class FirebaseAuthActivity extends AppCompatActivity {
     }
 
     public static boolean promptLogin(Context context, Activity activity, Intent postLoginIntent) {
-        FirebaseAuth auth = FirebaseAuth.getInstance();
+        FirebaseAuth auth = FirebaseInstanceManager.getAuth();
         if (auth.getCurrentUser() != null) {
             return true;
         }

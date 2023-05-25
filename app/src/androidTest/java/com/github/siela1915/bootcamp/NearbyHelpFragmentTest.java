@@ -27,6 +27,8 @@ import androidx.test.rule.GrantPermissionRule;
 
 import com.github.siela1915.bootcamp.Recipes.Ingredient;
 import com.github.siela1915.bootcamp.Recipes.Unit;
+import com.github.siela1915.bootcamp.firebase.Database;
+import com.github.siela1915.bootcamp.firebase.FirebaseInstanceManager;
 import com.github.siela1915.bootcamp.firebase.LocationDatabase;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -49,6 +51,7 @@ public class NearbyHelpFragmentTest {
     FragmentScenario<NearbyHelpFragment> scenario;
 
     private LocationDatabase locDb;
+    private Database db;
 
     @Rule
     public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(
@@ -57,16 +60,17 @@ public class NearbyHelpFragmentTest {
 
     @Before
     public void prepare() {
-        FirebaseApp.clearInstancesForTest();
-        FirebaseApp.initializeApp(getApplicationContext());
-        FirebaseAuth.getInstance().useEmulator("10.0.2.2", 9099);
-        FirebaseDatabase.getInstance().useEmulator("10.0.2.2", 9000);
+        FirebaseInstanceManager.emulator = true;
 
         if (locDb == null) {
-            locDb = new LocationDatabase();
+            locDb = new LocationDatabase(FirebaseInstanceManager.getDatabase(getApplicationContext()));
         }
 
-        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+        if (db == null) {
+            db = new Database(FirebaseInstanceManager.getDatabase(getApplicationContext()));
+        }
+
+        if (FirebaseInstanceManager.getAuth().getCurrentUser() != null) {
             FirebaseAuthActivityTest.logoutSync();
         }
     }
@@ -84,57 +88,8 @@ public class NearbyHelpFragmentTest {
 
         scenario = FragmentScenario.launchInContainer(NearbyHelpFragment.class);
 
-        onView(withId(R.id.chooseHelpGroup)).check(matches(withEffectiveVisibility(VISIBLE)));
-        onView(withId(R.id.askHelpGroup)).check(matches(not(withEffectiveVisibility(VISIBLE))));
-        onView(withId(R.id.offerHelpGroup)).check(matches(not(withEffectiveVisibility(VISIBLE))));
-        FirebaseAuthActivityTest.logoutSync();
-    }
-
-    @Test
-    public void showsCorrectAskHelpScreen() {
-        FirebaseAuthActivityTest.loginSync("test@example.com");
-
-        scenario = FragmentScenario.launchInContainer(NearbyHelpFragment.class);
-
-        onView(withId(R.id.askHelpButton))
-                .perform(ViewActions.click());
-
-        onView(withId(R.id.chooseHelpGroup)).check(matches(not(withEffectiveVisibility(VISIBLE))));
         onView(withId(R.id.askHelpGroup)).check(matches(withEffectiveVisibility(VISIBLE)));
-        onView(withId(R.id.offerHelpGroup)).check(matches(not(withEffectiveVisibility(VISIBLE))));
-        FirebaseAuthActivityTest.logoutSync();
-    }
-
-    @Test
-    public void showsCorrectOfferHelpScreen() {
-        FirebaseAuthActivityTest.loginSync("test@example.com");
-
-        scenario = FragmentScenario.launchInContainer(NearbyHelpFragment.class);
-
-        onView(withId(R.id.offerHelpButton))
-                .perform(ViewActions.click());
-
-        onView(withId(R.id.chooseHelpGroup)).check(matches(not(withEffectiveVisibility(VISIBLE))));
-        onView(withId(R.id.askHelpGroup)).check(matches(not(withEffectiveVisibility(VISIBLE))));
-        onView(withId(R.id.offerHelpGroup)).check(matches(withEffectiveVisibility(VISIBLE)));
-        FirebaseAuthActivityTest.logoutSync();
-    }
-
-    @Test
-    public void showsCorrectOfferedIngredientsOnOfferHelpScreen() {
-        FirebaseAuthActivityTest.loginSync("showsCorrectOffered@test.com");
-
-        scenario = FragmentScenario.launchInContainer(NearbyHelpFragment.class);
-
-        fillOffersInDatabase();
-
-        onView(withId(R.id.offerHelpButton))
-                .perform(ViewActions.click());
-
-        onView(withId(R.id.chooseHelpGroup)).check(matches(not(withEffectiveVisibility(VISIBLE))));
-        onView(withId(R.id.askHelpGroup)).check(matches(not(withEffectiveVisibility(VISIBLE))));
-        onView(withId(R.id.offerHelpGroup)).check(matches(withEffectiveVisibility(VISIBLE)));
-
+        onView(withId(R.id.replyHelpGroup)).check(matches(not(withEffectiveVisibility(VISIBLE))));
         FirebaseAuthActivityTest.logoutSync();
     }
 
@@ -145,8 +100,6 @@ public class NearbyHelpFragmentTest {
         scenario = FragmentScenario.launchInContainer(NearbyHelpFragment.class);
 
         fillOffersInDatabase();
-
-        onView(withId(R.id.askHelpButton)).perform(ViewActions.click());
 
         onView(allOf(
                 isDescendantOfA(withId(R.id.ingredientsName)),
@@ -169,38 +122,6 @@ public class NearbyHelpFragmentTest {
         FirebaseAuthActivityTest.logoutSync();
     }
 
-
-    @Test
-    public void offerHelpUploadsLocation() {
-        FirebaseAuthActivityTest.loginSync("test@example.com");
-
-        scenario = FragmentScenario.launchInContainer(NearbyHelpFragment.class);
-
-        onView(withId(R.id.offerHelpButton))
-                .perform(ViewActions.click());
-
-        onView(withId(R.id.offerAddIngredient))
-                .perform(ViewActions.click());
-
-        onView(allOf(
-                isDescendantOfA(withId(R.id.ingredientsName)),
-                withClassName(endsWith("AutoCompleteTextView"))
-        )).perform(ViewActions.typeText("testIngredient"), ViewActions.closeSoftKeyboard());
-        onView(allOf(
-                isDescendantOfA(withId(R.id.ingredientsAmount)),
-                withClassName(endsWith("EditText"))
-        )).perform(ViewActions.typeText("3"), ViewActions.closeSoftKeyboard());
-        onView(allOf(
-                isDescendantOfA(withId(R.id.ingredientsUnit)),
-                withClassName(endsWith("EditText"))
-        )).perform(ViewActions.typeText("g"), ViewActions.closeSoftKeyboard());
-
-        onView(withId(R.id.submitOfferHelpButton))
-                .perform(ViewActions.click());
-
-        FirebaseAuthActivityTest.logoutSync();
-    }
-
     @Test
     public void fragmentWithArgumentsShowsReplyPage() {
         Bundle args = new Bundle();
@@ -210,8 +131,6 @@ public class NearbyHelpFragmentTest {
 
         onView(withId(R.id.replyHelpGroup)).check(matches(withEffectiveVisibility(VISIBLE)));
         onView(withId(R.id.askHelpGroup)).check(matches(not(withEffectiveVisibility(VISIBLE))));
-        onView(withId(R.id.offerHelpGroup)).check(matches(not(withEffectiveVisibility(VISIBLE))));
-        onView(withId(R.id.chooseHelpGroup)).check(matches(not(withEffectiveVisibility(VISIBLE))));
     }
 
     @Test
@@ -224,8 +143,6 @@ public class NearbyHelpFragmentTest {
 
         onView(withId(R.id.replyHelpGroup)).check(matches(not(withEffectiveVisibility(VISIBLE))));
         onView(withId(R.id.askHelpGroup)).check(matches(not(withEffectiveVisibility(VISIBLE))));
-        onView(withId(R.id.offerHelpGroup)).check(matches(not(withEffectiveVisibility(VISIBLE))));
-        onView(withId(R.id.chooseHelpGroup)).check(matches(not(withEffectiveVisibility(VISIBLE))));
 
         onView(withContentDescription("Google Map")).check(matches(withEffectiveVisibility(VISIBLE)));
     }
@@ -241,8 +158,6 @@ public class NearbyHelpFragmentTest {
 
         onView(withId(R.id.replyHelpGroup)).check(matches(not(withEffectiveVisibility(VISIBLE))));
         onView(withId(R.id.askHelpGroup)).check(matches(not(withEffectiveVisibility(VISIBLE))));
-        onView(withId(R.id.offerHelpGroup)).check(matches(not(withEffectiveVisibility(VISIBLE))));
-        onView(withId(R.id.chooseHelpGroup)).check(matches(not(withEffectiveVisibility(VISIBLE))));
 
         onView(withContentDescription("Google Map")).check(matches(withEffectiveVisibility(VISIBLE)));
     }
@@ -251,26 +166,9 @@ public class NearbyHelpFragmentTest {
     public void backButtonWorksCorrectlyInAskHelpScreen() {
         scenario = FragmentScenario.launchInContainer(NearbyHelpFragment.class);
 
-        onView(withId(R.id.askHelpButton)).perform(ViewActions.click());
         onView(withId(R.id.askHelpGroup)).check(matches(withEffectiveVisibility(VISIBLE)));
 
         pressBack();
-
-        onView(withId(R.id.askHelpGroup)).check(matches(not(withEffectiveVisibility(VISIBLE))));
-        onView(withId(R.id.chooseHelpGroup)).check(matches(withEffectiveVisibility(VISIBLE)));
-    }
-
-    @Test
-    public void backButtonWorksCorrectlyInOfferHelpScreen() {
-        scenario = FragmentScenario.launchInContainer(NearbyHelpFragment.class);
-
-        onView(withId(R.id.offerHelpButton)).perform(ViewActions.click());
-        onView(withId(R.id.offerHelpGroup)).check(matches(withEffectiveVisibility(VISIBLE)));
-
-        pressBack();
-
-        onView(withId(R.id.offerHelpGroup)).check(matches(not(withEffectiveVisibility(VISIBLE))));
-        onView(withId(R.id.chooseHelpGroup)).check(matches(withEffectiveVisibility(VISIBLE)));
     }
 
     @Test
@@ -290,7 +188,7 @@ public class NearbyHelpFragmentTest {
     @Test
     public void replyPageCanSendReply() {
         FirebaseAuthActivityTest.loginSync("replyPagePutsReplyIntoDatabase@test.com");
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseUser user = FirebaseInstanceManager.getAuth().getCurrentUser();
         assertNotNull(user);
         Bundle args = new Bundle();
         args.putString(NearbyHelpFragment.ARG_REPLY_OFFER_UID, user.getUid());
@@ -310,11 +208,12 @@ public class NearbyHelpFragmentTest {
             loc.setLatitude(37.4226711);
             loc.setLongitude(-122.0849872);
             Tasks.await(locDb.updateLocation(loc));
-            Tasks.await(locDb.updateOffered(Arrays.asList(
+            Tasks.await(db.updateFridge(Arrays.asList(
                     new Ingredient("testIngredient", new Unit(2, "g")),
                     new Ingredient("testIngredient", new Unit(100, "g")),
                     new Ingredient("testIngredient", new Unit(1, "kg")),
                     new Ingredient("testIngredient2", new Unit(5, "cups")))));
+            Tasks.await(locDb.updateOffered(Arrays.asList(0, 1, 2, 3)));
         } catch (ExecutionException | InterruptedException e) {
             throw new RuntimeException(e);
         }

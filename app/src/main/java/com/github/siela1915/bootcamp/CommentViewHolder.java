@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.github.siela1915.bootcamp.Recipes.Comment;
 import com.github.siela1915.bootcamp.Recipes.Recipe;
 import com.github.siela1915.bootcamp.firebase.Database;
+import com.github.siela1915.bootcamp.firebase.FirebaseInstanceManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -34,10 +35,8 @@ public class CommentViewHolder extends RecyclerView.ViewHolder implements Compou
 
     CommentAdapter adapter;
 
-    private final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-
-    private final Database database = new Database(firebaseDatabase);
-    private final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+    private final Database database;
+    private final FirebaseAuth firebaseAuth = FirebaseInstanceManager.getAuth();
 
 
     public CommentViewHolder(@NonNull View itemView, Recipe recipe, CommentAdapter adapter) {
@@ -48,6 +47,9 @@ public class CommentViewHolder extends RecyclerView.ViewHolder implements Compou
         photo = itemView.findViewById(R.id.profilePhoto);
         this.recipe = recipe;
         this.adapter = adapter;
+
+        FirebaseDatabase firebaseDatabase = FirebaseInstanceManager.getDatabase(adapter.context);
+        database = new Database(firebaseDatabase);
 
         replies = itemView.findViewById(R.id.repliesRecyclerView);
 
@@ -102,7 +104,7 @@ public class CommentViewHolder extends RecyclerView.ViewHolder implements Compou
         int position = getAdapterPosition();
             Comment currentComment = adapter.getData().get(position);
             if (isChecked) {
-                if(FirebaseAuth.getInstance().getCurrentUser()==null){
+                if(FirebaseInstanceManager.getAuth().getCurrentUser()==null){
                     Toast.makeText(buttonView.getContext(), "Sign in to like this comment", Toast.LENGTH_SHORT).show();
                 } else {
                     currentComment.increaseLikes();

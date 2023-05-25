@@ -166,7 +166,7 @@ public class UploadingRecipeFragment extends Fragment {
         pd.setMessage(getString(R.string.uploading_hint));
 
         addListeners(view);
-        addIngredient.setOnClickListener(v -> recipeStepAndIngredientManager.addIngredient(idMap, apiService));
+        addIngredient.setOnClickListener(v -> recipeStepAndIngredientManager.addIngredient(idMap, apiService, false, null));
 
         return view;
     }

@@ -38,7 +38,7 @@ public class PushNotificationService extends FirebaseMessagingService {
     public void onCreate() {
         super.onCreate();
 
-        userDb = new UserDatabase();
+        userDb = new UserDatabase(FirebaseInstanceManager.getDatabase(getApplicationContext()));
         createNotificationChannel();
     }
 
@@ -81,7 +81,7 @@ public class PushNotificationService extends FirebaseMessagingService {
     public void onNewToken(@NonNull String token) {
         super.onNewToken(token);
 
-        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+        if (FirebaseInstanceManager.getAuth().getCurrentUser() != null) {
             userDb.addDeviceToken();
         }
     }
@@ -135,8 +135,8 @@ public class PushNotificationService extends FirebaseMessagingService {
         }
     }
 
-    static public Task<Void> sendRemoteNotification(String userId, String title, String body, Map<String, String> data) {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    static public Task<Void> sendRemoteNotification(Context context, String userId, String title, String body, Map<String, String> data) {
+        FirebaseUser user = FirebaseInstanceManager.getAuth().getCurrentUser();
         if (user != null) {
             Map<String, Object> notif = new HashMap<>();
             notif.put("sender", user.getUid());
@@ -151,7 +151,8 @@ public class PushNotificationService extends FirebaseMessagingService {
             }
             notif.put("sent", false);
 
-            DatabaseReference db = FirebaseDatabase.getInstance().getReference("notifications");
+            DatabaseReference db = FirebaseInstanceManager.getDatabase(context.getApplicationContext())
+                    .getReference("notifications");
             String uniqueKey = db.push().getKey();
             if (uniqueKey != null) {
                 return db.child(uniqueKey).updateChildren(notif);

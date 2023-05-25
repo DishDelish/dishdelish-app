@@ -1,6 +1,7 @@
 package com.github.siela1915.bootcamp.UploadRecipe;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -57,10 +58,11 @@ public class RecipeStepAndIngredientManager {
         return true;
     }
 
-    public void addIngredient(Map<String, Integer> idMap, IngredientAutocomplete apiService) {
+    public void addIngredient(Map<String, Integer> idMap, IngredientAutocomplete apiService, boolean offerable, List<String> prefill) {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             final View ingredient = inflater.inflate(R.layout.recipe_ingredient_edittext, null, false);
             ImageView removeIngredient = (ImageView) ingredient.findViewById(R.id.removeIngredient);
+            ImageView offerIngredient = (ImageView) ingredient.findViewById(R.id.offerIngredientItem);
             TextInputLayout ingredientsAmountLayout = ingredient.findViewById(R.id.ingredientsAmount);
             EditText ingredientsAmount = ingredientsAmountLayout.getEditText();
             TextInputLayout ingredientsUnitLayout = ingredient.findViewById(R.id.ingredientsUnit);
@@ -71,6 +73,21 @@ public class RecipeStepAndIngredientManager {
             addIngredientValidators(ingredientsAmount, ingredientsUnit, ingredientsName);
 
             removeIngredient.setOnClickListener(v -> removeIngredient(ingredient));
+
+            if (offerable) {
+                offerIngredient.setOnClickListener(v -> {
+                    v.setActivated(!v.isActivated());
+                    v.setBackgroundColor(v.isActivated() ? Color.GREEN : Color.RED);
+                });
+                offerIngredient.setBackgroundColor(Color.RED);
+                offerIngredient.setVisibility(View.VISIBLE);
+            }
+
+            if (prefill != null && ingredientsAmount != null && ingredientsUnit != null && ingredientsName != null) {
+                ingredientsAmount.setText(prefill.get(0));
+                ingredientsUnit.setText(prefill.get(1));
+                ingredientsName.setText(prefill.get(2));
+            }
 
             ingredientLinearLayout.addView(ingredient);
             AutoCompleteTextView ingredientAutoComplete = (AutoCompleteTextView) ingredient.findViewById(R.id.ingredientAutoComplete);
@@ -92,6 +109,19 @@ public class RecipeStepAndIngredientManager {
                     String ingredientUnit = ((TextInputLayout) step.getChildAt(1)).getEditText().getText().toString();
                     int ingredientAmount = Integer.parseInt(((TextInputLayout) step.getChildAt(0)).getEditText().getText().toString());
                     ingredients.add(new Ingredient(ingredientName, new Unit(ingredientAmount, ingredientUnit)));
+                }
+            }
+        }
+        return ingredients;
+    }
+
+    public List<Integer> getOfferable() {
+        ArrayList<Integer> ingredients = new ArrayList<>();
+        for (int i = 0; i < ingredientLinearLayout.getChildCount(); i++) {
+            if (ingredientLinearLayout.getChildAt(i) instanceof ConstraintLayout) {
+                ConstraintLayout step = (ConstraintLayout) ingredientLinearLayout.getChildAt(i);
+                if (step.findViewById(R.id.offerIngredientItem).isActivated()) {
+                    ingredients.add(i);
                 }
             }
         }

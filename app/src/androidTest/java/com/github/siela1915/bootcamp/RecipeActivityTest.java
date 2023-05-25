@@ -50,8 +50,10 @@ import com.github.siela1915.bootcamp.Recipes.ExampleRecipes;
 import com.github.siela1915.bootcamp.Recipes.Ingredient;
 import com.github.siela1915.bootcamp.Recipes.Recipe;
 import com.github.siela1915.bootcamp.firebase.Database;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.auth.FirebaseAuth;
+import com.github.siela1915.bootcamp.firebase.FirebaseInstanceManager;
+import com.github.siela1915.bootcamp.firebase.User;
+import com.github.siela1915.bootcamp.firebase.UserDatabase;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.database.FirebaseDatabase;
 
 import org.hamcrest.Matcher;
@@ -63,6 +65,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 
@@ -81,16 +84,13 @@ public class RecipeActivityTest {
 
     @BeforeClass
     public static void prepareEmulator() {
-        FirebaseApp.clearInstancesForTest();
-        FirebaseApp.initializeApp(appContext);
-        FirebaseAuth.getInstance().useEmulator("10.0.2.2", 9099);
-        fb = FirebaseDatabase.getInstance();
-        fb.useEmulator("10.0.2.2", 9000);
+        FirebaseInstanceManager.emulator = true;
+        fb = FirebaseInstanceManager.getDatabase(getApplicationContext());
 
         database = new Database(fb);
 
 
-        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+        if (FirebaseInstanceManager.getAuth().getCurrentUser() != null) {
             FirebaseAuthActivityTest.logoutSync();
         }
 
@@ -135,8 +135,16 @@ public class RecipeActivityTest {
 
     @After
     public void tearDown() {
-        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+        if (FirebaseInstanceManager.getAuth().getCurrentUser() != null) {
             FirebaseAuthActivityTest.logoutSync();
+        }
+        try {
+            Intents.release();
+        } catch (IllegalStateException exception) {
+            if (exception.getMessage() == null ||
+                    !exception.getMessage().contains("init() must be called prior to using this method")) {
+                throw exception;
+            }
         }
     }
 
@@ -813,6 +821,12 @@ public class RecipeActivityTest {
     @Test
     public void replyAuthenticated() throws InterruptedException {
         FirebaseAuthActivityTest.loginSync("example@email.com");
+        UserDatabase userDb = new UserDatabase(FirebaseInstanceManager.getDatabase(getApplicationContext()));
+        try {
+            Tasks.await(userDb.addDeviceToken());
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        }
         waitForDatabaseFetchCompletion(300, TimeUnit.SECONDS);
         Intent i = RecipeConverter.convertToIntent(omelette, ApplicationProvider.getApplicationContext());
 
