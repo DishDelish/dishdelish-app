@@ -17,6 +17,7 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import org.hamcrest.Matchers;
+import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,6 +27,18 @@ public class MainActivityTest {
     @Rule
     public ActivityScenarioRule<MainActivity> testRule = new ActivityScenarioRule<>(MainActivity.class);
 
+    @After
+    public void cleanUp() {
+        try {
+            Intents.release();
+        } catch (IllegalStateException exception) {
+            if (exception.getMessage() == null ||
+                    !exception.getMessage().contains("init() must be called prior to using this method")) {
+                throw exception;
+            }
+        }
+    }
+
     @Test
     public void emptyNameSent() {
         Intents.init();
@@ -34,8 +47,6 @@ public class MainActivityTest {
         button.perform(ViewActions.click());
 
         Intents.intended(Matchers.allOf(IntentMatchers.hasExtra("com.github.siela1915.bootcamp.userName", ""), IntentMatchers.hasComponent(GreetingActivity.class.getName())));
-
-        Intents.release();
     }
 
     @Test
@@ -52,8 +63,6 @@ public class MainActivityTest {
                 IntentMatchers.hasExtra("com.github.siela1915.bootcamp.userName", "Test"),
                 IntentMatchers.hasComponent(GreetingActivity.class.getName())
         ));
-
-        Intents.release();
     }
 
     @Test
@@ -70,8 +79,6 @@ public class MainActivityTest {
         Intents.intended(Matchers.allOf(
                 IntentMatchers.hasExtra("com.github.siela1915.bootcamp.authaction", FirebaseAuthActivity.AUTH_ACTION.LOGIN),
                 IntentMatchers.hasExtra("com.github.siela1915.bootcamp.postauthintent", IntentMatchers.hasComponent(GreetingActivity.class.getName()))));
-
-        Intents.release();
     }
 
     @Test
@@ -88,7 +95,5 @@ public class MainActivityTest {
         Intents.intended(Matchers.allOf(
                 IntentMatchers.hasExtra("com.github.siela1915.bootcamp.authaction", FirebaseAuthActivity.AUTH_ACTION.LOGOUT),
                 IntentMatchers.hasExtra("com.github.siela1915.bootcamp.postauthintent", IntentMatchers.hasComponent(MainActivity.class.getName()))));
-
-        Intents.release();
     }
 }

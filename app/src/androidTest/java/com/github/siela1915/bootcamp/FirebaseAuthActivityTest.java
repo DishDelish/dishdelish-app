@@ -1,6 +1,5 @@
 package com.github.siela1915.bootcamp;
 
-import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
@@ -25,16 +24,15 @@ import com.firebase.ui.auth.AuthUI;
 import com.github.siela1915.bootcamp.firebase.FirebaseInstanceManager;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.UserProfileChangeRequest;
-import com.google.firebase.database.FirebaseDatabase;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -101,6 +99,19 @@ public class FirebaseAuthActivityTest {
         doneIntent = new Intent(ApplicationProvider.getApplicationContext(), GreetingActivity.class);
     }
 
+    @After
+    public void cleanUp() {
+        try {
+            Intents.release();
+        } catch (IllegalStateException exception) {
+            if (exception.getMessage() == null ||
+                    !exception.getMessage().contains("init() must be called prior to using this method")) {
+                throw exception;
+            }
+        }
+        logoutSync();
+    }
+
     @Test
     public void testLoggedIn() {
         loginSync("foo@example.com");
@@ -112,8 +123,6 @@ public class FirebaseAuthActivityTest {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        Intents.release();
-        logoutSync();
     }
 
     @Test
@@ -127,7 +136,6 @@ public class FirebaseAuthActivityTest {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        Intents.release();
     }
 
     @Test
@@ -141,7 +149,6 @@ public class FirebaseAuthActivityTest {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        Intents.release();
     }
 
     @Test
@@ -180,7 +187,6 @@ public class FirebaseAuthActivityTest {
             loginButton.check(doesNotExist());
             Intents.intended(IntentMatchers.hasComponent(FirebaseAuthActivity.class.getName()));
         }
-        Intents.release();
     }
 
     @Test
@@ -196,7 +202,5 @@ public class FirebaseAuthActivityTest {
 
             laterButton.check(doesNotExist());
         }
-        Intents.release();
-        logoutSync();
     }
 }

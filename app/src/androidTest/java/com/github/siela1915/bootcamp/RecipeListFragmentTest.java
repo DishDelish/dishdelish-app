@@ -41,6 +41,14 @@ public class RecipeListFragmentTest {
     @After
     public void cleanUp() {
         scenario.close();
+        try {
+            Intents.release();
+        } catch (IllegalStateException exception) {
+            if (exception.getMessage() == null ||
+                    !exception.getMessage().contains("init() must be called prior to using this method")) {
+                throw exception;
+            }
+        }
     }
 
     @Test
@@ -99,8 +107,6 @@ public class RecipeListFragmentTest {
         onView(withId(R.id.recipeList)).perform(actionOnItemAtPosition(0, click()));
 
         Intents.intended(IntentMatchers.hasComponent(RecipeActivity.class.getName()));
-
-        Intents.release();
     }
 
     /**

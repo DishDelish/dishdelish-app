@@ -51,8 +51,6 @@ import com.github.siela1915.bootcamp.Recipes.Ingredient;
 import com.github.siela1915.bootcamp.Recipes.Recipe;
 import com.github.siela1915.bootcamp.firebase.Database;
 import com.github.siela1915.bootcamp.firebase.FirebaseInstanceManager;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 
 import org.hamcrest.Matcher;
@@ -135,6 +133,14 @@ public class RecipeActivityTest {
     public void tearDown() {
         if (FirebaseInstanceManager.getAuth().getCurrentUser() != null) {
             FirebaseAuthActivityTest.logoutSync();
+        }
+        try {
+            Intents.release();
+        } catch (IllegalStateException exception) {
+            if (exception.getMessage() == null ||
+                    !exception.getMessage().contains("init() must be called prior to using this method")) {
+                throw exception;
+            }
         }
     }
 
