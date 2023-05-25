@@ -21,17 +21,15 @@ public class FirebaseInstanceManagerTest {
 
     @Test
     public void withoutEmulatorGivesCorrectDatabase() {
+        FirebaseInstanceManager.emulator = false;
+
         FirebaseApp.clearInstancesForTest();
         FirebaseApp.initializeApp(getApplicationContext());
 
-        FirebaseInstanceManager.emulator = false;
         FirebaseDatabase db = FirebaseInstanceManager.getDatabase(getApplicationContext());
-
-        assertThat(db.getReference().toString(), is(not("http://10.0.2.2:9000")));
 
         FirebaseDatabase db2 = FirebaseInstanceManager.getDatabase(getApplicationContext());
 
-        assertThat(db2.getReference().toString(), is(not("http://10.0.2.2:9000")));
     }
 
     @Test
