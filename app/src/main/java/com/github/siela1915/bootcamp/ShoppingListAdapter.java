@@ -36,27 +36,6 @@ public class ShoppingListAdapter  extends RecyclerView.Adapter<ShoppingListViewH
         manager = new ShoppingListManager(context);
         String item = shoppingList.get(position);
         holder.ingredientName.setText(item);
-        /*holder.itemView.setOnClickListener(view ->{
-            AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext(),R.style.AlertDialogTheme);
-            builder.setTitle("Are you sure you want to delete this item?");
-            builder.setCancelable(false);
-            builder.setNegativeButton("Yes", (dialog, which) -> {
-                String item_to_remove= shoppingList.get(position);
-                shoppingList.remove(position);
-                notifyDataSetChanged();
-                manager.removeIngredient(item_to_remove);
-            });
-            builder.setPositiveButton("No",((dialog, which) -> {
-                dialog.cancel();
-            }));
-            AlertDialog dialog=builder.create();
-            dialog.setOnShowListener(arg0 -> {
-                dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(R.color.teal_700);
-                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(R.color.teal_700);
-            });
-            dialog.show();
-
-        });*/
     }
 
     @Override
