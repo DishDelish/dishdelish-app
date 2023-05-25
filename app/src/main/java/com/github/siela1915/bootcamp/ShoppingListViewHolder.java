@@ -23,11 +23,6 @@ public class ShoppingListViewHolder extends RecyclerView.ViewHolder implements C
         this.adapter = adapter;
     }
 
-    public void bind(String item, boolean isSelected) {
-        checkBox.setChecked(isSelected);
-        ingredientName.setText(item);
-    }
-
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         int position = getAdapterPosition();
