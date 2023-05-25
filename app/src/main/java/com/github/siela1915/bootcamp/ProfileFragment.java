@@ -25,6 +25,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.github.siela1915.bootcamp.firebase.FirebaseInstanceManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
@@ -68,7 +69,7 @@ public class ProfileFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseUser user = FirebaseInstanceManager.getAuth().getCurrentUser();
         Intent navToProfile = new Intent(getActivity(), MainHomeActivity.class);
         navToProfile.putExtra("com.github.siela1915.bootcamp.navToProfile", true);
         if (user == null) {
