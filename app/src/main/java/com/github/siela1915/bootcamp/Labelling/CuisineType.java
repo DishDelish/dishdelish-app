@@ -2,6 +2,7 @@ package com.github.siela1915.bootcamp.Labelling;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public enum CuisineType {
     NONE("None"), AMERICAN("American"), CHINESE("Chinese"), INDIAN("Indian"), LIBYAN("Libyan"),
@@ -34,6 +35,14 @@ public enum CuisineType {
             }
         }
         return null;
+    }
+
+    public static CuisineType fromInt(Integer i){
+        return CuisineType.values()[i];
+    }
+
+    public static List<CuisineType> fromIntList(List<Integer> l){
+        return l.stream().map(i -> CuisineType.values()[i]).collect(Collectors.toList());
     }
 }
 

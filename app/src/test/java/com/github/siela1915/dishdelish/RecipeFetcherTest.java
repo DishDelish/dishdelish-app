@@ -7,6 +7,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 import com.github.siela1915.bootcamp.Labelling.CuisineType;
+import com.github.siela1915.bootcamp.Labelling.DietType;
 import com.github.siela1915.bootcamp.Labelling.RecipeFetcher;
 import com.github.siela1915.bootcamp.Recipes.ExampleRecipes;
 import com.github.siela1915.bootcamp.Recipes.Ingredient;
@@ -112,10 +113,14 @@ public class RecipeFetcherTest {
         List<Integer> allergies = new ArrayList<>();
         List<Integer> cuisines = new ArrayList<>();
         List<Integer> diets = new ArrayList<>();
+
+        for (int i = 0; i < ExampleRecipes.recipes.size(); i++) {
+            ExampleRecipes.recipes.get(i).setUniqueKey(String.valueOf(i));
+        }
         fetcher = new RecipeFetcher(allergies, cuisines, diets,ExampleRecipes.recipes);
 
-        List<String> expectedList = Arrays.asList(ExampleRecipes.recipes.get(2).recipeName);
-        List<String> actualList = fetcher.filterByIngredients(ExampleRecipes.recipes, Arrays.asList(new Ingredient("lemon", new Unit(1, ""))));
+        List<String> expectedList = Arrays.asList(String.valueOf(1));
+        List<String> actualList = fetcher.filterByIngredients(Arrays.asList(new Ingredient("Cauliflower", new Unit(1, "")), new Ingredient("Coriander", new Unit(1, ""))));
 
         assertEquals(expectedList, actualList);
     }
@@ -125,10 +130,14 @@ public class RecipeFetcherTest {
         List<Integer> allergies = new ArrayList<>();
         List<Integer> cuisines = new ArrayList<>();
         List<Integer> diets = new ArrayList<>();
+
+        for (int i = 0; i < ExampleRecipes.recipes.size(); i++) {
+            ExampleRecipes.recipes.get(i).setUniqueKey(String.valueOf(i));
+        }
         fetcher = new RecipeFetcher(allergies, cuisines, diets,ExampleRecipes.recipes);
 
-        List<String> expectedList = Arrays.asList(ExampleRecipes.recipes.get(2).recipeName);
-        List<String> actualList = fetcher.filterByIngredients(ExampleRecipes.recipes, Arrays.asList(new Ingredient("LeMON", new Unit(1, ""))));
+        List<String> expectedList = Arrays.asList(String.valueOf(1));
+        List<String> actualList = fetcher.filterByIngredients(Arrays.asList(new Ingredient("CAUlIfLoWer", new Unit(1, "")), new Ingredient("CoRIAnder", new Unit(1, ""))));
 
         assertEquals(expectedList, actualList);
     }
@@ -157,6 +166,19 @@ public class RecipeFetcherTest {
         assertEquals(rangeDesc, fetcher.sortByProtein(recipes));
         assertEquals(rangeAsc, fetcher.sortByCalories(recipes));
         assertEquals(rangeDesc, fetcher.sortByCarbohydrates(recipes));
+    }
+
+    @Test
+    public void fetcherExcludesInducedDietOrAllergyViolatingRecipes(){
+        List<Integer> allergies = new ArrayList<>();
+        List<Integer> cuisines = new ArrayList<>();
+        List<Integer> diets = Arrays.asList(DietType.VEGAN.ordinal());
+        fetcher = new RecipeFetcher(allergies, cuisines, diets,ExampleRecipes.recipes);
+        //lemon pudding is marked as "DAIRY", but contains eggs so should be excluded if the user is vegan
+        assertFalse(fetcher.fetchRecipeList().contains(ExampleRecipes.recipes.get(2).recipeName));
+        //the only example recipe without eggs is Cauliflower Rice, Krabby Patty is marked with the EGGS allergy type as well
+        assertEquals(1, fetcher.fetchRecipeList().size());
+        assertTrue(fetcher.fetchRecipeList().contains(ExampleRecipes.recipes.get(1).recipeName));
     }
 
 

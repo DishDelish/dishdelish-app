@@ -54,20 +54,24 @@ public class RecipeFetcher{
                     .toArray().length*10;
 
             //checking if the recipe violates allergy or diet constraint
-            //List<Boolean> temp= allergies.stream().map(a -> r.allergyTypes.contains(a)).collect(Collectors.toList());
-            if((allergies).stream()
+            if((AllergyType.fromIntList(allergies)).stream()
                     .map(a -> a.toString())
                     .distinct()
-                    .filter(x -> (r.ingredientList).stream().anyMatch(y -> y.getIngredient().equals(x)))
+                    .filter(x -> (r.ingredientList).stream().anyMatch(y -> y.getIngredient().contains(x.toLowerCase())))
                     .toArray().length > 0
-            || (allergies).stream()
+            || (AllergyType.fromIntList(allergies)).stream()
                     .distinct()
-                    .filter(x -> (r.allergyTypes).stream().anyMatch(y -> y.equals(x)))
+                    .filter(x -> (AllergyType.fromIntList(r.allergyTypes)).stream().anyMatch(y -> y.equals(x)))
+                    .toArray().length > 0
+            || (DietType.fromIntList(diets)).stream()
+                    .distinct()
+                    .filter(x -> (DietType.fromIntList(r.dietTypes)).stream().anyMatch(y -> y.equals(x)))
                     .toArray().length > 0
             || (diets).stream()
-                    .distinct()
-                    .filter(x -> (r.dietTypes).stream().anyMatch(y -> y.equals(x)))
-                    .toArray().length > 0){
+                    .map(d -> DietType.getViolatingIngredients(d))
+                    .filter(x -> (r.ingredientList).stream().anyMatch(y -> x.contains(y.getIngredient())))
+                    .toArray().length > 0
+            ){
 
                 weight=0;
             }
@@ -104,19 +108,27 @@ public class RecipeFetcher{
 
     /**
      * Filters recipes to only contain recipes using all ingredients in the ingredients list
-     * @param recipes to be filtered
      * @param ingredients to consider for filtering
      * @return filtered recipe names
      */
-    public List<String> filterByIngredients(List<Recipe> recipes, List<Ingredient> ingredients){
-        Objects.requireNonNull(recipes);
-        List<Recipe> ret = new ArrayList<>(recipes);
-        return ret.stream()
-                .filter(r ->
-                        new HashSet<>(r.ingredientList.stream().map(Ingredient::getIngredient).collect(Collectors.toList()))
-                        .containsAll(ingredients.stream().map(Ingredient::getIngredient).collect(Collectors.toList())))
-                .map(r -> r.recipeName)
-                .collect(Collectors.toList());
+    public List<String> filterByIngredients(List<Ingredient> ingredients){
+        Objects.requireNonNull(allRecipes);
+        List<String> filteredRecipes = new ArrayList<>();
+
+        for (Recipe recipe : allRecipes) {
+            boolean containsOnlyIngredients = recipe.getIngredientList().stream()
+                    .map(i -> i.getIngredient())
+                    .allMatch(ingredient ->
+                            ingredients.stream()
+                                    .map(i -> i.getIngredient()).collect(Collectors.toList())
+                            .contains(ingredient));
+
+            if (containsOnlyIngredients) {
+                filteredRecipes.add(recipe.uniqueKey);
+            }
+        }
+
+        return filteredRecipes;
     }
 
 
