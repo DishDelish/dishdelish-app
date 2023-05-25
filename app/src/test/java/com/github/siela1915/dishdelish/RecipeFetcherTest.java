@@ -137,7 +137,7 @@ public class RecipeFetcherTest {
         fetcher = new RecipeFetcher(allergies, cuisines, diets,ExampleRecipes.recipes);
 
         List<String> expectedList = Arrays.asList(String.valueOf(1));
-        List<String> actualList = fetcher.filterByIngredients(Arrays.asList(new Ingredient("CaUlIfLoWer", new Unit(1, "")), new Ingredient("CoRIAnder", new Unit(1, ""))));
+        List<String> actualList = fetcher.filterByIngredients(Arrays.asList(new Ingredient("CAUlIfLoWer", new Unit(1, "")), new Ingredient("CoRIAnder", new Unit(1, ""))));
 
         assertEquals(expectedList, actualList);
     }
