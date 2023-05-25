@@ -21,6 +21,9 @@ public class FirebaseInstanceManagerTest {
 
     @Test
     public void withoutEmulatorGivesCorrectDatabase() {
+        FirebaseApp.clearInstancesForTest();
+        FirebaseApp.initializeApp(getApplicationContext());
+
         FirebaseInstanceManager.emulator = false;
         FirebaseDatabase db = FirebaseInstanceManager.getDatabase(getApplicationContext());
 
@@ -46,6 +49,9 @@ public class FirebaseInstanceManagerTest {
 
     @Test
     public void withoutEmulatorGivesAuthentication() {
+        FirebaseApp.clearInstancesForTest();
+        FirebaseApp.initializeApp(getApplicationContext());
+        
         FirebaseInstanceManager.emulator = false;
         FirebaseAuth auth = FirebaseInstanceManager.getAuth();
     }
