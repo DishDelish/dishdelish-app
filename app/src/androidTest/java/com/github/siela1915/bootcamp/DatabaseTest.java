@@ -714,4 +714,30 @@ public class DatabaseTest {
         }
         FirebaseAuthActivityTest.logoutSync();
     }
+
+    @Test
+    public void getFavoriteRecipesReturnsCorrectRecipeTest() {
+        FirebaseAuthActivityTest.loginSync("getFavoriteRecipesReturnsCorrectRecipe@example.com");
+
+        Database db = new Database(firebaseInstance);
+        Recipe recipe1 = createRecipeEggs();
+        Recipe recipe2 = createOtherEggsRecipe();
+        Recipe recipe3 = createRecipeEggs();
+        Task<String> set1 = db.setAsync(recipe1);
+        Task<String> set2 = set1.continueWithTask(t -> db.setAsync(recipe2));
+        Task<String> set3 = set2.continueWithTask(t -> db.setAsync(recipe3));
+        Task<Void> addTask = set3.continueWithTask(t -> db.addFavorite(recipe1.uniqueKey));
+        addTask = addTask.continueWithTask(t -> db.addFavorite(recipe3.uniqueKey));
+        Task<List<Recipe>> resultTask = addTask.continueWithTask(t -> db.getFavoriteRecipes());
+        try {
+            List<Recipe> ls = Tasks.await(resultTask);
+            assertEquals(2, ls.size());
+            assertTrue(ls.contains(recipe1));
+            assertTrue(ls.contains(recipe3));
+        } catch (ExecutionException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        FirebaseAuthActivityTest.logoutSync();
+    }
 }

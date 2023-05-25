@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
 /**
  * Java class which connects to the Firebase database to set and retrieve data
@@ -384,6 +385,19 @@ public class Database {
                 favs.add(recipe.getKey());
             }
             return favs;
+        });
+    }
+
+    public Task<List<Recipe>> getFavoriteRecipes() {
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+            return Tasks.forException(new FirebaseNoSignedInUserException("Sign in to get favorites"));
+        }
+        return getFavorites().continueWithTask(favorites -> {
+            List<Task<Recipe>> favListTasks = favorites.getResult().stream()
+                    .map(this::getAsync).collect(Collectors.toList());
+            return Tasks.whenAll(favListTasks)
+                    .continueWith(task -> favListTasks.stream()
+                            .map(Task::getResult).collect(Collectors.toList()));
         });
     }
 

@@ -31,10 +31,12 @@ public class RecipeFetcher{
     private List<Integer> allergies;
     private List<Integer> cuisines;
     private List<Integer> diets;
-    public RecipeFetcher(List<Integer> allergies, List<Integer> cuisines, List<Integer> diets) {
+    private List<Recipe> allRecipes;
+    public RecipeFetcher(List<Integer> allergies, List<Integer> cuisines, List<Integer> diets,List<Recipe> fromRecipes) {
         this.allergies = allergies;
         this.cuisines = cuisines;
         this.diets = diets;
+        allRecipes=fromRecipes;
     }
 
     //returns list of IDs of recipes?
@@ -43,7 +45,7 @@ public class RecipeFetcher{
         //String will represent the ID of the recipe, for now it's just the name
         Map<String, Float> mapOfRecipes = new HashMap<>();
 
-        for(Recipe r :ExampleRecipes.recipes){
+        for(Recipe r :allRecipes){
             //Base weight, will be lower only if diets or allergies are violated
             float weight = 5;
             weight += (cuisines).stream()
@@ -54,6 +56,11 @@ public class RecipeFetcher{
             //checking if the recipe violates allergy or diet constraint
             //List<Boolean> temp= allergies.stream().map(a -> r.allergyTypes.contains(a)).collect(Collectors.toList());
             if((allergies).stream()
+                    .map(a -> a.toString())
+                    .distinct()
+                    .filter(x -> (r.ingredientList).stream().anyMatch(y -> y.getIngredient().equals(x)))
+                    .toArray().length > 0
+            || (allergies).stream()
                     .distinct()
                     .filter(x -> (r.allergyTypes).stream().anyMatch(y -> y.equals(x)))
                     .toArray().length > 0
