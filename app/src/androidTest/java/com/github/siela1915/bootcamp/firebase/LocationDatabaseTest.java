@@ -12,7 +12,6 @@ import android.location.Location;
 import android.util.Pair;
 
 import com.github.siela1915.bootcamp.FirebaseAuthActivityTest;
-import com.github.siela1915.bootcamp.Recipes.ExampleRecipes;
 import com.github.siela1915.bootcamp.Recipes.Ingredient;
 import com.github.siela1915.bootcamp.Recipes.Unit;
 import com.google.android.gms.tasks.Tasks;
@@ -30,19 +29,21 @@ import java.util.concurrent.ExecutionException;
 
 public class LocationDatabaseTest {
     private LocationDatabase locDb;
+    private Database db;
 
     @Before
     public void prepareEmulator() {
-        FirebaseApp.clearInstancesForTest();
-        FirebaseApp.initializeApp(getApplicationContext());
-        FirebaseAuth.getInstance().useEmulator("10.0.2.2", 9099);
-        FirebaseDatabase.getInstance().useEmulator("10.0.2.2", 9000);
+        FirebaseInstanceManager.emulator = true;
 
         if (locDb == null) {
-            locDb = new LocationDatabase();
+            locDb = new LocationDatabase(FirebaseInstanceManager.getDatabase(getApplicationContext()));
         }
 
-        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+        if (db == null) {
+            db = new Database(FirebaseInstanceManager.getDatabase(getApplicationContext()));
+        }
+
+        if (FirebaseInstanceManager.getAuth().getCurrentUser() != null) {
             FirebaseAuthActivityTest.logoutSync();
         }
     }
@@ -58,7 +59,7 @@ public class LocationDatabaseTest {
             Tasks.await(locDb.updateLocation(loc));
             List<Pair<String, Location>> list = Tasks.await(locDb.getNearby(loc));
             assertThat(list.size(), is(1));
-            assertThat(list.get(0).first, is(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid()));
+            assertThat(list.get(0).first, is(Objects.requireNonNull(FirebaseInstanceManager.getAuth().getCurrentUser()).getUid()));
             assertThat(list.get(0).second.distanceTo(loc), lessThan(0.001f));
         } catch (ExecutionException | InterruptedException e) {
             throw new RuntimeException(e);
@@ -76,8 +77,9 @@ public class LocationDatabaseTest {
         loc.setLatitude(5.0);
         try {
             Tasks.await(locDb.updateLocation(loc));
-            Tasks.await(locDb.updateOffered(ing));
-            List<Ingredient> res = Tasks.await(locDb.getOffered(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid()));
+            Tasks.await(db.updateFridge(ing));
+            Tasks.await(locDb.updateOffered(Collections.singletonList(0)));
+            List<Ingredient> res = Tasks.await(locDb.getOfferedIngredients(Objects.requireNonNull(FirebaseInstanceManager.getAuth().getCurrentUser()).getUid()));
             assertNotNull(res);
             assertThat(res, containsInAnyOrder(ing.toArray(new Ingredient[0])));
         } catch (ExecutionException | InterruptedException e) {
@@ -106,7 +108,7 @@ public class LocationDatabaseTest {
 
     @Test
     public void updateOfferedLoggedOutReturnsExceptionTask() {
-        List<Ingredient> ing = Collections.singletonList(ExampleRecipes.recipes.get(0).getIngredientList().get(0));
+        List<Integer> ing = Collections.singletonList(0);
 
         assertThrows(ExecutionException.class, () -> Tasks.await(locDb.updateOffered(ing)));
     }

@@ -14,6 +14,7 @@ import com.github.siela1915.bootcamp.Recipes.Recipe;
 import com.github.siela1915.bootcamp.Recipes.Unit;
 import com.github.siela1915.bootcamp.Recipes.Utensils;
 import com.github.siela1915.bootcamp.firebase.Database;
+import com.github.siela1915.bootcamp.firebase.FirebaseInstanceManager;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.FirebaseApp;
@@ -36,11 +37,8 @@ public class DatabaseTest {
 
     @Before
     public void connectToEmulator() {
-        FirebaseApp.clearInstancesForTest();
-        FirebaseApp.initializeApp(getApplicationContext());
-        FirebaseAuth.getInstance().useEmulator("10.0.2.2", 9099);
-        firebaseInstance = FirebaseDatabase.getInstance();
-        firebaseInstance.useEmulator("10.0.2.2", 9000);
+        FirebaseInstanceManager.emulator = true;
+        firebaseInstance = FirebaseInstanceManager.getDatabase(getApplicationContext());
     }
 
     @After

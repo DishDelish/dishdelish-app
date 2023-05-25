@@ -8,45 +8,18 @@
     tools:context=".NearbyHelpFragment">
 
     <androidx.constraintlayout.widget.Group
-        android:id="@+id/offerHelpGroup"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:constraint_referenced_ids="submitOfferHelpButton,offerAddIngredient,offerIngredientScroll" />
-
-    <androidx.constraintlayout.widget.Group
         android:id="@+id/askHelpGroup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:constraint_referenced_ids="submitAskHelpButton,askIngredientLayout"
-        tools:visibility="gone" />
+        app:constraint_referenced_ids="submitAskHelpButton,askIngredientLayout" />
 
     <androidx.constraintlayout.widget.Group
         android:id="@+id/replyHelpGroup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         app:constraint_referenced_ids="replyInputHelp,sendReplyHelpButton"
         tools:visibility="gone" />
-
-    <androidx.constraintlayout.widget.Group
-        android:id="@+id/chooseHelpGroup"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:constraint_referenced_ids="askHelpButton,offerHelpButton"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:visibility="gone" />
-
-    <Button
-        android:id="@+id/askHelpButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:text="Ask for help"
-        app:layout_constraintBottom_toTopOf="@+id/verticalCenterGuideline"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
 
     <LinearLayout
         android:id="@+id/askIngredientLayout"
@@ -60,49 +33,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <Button
-        android:id="@+id/offerHelpButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="Offer help"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/verticalCenterGuideline"
-        tools:visibility="gone" />
-
-    <Button
-        android:id="@+id/offerAddIngredient"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginBottom="16dp"
-        android:text="Add ingredient"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <ScrollView
-        android:id="@+id/offerIngredientScroll"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/submitOfferHelpButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <LinearLayout
-            android:id="@+id/offerIngredientLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingBottom="8dp"
-            android:clipToPadding="false" />
-    </ScrollView>
-
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/verticalCenterGuideline"
         android:layout_width="wrap_content"
@@ -115,32 +45,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="Send out request"
+        android:text="@string/nearbySendRequest"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/verticalCenterGuideline"
-        tools:visibility="gone" />
-
-    <Button
-        android:id="@+id/submitOfferHelpButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        android:text="Update offered"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/verticalCenterGuideline" />
 
     <Button
         android:id="@+id/sendReplyHelpButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="Reply"
+        android:text="@string/reply"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/verticalCenterGuideline"
-        tools:visibility="gone" />
+        app:layout_constraintTop_toBottomOf="@+id/verticalCenterGuideline" />
 
     <EditText
         android:id="@+id/replyInputHelp"
@@ -150,7 +68,9 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="8dp"
-        android:hint="Enter message to send to the requester. Include any details needed to find your place, time you're available and potentially a way to contact you"
+        android:autofillHints=""
+        android:hint="@string/nearbyReplyHint"
+        android:inputType="text"
         app:layout_constraintBottom_toTopOf="@+id/verticalCenterGuideline"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

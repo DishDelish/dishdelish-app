@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/ingredients"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -53,10 +54,10 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="10dp"
-        android:minWidth="80dp"
         android:hint="@string/ingredientsNameHint"
+        android:minWidth="80dp"
         android:textColorHint="#8e9094"
-        app:layout_constraintEnd_toStartOf="@+id/removeIngredient"
+        app:layout_constraintEnd_toStartOf="@id/offerIngredientItem"
         app:layout_constraintStart_toEndOf="@+id/ingredientsUnit"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -69,6 +70,20 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <ImageView
+        android:id="@+id/offerIngredientItem"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="10dp"
+        android:src="@drawable/baseline_map_24"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/removeIngredient"
+        app:layout_constraintStart_toEndOf="@+id/ingredientsName"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="gone"
+        android:contentDescription="@string/offerIngredientItemDescription" />
+
+    <ImageView
         android:id="@+id/removeIngredient"
         android:layout_width="25dp"
         android:layout_height="25dp"
@@ -76,7 +91,8 @@
         android:src="@drawable/close"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/ingredientsName"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toEndOf="@id/offerIngredientItem"
+        app:layout_constraintTop_toTopOf="parent"
+        android:contentDescription="@string/removeIngredientDescription" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

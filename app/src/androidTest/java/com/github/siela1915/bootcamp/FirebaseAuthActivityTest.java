@@ -1,12 +1,13 @@
 package com.github.siela1915.bootcamp;
 
-import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.intent.Intents.intending;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.nullValue;
 
 import android.app.Activity;
 import android.app.Instrumentation;
@@ -22,18 +23,20 @@ import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.firebase.ui.auth.AuthUI;
+import com.github.siela1915.bootcamp.firebase.FirebaseInstanceManager;
+import com.github.siela1915.bootcamp.firebase.UserDatabase;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.UserProfileChangeRequest;
-import com.google.firebase.database.FirebaseDatabase;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -56,10 +59,14 @@ public class FirebaseAuthActivityTest {
         }
 
         AuthCredential credential = GoogleAuthProvider.getCredential(userJson, null);
-        Task<AuthResult> result = FirebaseAuth.getInstance().signInWithCredential(credential);
+        Task<AuthResult> result = FirebaseInstanceManager.getAuth().signInWithCredential(credential);
 
         try {
             AuthResult authResult = Tasks.await(result);
+            FirebaseUser user = FirebaseInstanceManager.getAuth().getCurrentUser();
+            assertThat(user, is(not(nullValue())));
+            user.updateProfile(new UserProfileChangeRequest.Builder().setDisplayName(email).build());
+            Tasks.await(FirebaseInstanceManager.getAuth().updateCurrentUser(user));
         } catch (ExecutionException | InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -89,18 +96,28 @@ public class FirebaseAuthActivityTest {
 
     @Before
     public void prepare() {
-        FirebaseApp.clearInstancesForTest();
-        FirebaseApp.initializeApp(getApplicationContext());
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        FirebaseDatabase.getInstance().useEmulator("10.0.2.2", 9000);
+        FirebaseInstanceManager.emulator = true;
 
-        auth.useEmulator("10.0.2.2", 9099);
+        FirebaseAuth auth = FirebaseInstanceManager.getAuth();
 
         if (auth.getCurrentUser() != null) {
             auth.signOut();
         }
 
         doneIntent = new Intent(ApplicationProvider.getApplicationContext(), GreetingActivity.class);
+    }
+
+    @After
+    public void cleanUp() {
+        try {
+            Intents.release();
+        } catch (IllegalStateException exception) {
+            if (exception.getMessage() == null ||
+                    !exception.getMessage().contains("init() must be called prior to using this method")) {
+                throw exception;
+            }
+        }
+        logoutSync();
     }
 
     @Test
@@ -114,8 +131,6 @@ public class FirebaseAuthActivityTest {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        Intents.release();
-        logoutSync();
     }
 
     @Test
@@ -129,7 +144,6 @@ public class FirebaseAuthActivityTest {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        Intents.release();
     }
 
     @Test
@@ -143,21 +157,20 @@ public class FirebaseAuthActivityTest {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        Intents.release();
     }
 
     @Test
     public void testUpdate() {
         loginSync("foo@example.com");
 
-        String initDisplayName = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getDisplayName();
+        String initDisplayName = Objects.requireNonNull(FirebaseInstanceManager.getAuth().getCurrentUser()).getDisplayName();
         Task<Void> result = FirebaseAuthActivity.update(new UserProfileChangeRequest.Builder()
                 .setDisplayName(initDisplayName + "updated")
                 .build());
         try {
             Tasks.await(result);
 
-            assertThat(FirebaseAuth.getInstance().getCurrentUser().getDisplayName(), is(initDisplayName + "updated"));
+            assertThat(FirebaseInstanceManager.getAuth().getCurrentUser().getDisplayName(), is(initDisplayName + "updated"));
         } catch (ExecutionException | InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -182,7 +195,6 @@ public class FirebaseAuthActivityTest {
             loginButton.check(doesNotExist());
             Intents.intended(IntentMatchers.hasComponent(FirebaseAuthActivity.class.getName()));
         }
-        Intents.release();
     }
 
     @Test
@@ -198,7 +210,5 @@ public class FirebaseAuthActivityTest {
 
             laterButton.check(doesNotExist());
         }
-        Intents.release();
-        logoutSync();
     }
 }
