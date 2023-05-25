@@ -20,7 +20,8 @@ public class ShoppingListHelper extends SQLiteOpenHelper {
         String SQL_CREATE_SHOPPING_LIST_TABLE = "CREATE TABLE " +
                 ShoppingListContract.ShoppingListEntry.TABLE_NAME + " (" +
                 ShoppingListContract.ShoppingListEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                ShoppingListContract.ShoppingListEntry.COLUMN_NAME_INGREDIENT + " TEXT NOT NULL);";
+                ShoppingListContract.ShoppingListEntry.COLUMN_NAME_INGREDIENT + " TEXT NOT NULL, " +
+                ShoppingListContract.ShoppingListEntry.COLUMN_NAME_DATE + " TEXT NOT NULL);"; // Add the new column for date
 
         db.execSQL(SQL_CREATE_SHOPPING_LIST_TABLE);
     }

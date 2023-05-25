@@ -12,5 +12,6 @@ public class ShoppingListContract {
     public static class ShoppingListEntry implements BaseColumns {
         public static final String TABLE_NAME = "shopping_list";
         public static final String COLUMN_NAME_INGREDIENT = "ingredient";
+        public static final String COLUMN_NAME_DATE = "date"; // Add the new column for date
     }
 }
