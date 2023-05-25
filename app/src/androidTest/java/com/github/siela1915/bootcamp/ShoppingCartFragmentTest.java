@@ -3,7 +3,13 @@ package com.github.siela1915.bootcamp;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+
+import static org.hamcrest.CoreMatchers.allOf;
+import static org.hamcrest.core.IsInstanceOf.instanceOf;
+
+import android.widget.TextView;
 
 import androidx.fragment.app.testing.FragmentScenario;
 import androidx.test.espresso.Espresso;
@@ -37,17 +43,24 @@ public class ShoppingCartFragmentTest {
             e.printStackTrace();
         }
         // Type a new item in the EditText
-        Espresso.onView(ViewMatchers.withId(R.id.editTextItem))
+        Espresso.onView(withId(R.id.editTextItem))
                  // Add a delay of 500 milliseconds
                 .perform(ViewActions.typeText("New Item"));
 
         // Click the Add button
-        Espresso.onView(ViewMatchers.withId(R.id.buttonAdd))
+        Espresso.onView(withId(R.id.buttonAdd))
                 .perform(ViewActions.click());
 
         // Verify if the item is added to the shopping list RecyclerView
-        Espresso.onView(ViewMatchers.withId(R.id.shoppingList))
-                .check(matches(hasDescendant(withText("New Item"))));
+        Espresso.onView(withId(R.id.shoppingList))
+                .check(matches(hasDescendant(
+                        allOf(
+                                instanceOf(TextView.class),
+                                withId(R.id.ingredientName),
+                                withText("New Item")
+                        )
+                )));
+
 
         // Additional assertions or verifications if needed
     }
@@ -61,28 +74,28 @@ public class ShoppingCartFragmentTest {
             e.printStackTrace();
         }
         // Type a new item in the EditText
-        Espresso.onView(ViewMatchers.withId(R.id.editTextItem))
+        Espresso.onView(withId(R.id.editTextItem))
                 .perform(ViewActions.typeText("item1"));
 
         // Click the Add button
-        Espresso.onView(ViewMatchers.withId(R.id.buttonAdd))
+        Espresso.onView(withId(R.id.buttonAdd))
                 .perform(ViewActions.click());
 
 
         // Click the Clear All button
-        Espresso.onView(ViewMatchers.withId(R.id.buttonClearAll))
+        Espresso.onView(withId(R.id.buttonClearAll))
                 .perform(ViewActions.scrollTo())
                 .perform(ViewActions.click());
 
 
         // need to add an item otherwise recyclerview is not visible
-        Espresso.onView(ViewMatchers.withId(R.id.editTextItem))
+        Espresso.onView(withId(R.id.editTextItem))
                 .perform(ViewActions.typeText("item2"));
-        Espresso.onView(ViewMatchers.withId(R.id.buttonAdd))
+        Espresso.onView(withId(R.id.buttonAdd))
                 .perform(ViewActions.click());
 
 
-        Espresso.onView(ViewMatchers.withId(R.id.shoppingList))
+        Espresso.onView(withId(R.id.shoppingList))
                 .check(matches(isDisplayed())); // Check if RecyclerView is still displayed
 
     }
@@ -95,32 +108,32 @@ public class ShoppingCartFragmentTest {
             e.printStackTrace();
         }
         // Type a new item in the EditText
-        Espresso.onView(ViewMatchers.withId(R.id.editTextItem))
+        Espresso.onView(withId(R.id.editTextItem))
                 .perform(ViewActions.typeText("item1"));
 
         // Click the Add button
-        Espresso.onView(ViewMatchers.withId(R.id.buttonAdd))
+        Espresso.onView(withId(R.id.buttonAdd))
                 .perform(ViewActions.click());
 
         // Type a new item in the EditText
-        Espresso.onView(ViewMatchers.withId(R.id.editTextItem))
+        Espresso.onView(withId(R.id.editTextItem))
                 .perform(ViewActions.typeText("item2"));
 
         // Click the Add button
-        Espresso.onView(ViewMatchers.withId(R.id.buttonAdd))
+        Espresso.onView(withId(R.id.buttonAdd))
                 .perform(ViewActions.click());
 
         // Select an item by clicking on its checkbox in the RecyclerView
-        Espresso.onView(ViewMatchers.withId(R.id.shoppingList))
+        Espresso.onView(withId(R.id.shoppingList))
                 .perform(RecyclerViewActions.actionOnItemAtPosition(0, ViewActions.click()));
 
         // Click the Delete Selected button
-        Espresso.onView(ViewMatchers.withId(R.id.buttonDeleteSelected))
+        Espresso.onView(withId(R.id.buttonDeleteSelected))
                 .perform(ViewActions.scrollTo())
                 .perform(ViewActions.click());
 
         // Verify if the selected item is deleted from the shopping list RecyclerView
-        Espresso.onView(ViewMatchers.withId(R.id.shoppingList))
+        Espresso.onView(withId(R.id.shoppingList))
                 .check(matches(isDisplayed())); // Check if RecyclerView is still displayed
 
     }
