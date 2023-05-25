@@ -253,21 +253,16 @@ public class MainHomeActivity extends AppCompatActivity {
         setContainerContent(R.id.fragContainer, RecipeListFragment.newInstance(new ArrayList<>()), false);
 
         Database db = new Database(FirebaseDatabase.getInstance());
-        db.getFavorites().addOnSuccessListener(favorites -> {
-            List<Task<Recipe>> favListTasks = favorites.stream().map(db::getAsync).collect(Collectors.toList());
-            Tasks.whenAll(favListTasks).addOnSuccessListener(voidRes -> {
+        db.getFavoriteRecipes().addOnSuccessListener(favRecipes -> {
                 Fragment currentFrag = fragmentManager.findFragmentById(R.id.fragContainer);
                 if (currentFrag == null || currentFrag.getClass() != RecipeListFragment.class) {
                     return;
                 }
                 fragmentManager.popBackStack();
-                List<Recipe> favRecipes = favListTasks
-                        .stream().map(Task::getResult).collect(Collectors.toList());
                 setContainerContent(R.id.fragContainer, RecipeListFragment.newInstance(
                         favRecipes
                 ), false);
             });
-        });
     }
 
     private void openHelp() {
