@@ -6,20 +6,29 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.github.siela1915.bootcamp.AutocompleteApi.BooleanWrapper;
+import com.github.siela1915.bootcamp.AutocompleteApi.IngredientAutocomplete;
 import com.github.siela1915.bootcamp.Recipes.Ingredient;
 import com.github.siela1915.bootcamp.Recipes.Unit;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -37,6 +46,7 @@ public class ShoppingCartFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private IngredientAutocomplete autocomplete;
 
     public ShoppingCartFragment() {
         // Required empty public constructor
@@ -73,6 +83,7 @@ public class ShoppingCartFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        autocomplete = new IngredientAutocomplete();
         // Inflate the layout for this fragment
         manager = new ShoppingListManager(getContext());
         View view = inflater.inflate(R.layout.fragment_shopping_cart, container, false);
@@ -96,7 +107,8 @@ public class ShoppingCartFragment extends Fragment {
             deleteSelectedItems(adapter);
         });
 
-        EditText editTextItem = view.findViewById(R.id.editTextItem);
+        AutoCompleteTextView editTextItem = view.findViewById(R.id.editTextItem);
+        setupIngredientAutocomplete(editTextItem, new HashMap<>(), autocomplete);
         Button buttonAdd = view.findViewById(R.id.buttonAdd);
         buttonAdd.setOnClickListener(v -> {
             String newItem = editTextItem.getText().toString().trim();
@@ -109,6 +121,51 @@ public class ShoppingCartFragment extends Fragment {
         });
 
         return view;
+    }
+
+    public void setupIngredientAutocomplete(AutoCompleteTextView ingredientAutoComplete, Map<String, Integer> idMap, IngredientAutocomplete apiService){
+        ingredientAutoComplete.setThreshold(1);
+
+        ingredientAutoComplete.setOnItemClickListener((parent, view, position, id) -> {
+            // Clear the focus of the AutoCompleteTextView
+            ingredientAutoComplete.clearFocus();
+        });
+        ingredientAutoComplete.addTextChangedListener(new TextWatcher() {
+            String prevString;
+            boolean isTyping = false;
+            private final Handler handler = new Handler();
+            private final long DELAY = 500; // milliseconds
+
+
+            //function to be called if the user stops typing
+            Runnable runnable = new Runnable() {
+                @Override
+                public void run() {
+                    isTyping = false;
+                    System.out.println(prevString + " Running");
+                    //send notification for stopped typing event
+                    apiService.completeSearchNames(prevString, ingredientAutoComplete, idMap);
+                }
+            };
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                //doesn't consider defocusing and refocusing the text field as typing
+                if (!isTyping) {
+                    // Send notification for start typing event
+                    ingredientAutoComplete.dismissDropDown();
+                    isTyping = true;
+                }
+                handler.removeCallbacks(runnable);
+                prevString = s.toString();
+                handler.postDelayed(runnable, DELAY); // set delay
+            }
+            @Override
+            public void afterTextChanged(final Editable s) {
+            }
+        });
     }
 
     private String getCurrentDate() {
