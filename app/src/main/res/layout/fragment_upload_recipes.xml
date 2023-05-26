@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:fillViewport="true"
-    android:theme="@style/Theme.MaterialComponents.DayNight"
+    android:theme="@style/Theme.SDPBootcamp"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
@@ -14,6 +14,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingBottom="30dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -29,17 +30,28 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <TextView
+            android:id="@+id/uploadRecipeTip"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="10dp"
+            android:text="@string/uploadRecipePageTip"
+            android:textSize="10sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/uploadRecipeTitle"/>
+
         <LinearLayout
             android:id="@+id/recipeName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="30dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:layout_marginRight="30dp"
             android:orientation="vertical"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/uploadRecipeTitle">
+            app:layout_constraintTop_toBottomOf="@+id/uploadRecipeTip">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -335,7 +347,6 @@
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="10dp"
                     android:hint="@string/ingredientsUnitHint"
-                    android:minWidth="80dp"
                     android:textColorHint="#8e9094"
                     app:layout_constraintEnd_toStartOf="@+id/ingredientsName"
                     app:layout_constraintStart_toEndOf="@+id/ingredientsAmount"
@@ -351,9 +362,8 @@
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/ingredientsName"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                    android:layout_width="0dp"
+                    android:layout_width="170dp"
                     android:layout_height="wrap_content"
-                    android:minWidth="80dp"
                     android:hint="@string/ingredientsNameHint"
                     android:textColorHint="#8e9094"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -436,6 +446,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="0dp"
+                android:layout_marginTop="8dp"
                 android:text="@string/addCuisineTypeButton"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/cuisineTypesContent"
@@ -497,6 +508,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
+                android:layout_marginTop="8dp"
                 android:text="@string/addAllergyTypeButton"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/allergyTypesContent"
@@ -558,6 +570,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
+                android:layout_marginTop="8dp"
                 android:text="@string/addDietTypeButton"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/dietTypesContent"
@@ -618,7 +631,7 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="text" />
+                        android:inputType="text|textMultiLine"/>
 
                 </com.google.android.material.textfield.TextInputLayout>
 

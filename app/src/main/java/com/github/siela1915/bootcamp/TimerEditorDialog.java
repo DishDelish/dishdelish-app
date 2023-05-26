@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -75,11 +76,15 @@ public class TimerEditorDialog extends DialogFragment {
 
     private void loadTimerList() {
         Map<Integer, CountDownTimerWithPause> timerList = timerViewModel.getTimerList();
+        ConstraintLayout timerListDisplay = timerEditorDialogView.findViewById(R.id.timerList);
         if (!timerList.isEmpty()) {
+            timerListDisplay.setVisibility(View.VISIBLE);
             LinearLayout timerListWrapper = timerEditorDialogView.findViewById(R.id.timerListContentWrapper);
             timerList.forEach((idx, timer) -> {
                 if (idx != currentStepIndex) addTimer(idx, timer, timerListWrapper);
             });
+        } else {
+            timerListDisplay.setVisibility(View.GONE);
         }
     }
 
@@ -119,7 +124,7 @@ public class TimerEditorDialog extends DialogFragment {
         timerEditorDialogView.findViewById(R.id.timerEdit).setVisibility(View.GONE);
         timerEditorDialogView.findViewById(R.id.timerCreate).setVisibility(View.VISIBLE);
 
-        ((Button) timerEditorDialogView.findViewById(R.id.startTimer)).setOnClickListener(l -> {
+        ((LinearLayout) timerEditorDialogView.findViewById(R.id.startTimer)).setOnClickListener(l -> {
             if (requiredFieldsFilledAndValid()) {
                 long time = getTime();
                 CountDownTimerWithPause newTimer = new CountDownTimerWithPause(time, interval) {
@@ -164,9 +169,9 @@ public class TimerEditorDialog extends DialogFragment {
 
         CountDownTimerWithPause countDownTimerWithPause = timerViewModel.getTimerList().get(index);
 
-        ((Button) timerEditorDialogView.findViewById(R.id.pauseTimer)).setOnClickListener(l -> pauseTimer(index));
-        ((Button) timerEditorDialogView.findViewById(R.id.resumeTimer)).setOnClickListener(l -> resumeTimer(index));
-        ((Button) timerEditorDialogView.findViewById(R.id.cancelTimer)).setOnClickListener(l -> cancelTimer(index));
+        ((LinearLayout) timerEditorDialogView.findViewById(R.id.pauseTimer)).setOnClickListener(l -> pauseTimer(index));
+        ((LinearLayout) timerEditorDialogView.findViewById(R.id.resumeTimer)).setOnClickListener(l -> resumeTimer(index));
+        ((LinearLayout) timerEditorDialogView.findViewById(R.id.cancelTimer)).setOnClickListener(l -> cancelTimer(index));
 
         if (countDownTimerWithPause.isPaused()) {
             setTime(countDownTimerWithPause.getPauseTime());

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:padding="16dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -35,108 +35,133 @@
                 android:id="@+id/timerCreateTitleName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="30sp"
                 android:layout_marginStart="20dp"
+                android:textSize="30sp"
                 app:layout_constraintStart_toEndOf="@+id/timerCreateTitle"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/timerCreateContent"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginVertical="10dp"
+                android:minWidth="360dp"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:layout_marginVertical="20dp"
+                android:paddingVertical="20dp"
+                android:background="@drawable/border"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/timerCreateTitle">
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/timerHour"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="0dp"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/timerCreateContent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginVertical="10dp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
+                    app:layout_constraintTop_toBottomOf="@+id/timerCreateTitle">
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="match_parent"
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/timerHour"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:inputType="number"
-                        android:text="@string/timer_hour_hint" />
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
 
-                </com.google.android.material.textfield.TextInputLayout>
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="number"
+                            android:text="@string/timer_hour_hint" />
 
-                <TextView
-                    android:id="@+id/timerHourUnitCreate"
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <TextView
+                        android:id="@+id/timerHourUnitCreate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="20dp"
+                        android:text="@string/timer_hour_unit"
+                        app:layout_constraintStart_toEndOf="@+id/timerHour"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/timerMin"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        app:layout_constraintStart_toEndOf="@+id/timerHourUnitCreate"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="number"
+                            android:text="@string/timer_min_hint" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <TextView
+                        android:id="@+id/timerMinUnitCreate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="20dp"
+                        android:text="@string/timer_min_unit"
+                        app:layout_constraintStart_toEndOf="@+id/timerMin"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/timerSec"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        app:layout_constraintStart_toEndOf="@+id/timerMinUnitCreate"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="number"
+                            android:text="@string/timer_sec_hint" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <TextView
+                        android:id="@+id/timerSecUnitCreate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="20dp"
+                        android:text="@string/timer_sec_unit"
+                        app:layout_constraintStart_toEndOf="@+id/timerSec"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <LinearLayout
+                    android:id="@+id/startTimer"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="20dp"
-                    android:text="@string/timer_hour_unit"
-                    app:layout_constraintStart_toEndOf="@+id/timerHour"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/timerCreateContent">
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/timerMin"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    app:layout_constraintStart_toEndOf="@+id/timerHourUnitCreate"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="match_parent"
+                    <ImageView
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:inputType="number"
-                        android:text="@string/timer_min_hint" />
+                        android:src="@drawable/start" />
 
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <TextView
-                    android:id="@+id/timerMinUnitCreate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="20dp"
-                    android:text="@string/timer_min_unit"
-                    app:layout_constraintStart_toEndOf="@+id/timerMin"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/timerSec"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    app:layout_constraintStart_toEndOf="@+id/timerMinUnitCreate"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="match_parent"
+                    <TextView
+                        android:id="@+id/startTimerText"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:inputType="number"
-                        android:text="@string/timer_sec_hint" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <TextView
-                    android:id="@+id/timerSecUnitCreate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="20dp"
-                    android:text="@string/timer_sec_unit"
-                    app:layout_constraintStart_toEndOf="@+id/timerSec"
-                    app:layout_constraintTop_toTopOf="parent" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <Button
-                android:id="@+id/startTimer"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/cook_now_timer_create_button"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/timerCreateContent" />
-
+                        android:text="@string/cook_now_timer_create_button" />
+                </LinearLayout>
+            </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -161,116 +186,171 @@
                 android:id="@+id/timerEditTitleName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="30sp"
                 android:layout_marginStart="20dp"
+                android:textSize="30sp"
                 app:layout_constraintStart_toEndOf="@+id/timerEditTitle"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/timerEditContent"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginVertical="10dp"
+                android:minWidth="360dp"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:layout_marginVertical="20dp"
+                android:paddingVertical="20dp"
+                android:background="@drawable/border"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/timerEditTitle">
 
-                <TextView
-                    android:id="@+id/timerHourNumber"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/timerEditContent"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="24sp"
-                    android:textStyle="bold"
+                    android:layout_marginBottom="15dp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toBottomOf="@+id/timerEditTitle">
 
-                <TextView
-                    android:id="@+id/timerHourUnitEdit"
+                    <TextView
+                        android:id="@+id/timerHourNumber"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="24sp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/timerHourUnitEdit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:text="@string/timer_hour_unit"
+                        android:textSize="20sp"
+                        app:layout_constraintStart_toEndOf="@+id/timerHourNumber"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/timerMinNumber"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:textSize="24sp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toEndOf="@+id/timerHourUnitEdit"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/timerMinUnitEdit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:text="@string/timer_min_unit"
+                        android:textSize="20sp"
+                        app:layout_constraintStart_toEndOf="@+id/timerMinNumber"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/timerSecNumber"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:textSize="24sp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toEndOf="@+id/timerMinUnitEdit"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/timerSecUnitEdit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:text="@string/timer_sec_unit"
+                        android:textSize="20sp"
+                        app:layout_constraintStart_toEndOf="@+id/timerSecNumber"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:textSize="20sp"
-                    android:text="@string/timer_hour_unit"
-                    app:layout_constraintStart_toEndOf="@+id/timerHourNumber"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    android:layout_marginTop="10dp">
 
-                <TextView
-                    android:id="@+id/timerMinNumber"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:textSize="24sp"
-                    android:textStyle="bold"
-                    app:layout_constraintStart_toEndOf="@+id/timerHourUnitEdit"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    <LinearLayout
+                        android:id="@+id/pauseTimer"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/timerMinUnitEdit"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:textSize="20sp"
-                    android:text="@string/timer_min_unit"
-                    app:layout_constraintStart_toEndOf="@+id/timerMinNumber"
-                    app:layout_constraintTop_toTopOf="parent" />
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/pause" />
 
-                <TextView
-                    android:id="@+id/timerSecNumber"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:textSize="24sp"
-                    android:textStyle="bold"
-                    app:layout_constraintStart_toEndOf="@+id/timerMinUnitEdit"
-                    app:layout_constraintTop_toTopOf="parent" />
+                        <TextView
+                            android:id="@+id/pauseTimerText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/cook_now_timer_edit_pause_button" />
+                    </LinearLayout>
 
-                <TextView
-                    android:id="@+id/timerSecUnitEdit"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:textSize="20sp"
-                    android:text="@string/timer_sec_unit"
-                    app:layout_constraintStart_toEndOf="@+id/timerSecNumber"
-                    app:layout_constraintTop_toTopOf="parent" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                    <LinearLayout
+                        android:id="@+id/resumeTimer"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:layout_marginStart="30dp"
+                        android:orientation="vertical">
 
-            <Button
-                android:id="@+id/pauseTimer"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/cook_now_timer_edit_pause_button"
-                tools:ignore="MissingConstraints" />
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/resume" />
 
-            <Button
-                android:id="@+id/resumeTimer"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:text="@string/cook_now_timer_edit_resume_button"
-                tools:ignore="MissingConstraints" />
+                        <TextView
+                            android:id="@+id/resumeTimerText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/cook_now_timer_edit_resume_button" />
+                    </LinearLayout>
 
-            <Button
-                android:id="@+id/cancelTimer"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:text="@string/cook_now_timer_edit_cancel_button"
-                tools:ignore="MissingConstraints" />
+                    <LinearLayout
+                        android:id="@+id/cancelTimer"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:layout_marginStart="30dp"
+                        android:orientation="vertical">
 
-            <androidx.constraintlayout.helper.widget.Flow
-                android:id="@+id/timerEditButtonFlow"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                app:constraint_referenced_ids="cancelTimer,resumeTimer,pauseTimer"
-                app:flow_horizontalBias="0"
-                app:flow_horizontalGap="10dp"
-                app:flow_horizontalStyle="packed"
-                app:flow_verticalBias="0"
-                app:flow_wrapMode="chain"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/timerEditContent" />
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/cancel" />
+
+                        <TextView
+                            android:id="@+id/cancelTimerText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/cook_now_timer_edit_cancel_button" />
+                    </LinearLayout>
+
+                    <androidx.constraintlayout.helper.widget.Flow
+                        android:id="@+id/timerEditButtonFlow"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        app:constraint_referenced_ids="cancelTimer,resumeTimer,pauseTimer"
+                        app:flow_horizontalBias="0"
+                        app:flow_horizontalGap="10dp"
+                        app:flow_horizontalStyle="packed"
+                        app:flow_verticalBias="0"
+                        app:flow_wrapMode="chain" />
+                </LinearLayout>
+
+            </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -280,8 +360,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        app:layout_constraintTop_toBottomOf="@+id/timerTopWrapper"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/timerTopWrapper">
 
         <TextView
             android:id="@+id/timerListTitle"
@@ -298,9 +378,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginVertical="16dp"
-            app:layout_constraintTop_toBottomOf="@+id/timerListTitle"
+            android:orientation="vertical"
             app:layout_constraintStart_toStartOf="parent"
-            android:orientation="vertical">
+            app:layout_constraintTop_toBottomOf="@+id/timerListTitle">
 
         </LinearLayout>
 

@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
-    android:theme="@style/Theme.MaterialComponents.DayNight">
+    android:theme="@style/Theme.SDPBootcamp">
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/ingredientsAmount"
@@ -35,7 +35,6 @@
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
         android:hint="@string/ingredientsUnitHint"
-        android:minWidth="80dp"
         android:textColorHint="#8e9094"
         app:layout_constraintEnd_toStartOf="@+id/ingredientsName"
         app:layout_constraintStart_toEndOf="@+id/ingredientsAmount"
@@ -51,7 +50,7 @@
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/ingredientsName"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-        android:layout_width="0dp"
+        android:layout_width="170dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="10dp"
         android:hint="@string/ingredientsNameHint"
@@ -87,7 +86,6 @@
         android:id="@+id/removeIngredient"
         android:layout_width="25dp"
         android:layout_height="25dp"
-        android:layout_marginStart="10dp"
         android:src="@drawable/close"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

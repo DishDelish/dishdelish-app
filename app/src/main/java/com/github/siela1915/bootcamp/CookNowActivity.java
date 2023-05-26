@@ -94,7 +94,7 @@ public class CookNowActivity extends AppCompatActivity {
                         .commit();
                 if(currentIndex!=0)
                     fragmentManager.beginTransaction()
-                            .replace(R.id.container_timer, timerFragments.get(currentIndex))
+                            .replace(R.id.container_timer, timerFragments.get(currentIndex-1))
                             .commit();
             }
         });
