@@ -173,6 +173,8 @@ public class HomePageFragment extends Fragment {
             popUpDialogBuilder(allergies,checksum,title, selectedAllergy,ALLERGY);
         });
 
+        fridgeButton.setChecked(myFridge != null);
+
         fridgeButton.setOnCheckedChangeListener((v, isChecked) -> {
             if (!isChecked) {
                 myFridge = null;
@@ -203,7 +205,7 @@ public class HomePageFragment extends Fragment {
                 selectedCuisine.clear();
                 selectedDiet.clear();
                 selectedPrepTime.clear();
-                myFridge = null;
+                fridgeButton.setChecked(false);
                 recipeAdapter.setRecipes(fetchedRecipes);
             } else {
                 moreFilter.setText("clear filters");
