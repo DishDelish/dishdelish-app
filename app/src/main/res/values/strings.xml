@@ -219,5 +219,6 @@
     <string name="removeIngredientDescription">Remove Ingredient</string>
     <string name="nearbyRequestSent">Sent request!</string>
     <string name="nearbyNotAuthenticatedErrorMsg">Can\'t reply without being authenticated</string>
+    <string name="filterMyFridge">Limit to MyFridge</string>
 
 </resources>
