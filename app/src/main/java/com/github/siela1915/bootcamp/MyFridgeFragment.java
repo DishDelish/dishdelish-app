@@ -21,6 +21,7 @@ import android.widget.LinearLayout;
 
 import com.github.siela1915.bootcamp.AutocompleteApi.IngredientAutocomplete;
 import com.github.siela1915.bootcamp.Recipes.Ingredient;
+import com.github.siela1915.bootcamp.Recipes.Unit;
 import com.github.siela1915.bootcamp.UploadRecipe.RecipeStepAndIngredientManager;
 import com.github.siela1915.bootcamp.firebase.Database;
 import com.github.siela1915.bootcamp.firebase.FirebaseInstanceManager;
@@ -37,6 +38,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -87,6 +89,7 @@ public class MyFridgeFragment extends Fragment {
         Button addIngredient = view.findViewById(R.id.myFridgeAddIngredient);
         Button updateFridge = view.findViewById(R.id.submitMyFridgeButton);
         Button updateOffered = view.findViewById(R.id.updateOfferedFridge);
+        Button filterBy = view.findViewById(R.id.myFridgeFilterBy);
 
         ingredientManager = new RecipeStepAndIngredientManager(requireContext(), null, ingLayout);
 
@@ -116,6 +119,19 @@ public class MyFridgeFragment extends Fragment {
                 if (ingredientManager.isIngredientValid()) {
                     List<Ingredient> fridge = ingredientManager.getIngredients();
                     db.updateFridge(fridge);
+                }
+            });
+
+            filterBy.setOnClickListener(v -> {
+                if (ingredientManager.isIngredientValid()) {
+                    List<Ingredient> fridge = ingredientManager.getIngredients();
+                    db.updateFridge(fridge);
+                    HomePageFragment fragment = HomePageFragment.newInstance(fridge);
+                    getParentFragmentManager().beginTransaction()
+                            .setReorderingAllowed(true)
+                            .replace(getId(),fragment)
+                            .addToBackStack(HomePageFragment.class.getName())
+                            .commit();
                 }
             });
 
