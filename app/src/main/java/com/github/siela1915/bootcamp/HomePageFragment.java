@@ -51,7 +51,7 @@ public class HomePageFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_MYFRIDGE = "myFridge";
+    public static final String ARG_MYFRIDGE = "myFridge";
 
     public static final int DIET = 1;
     public static final int CUISINE = 2;
