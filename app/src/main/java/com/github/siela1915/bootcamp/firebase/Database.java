@@ -389,7 +389,7 @@ public class Database {
     }
 
     public Task<List<Recipe>> getFavoriteRecipes() {
-        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+        if (FirebaseInstanceManager.getAuth().getCurrentUser() == null) {
             return Tasks.forException(new FirebaseNoSignedInUserException("Sign in to get favorites"));
         }
         return getFavorites().continueWithTask(favorites -> {

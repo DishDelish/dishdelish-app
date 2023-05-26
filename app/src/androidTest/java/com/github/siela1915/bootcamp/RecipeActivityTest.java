@@ -733,7 +733,7 @@ public class RecipeActivityTest {
 
         Thread.sleep(3000);
 
-        onView(withId(R.id.enterComment)).check(matches(isDisplayed()));
+        onView(withId(R.id.enterComment)).perform(scrollTo()).check(matches(isDisplayed()));
 
         scenario.close();
 

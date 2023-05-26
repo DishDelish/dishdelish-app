@@ -41,17 +41,19 @@ public class RecipeActivity extends AppCompatActivity implements CompoundButton.
     private Recipe recipe;
     private ShoppingListManager shoppingListManager;
 
-    private final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+    private Database database;
 
-    private final Database database = new Database(firebaseDatabase);
-
-    private final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+    private FirebaseAuth firebaseAuth;
     private static final DecimalFormat nutritionalValueFormat = new DecimalFormat("0.00");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe);
+
+        firebaseAuth = FirebaseInstanceManager.getAuth();
+        FirebaseDatabase firebaseDatabase = FirebaseInstanceManager.getDatabase(getApplicationContext());
+        database = new Database(firebaseDatabase);
 
         shoppingListManager = new ShoppingListManager(this);
 

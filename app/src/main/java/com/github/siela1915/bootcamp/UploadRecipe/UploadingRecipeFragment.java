@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
@@ -43,6 +44,7 @@ import com.github.siela1915.bootcamp.Recipes.Ingredient;
 import com.github.siela1915.bootcamp.Recipes.Recipe;
 import com.github.siela1915.bootcamp.Recipes.Utensils;
 import com.github.siela1915.bootcamp.firebase.Database;
+import com.github.siela1915.bootcamp.firebase.FirebaseInstanceManager;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputLayout;
@@ -77,10 +79,10 @@ public class UploadingRecipeFragment extends Fragment {
     private Map<String, Integer> idMap = new HashMap<>();
     //global recipe variable so we only use one instance of a recipe
     private Recipe recipe;
-    private final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+    private FirebaseDatabase firebaseDatabase;
     private final FirebaseStorage storage = FirebaseStorage.getInstance();
     private final StorageReference storageRef = storage.getReferenceFromUrl(storagePath);
-    private final Database database = new Database(firebaseDatabase);
+    private Database database;
     private String userId;
     CuisineType[] cuisineTypeValues;
     AllergyType[] allergyTypeValues;
@@ -108,6 +110,14 @@ public class UploadingRecipeFragment extends Fragment {
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        firebaseDatabase = FirebaseInstanceManager.getDatabase(requireContext().getApplicationContext());
+        database = new Database(firebaseDatabase);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_upload_recipes, container, false);
@@ -117,7 +127,7 @@ public class UploadingRecipeFragment extends Fragment {
             return view;
         }
 
-        userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        userId = FirebaseInstanceManager.getAuth().getCurrentUser().getUid();
 
         // get view elements
         imgView = (ImageView) view.findViewById(R.id.recipeImageContent);
@@ -530,7 +540,7 @@ public class UploadingRecipeFragment extends Fragment {
     }
 
     private boolean isUserLoggedIn() {
-        return FirebaseAuth.getInstance().getCurrentUser() != null;
+        return FirebaseInstanceManager.getAuth().getCurrentUser() != null;
     }
 
     private void showLoginAlert() {

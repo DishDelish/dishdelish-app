@@ -232,5 +232,7 @@
     <string name="removeIngredientDescription">Remove Ingredient</string>
     <string name="nearbyRequestSent">Sent request!</string>
     <string name="nearbyNotAuthenticatedErrorMsg">Can\'t reply without being authenticated</string>
+    <string name="filterMyFridge">Limit to MyFridge</string>
+    <string name="myFridgeFilterBy">Get recipes with ingredients</string>
 
 </resources>

@@ -143,6 +143,21 @@ public class MyFridgeFragmentTest {
     }
 
     @Test
+    public void filterByFridgeGoesToHomePage() {
+        FirebaseAuthActivityTest.loginSync("filterByFridgeGoesToHomePage@myfridge.com");
+
+        scenario = FragmentScenario.launchInContainer(MyFridgeFragment.class);
+
+        onView(withId(R.id.myFridgeFilterBy))
+                .perform(ViewActions.click());
+
+        onView(withId(R.id.homeFragment))
+                .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+
+        FirebaseAuthActivityTest.logoutSync();
+    }
+
+    @Test
     public void offerHelpShowsOffers() {
         FirebaseAuthActivityTest.loginSync("offerHelpShowsOffers@myfridge.com");
 

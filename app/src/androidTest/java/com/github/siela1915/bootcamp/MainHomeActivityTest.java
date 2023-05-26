@@ -359,6 +359,7 @@ public class MainHomeActivityTest {
         onView(withId(R.id.moreFilterTextView)).check(matches(isDisplayed()));
         onView(withId(R.id.moreFilterTextView)).perform(click());
         onView(withId(R.id.filter)).check(matches(isDisplayed()));
+        onView(withId(R.id.btnFridge)).check(matches(isDisplayed()));
         //onView(withId(R.id.btnPrpTime)).perform(click());
         //onView(withText("Choose the preparation time")).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.btnDiet)).perform(click());
@@ -381,6 +382,19 @@ public class MainHomeActivityTest {
         onView(withText("Choose your preferred cuisine")).check(matches(withEffectiveVisibility(VISIBLE)));
         scenario.close();
     }
+
+    @Test
+    public void moreFilterByClickingOnMyFridgeBtnTest(){
+        FirebaseAuthActivityTest.loginSync("moreFilterByClickingOnMyFridgeBtn@test");
+
+        scenario= ActivityScenario.launch(MainHomeActivity.class);
+        onView(withId(R.id.moreFilterTextView)).perform(click());
+        onView(withId(R.id.btnFridge)).perform(click());
+        scenario.close();
+
+        FirebaseAuthActivityTest.logoutSync();
+    }
+
     @Test
     public void moreFilterTextChangesToclearFilterTest(){
         scenario= ActivityScenario.launch(MainHomeActivity.class);
