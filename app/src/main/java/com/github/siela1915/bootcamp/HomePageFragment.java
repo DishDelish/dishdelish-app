@@ -210,12 +210,14 @@ public class HomePageFragment extends Fragment {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                searchView.clearFocus();
                 return false;
             }
             @Override
             public boolean onQueryTextChange(String newText) {
                 if(newText.isEmpty()){
                     recipeAdapter.setRecipes(fetchedRecipes);
+                    searchView.clearFocus();
                 }
                 filterRecipesByName(newText);
                 return false;
