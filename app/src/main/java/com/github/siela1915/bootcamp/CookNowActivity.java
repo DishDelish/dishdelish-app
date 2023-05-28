@@ -47,7 +47,7 @@ public class CookNowActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
-        recipe = getIntent().getParcelableExtra("recipe");
+        recipe = getIntent().getParcelableExtra("Recipe");
         if (recipe == null)
             recipe = ExampleRecipes.recipes.get(0);
 
