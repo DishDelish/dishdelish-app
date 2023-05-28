@@ -2,7 +2,6 @@
 
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
@@ -41,7 +40,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/uploadRecipePageRecipeName"
+                android:text="@string/reviewRecipePageRecipeName"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -65,7 +64,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/prepTime"
+                android:text="@string/reviewPrepTime"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -89,7 +88,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/cookTime"
+                android:text="@string/reviewCookTime"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -113,7 +112,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/ingredients"
+                android:text="@string/reviewIngredients"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -137,7 +136,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/utensils"
+                android:text="@string/reviewUtensils"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -161,7 +160,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/cuisineTypes"
+                android:text="@string/reviewCuisineTypes"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -185,7 +184,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/allergyTypes"
+                android:text="@string/reviewAllergyTypes"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -209,7 +208,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/dietTypes"
+                android:text="@string/reviewDietTypes"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -233,7 +232,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/step"
+                android:text="@string/reviewStep"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -257,7 +256,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/servings"
+                android:text="@string/reviewServings"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -282,7 +281,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/image"
+                android:text="@string/reviewImage"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 

@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -25,7 +27,7 @@ import com.github.siela1915.bootcamp.Labelling.CuisineType;
 import com.github.siela1915.bootcamp.Labelling.DietType;
 import com.github.siela1915.bootcamp.Labelling.RecipeFetcher;
 import com.github.siela1915.bootcamp.Recipes.ExampleRecipes;
-import com.github.siela1915.bootcamp.Recipes.PreparationTime;
+import com.github.siela1915.bootcamp.Recipes.Ingredient;
 import com.github.siela1915.bootcamp.Recipes.Recipe;
 import com.github.siela1915.bootcamp.Recipes.RecipeItemAdapter;
 import com.github.siela1915.bootcamp.Tools.SuggestionCalculator;
@@ -34,9 +36,10 @@ import com.github.siela1915.bootcamp.firebase.FirebaseInstanceManager;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 
 /**
@@ -48,16 +51,12 @@ public class HomePageFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    public static final String ARG_MYFRIDGE = "myFridge";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
     public static final int DIET = 1;
     public static final int CUISINE = 2;
     public static final int ALLERGY = 3;
     public static final int PREP_TIME = 4;
-    private String mParam2;
     private  String cuis= "";
     private TextView homeTextView;
     private RecyclerView recipeListRecyclerView;
@@ -66,13 +65,15 @@ public class HomePageFragment extends Fragment {
     private Database database;
     private RecipeItemAdapter recipeAdapter;
     private TextView moreFilter;
-    private LinearLayout filterLayout, recipeListLinearLayout;
+    private ConstraintLayout filterLayout;
+    private LinearLayout recipeListLinearLayout;
     private SearchView searchView;
     private Button dietBtn,allergyBtn,cuisineBtn,prepTimeBtn;
     private List<Recipe> fetchedRecipes= new ArrayList<>();
+    private List<Ingredient> myFridge;
     private List<Integer> selectedCuisine = new ArrayList<>();
     private List<Integer> selectedDiet = new ArrayList<>();
-    private List<Integer> selectedAllery= new ArrayList<>();
+    private List<Integer> selectedAllergy = new ArrayList<>();
     private List<Integer> selectedPrepTime= new ArrayList<>();
     public HomePageFragment() {
         // Required empty public constructor
@@ -82,16 +83,14 @@ public class HomePageFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
+     * @param fridgeContent Content of My Fridge.
      * @return A new instance of fragment HomePageFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static HomePageFragment newInstance(String param1, String param2) {
+    public static HomePageFragment newInstance(List<Ingredient> fridgeContent) {
         HomePageFragment fragment = new HomePageFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putParcelableArrayList(ARG_MYFRIDGE, new ArrayList<>(fridgeContent));
         fragment.setArguments(args);
         return fragment;
     }
@@ -100,8 +99,7 @@ public class HomePageFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            myFridge = getArguments().getParcelableArrayList(ARG_MYFRIDGE);
         }
 
         firebaseDatabase = FirebaseInstanceManager.getDatabase(requireContext().getApplicationContext());
@@ -140,12 +138,14 @@ public class HomePageFragment extends Fragment {
         dietBtn = view.findViewById(R.id.btnDiet);
         allergyBtn=view.findViewById(R.id.btnAllergy);
         cuisineBtn = view.findViewById(R.id.btnCuisine);
+        CheckBox fridgeButton = view.findViewById(R.id.btnFridge);
         //prepTimeBtn= view.findViewById(R.id.btnPrpTime);
 
 
         cuisineBtn.setOnClickListener(v -> {
             String [] cuisineTypes= CuisineType.getAll();
             boolean[] checksum= new boolean[cuisineTypes.length];
+            selectedCuisine.forEach(index -> checksum[index] = true);
             String title = "Choose your preferred cuisine";
             popUpDialogBuilder(cuisineTypes,checksum,title,selectedCuisine,CUISINE);
         });
@@ -161,15 +161,32 @@ public class HomePageFragment extends Fragment {
         dietBtn.setOnClickListener(v -> {
             String [] diets= DietType.getAll();
             boolean[] checksum= new boolean[diets.length];
+            selectedDiet.forEach(index -> checksum[index] = true);
             String title = "Choose your diet";
             popUpDialogBuilder(diets,checksum,title,selectedDiet,DIET);
         });
         allergyBtn.setOnClickListener(v -> {
             String [] allergies= AllergyType.getAll();
             boolean[] checksum= new boolean[allergies.length];
+            selectedAllergy.forEach(index -> checksum[index] = true);
             String title = "what are you allergic to";
-            popUpDialogBuilder(allergies,checksum,title,selectedAllery,ALLERGY);
+            popUpDialogBuilder(allergies,checksum,title, selectedAllergy,ALLERGY);
         });
+
+        fridgeButton.setChecked(myFridge != null);
+
+        fridgeButton.setOnCheckedChangeListener((v, isChecked) -> {
+            if (!isChecked) {
+                myFridge = null;
+                updateRecipes();
+            } else {
+                database.getFridge().addOnSuccessListener(ingredients -> {
+                    myFridge = ingredients;
+                    updateRecipes();
+                });
+            }
+        });
+
         moreFilter.setOnClickListener(v->{
             if (filterLayout.getVisibility() == View.VISIBLE) {
                 filterLayout.animate()
@@ -184,10 +201,11 @@ public class HomePageFragment extends Fragment {
                         })
                         .start();
                 moreFilter.setText("more filters");
-                selectedAllery.clear();
+                selectedAllergy.clear();
                 selectedCuisine.clear();
                 selectedDiet.clear();
                 selectedPrepTime.clear();
+                fridgeButton.setChecked(false);
                 recipeAdapter.setRecipes(fetchedRecipes);
             } else {
                 moreFilter.setText("clear filters");
@@ -205,6 +223,7 @@ public class HomePageFragment extends Fragment {
                         })
                         .start();
 
+                updateRecipes();
             }
         });
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -230,11 +249,17 @@ public class HomePageFragment extends Fragment {
                     fetchedRecipes = list;
                     recipeAdapter =new RecipeItemAdapter(list, view.getContext());
                     recipeListRecyclerView.setAdapter(this.recipeAdapter/*new RecipeItemAdapter(list, view.getContext())*/);
+                    if (myFridge != null) {
+                        moreFilter.callOnClick();
+                    }
         })
                 .addOnFailureListener(e->{
                     e.printStackTrace();
                     //recipeAdapter = new RecipeItemAdapter(ExampleRecipes.recipes,view.getContext());
                     recipeListRecyclerView.setAdapter(new RecipeItemAdapter(ExampleRecipes.recipes,view.getContext()));
+                    if (myFridge != null) {
+                        moreFilter.callOnClick();
+                    }
                     //fetchedRecipes= ExampleRecipes.recipes;
                 });
     }
@@ -297,21 +322,8 @@ public class HomePageFragment extends Fragment {
                     }
                 }
             }
-            RecipeFetcher recipeFetcher = new RecipeFetcher(selectedAllery,selectedCuisine,selectedDiet,fetchedRecipes);
-            List<String> filteredRecipes= recipeFetcher.fetchRecipeList();
-            List<Recipe> recipeList = new ArrayList<>();
-            for (String recipeName: filteredRecipes){
-                for(int i=0; i<recipeAdapter.getRecipes().size();i++){
-                    if(recipeAdapter.getRecipes().get(i).recipeName.equalsIgnoreCase(recipeName)){
-                        recipeList.add(recipeAdapter.getRecipes().get(i));
-                    }
-                }
 
-            }
-            //fetchedRecipes= recipeList;
-            System.out.println("\n\n\n\n\n\n recipeList size "+recipeList.size());
-            System.out.println("\n\n\n\n\n\n fetechedone size "+fetchedRecipes.size());
-            recipeAdapter.setRecipes(recipeList);
+            updateRecipes();
         });
 
         builder.setNegativeButton("Cancel", (dialog, which) -> {
@@ -327,5 +339,22 @@ public class HomePageFragment extends Fragment {
             dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(R.color.orange);
         });
         dialog.show();
+    }
+
+    private void updateRecipes() {
+        RecipeFetcher recipeFetcher = new RecipeFetcher(selectedAllergy,selectedCuisine,selectedDiet,fetchedRecipes);
+        Set<String> filteredRecipes = new HashSet<>(recipeFetcher.fetchRecipeList());
+        if (myFridge != null) {
+            List<String> ingRecipes = recipeFetcher.filterByIngredients(myFridge);
+            filteredRecipes.retainAll(ingRecipes);
+        }
+
+        List<Recipe> recipeList = fetchedRecipes.stream()
+                .filter(recipe -> filteredRecipes.contains(recipe.recipeName))
+                .collect(Collectors.toList());
+        //fetchedRecipes= recipeList;
+        System.out.println("\n\n\n\n\n\n recipeList size "+recipeList.size());
+        System.out.println("\n\n\n\n\n\n fetechedone size "+fetchedRecipes.size());
+        recipeAdapter.setRecipes(recipeList);
     }
 }

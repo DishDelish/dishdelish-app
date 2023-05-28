@@ -13,20 +13,22 @@ import android.widget.Toast;
 
 import com.github.siela1915.bootcamp.Recipes.Recipe;
 import com.github.siela1915.bootcamp.firebase.Database;
+import com.github.siela1915.bootcamp.firebase.FirebaseInstanceManager;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class RatingActivity extends AppCompatActivity implements RatingBar.OnRatingBarChangeListener, View.OnClickListener {
     private float rating;
     private Recipe recipe;
 
-    private final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-
-    private final Database database = new Database(firebaseDatabase);
+    private Database database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rating);
+
+        FirebaseDatabase firebaseDatabase = FirebaseInstanceManager.getDatabase(getApplicationContext());
+        database = new Database(firebaseDatabase);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
