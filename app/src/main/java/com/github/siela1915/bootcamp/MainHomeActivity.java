@@ -133,22 +133,6 @@ public class MainHomeActivity extends AppCompatActivity {
                 cuisineType.add(ct.ordinal());
             }
 
-            /*
-            RecipeFetcher recipeFetcher = new RecipeFetcher(allergy,cuisineType,dietType);
-            List<String> filteredRecipes= recipeFetcher.fetchRecipeList();
-            List<Recipe> recipeList = new ArrayList<>();
-            for (String recipeName: filteredRecipes){
-                for(int i=0; i<ExampleRecipes.recipes.size();i++){
-                    if(ExampleRecipes.recipes.get(i).recipeName.equalsIgnoreCase(recipeName)){
-                        recipeList.add(ExampleRecipes.recipes.get(i));
-                    }
-                }
-
-            }
-
-             */
-           // setContainerContent(R.id.fragContainer,RecipeListFragment.newInstance(recipeList),false);
-
         });
         toggle= new ActionBarDrawerToggle(this,drawerLayout,R.string.open,R.string.close);
         drawerLayout.addDrawerListener(toggle);
@@ -184,20 +168,6 @@ public class MainHomeActivity extends AppCompatActivity {
                     intent.putExtra("navToMyFridge", true);
                     if (FirebaseAuthActivity.promptLogin(this, this, intent)) {
                         setContainerContent(R.id.fragContainer, MyFridgeFragment.class, false);
-                    }
-                    break;
-                case R.id.menuItem_filter:
-                    if(item.isChecked()){
-                        item.setChecked(false);
-                        filterView.setVisibility(View.GONE);
-                    }else{
-                        item.setChecked(true);
-                        filterView.setVisibility(View.VISIBLE);
-                    }
-                    fragmentContainerView= findViewById(R.id.fragContainer);
-                    boolean homeFragmentCheck=fragmentContainerView.getFragment().getClass()==HomePageFragment.class;
-                    if(!homeFragmentCheck) {
-                        setContainerContent(R.id.fragContainer,HomePageFragment.class,false);
                     }
                     break;
                 case R.id.menuItem_favorites:

@@ -64,7 +64,7 @@ public class HomePageFragment extends Fragment {
 
     private Database database;
     private RecipeItemAdapter recipeAdapter;
-    private TextView moreFilter;
+    private Button moreFilter;
     private ConstraintLayout filterLayout;
     private LinearLayout recipeListLinearLayout;
     private SearchView searchView;
@@ -242,8 +242,6 @@ public class HomePageFragment extends Fragment {
                 return false;
             }
         });
-       // database.getNRandomAsync(100).addOnSuccessListener(list->{
-         //           fetchedRecipes = new ArrayList<>(list);
 
         SuggestionCalculator.getSuggestions(database).addOnSuccessListener(list->{
                     fetchedRecipes = list;
@@ -255,12 +253,10 @@ public class HomePageFragment extends Fragment {
         })
                 .addOnFailureListener(e->{
                     e.printStackTrace();
-                    //recipeAdapter = new RecipeItemAdapter(ExampleRecipes.recipes,view.getContext());
                     recipeListRecyclerView.setAdapter(new RecipeItemAdapter(ExampleRecipes.recipes,view.getContext()));
                     if (myFridge != null) {
                         moreFilter.callOnClick();
                     }
-                    //fetchedRecipes= ExampleRecipes.recipes;
                 });
     }
 
@@ -285,7 +281,7 @@ public class HomePageFragment extends Fragment {
 
         if (filterLayoutGone) {
             layoutParams.height = 0;
-            layoutParams.weight = 0.90f;
+            layoutParams.weight = 0.88f;
         } else {
             layoutParams.height = 0;
             layoutParams.weight = 0.75f;
