@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_marginTop="5dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -15,9 +16,10 @@
 
         <ImageView
             android:id="@+id/profilePhoto"
-            android:layout_width="75dp"
-            android:layout_height="105dp"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
             android:layout_marginStart="15dp"
+            android:layout_marginTop="15dp"
             android:background="@drawable/comment_box"
             android:clipToOutline="true"
             app:layout_constraintStart_toStartOf="parent"
@@ -30,7 +32,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignTop="@id/profilePhoto"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="10dp"
             android:layout_toEndOf="@id/profilePhoto"
             android:orientation="vertical"
             app:layout_constraintStart_toEndOf="@+id/profilePhoto"
@@ -41,8 +43,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignStart="@id/textLayout"
-                android:layout_marginStart="10dp"
                 android:layout_marginTop="5dp"
+                android:textStyle="bold"
                 android:fontFamily="@font/poppins"
                 android:text="User"
                 android:textColor="@color/black" />
@@ -70,6 +72,7 @@
             android:layout_toEndOf="@id/profilePhoto"
             android:gravity="end"
             android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@+id/textLayout"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@+id/textLayout">
 
@@ -116,7 +119,6 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="40dp"
-        android:layout_marginTop="5dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/commentLayout"
         app:layout_constraintStart_toStartOf="@+id/commentLayout"

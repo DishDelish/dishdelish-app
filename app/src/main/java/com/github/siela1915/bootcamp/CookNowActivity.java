@@ -47,7 +47,7 @@ public class CookNowActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
-        recipe = getIntent().getParcelableExtra("recipe");
+        recipe = getIntent().getParcelableExtra("Recipe");
         if (recipe == null)
             recipe = ExampleRecipes.recipes.get(0);
 
@@ -72,17 +72,18 @@ public class CookNowActivity extends AppCompatActivity {
         for (String step : recipe.getSteps()) {
             CookNowStepFragment s = CookNowStepFragment.newInstance(index, step);
             stepFragments.add(s);
-            CookNowTimerFragment t = CookNowTimerFragment.newInstance(index);
+            CookNowTimerFragment t = CookNowTimerFragment.newInstance(index-1);
             timerFragments.add(t);
             index+=1;
         }
+        timerFragments.add(CookNowTimerFragment.newInstance(index-1));
         // Set initial fragments
         fragmentManager.beginTransaction()
                 .replace(R.id.container_step, stepFragments.get(currentIndex))
+                .commit();// Set initial fragments
+        fragmentManager.beginTransaction()
+                .replace(R.id.container_timer, timerFragments.get(0))
                 .commit();
-//        fragmentManager.beginTransaction()
-//                .replace(R.id.container_timer, timerFragments.get(currentIndex))
-//                .commit();
 
         // Button click listeners
         Button btnBackward = findViewById(R.id.btnBackward);
@@ -92,10 +93,9 @@ public class CookNowActivity extends AppCompatActivity {
                 fragmentManager.beginTransaction()
                         .replace(R.id.container_step, stepFragments.get(currentIndex))
                         .commit();
-                if(currentIndex!=0)
-                    fragmentManager.beginTransaction()
-                            .replace(R.id.container_timer, timerFragments.get(currentIndex-1))
-                            .commit();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.container_timer, timerFragments.get(currentIndex))
+                        .commit();
             }
         });
 
@@ -107,7 +107,7 @@ public class CookNowActivity extends AppCompatActivity {
                         .replace(R.id.container_step, stepFragments.get(currentIndex))
                         .commit();
                 fragmentManager.beginTransaction()
-                        .replace(R.id.container_timer, timerFragments.get(currentIndex-1))
+                        .replace(R.id.container_timer, timerFragments.get(currentIndex))
                         .commit();
             }
         });
