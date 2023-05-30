@@ -333,6 +333,11 @@ public class Recipe implements Parcelable {
         return recipeName;
     }
 
+    @Override
+    public int hashCode() {
+        return uniqueKey.hashCode();
+    }
+
 }
 
 

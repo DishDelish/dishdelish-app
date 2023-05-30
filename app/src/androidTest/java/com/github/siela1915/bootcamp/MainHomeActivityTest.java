@@ -390,9 +390,8 @@ public class MainHomeActivityTest {
         scenario= ActivityScenario.launch(MainHomeActivity.class);
         onView(withId(R.id.moreFilterTextView)).perform(click());
         onView(withId(R.id.btnFridge)).perform(click());
-        scenario.close();
-
         FirebaseAuthActivityTest.logoutSync();
+        scenario.close();
     }
 
     @Test
