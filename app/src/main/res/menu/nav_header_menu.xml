@@ -13,10 +13,6 @@
         android:title="@string/upload_menu"
         android:icon="@drawable/baseline_upload_24"/>
     <item
-        android:id="@+id/menuItem_filter"
-        android:title="@string/filter_menu"
-        android:icon="@drawable/baseline_filter_alt_24"/>
-    <item
         android:id="@+id/menuItem_fridge"
         android:icon="@drawable/baseline_kitchen_24"
         android:title="@string/fridgeMenu" />

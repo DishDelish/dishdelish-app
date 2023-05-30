@@ -64,7 +64,7 @@ public class HomePageFragment extends Fragment {
 
     private Database database;
     private RecipeItemAdapter recipeAdapter;
-    private TextView moreFilter;
+    private Button moreFilter;
     private ConstraintLayout filterLayout;
     private LinearLayout recipeListLinearLayout;
     private SearchView searchView;
@@ -116,8 +116,8 @@ public class HomePageFragment extends Fragment {
         if(data != null){
             cuis+= data.getString("selected cuisine");
         }
-        TextView underlinedText = view.findViewById(R.id.moreFilterTextView);
-        underlinedText.setPaintFlags(underlinedText.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        //TextView underlinedText = view.findViewById(R.id.moreFilterTextView);
+        //underlinedText.setPaintFlags(underlinedText.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         return view;
     }
@@ -150,14 +150,7 @@ public class HomePageFragment extends Fragment {
             popUpDialogBuilder(cuisineTypes,checksum,title,selectedCuisine,CUISINE);
         });
 
-/*        prepTimeBtn.setOnClickListener(v -> {
-            String [] prepTime= PreparationTime.getAll();
-            boolean[] checksum= new boolean[prepTime.length];
-            String title = "Choose the preparation time";
-            popUpDialogBuilder(prepTime,checksum,title,selectedPrepTime,PREP_TIME);
-        });
 
- */
         dietBtn.setOnClickListener(v -> {
             String [] diets= DietType.getAll();
             boolean[] checksum= new boolean[diets.length];
@@ -191,7 +184,7 @@ public class HomePageFragment extends Fragment {
             if (filterLayout.getVisibility() == View.VISIBLE) {
                 filterLayout.animate()
                         .alpha(0f)
-                        .setDuration(200)
+                        .setDuration(0)
                         .withEndAction(new Runnable() {
                             @Override
                             public void run() {
@@ -213,7 +206,7 @@ public class HomePageFragment extends Fragment {
                 filterLayout.setAlpha(0f);
                 filterLayout.animate()
                         .alpha(1f)
-                        .setDuration(200)
+                        .setDuration(0)
                         .withEndAction(new Runnable() {
                             @Override
                             public void run() {
@@ -229,19 +222,19 @@ public class HomePageFragment extends Fragment {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                searchView.clearFocus();
                 return false;
             }
             @Override
             public boolean onQueryTextChange(String newText) {
                 if(newText.isEmpty()){
                     recipeAdapter.setRecipes(fetchedRecipes);
+                    searchView.clearFocus();
                 }
                 filterRecipesByName(newText);
                 return false;
             }
         });
-       // database.getNRandomAsync(100).addOnSuccessListener(list->{
-         //           fetchedRecipes = new ArrayList<>(list);
 
         SuggestionCalculator.getSuggestions(database).addOnSuccessListener(list->{
                     fetchedRecipes = list;
@@ -253,12 +246,10 @@ public class HomePageFragment extends Fragment {
         })
                 .addOnFailureListener(e->{
                     e.printStackTrace();
-                    //recipeAdapter = new RecipeItemAdapter(ExampleRecipes.recipes,view.getContext());
                     recipeListRecyclerView.setAdapter(new RecipeItemAdapter(ExampleRecipes.recipes,view.getContext()));
                     if (myFridge != null) {
                         moreFilter.callOnClick();
                     }
-                    //fetchedRecipes= ExampleRecipes.recipes;
                 });
     }
 
@@ -283,7 +274,7 @@ public class HomePageFragment extends Fragment {
 
         if (filterLayoutGone) {
             layoutParams.height = 0;
-            layoutParams.weight = 0.90f;
+            layoutParams.weight = 0.88f;
         } else {
             layoutParams.height = 0;
             layoutParams.weight = 0.75f;
