@@ -18,18 +18,20 @@
         <SearchView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1.8"
+            android:layout_weight="2"
             android:id="@+id/searchView"
             android:queryHint="Recipe name"
             android:iconifiedByDefault="false"
             tools:ignore="NestedWeights" />
         <Button
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1.2"
             android:id="@+id/moreFilterTextView"
+            android:layout_gravity="center"
+            android:gravity="center"
             android:textColor="@color/white"
             android:text="more filters"
+            android:textSize="10sp"
             tools:ignore="HardcodedText,KeyboardInaccessibleWidget,TouchTargetSizeCheck" />
     </LinearLayout>
 
