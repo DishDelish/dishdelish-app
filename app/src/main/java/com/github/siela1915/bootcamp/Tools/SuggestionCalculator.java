@@ -63,7 +63,7 @@ public class SuggestionCalculator {
                     result.addAll(tasks.get(2).getResult());
 
                     //Add some different recipes too
-                    result.addAll(random.stream().filter(r -> !result.contains(r)).limit(N/10).collect(Collectors.toList()));
+                    result.addAll(random.stream().filter(r -> !result.contains(r)).limit(N/2).collect(Collectors.toList()));
                     List<Recipe> ls = new ArrayList<>(result);
                     Collections.shuffle(ls);
 
