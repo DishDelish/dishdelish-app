@@ -292,6 +292,7 @@ public class HomePageFragment extends Fragment {
             checksum[which]=isChecked;
         });
         builder.setPositiveButton("Ok", (dialog, which) -> {
+            selected.clear();
             for(int i=0; i< checksum.length; i++){
                 if(checksum[i]){
                     switch (filter){
