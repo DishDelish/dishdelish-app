@@ -75,6 +75,7 @@ public class MainHomeActivityTest {
 
     @After
     public void cleanUp() {
+        FirebaseAuthActivityTest.logoutSync();
         scenario.close();
     }
 

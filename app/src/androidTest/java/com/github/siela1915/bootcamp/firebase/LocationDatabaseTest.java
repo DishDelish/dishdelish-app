@@ -19,6 +19,7 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -46,6 +47,11 @@ public class LocationDatabaseTest {
         if (FirebaseInstanceManager.getAuth().getCurrentUser() != null) {
             FirebaseAuthActivityTest.logoutSync();
         }
+    }
+
+    @After
+    public void cleanUp() {
+        FirebaseAuthActivityTest.logoutSync();
     }
 
     @Test

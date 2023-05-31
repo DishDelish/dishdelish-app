@@ -28,6 +28,7 @@ import com.github.siela1915.bootcamp.Recipes.ExampleRecipes;
 import com.github.siela1915.bootcamp.Recipes.Ingredient;
 import com.github.siela1915.bootcamp.Recipes.Recipe;
 
+import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.internal.matchers.Not;
@@ -42,6 +43,11 @@ public class IngredientCheckFragmentContainerTest {
     @Rule
     public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(
             Manifest.permission.ACCESS_FINE_LOCATION);
+
+    @After
+    public void cleanUp() {
+        FirebaseAuthActivityTest.logoutSync();
+    }
 
     @Test
     public void ingredientCheckFirstInteractionTest(){
@@ -61,12 +67,14 @@ public class IngredientCheckFragmentContainerTest {
 
     @Test
     public void onClickOnNearbyBtnNavigatesToNearbyHelpFragmentTest(){
+        FirebaseAuthActivityTest.loginSync("ingredientCheckNearbyBtn@example.com");
         Bundle args = new Bundle();
         ArrayList<Ingredient> l = new ArrayList<>(recipe.getIngredientList());
         args.putParcelableArrayList("ingredients", l);
         scenario =FragmentScenario.launchInContainer(FragmentIngredientCheckContainer.class, args);
         onView(withId(R.id.nearByBtn)).perform(click());
         onView(withContentDescription("Google Map")).check(matches(withEffectiveVisibility(VISIBLE)));
+        FirebaseAuthActivityTest.logoutSync();
     }
 
     @Test

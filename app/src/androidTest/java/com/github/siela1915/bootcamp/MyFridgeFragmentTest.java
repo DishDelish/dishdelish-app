@@ -72,6 +72,7 @@ public class MyFridgeFragmentTest {
 
     @After
     public void cleanUp() {
+        FirebaseAuthActivityTest.logoutSync();
         if (scenario != null) {
             scenario.close();
         }

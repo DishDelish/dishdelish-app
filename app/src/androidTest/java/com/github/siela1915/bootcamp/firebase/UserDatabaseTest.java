@@ -22,6 +22,7 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.messaging.FirebaseMessaging;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -42,6 +43,11 @@ public class UserDatabaseTest {
         if (FirebaseInstanceManager.getAuth().getCurrentUser() != null) {
             FirebaseAuthActivityTest.logoutSync();
         }
+    }
+
+    @After
+    public void cleanUp() {
+        FirebaseAuthActivityTest.logoutSync();
     }
 
     @Test
