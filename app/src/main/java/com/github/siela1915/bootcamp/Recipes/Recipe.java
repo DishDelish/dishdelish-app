@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class Recipe implements Parcelable {
-    public String image, recipeName, userName, uniqueKey = "";
+    public String image, recipeName, userName = "", uniqueKey = "";
     public String userId = "";
     public int profilePicture, prepTime, cookTime, servings, likes, numRatings = 0;
     public double rating;
