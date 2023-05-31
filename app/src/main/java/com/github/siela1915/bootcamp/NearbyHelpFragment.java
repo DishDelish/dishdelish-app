@@ -186,7 +186,7 @@ public class NearbyHelpFragment extends Fragment implements OnMapReadyCallback, 
 
         List<Ingredient> askedIngredients = mAskedIngredients;
 
-        fusedLocationClient.getCurrentLocation(PRIORITY_BALANCED_POWER_ACCURACY, null)
+        fusedLocationClient.getLastLocation()
                 .continueWithTask(locTask -> {
                     googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
                             new LatLng(locTask.getResult().getLatitude(),
