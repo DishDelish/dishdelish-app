@@ -478,11 +478,11 @@ public class UploadingRecipeFragment extends Fragment {
         // as utensils are not mandatory to have, a protector condition is needed
         if (utensils != null) utensilsString = truncateString(utensils.toString());
         bundle.putString("utensils", utensilsString);
-        bundle.putString("ingredientList", truncateString(recipe.getIngredientList().toString()));
+        bundle.putString("ingredientList", recipe.getIngredientList().stream().map(Ingredient::toString).collect(Collectors.joining("\n")));
         bundle.putString("cuisineTypes", truncateAndConvertEnumArray(recipe.getCuisineTypes(), cuisineTypeValues));
         bundle.putString("allergyTypes", truncateAndConvertEnumArray(recipe.getAllergyTypes(), allergyTypeValues));
         bundle.putString("dietTypes", truncateAndConvertEnumArray(recipe.getDietTypes(), dietTypeValues));
-        bundle.putString("steps", truncateString(recipe.getSteps().toString()));
+        bundle.putString("steps", String.join("\n", recipe.getSteps()));
 
         return bundle;
     }
