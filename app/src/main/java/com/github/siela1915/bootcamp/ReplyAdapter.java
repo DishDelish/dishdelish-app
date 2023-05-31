@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.siela1915.bootcamp.Recipes.Comment;
+import com.github.siela1915.bootcamp.Recipes.Recipe;
 import com.github.siela1915.bootcamp.firebase.FirebaseInstanceManager;
 import com.github.siela1915.bootcamp.firebase.UserDatabase;
 
@@ -19,13 +20,15 @@ public class ReplyAdapter extends RecyclerView.Adapter<ReplyViewHolder> {
     List<Comment> replies;
 
     Comment parent;
+    Recipe recipe;
 
     UserDatabase userDb;
 
-    public ReplyAdapter(Context context, List<Comment> replies, Comment parent){
+    public ReplyAdapter(Context context, List<Comment> replies, Comment parent, Recipe recipe){
         this.context = context;
         this.replies = replies;
         this.parent = parent;
+        this.recipe = recipe;
 
         userDb = new UserDatabase(FirebaseInstanceManager.getDatabase(context.getApplicationContext()));
     }
@@ -38,7 +41,7 @@ public class ReplyAdapter extends RecyclerView.Adapter<ReplyViewHolder> {
     @NonNull
     @Override
     public ReplyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new ReplyViewHolder(LayoutInflater.from(context).inflate(R.layout.reply_item, parent, false));
+        return new ReplyViewHolder(LayoutInflater.from(context).inflate(R.layout.reply_item, parent, false), recipe, this.parent, this);
     }
 
     /**
