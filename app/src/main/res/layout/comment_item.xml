@@ -29,12 +29,14 @@
 
         <LinearLayout
             android:id="@+id/textLayout"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_alignTop="@id/profilePhoto"
             android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
             android:layout_toEndOf="@id/profilePhoto"
             android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/profilePhoto"
             app:layout_constraintTop_toTopOf="@+id/profilePhoto">
 
@@ -51,7 +53,7 @@
 
             <TextView
                 android:id="@+id/commentText"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignStart="@id/textLayout"
                 android:layout_marginTop="5dp"
@@ -72,9 +74,9 @@
             android:layout_toEndOf="@id/profilePhoto"
             android:gravity="end"
             android:orientation="horizontal"
-            app:layout_constraintTop_toBottomOf="@+id/textLayout"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/textLayout">
+            app:layout_constraintStart_toStartOf="@+id/textLayout"
+            app:layout_constraintTop_toBottomOf="@+id/textLayout">
 
             <ToggleButton
                 android:id="@+id/thumbButton"

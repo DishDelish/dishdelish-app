@@ -21,41 +21,43 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:srcCompat="@tools:sample/avatars" />
 
-        <LinearLayout
-            android:id="@+id/textLayout"
+    <LinearLayout
+        android:id="@+id/textLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/replyProfilePhoto"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="10dp"
+        android:layout_toEndOf="@id/replyProfilePhoto"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/replyProfilePhoto"
+        app:layout_constraintTop_toTopOf="@+id/replyProfilePhoto">
+
+        <TextView
+            android:id="@+id/userName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignTop="@id/replyProfilePhoto"
-            android:layout_marginStart="16dp"
-            android:layout_toEndOf="@id/replyProfilePhoto"
-            android:orientation="vertical"
-            app:layout_constraintStart_toEndOf="@+id/replyProfilePhoto"
-            app:layout_constraintTop_toTopOf="@+id/replyProfilePhoto">
+            android:layout_alignStart="@id/textLayout"
+            android:layout_marginTop="5dp"
+            android:fontFamily="@font/poppins"
+            android:text="User"
+            android:textColor="@color/black"
+            android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/userName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignStart="@id/textLayout"
-                android:layout_marginTop="5dp"
-                android:textStyle="bold"
-                android:fontFamily="@font/poppins"
-                android:text="User"
-                android:textColor="@color/black" />
+        <TextView
+            android:id="@+id/replyText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@id/textLayout"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginBottom="5dp"
+            android:fontFamily="@font/poppins"
+            android:text="This is a reply"
+            android:textColor="@color/black" />
 
-            <TextView
-                android:id="@+id/replyText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignStart="@id/textLayout"
-                android:layout_marginTop="5dp"
-                android:layout_marginEnd="15dp"
-                android:layout_marginBottom="5dp"
-                android:fontFamily="@font/poppins"
-                android:text="This is a reply"
-                android:textColor="@color/black" />
-
-        </LinearLayout>
+    </LinearLayout>
 
         <LinearLayout
             android:id="@+id/thumbLayout"
