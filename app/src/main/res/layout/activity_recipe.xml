@@ -497,8 +497,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="45dp"
             android:text="Rate  Now !"
-            app:layout_constraintEnd_toStartOf="@+id/cookNowButton"
-            app:layout_constraintStart_toStartOf="@+id/recipePicture"
+            app:layout_constraintEnd_toEndOf="@+id/stepsText"
+            app:layout_constraintStart_toStartOf="@+id/stepsText"
             app:layout_constraintTop_toBottomOf="@+id/stepsText" />
 
         <androidx.recyclerview.widget.RecyclerView
