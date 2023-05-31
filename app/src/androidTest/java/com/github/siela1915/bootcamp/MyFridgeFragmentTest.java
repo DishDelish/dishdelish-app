@@ -98,15 +98,15 @@ public class MyFridgeFragmentTest {
         onView(allOf(
                 isDescendantOfA(withId(R.id.ingredientsName)),
                 withClassName(endsWith("AutoCompleteTextView"))
-        )).perform(ViewActions.typeText("testIngredient"), ViewActions.closeSoftKeyboard());
+        )).perform(ViewActions.scrollTo(), ViewActions.typeText("testIngredient"), ViewActions.closeSoftKeyboard());
         onView(allOf(
                 isDescendantOfA(withId(R.id.ingredientsAmount)),
                 withClassName(endsWith("EditText"))
-        )).perform(ViewActions.typeText("3"), ViewActions.closeSoftKeyboard());
+        )).perform(ViewActions.scrollTo(), ViewActions.typeText("3"), ViewActions.closeSoftKeyboard());
         onView(allOf(
                 isDescendantOfA(withId(R.id.ingredientsUnit)),
                 withClassName(endsWith("EditText"))
-        )).perform(ViewActions.typeText("g"), ViewActions.closeSoftKeyboard());
+        )).perform(ViewActions.scrollTo(), ViewActions.typeText("g"), ViewActions.closeSoftKeyboard());
 
         onView(withId(R.id.updateOfferedFridge))
                 .perform(ViewActions.click());
@@ -126,15 +126,15 @@ public class MyFridgeFragmentTest {
         onView(allOf(
                 isDescendantOfA(withId(R.id.ingredientsName)),
                 withClassName(endsWith("AutoCompleteTextView"))
-        )).perform(ViewActions.typeText("testIngredient"), ViewActions.closeSoftKeyboard());
+        )).perform(ViewActions.scrollTo(), ViewActions.typeText("testIngredient"), ViewActions.closeSoftKeyboard());
         onView(allOf(
                 isDescendantOfA(withId(R.id.ingredientsAmount)),
                 withClassName(endsWith("EditText"))
-        )).perform(ViewActions.typeText("3"), ViewActions.closeSoftKeyboard());
+        )).perform(ViewActions.scrollTo(), ViewActions.typeText("3"), ViewActions.closeSoftKeyboard());
         onView(allOf(
                 isDescendantOfA(withId(R.id.ingredientsUnit)),
                 withClassName(endsWith("EditText"))
-        )).perform(ViewActions.typeText("g"), ViewActions.closeSoftKeyboard());
+        )).perform(ViewActions.scrollTo(), ViewActions.typeText("g"), ViewActions.closeSoftKeyboard());
 
         onView(withId(R.id.submitMyFridgeButton))
                 .perform(ViewActions.click());
