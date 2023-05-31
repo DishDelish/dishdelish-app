@@ -110,8 +110,10 @@ public class FragmentIngredientCheck extends Fragment {
         });
         nearbyBtn.setOnClickListener(v->{
             NearbyHelpFragment fragment= NearbyHelpFragment.newInstance(
-                    adapter.getSelectedItems().stream().map(name ->
-                            new Ingredient(name, new Unit())).collect(Collectors.toList()));
+                    adapter.getSelectedItems().stream().map(name -> {
+                        int index = ingList.indexOf(name);
+                        return ingredientList.get(index);
+                    }).collect(Collectors.toList()));
             getParentFragmentManager().beginTransaction()
                     .replace(R.id.ingredientContainer,fragment)
                     .addToBackStack(null)
