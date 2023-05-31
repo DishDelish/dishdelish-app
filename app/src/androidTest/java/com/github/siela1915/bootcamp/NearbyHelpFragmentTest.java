@@ -77,6 +77,7 @@ public class NearbyHelpFragmentTest {
 
     @After
     public void cleanUp() {
+        FirebaseAuthActivityTest.logoutSync();
         if (scenario != null) {
             scenario.close();
         }

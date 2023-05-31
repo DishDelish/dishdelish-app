@@ -114,6 +114,7 @@ public class UploadingRecipeFragmentTest {
 
     @After
     public void cleanUp() throws IOException {
+        FirebaseAuthActivityTest.logoutSync();
         if (scenario != null) scenario.close();
         mockWebServer.shutdown();
     }

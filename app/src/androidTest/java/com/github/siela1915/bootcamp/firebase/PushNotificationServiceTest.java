@@ -12,6 +12,7 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.Intent;
 
+import com.github.siela1915.bootcamp.FirebaseAuthActivityTest;
 import com.github.siela1915.bootcamp.MainHomeActivity;
 
 import org.junit.After;
@@ -27,6 +28,11 @@ public class PushNotificationServiceTest {
         if (manager != null) {
             manager.cancelAll();
         }
+    }
+
+    @After
+    public void cleanUp() {
+        FirebaseAuthActivityTest.logoutSync();
     }
 
     @Test

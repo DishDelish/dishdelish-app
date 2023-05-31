@@ -50,6 +50,7 @@ public class SuggestionsTest {
 
     @After
     public void clearDatabase() {
+        FirebaseAuthActivityTest.logoutSync();
         if (firebaseInstance != null) {
             try {
                 for (DataSnapshot recipe : Tasks.await(firebaseInstance.getReference("recipes").orderByChild("recipeName")
@@ -101,6 +102,8 @@ public class SuggestionsTest {
         } catch (ExecutionException | InterruptedException e) {
             throw new RuntimeException(e);
         }
+
+        FirebaseAuthActivityTest.logoutSync();
     }
 
     private List<Recipe> favourites() {

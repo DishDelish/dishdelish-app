@@ -43,6 +43,7 @@ public class DatabaseTest {
 
     @After
     public void clearDatabase() {
+        FirebaseAuthActivityTest.logoutSync();
         if (firebaseInstance != null) {
             try {
                 for (DataSnapshot recipe : Tasks.await(firebaseInstance.getReference("recipes").orderByChild("recipeName")
