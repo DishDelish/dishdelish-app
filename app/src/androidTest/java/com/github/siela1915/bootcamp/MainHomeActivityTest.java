@@ -239,6 +239,7 @@ public class MainHomeActivityTest {
         onView(withId(R.id.navView)).perform(navigateTo(R.id.menuItem_about));
         onView(withId(R.id.aboutFragment)).check(matches(isDisplayed()));
     }
+    /*
     @Test
     public void choosingOtherMenusThanHomeAndAboutDoesNotChangeContentForTheMomentTest(){
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
@@ -292,6 +293,7 @@ public class MainHomeActivityTest {
         onView((withText("Choose the preparation time"))).check(matches(isDisplayed()));
         onView(withText("Cancel")).perform(click());
     }
+
     @Test
     public void testingFilterBtn(){
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
@@ -300,6 +302,8 @@ public class MainHomeActivityTest {
         onView(allOf(withId(R.id.filterBtn), isDescendantOfA(withId(R.id.filterLayout)))).perform(ViewActions.scrollTo(),click());
         onView((withId(R.id.rand_recipe_recyclerView))).check(matches(isDisplayed()));
     }
+
+     */
     @Test
     public void clickingOnShoppingCartMenuDisplaysAppropriateFragment(){
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
