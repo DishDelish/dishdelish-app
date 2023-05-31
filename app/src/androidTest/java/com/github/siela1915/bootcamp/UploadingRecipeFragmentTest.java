@@ -755,7 +755,7 @@ public class UploadingRecipeFragmentTest {
         final Context context = getApplicationContext();
         scenario = FragmentScenario.launchInContainer(UploadingRecipeFragment.class);
 
-        onView(withText(context.getResources().getString(R.string.login_required_popup_title))).check(matches(withEffectiveVisibility(VISIBLE)));
+        onView(withText(context.getResources().getString(R.string.login_required_popup_title))).inRoot(isDialog()).check(matches(withEffectiveVisibility(VISIBLE)));
         onView(withText(context.getResources().getString(R.string.login_required_popup_message))).check(matches(withEffectiveVisibility(VISIBLE)));
 
         onView(withText(context.getResources().getString(android.R.string.ok))).check(matches(withEffectiveVisibility(VISIBLE)));
