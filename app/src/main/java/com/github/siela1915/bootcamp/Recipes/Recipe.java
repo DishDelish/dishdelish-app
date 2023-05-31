@@ -18,7 +18,9 @@ public class Recipe implements Parcelable {
     public double rating;
 
     public Utensils utensils;
-    public List<Integer> cuisineTypes, allergyTypes, dietTypes;
+    public List<Integer> cuisineTypes = new ArrayList<>(),
+            allergyTypes = new ArrayList<>(),
+            dietTypes = new ArrayList<>();
     public List<Ingredient> ingredientList;
     public List<String> steps;
 
