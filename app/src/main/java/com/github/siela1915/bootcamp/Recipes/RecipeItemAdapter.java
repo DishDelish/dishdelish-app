@@ -5,6 +5,7 @@ import static androidx.test.InstrumentationRegistry.getContext;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -21,21 +23,47 @@ import com.github.siela1915.bootcamp.R;
 import com.github.siela1915.bootcamp.RecipeActivity;
 import com.github.siela1915.bootcamp.RecipeConverter;
 import com.github.siela1915.bootcamp.databinding.RecipeItemBinding;
+import com.google.android.gms.tasks.Task;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public class RecipeItemAdapter extends RecyclerView.Adapter<RecipeItemViewHolder>{
     private  List<Recipe> recipes;
+    private List<Bitmap> images;
+    private List<CompletableFuture<Void>> imageTasks;
     private Context context;
 
     public RecipeItemAdapter(List<Recipe> recipes, Context context) {
-        this.recipes = recipes;
         this.context= context;
 
+        setRecipes(recipes);
     }
     public void setRecipes(List<Recipe> newList){
         recipes=newList;
+        if (imageTasks != null) {
+            imageTasks.forEach(task -> task.cancel(true));
+        }
+        images = new ArrayList<>();
+        imageTasks = new ArrayList<>();
+        for (int index = 0; index < newList.size(); ++index) {
+            images.add(null);
+            int finalIndex = index;
+            CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
+                InputStream in = null;
+                try {
+                    in = new URL(newList.get(finalIndex).image).openStream();
+                } catch (IOException ignored) {}
+                images.set(finalIndex, BitmapFactory.decodeStream(in));
+                notifyItemChanged(finalIndex);
+            });
+            imageTasks.add(future);
+        }
         notifyDataSetChanged();
     }
     @NonNull
@@ -52,9 +80,7 @@ public class RecipeItemAdapter extends RecyclerView.Adapter<RecipeItemViewHolder
         holder.textView_likes.setText(recipes.get(position).likes+"");
         holder.recipe= recipes.get(position);
 
-        //Picasso.get().load(recipes.get(position).image).into(holder.recipe_Image);
-        new DownloadImageTask(holder.recipe_Image).execute(recipes.get(position).image);
-
+        holder.recipe_Image.setImageBitmap(images.get(position));
 
         //Bitmap avatar = BitmapFactory.decodeResource(this.getResources(), recipe.profilePicture);
         //userAvatar.setImageBitmap(avatar);
