@@ -14,7 +14,7 @@
 
         <ImageView
             android:id="@+id/recipePicture"
-            android:layout_width="335dp"
+            android:layout_width="0dp"
             android:layout_height="282dp"
             android:layout_marginTop="10dp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -62,7 +62,7 @@
 
         <ImageView
             android:id="@+id/infoBoxes"
-            android:layout_width="325dp"
+            android:layout_width="wrap_content"
             android:layout_height="126dp"
             android:layout_marginTop="188dp"
             app:layout_constraintEnd_toEndOf="@+id/recipePicture"
@@ -72,58 +72,70 @@
 
         <TextView
             android:id="@+id/prepTimeNbMins"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="40dp"
             android:layout_marginTop="70dp"
             android:text="0"
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            app:layout_constraintStart_toStartOf="@+id/infoBoxes"
+            app:layout_constraintEnd_toEndOf="@+id/prepMinsText"
+            app:layout_constraintStart_toStartOf="@+id/prepMinsText"
             app:layout_constraintTop_toTopOf="@+id/infoBoxes" />
 
         <TextView
             android:id="@+id/kcalCount"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="275dp"
             android:layout_marginTop="70dp"
             android:text="0"
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            app:layout_constraintStart_toStartOf="@+id/infoBoxes"
+            app:layout_constraintEnd_toEndOf="@+id/kcalLayoutHelper"
+            app:layout_constraintStart_toStartOf="@+id/kcalLayoutHelper"
             app:layout_constraintTop_toTopOf="@+id/infoBoxes" />
 
         <TextView
             android:id="@+id/prepMinsText"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="31dp"
             android:text="mins"
             android:textAlignment="viewStart"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            app:layout_constraintEnd_toStartOf="@+id/cookMinsText"
+            app:layout_constraintHorizontal_bias="0.26"
             app:layout_constraintStart_toStartOf="@+id/infoBoxes"
             app:layout_constraintTop_toBottomOf="@+id/prepTimeNbMins" />
 
         <TextView
-            android:id="@+id/cookTimeNbMins"
-            android:layout_width="0dp"
+            android:id="@+id/kcalLayoutHelper"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="158dp"
+            android:textAlignment="viewStart"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            app:layout_constraintEnd_toEndOf="@+id/infoBoxes"
+            app:layout_constraintHorizontal_bias="0.68"
+            app:layout_constraintStart_toEndOf="@+id/cookMinsText"
+            app:layout_constraintTop_toBottomOf="@+id/kcalCount" />
+
+        <TextView
+            android:id="@+id/cookTimeNbMins"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginTop="70dp"
             android:text="0"
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            app:layout_constraintStart_toStartOf="@+id/infoBoxes"
+            app:layout_constraintEnd_toEndOf="@+id/cookMinsText"
+            app:layout_constraintStart_toStartOf="@+id/cookMinsText"
             app:layout_constraintTop_toTopOf="@+id/infoBoxes" />
 
         <TextView
             android:id="@+id/cookMinsText"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="148dp"
             android:text="mins"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            app:layout_constraintEnd_toEndOf="@+id/infoBoxes"
             app:layout_constraintStart_toStartOf="@+id/infoBoxes"
             app:layout_constraintTop_toBottomOf="@+id/cookTimeNbMins" />
 
@@ -542,7 +554,7 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/ingredientsList"
-            android:layout_width="317dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:layout_marginEnd="18dp"
