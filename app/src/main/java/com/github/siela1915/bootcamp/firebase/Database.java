@@ -416,13 +416,8 @@ public class Database {
         return db.child(FRIDGE + "/" + user.getUid()).setValue(ing);
     }
 
-    public Task<List<Ingredient>> getFridge() {
-        FirebaseUser user = FirebaseInstanceManager.getAuth().getCurrentUser();
-        if (user == null) {
-            return Tasks.forException(new UserNotAuthenticatedException("User needs to be authenticated to access his fridge"));
-        }
-
-        return db.child(FRIDGE + "/" + user.getUid()).get()
+    public Task<List<Ingredient>> getFridge(String userId) {
+        return db.child(FRIDGE + "/" + userId).get()
                 .continueWith(dataTask -> {
                     List<Ingredient> list = new ArrayList<>();
                     for (DataSnapshot ds : dataTask.getResult().getChildren()) {
@@ -431,5 +426,14 @@ public class Database {
 
                     return list;
                 });
+    }
+
+    public Task<List<Ingredient>> getFridge() {
+        FirebaseUser user = FirebaseInstanceManager.getAuth().getCurrentUser();
+        if (user == null) {
+            return Tasks.forException(new UserNotAuthenticatedException("User needs to be authenticated to access his fridge"));
+        }
+
+        return getFridge(user.getUid());
     }
 }

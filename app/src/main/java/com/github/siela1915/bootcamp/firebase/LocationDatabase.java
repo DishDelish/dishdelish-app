@@ -70,7 +70,7 @@ public class LocationDatabase {
                     for (DataSnapshot ds : offersTask.getResult().getChildren()) {
                         indexes.add(ds.getValue(Integer.class));
                     }
-                    return db.getFridge().continueWith(fridgeTask -> {
+                    return db.getFridge(userId).continueWith(fridgeTask -> {
                         List<Ingredient> list = new ArrayList<>();
                         for (int i = 0; i < fridgeTask.getResult().size(); ++i) {
                             if (indexes.contains(i)) {
