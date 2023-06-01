@@ -49,7 +49,8 @@ public class RecipeItemAdapter extends RecyclerView.Adapter<RecipeItemViewHolder
         holder.textView_title.setText(recipes.get(position).recipeName);
         holder.textView_time.setText(recipes.get(position).cookTime+"min");
         holder.textView_serving.setText(recipes.get(position).servings+"");
-        holder.textView_likes.setText(recipes.get(position).likes+"");
+
+        holder.textView_likes.setText((int)(recipes.get(position).getRating())+"/5");
         holder.recipe= recipes.get(position);
 
         //Picasso.get().load(recipes.get(position).image).into(holder.recipe_Image);
