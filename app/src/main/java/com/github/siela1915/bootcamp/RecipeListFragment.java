@@ -60,7 +60,7 @@ public class RecipeListFragment extends Fragment {
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            recyclerView.setAdapter(new RecipeItemAdapter(mRecipeList, context));
+            recyclerView.setAdapter(new RecipeItemAdapter(mRecipeList, context, recyclerView));
             recyclerView.addItemDecoration(new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL));
         }
         return view;

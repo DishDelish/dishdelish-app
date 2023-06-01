@@ -238,7 +238,7 @@ public class HomePageFragment extends Fragment {
 
         SuggestionCalculator.getSuggestions(database).addOnSuccessListener(list->{
                     fetchedRecipes = list;
-                    recipeAdapter =new RecipeItemAdapter(list, view.getContext());
+                    recipeAdapter =new RecipeItemAdapter(list, view.getContext(), recipeListRecyclerView);
                     recipeListRecyclerView.setAdapter(this.recipeAdapter/*new RecipeItemAdapter(list, view.getContext())*/);
                     if (myFridge != null) {
                         moreFilter.callOnClick();
@@ -246,7 +246,7 @@ public class HomePageFragment extends Fragment {
         })
                 .addOnFailureListener(e->{
                     e.printStackTrace();
-                    recipeListRecyclerView.setAdapter(new RecipeItemAdapter(ExampleRecipes.recipes,view.getContext()));
+                    recipeListRecyclerView.setAdapter(new RecipeItemAdapter(ExampleRecipes.recipes,view.getContext(), recipeListRecyclerView));
                     if (myFridge != null) {
                         moreFilter.callOnClick();
                     }

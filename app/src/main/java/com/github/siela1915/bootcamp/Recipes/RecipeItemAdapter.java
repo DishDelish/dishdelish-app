@@ -31,6 +31,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
 public class RecipeItemAdapter extends RecyclerView.Adapter<RecipeItemViewHolder>{
@@ -38,9 +39,11 @@ public class RecipeItemAdapter extends RecyclerView.Adapter<RecipeItemViewHolder
     private List<Bitmap> images;
     private List<CompletableFuture<Void>> imageTasks;
     private Context context;
+    private RecyclerView recyclerView;
 
-    public RecipeItemAdapter(List<Recipe> recipes, Context context) {
+    public RecipeItemAdapter(List<Recipe> recipes, Context context, RecyclerView recyclerView) {
         this.context= context;
+        this.recyclerView = recyclerView;
 
         setRecipes(recipes);
     }
@@ -53,6 +56,10 @@ public class RecipeItemAdapter extends RecyclerView.Adapter<RecipeItemViewHolder
         imageTasks = new ArrayList<>();
         for (int index = 0; index < newList.size(); ++index) {
             images.add(null);
+        }
+        notifyDataSetChanged();
+
+        for (int index = 0; index < newList.size(); ++index) {
             int finalIndex = index;
             CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
                 InputStream in = null;
@@ -60,11 +67,11 @@ public class RecipeItemAdapter extends RecyclerView.Adapter<RecipeItemViewHolder
                     in = new URL(newList.get(finalIndex).image).openStream();
                 } catch (IOException ignored) {}
                 images.set(finalIndex, BitmapFactory.decodeStream(in));
-                notifyItemChanged(finalIndex);
+
+                recyclerView.post(() -> notifyItemChanged(finalIndex));
             });
             imageTasks.add(future);
         }
-        notifyDataSetChanged();
     }
     @NonNull
     @Override
