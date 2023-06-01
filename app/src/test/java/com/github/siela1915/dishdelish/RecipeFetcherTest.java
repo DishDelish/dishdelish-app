@@ -16,6 +16,7 @@ import com.github.siela1915.bootcamp.Recipes.Unit;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -119,7 +120,7 @@ public class RecipeFetcherTest {
         }
         fetcher = new RecipeFetcher(allergies, cuisines, diets,ExampleRecipes.recipes);
 
-        List<String> expectedList = Arrays.asList(String.valueOf(1));
+        List<String> expectedList = Collections.singletonList(ExampleRecipes.recipes.get(1).recipeName);
         List<String> actualList = fetcher.filterByIngredients(Arrays.asList(new Ingredient("Cauliflower", new Unit(1, "")), new Ingredient("Coriander", new Unit(1, ""))));
 
         assertEquals(expectedList, actualList);
@@ -136,7 +137,7 @@ public class RecipeFetcherTest {
         }
         fetcher = new RecipeFetcher(allergies, cuisines, diets,ExampleRecipes.recipes);
 
-        List<String> expectedList = Arrays.asList(String.valueOf(1));
+        List<String> expectedList = Collections.singletonList(ExampleRecipes.recipes.get(1).recipeName);
         List<String> actualList = fetcher.filterByIngredients(Arrays.asList(new Ingredient("CAUlIfLoWer", new Unit(1, "")), new Ingredient("CoRIAnder", new Unit(1, ""))));
 
         assertEquals(expectedList, actualList);

@@ -128,7 +128,7 @@ public class RecipeFetcher{
                             .contains(ingredient));
 
             if (containsOnlyIngredients) {
-                filteredRecipes.add(recipe.uniqueKey);
+                filteredRecipes.add(recipe.recipeName);
             }
         }
 
